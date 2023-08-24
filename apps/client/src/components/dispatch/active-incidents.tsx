@@ -35,7 +35,7 @@ export function ActiveIncidents() {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const draggingUnit = useDispatchState((state) => state.draggingUnit);
 
@@ -79,23 +79,23 @@ export function ActiveIncidents() {
     if (json.id) {
       asyncTable.remove(json.id);
 
-      closeModal(ModalIds.AlertDeleteIncident);
+      modalState.closeModal(ModalIds.AlertDeleteIncident);
       setTempIncident("hide");
     }
   }
 
   function onEditClick(incident: LeoIncident) {
-    openModal(ModalIds.ManageIncident);
+    modalState.openModal(ModalIds.ManageIncident);
     setTempIncident(incident);
   }
 
   function onEndClick(incident: LeoIncident) {
-    openModal(ModalIds.AlertDeleteIncident);
+    modalState.openModal(ModalIds.AlertDeleteIncident);
     setTempIncident(incident);
   }
 
   function handleCreateIncident() {
-    openModal(ModalIds.ManageIncident);
+    modalState.openModal(ModalIds.ManageIncident);
     setTempIncident("create");
   }
 
@@ -207,7 +207,7 @@ export function ActiveIncidents() {
 
             if (incident.openModalAfterCreation) {
               setTempIncident(incident as LeoIncident);
-              openModal(ModalIds.ManageIncident);
+              modalState.openModal(ModalIds.ManageIncident);
             } else {
               setTempIncident("hide");
             }

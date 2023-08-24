@@ -23,9 +23,9 @@ export function SelectDeputyModal() {
   const { userDeputies, isLoading } = useGetUserDeputies();
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
 
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
-  const t = useTranslations("Ems");
+  const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
 
   const { state, execute } = useFetch();
@@ -56,7 +56,7 @@ export function SelectDeputyModal() {
     });
 
     if (json.id) {
-      closeModal(ModalIds.SelectDeputy);
+      modalState.closeModal(ModalIds.SelectDeputy);
       setActiveDeputy(json as EmsFdDeputy);
     }
   }
@@ -72,15 +72,15 @@ export function SelectDeputyModal() {
 
   return (
     <Modal
-      title={t("selectDeputy")}
-      onClose={() => closeModal(ModalIds.SelectDeputy)}
-      isOpen={isOpen(ModalIds.SelectDeputy)}
+      title={t("Ems.selectDeputy")}
+      onClose={() => modalState.closeModal(ModalIds.SelectDeputy)}
+      isOpen={modalState.isOpen(ModalIds.SelectDeputy)}
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.deputy} label={t("deputy")}>
+            <FormField errorMessage={errors.deputy} label={t("Ems.deputy")}>
               <Select
                 isLoading={isLoading}
                 value={
@@ -102,7 +102,7 @@ export function SelectDeputyModal() {
             <AsyncListSearchField<EmergencyVehicleValue>
               errorMessage={errors.vehicleId}
               isOptional
-              label={t("emergencyVehicle")}
+              label={t("Ems.emergencyVehicle")}
               localValue={values.vehicleSearch}
               setValues={({ localValue, node }) => {
                 const vehicleId = !node ? {} : { vehicleId: node.key as string };
@@ -123,17 +123,17 @@ export function SelectDeputyModal() {
             {canSetUserDefinedCallsign ? (
               <TextField
                 isOptional
-                label={t("userDefinedCallsign")}
+                label={t("Leo.userDefinedCallsign")}
                 value={values.userDefinedCallsign}
                 onChange={(value) => setFieldValue("userDefinedCallsign", value)}
-                description={t("userDefinedCallsignDescription")}
+                description={t("Leo.userDefinedCallsignDescription")}
               />
             ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.SelectDeputy)}
+                onPress={() => modalState.closeModal(ModalIds.SelectDeputy)}
                 variant="cancel"
               >
                 {common("cancel")}

@@ -31,7 +31,7 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
   type,
   incident,
 }: Props<T>) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
@@ -45,7 +45,7 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.AddInvolvedUnit);
+    modalState.closeModal(ModalIds.AddInvolvedUnit);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -88,7 +88,7 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.AddInvolvedUnit)}
+      isOpen={modalState.isOpen(ModalIds.AddInvolvedUnit)}
       onClose={handleClose}
       title={t("addUnit")}
       className="w-[600px]"

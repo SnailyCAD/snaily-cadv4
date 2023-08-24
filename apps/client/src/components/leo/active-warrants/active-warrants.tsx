@@ -33,12 +33,12 @@ export function ActiveWarrants() {
     pagination: asyncTable.pagination,
   });
 
-  const { openModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
 
   function handleEditClick(warrant: Warrant) {
     warrantState.setTempId(warrant.id);
-    openModal(ModalIds.CreateWarrant, { isActive: true });
+    modalState.openModal(ModalIds.CreateWarrant, { isActive: true });
   }
 
   function assignedOfficers(assignedOfficers: AssignedWarrantOfficer[]) {
@@ -59,7 +59,7 @@ export function ActiveWarrants() {
             <Button
               variant={null}
               className="dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 bg-gray-500 hover:bg-gray-600 text-white"
-              onPress={() => openModal(ModalIds.CreateWarrant, { isActive: true })}
+              onPress={() => modalState.openModal(ModalIds.CreateWarrant, { isActive: true })}
             >
               {t("createWarrant")}
             </Button>

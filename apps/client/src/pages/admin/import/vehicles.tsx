@@ -30,7 +30,7 @@ export default function ImportVehiclesPage({ data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const veh = useTranslations("Vehicles");
-  const { closeModal, openModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredVehicles]);
@@ -54,7 +54,7 @@ export default function ImportVehiclesPage({ data }: Props) {
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
     vehicleState.setTempId(vehicle.id);
-    openModal(ModalIds.AlertDeleteVehicle);
+    modalState.openModal(ModalIds.AlertDeleteVehicle);
   }
 
   async function handleDeleteVehicle() {
@@ -68,7 +68,7 @@ export default function ImportVehiclesPage({ data }: Props) {
     if (typeof json === "boolean" && json) {
       asyncTable.remove(tempVehicle.id);
       vehicleState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteWeapon);
+      modalState.closeModal(ModalIds.AlertDeleteWeapon);
     }
   }
 
@@ -83,7 +83,9 @@ export default function ImportVehiclesPage({ data }: Props) {
           <Title className="!mb-0">{t("IMPORT_VEHICLES")}</Title>
 
           <div>
-            <Button onPress={() => openModal(ModalIds.ImportVehicles)}>{t("importViaFile")}</Button>
+            <Button onPress={() => modalState.openModal(ModalIds.ImportVehicles)}>
+              {t("importViaFile")}
+            </Button>
           </div>
         </div>
 

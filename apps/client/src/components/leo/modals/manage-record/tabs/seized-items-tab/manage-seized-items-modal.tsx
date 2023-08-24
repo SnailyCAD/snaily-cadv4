@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function ManageSeizedItemsModal({ item, onClose }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
@@ -47,13 +47,13 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageSeizedItems);
+    modalState.closeModal(ModalIds.ManageSeizedItems);
   }
 
   return (
     <Modal
       title={item ? t("editSeizedItem") : t("addSeizedItem")}
-      isOpen={isOpen(ModalIds.ManageSeizedItems)}
+      isOpen={modalState.isOpen(ModalIds.ManageSeizedItems)}
       onClose={handleClose}
       className="w-[600px]"
     >

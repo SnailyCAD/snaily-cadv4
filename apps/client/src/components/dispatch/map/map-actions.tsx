@@ -17,7 +17,7 @@ import { Permissions, usePermission } from "hooks/usePermission";
 export function MapActions() {
   const t = useTranslations();
   const portalRef = usePortal("MapActions");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const mapState = useDispatchMapState((state) => ({
     hiddenItems: state.hiddenItems,
     setItem: state.setItem,
@@ -66,10 +66,10 @@ export function MapActions() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button onPress={() => openModal(ModalIds.Manage911Call)}>
+          <Button onPress={() => modalState.openModal(ModalIds.Manage911Call)}>
             {t("Calls.create911Call")}
           </Button>
-          <Button onPress={() => openModal(ModalIds.SelectMapServer)}>
+          <Button onPress={() => modalState.openModal(ModalIds.SelectMapServer)}>
             {t("Leo.selectMapServer")}
           </Button>
         </div>

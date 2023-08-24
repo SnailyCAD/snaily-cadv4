@@ -19,7 +19,7 @@ interface PetsPageProps {
 
 export default function PetsPage(props: PetsPageProps) {
   const t = useTranslations();
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
@@ -38,7 +38,9 @@ export default function PetsPage(props: PetsPageProps) {
       <header className="flex items-center justify-between mb-5">
         <Title>{t("Pets.pets")}</Title>
 
-        <Button onPress={() => openModal(ModalIds.ManagePet)}>{t("Pets.createPet")}</Button>
+        <Button onPress={() => modalState.openModal(ModalIds.ManagePet)}>
+          {t("Pets.createPet")}
+        </Button>
       </header>
 
       {props.pets.totalCount <= 0 ? (

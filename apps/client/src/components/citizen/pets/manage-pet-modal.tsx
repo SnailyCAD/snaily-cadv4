@@ -21,7 +21,7 @@ interface ManagePetModalProps {
 }
 
 export function ManagePetModal(props: ManagePetModalProps) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Pets");
   const common = useTranslations("Common");
   const { execute, state } = useFetch();
@@ -44,7 +44,7 @@ export function ManagePetModal(props: ManagePetModalProps) {
     : "";
 
   function handleClose() {
-    closeModal(ModalIds.ManagePet);
+    modalState.closeModal(ModalIds.ManagePet);
   }
 
   const validate = handleValidate(PET_SCHEMA);
@@ -78,7 +78,7 @@ export function ManagePetModal(props: ManagePetModalProps) {
         });
 
         router.push(`/pets/${json.id}`);
-        closeModal(ModalIds.ManagePet);
+        modalState.closeModal(ModalIds.ManagePet);
       }
     } else {
       const { json } = await execute<PostPetsData>({
@@ -98,7 +98,7 @@ export function ManagePetModal(props: ManagePetModalProps) {
 
         router.push(`/pets/${json.id}`);
         props.onCreate?.(json);
-        closeModal(ModalIds.ManagePet);
+        modalState.closeModal(ModalIds.ManagePet);
       }
     }
   }
@@ -108,7 +108,7 @@ export function ManagePetModal(props: ManagePetModalProps) {
       className="w-[600px]"
       onClose={handleClose}
       title={t("createPet")}
-      isOpen={isOpen(ModalIds.ManagePet)}
+      isOpen={modalState.isOpen(ModalIds.ManagePet)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, errors, setFieldValue }) => (

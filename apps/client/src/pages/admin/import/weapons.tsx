@@ -30,7 +30,7 @@ export default function ImportWeaponsPage({ data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const wep = useTranslations("Weapons");
-  const { closeModal, openModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasDeletePermissions = hasPermissions([Permissions.DeleteRegisteredWeapons]);
@@ -54,7 +54,7 @@ export default function ImportWeaponsPage({ data }: Props) {
 
   function handleDeleteClick(weapon: Weapon) {
     weaponState.setTempId(weapon.id);
-    openModal(ModalIds.AlertDeleteWeapon);
+    modalState.openModal(ModalIds.AlertDeleteWeapon);
   }
 
   async function handleDeleteWeapon() {
@@ -68,7 +68,7 @@ export default function ImportWeaponsPage({ data }: Props) {
     if (typeof json === "boolean" && json) {
       asyncTable.remove(tempWeapon.id);
       weaponState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteWeapon);
+      modalState.closeModal(ModalIds.AlertDeleteWeapon);
     }
   }
 
@@ -83,7 +83,9 @@ export default function ImportWeaponsPage({ data }: Props) {
           <Title className="!mb-0">{t("IMPORT_WEAPONS")}</Title>
 
           <div>
-            <Button onPress={() => openModal(ModalIds.ImportWeapons)}>{t("importViaFile")}</Button>
+            <Button onPress={() => modalState.openModal(ModalIds.ImportWeapons)}>
+              {t("importViaFile")}
+            </Button>
           </div>
         </div>
 

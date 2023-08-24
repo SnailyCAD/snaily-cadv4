@@ -21,7 +21,7 @@ const values = [
 
 export function NameSearchWarrantsTab() {
   const common = useTranslations("Common");
-  const { openModal, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
@@ -41,7 +41,7 @@ export function NameSearchWarrantsTab() {
     : hasManageWarrantsPermissions;
 
   async function handleDelete() {
-    const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
+    const warrant = modalState.getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
     if (!warrant) return;
     if (!currentResult || currentResult.isConfidential) return;
 
@@ -56,12 +56,12 @@ export function NameSearchWarrantsTab() {
         ...currentResult,
         warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
       });
-      closeModal(ModalIds.AlertRevokeWarrant);
+      modalState.closeModal(ModalIds.AlertRevokeWarrant);
     }
   }
 
   function handleDeleteClick(warrant: Warrant) {
-    openModal(ModalIds.AlertRevokeWarrant, warrant);
+    modalState.openModal(ModalIds.AlertRevokeWarrant, warrant);
   }
 
   async function handleChange(value: string, warrant: Warrant) {

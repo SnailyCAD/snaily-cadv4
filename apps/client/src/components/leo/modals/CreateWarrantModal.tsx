@@ -25,19 +25,19 @@ interface Props {
 }
 
 export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpdate }: Props) {
-  const { isOpen, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
   const { activeOfficers } = useActiveOfficers();
-  const { isActive } = getPayload<{ isActive: boolean }>(ModalIds.CreateWarrant) ?? {
+  const { isActive } = modalState.getPayload<{ isActive: boolean }>(ModalIds.CreateWarrant) ?? {
     isActive: false,
   };
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.CreateWarrant);
+    modalState.closeModal(ModalIds.CreateWarrant);
   }
 
   async function onSubmit(
@@ -58,7 +58,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
       });
 
       if (json.id) {
-        closeModal(ModalIds.CreateWarrant);
+        modalState.closeModal(ModalIds.CreateWarrant);
         onUpdate?.(json);
       }
     } else {
@@ -88,7 +88,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
           icon: "success",
         });
 
-        closeModal(ModalIds.CreateWarrant);
+        modalState.closeModal(ModalIds.CreateWarrant);
         onCreate?.(json);
       }
     }
@@ -105,7 +105,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
   return (
     <Modal
       title={t("createWarrant")}
-      isOpen={isOpen(ModalIds.CreateWarrant)}
+      isOpen={modalState.isOpen(ModalIds.CreateWarrant)}
       onClose={handleClose}
       className="w-[600px]"
     >

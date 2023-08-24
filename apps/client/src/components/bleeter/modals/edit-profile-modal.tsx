@@ -10,15 +10,15 @@ interface EditBleeterProfileModalProps {
 }
 
 export function EditBleeterProfileModal(props: EditBleeterProfileModalProps) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Bleeter");
 
   return (
     <Modal
       className="w-[600px]"
-      onClose={() => closeModal(ModalIds.ManageBleeterProfile)}
+      onClose={() => modalState.closeModal(ModalIds.ManageBleeterProfile)}
       title={t("editProfile")}
-      isOpen={isOpen(ModalIds.ManageBleeterProfile)}
+      isOpen={modalState.isOpen(ModalIds.ManageBleeterProfile)}
     >
       <NewBleeterExperienceForm {...props} showFormOnly />
     </Modal>

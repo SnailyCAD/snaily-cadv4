@@ -19,7 +19,7 @@ const ManageMedicalRecordsModal = dynamic(
 
 export function MedicalRecords() {
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("MedicalRecords");
   const common = useTranslations("Common");
   const { citizen, setCurrentCitizen } = useCitizen(false);
@@ -41,7 +41,7 @@ export function MedicalRecords() {
         ...citizen,
         medicalRecords: citizen.medicalRecords.filter((v) => v.id !== tempRecord.id),
       });
-      closeModal(ModalIds.AlertDeleteMedicalRecord);
+      modalState.closeModal(ModalIds.AlertDeleteMedicalRecord);
       recordState.setTempId(null);
     }
   }
@@ -54,14 +54,14 @@ export function MedicalRecords() {
     if (!MEDICAL_RECORDS_CITIZEN_MANAGEABLE) return;
 
     recordState.setTempId(record.id);
-    openModal(ModalIds.AlertDeleteMedicalRecord);
+    modalState.openModal(ModalIds.AlertDeleteMedicalRecord);
   }
 
   function handleEditClick(record: MedicalRecord) {
     if (!MEDICAL_RECORDS_CITIZEN_MANAGEABLE) return;
 
     recordState.setTempId(record.id);
-    openModal(ModalIds.ManageMedicalRecords);
+    modalState.openModal(ModalIds.ManageMedicalRecords);
   }
 
   return (
@@ -71,7 +71,7 @@ export function MedicalRecords() {
           <h1 className="text-2xl font-semibold">{t("yourMedicalRecords")}</h1>
 
           {MEDICAL_RECORDS_CITIZEN_MANAGEABLE ? (
-            <Button onPress={() => openModal(ModalIds.ManageMedicalRecords)} size="xs">
+            <Button onPress={() => modalState.openModal(ModalIds.ManageMedicalRecords)} size="xs">
               {t("addMedicalRecord")}
             </Button>
           ) : null}
@@ -131,7 +131,7 @@ export function MedicalRecords() {
                 ],
               });
 
-              closeModal(ModalIds.ManageMedicalRecords);
+              modalState.closeModal(ModalIds.ManageMedicalRecords);
             }}
             onUpdate={(old, newR) => {
               const copy = [...citizen.medicalRecords];
@@ -142,7 +142,7 @@ export function MedicalRecords() {
                 ...citizen,
                 medicalRecords: handleBloodgroupStateChange(copy, newR.bloodGroup),
               });
-              closeModal(ModalIds.ManageMedicalRecords);
+              modalState.closeModal(ModalIds.ManageMedicalRecords);
             }}
             medicalRecord={tempRecord}
             onClose={() => recordState.setTempId(null)}

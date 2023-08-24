@@ -45,7 +45,7 @@ export function TowTaxiCallsTable({ initialData, type, noCallsText }: Props) {
   const tableState = useTableState(asyncTable);
   const [tempCall, callState] = useTemporaryItem<string, TowCall | TaxiCall>(asyncTable.items);
 
-  const { openModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
@@ -60,12 +60,12 @@ export function TowTaxiCallsTable({ initialData, type, noCallsText }: Props) {
   const hasManagePermissions = hasPermissions(toCheckPerms);
 
   function assignClick(call: TowCall | TaxiCall) {
-    openModal(ModalIds.AssignToTowCall);
+    modalState.openModal(ModalIds.AssignToTowCall);
     callState.setTempId(call.id);
   }
 
   function editClick(call: TowCall | TaxiCall) {
-    openModal(ModalIds.ManageTowCall);
+    modalState.openModal(ModalIds.ManageTowCall);
     callState.setTempId(call.id);
   }
 

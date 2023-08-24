@@ -15,11 +15,11 @@ export function AlertDeclineOfficerModal({
 }) {
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const { isOpen, closeModal, getPayload } = useModal();
-  const unit = getPayload<Unit>(ModalIds.AlertDeclineOfficer);
+  const modalState = useModal();
+  const unit = modalState.getPayload<Unit>(ModalIds.AlertDeclineOfficer);
 
   function handleClose() {
-    closeModal(ModalIds.AlertDeclineOfficer);
+    modalState.closeModal(ModalIds.AlertDeclineOfficer);
   }
 
   const ACTIONS = [
@@ -35,8 +35,8 @@ export function AlertDeclineOfficerModal({
   return (
     <Modal
       title={t("declineUnit")}
-      onClose={() => closeModal(ModalIds.AlertDeclineOfficer)}
-      isOpen={isOpen(ModalIds.AlertDeclineOfficer)}
+      onClose={() => modalState.closeModal(ModalIds.AlertDeclineOfficer)}
+      isOpen={modalState.isOpen(ModalIds.AlertDeclineOfficer)}
       className="min-w-[600px]"
     >
       <Formik

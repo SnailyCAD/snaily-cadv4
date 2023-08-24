@@ -41,7 +41,7 @@ export function ConnectionsTab({
     setCurrentlySelectedCall: state.setCurrentlySelectedCall,
   }));
   const { activeIncidents } = useActiveIncidents();
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const incident =
     (values.incidentId && (record as any)?.incident) ??
@@ -83,7 +83,7 @@ export function ConnectionsTab({
             <>
               <Button
                 onClick={() => {
-                  openModal(ModalIds.ManageIncident);
+                  modalState.openModal(ModalIds.ManageIncident);
                 }}
                 className="min-w-fit"
               >
@@ -115,7 +115,7 @@ export function ConnectionsTab({
               <Button
                 onClick={() => {
                   setCurrentlySelectedCall(call);
-                  openModal(ModalIds.Manage911Call);
+                  modalState.openModal(ModalIds.Manage911Call);
                 }}
                 className="min-w-fit"
               >

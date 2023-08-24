@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function CreateBusinessModal({ onCreate }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();
   const common = useTranslations("Common");
@@ -27,7 +27,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
   const error = useTranslations("Errors");
 
   function handleClose() {
-    closeModal(ModalIds.CreateBusiness);
+    modalState.closeModal(ModalIds.CreateBusiness);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -45,7 +45,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
       }
 
       onCreate?.(json.employee);
-      closeModal(ModalIds.CreateBusiness);
+      modalState.closeModal(ModalIds.CreateBusiness);
     }
   }
 
@@ -63,7 +63,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
     <Modal
       className="w-[700px]"
       title={t("createBusiness")}
-      isOpen={isOpen(ModalIds.CreateBusiness)}
+      isOpen={modalState.isOpen(ModalIds.CreateBusiness)}
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

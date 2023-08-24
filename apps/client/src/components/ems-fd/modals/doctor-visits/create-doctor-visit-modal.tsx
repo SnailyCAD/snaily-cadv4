@@ -19,14 +19,14 @@ interface Props {
 
 export function CreateDoctorVisitModal({ citizen, onClose, onCreate }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Ems");
 
   const validate = handleValidate(DOCTOR_VISIT_SCHEMA);
 
   function handleClose() {
-    closeModal(ModalIds.CreateDoctorVisit);
+    modalState.closeModal(ModalIds.CreateDoctorVisit);
     onClose?.();
   }
 
@@ -39,7 +39,7 @@ export function CreateDoctorVisitModal({ citizen, onClose, onCreate }: Props) {
 
     if (json?.id) {
       onCreate?.(json);
-      closeModal(ModalIds.CreateDoctorVisit);
+      modalState.closeModal(ModalIds.CreateDoctorVisit);
     }
   }
 
@@ -57,7 +57,7 @@ export function CreateDoctorVisitModal({ citizen, onClose, onCreate }: Props) {
     <Modal
       title={t("createDoctorVisit")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.CreateDoctorVisit)}
+      isOpen={modalState.isOpen(ModalIds.CreateDoctorVisit)}
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -111,7 +111,7 @@ export function CreateDoctorVisitModal({ citizen, onClose, onCreate }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.CreateDoctorVisit)}
+                onPress={() => modalState.closeModal(ModalIds.CreateDoctorVisit)}
                 variant="cancel"
               >
                 {common("cancel")}

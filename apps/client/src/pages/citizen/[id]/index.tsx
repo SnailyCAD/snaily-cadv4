@@ -51,7 +51,7 @@ export default function CitizenId() {
   });
 
   const { execute, state } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const router = useRouter();
@@ -69,7 +69,7 @@ export default function CitizenId() {
     });
 
     if (typeof data.json === "boolean" && data.json) {
-      closeModal(ModalIds.AlertDeleteCitizen);
+      modalState.closeModal(ModalIds.AlertDeleteCitizen);
       router.push("/citizen");
     }
   }
@@ -82,7 +82,7 @@ export default function CitizenId() {
     });
 
     if (typeof data.json === "boolean" && data.json) {
-      closeModal(ModalIds.AlertMarkDeceased);
+      modalState.closeModal(ModalIds.AlertMarkDeceased);
       setCurrentCitizen({ ...citizen, dead: true, dateOfDead: new Date() });
     }
   }
@@ -130,7 +130,7 @@ export default function CitizenId() {
           {citizen.imageId ? (
             <button
               type="button"
-              onClick={() => openModal(ModalIds.CitizenImage)}
+              onClick={() => modalState.openModal(ModalIds.CitizenImage)}
               className="cursor-pointer"
               aria-label="View citizen image"
             >
@@ -219,7 +219,7 @@ export default function CitizenId() {
               {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
                 <>
                   <DropdownMenuItem
-                    onClick={() => openModal(ModalIds.AlertDeleteCitizen)}
+                    onClick={() => modalState.openModal(ModalIds.AlertDeleteCitizen)}
                     variant="danger"
                   >
                     {t("deleteCitizen")}
@@ -227,7 +227,7 @@ export default function CitizenId() {
 
                   {!citizen.dead ? (
                     <DropdownMenuItem
-                      onClick={() => openModal(ModalIds.AlertMarkDeceased)}
+                      onClick={() => modalState.openModal(ModalIds.AlertMarkDeceased)}
                       variant="danger"
                     >
                       {t("markCitizenDeceased")}

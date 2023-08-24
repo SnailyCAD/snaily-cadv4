@@ -24,7 +24,7 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
   const [file, setFile] = React.useState<File | null>(null);
 
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Values");
   const common = useTranslations("Common");
 
@@ -63,7 +63,7 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
 
     if (Array.isArray(json)) {
       onImport(json);
-      closeModal(id);
+      modalState.closeModal(id);
     }
   }
 
@@ -75,8 +75,8 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
     <Modal
       className="w-[600px]"
       title={data[id].title}
-      onClose={() => closeModal(id)}
-      isOpen={isOpen(id)}
+      onClose={() => modalState.closeModal(id)}
+      isOpen={modalState.isOpen(id)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
@@ -102,7 +102,7 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
             </a>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
+              <Button type="reset" onPress={() => modalState.closeModal(id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

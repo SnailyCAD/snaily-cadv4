@@ -20,14 +20,14 @@ interface Props {
 
 export function JoinBusinessModal({ onCreate }: Props) {
   const joinableBusinesses = useBusinessState((s) => s.joinableBusinesses);
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
 
   function handleClose() {
-    closeModal(ModalIds.JoinBusiness);
+    modalState.closeModal(ModalIds.JoinBusiness);
   }
 
   async function onSubmit(
@@ -42,7 +42,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
     });
 
     if (json.id) {
-      closeModal(ModalIds.JoinBusiness);
+      modalState.closeModal(ModalIds.JoinBusiness);
       onCreate?.(json);
 
       if (!json.business.whitelisted) {
@@ -64,7 +64,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
     <Modal
       className="w-[600px]"
       title={t("joinBusiness")}
-      isOpen={isOpen(ModalIds.JoinBusiness)}
+      isOpen={modalState.isOpen(ModalIds.JoinBusiness)}
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

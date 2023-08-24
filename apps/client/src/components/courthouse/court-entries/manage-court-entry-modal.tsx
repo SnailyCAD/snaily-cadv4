@@ -29,7 +29,7 @@ export function ManageCourtEntry({
   onCreate,
   onUpdate,
 }: Props) {
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const t = useTranslations("Courthouse");
@@ -44,7 +44,7 @@ export function ManageCourtEntry({
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageCourtEntry);
+    modalState.closeModal(ModalIds.ManageCourtEntry);
   }
 
   async function onSubmit(
@@ -65,7 +65,7 @@ export function ManageCourtEntry({
 
       if (json.id) {
         onUpdate?.(json);
-        closeModal(ModalIds.ManageCourtEntry);
+        modalState.closeModal(ModalIds.ManageCourtEntry);
       }
     } else {
       const { json } = await execute<PostCourtEntriesData, typeof INITIAL_VALUES>({
@@ -77,7 +77,7 @@ export function ManageCourtEntry({
 
       if (json.id) {
         onCreate?.(json);
-        closeModal(ModalIds.ManageCourtEntry);
+        modalState.closeModal(ModalIds.ManageCourtEntry);
       }
     }
   }
@@ -85,7 +85,7 @@ export function ManageCourtEntry({
   return (
     <Modal
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageCourtEntry)}
+      isOpen={modalState.isOpen(ModalIds.ManageCourtEntry)}
       title={t("manageCourtEntry")}
       className="w-[750px]"
     >

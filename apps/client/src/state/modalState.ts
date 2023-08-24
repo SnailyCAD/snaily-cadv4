@@ -1,6 +1,6 @@
-import * as React from "react";
 import type { ModalIds } from "types/modal-ids";
-import { create } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 
 type Payloads = Record<string, unknown>;
 
@@ -9,69 +9,49 @@ interface ModalState {
   setCanBeClosed(v: boolean): void;
 
   open: ModalIds[];
-  setOpen(id: ModalIds[]): void;
+  isOpen(id: ModalIds): boolean;
+  openModal<T = unknown>(id: ModalIds, payload?: T): void;
+  closeModal(id: ModalIds): void;
 
   payloads: Payloads;
+  getPayload<T = unknown>(id: ModalIds): T | null;
   setPayloads(payloads: Payloads): void;
 }
 
-interface UseModal extends Pick<ModalState, "canBeClosed" | "setCanBeClosed"> {
-  isOpen(id: ModalIds): boolean;
-  closeModal(id: ModalIds): void;
-  openModal<T = unknown>(id: ModalIds, payload?: T): void;
-  getPayload<T = unknown>(id: ModalIds): T | null;
-}
+export const useModal = createWithEqualityFn<ModalState>()(
+  (set, get) => ({
+    open: [],
+    openModal(id, payload) {
+      const state = get();
 
-export const useModalState = create<ModalState>()((set) => ({
-  open: [],
-  setOpen: (ids) => set({ open: ids }),
+      const isOpen = state.open.includes(id);
+      if (isOpen) return;
 
-  payloads: {},
-  setPayloads: (payloads) => set({ payloads }),
-
-  canBeClosed: true,
-  setCanBeClosed: (v) => set({ canBeClosed: v }),
-}));
-
-export function useModal(): UseModal {
-  const modalState = useModalState();
-  const canBeClosed = React.useMemo(() => modalState.canBeClosed, [modalState.canBeClosed]);
-
-  const isOpen = React.useCallback(
-    (id: ModalIds) => {
-      return modalState.open.includes(id);
+      set({ open: [...state.open, id], payloads: { ...state.payloads, [id]: payload } });
     },
-    [modalState.open],
-  );
-
-  const getPayload = React.useCallback(
-    <T = unknown>(id: ModalIds) => {
-      return (modalState.payloads[id] ?? null) as T | null;
+    isOpen(id: ModalIds) {
+      const state = get();
+      return state.open.includes(id);
     },
-    [modalState.payloads],
-  );
+    closeModal(id) {
+      const state = get();
 
-  const openModal = <T = unknown>(id: ModalIds, payload?: T) => {
-    if (isOpen(id)) return;
+      if (!state.open.includes(id)) return;
+      set({
+        open: state.open.filter((v) => v !== id),
+        payloads: { ...state.payloads, [id]: undefined },
+      });
+    },
 
-    modalState.setPayloads({ ...modalState.payloads, [id]: payload });
-    modalState.setOpen([...modalState.open, id]);
-  };
+    payloads: {},
+    setPayloads: (payloads) => set({ payloads }),
+    getPayload<T>(id: ModalIds) {
+      const state = get();
+      return (state.payloads[id] ?? null) as T | null;
+    },
 
-  const closeModal = (id: ModalIds) => {
-    if (!isOpen(id)) return;
-
-    modalState.setPayloads({ ...modalState.payloads, [id]: undefined });
-    modalState.setOpen(modalState.open.filter((v) => v !== id));
-  };
-
-  return {
-    canBeClosed,
-
-    isOpen,
-    openModal,
-    closeModal,
-    getPayload,
-    setCanBeClosed: modalState.setCanBeClosed,
-  };
-}
+    canBeClosed: true,
+    setCanBeClosed: (v) => set({ canBeClosed: v }),
+  }),
+  shallow,
+);

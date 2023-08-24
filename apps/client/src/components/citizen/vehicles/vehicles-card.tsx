@@ -29,7 +29,7 @@ const TransferVehicleModal = dynamic(
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const [search, setSearch] = React.useState("");
 
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Vehicles");
   const { state, execute } = useFetch();
@@ -66,23 +66,23 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     if (json) {
       asyncTable.remove(tempVehicle.id);
       vehicleState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteVehicle);
+      modalState.closeModal(ModalIds.AlertDeleteVehicle);
     }
   }
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
     vehicleState.setTempId(vehicle.id);
-    openModal(ModalIds.AlertDeleteVehicle);
+    modalState.openModal(ModalIds.AlertDeleteVehicle);
   }
 
   function handleEditClick(vehicle: RegisteredVehicle) {
     vehicleState.setTempId(vehicle.id);
-    openModal(ModalIds.RegisterVehicle);
+    modalState.openModal(ModalIds.RegisterVehicle);
   }
 
   function handleTransferClick(vehicle: RegisteredVehicle) {
     vehicleState.setTempId(vehicle.id);
-    openModal(ModalIds.TransferVehicle);
+    modalState.openModal(ModalIds.TransferVehicle);
   }
 
   return (
@@ -91,7 +91,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourVehicles")}</h1>
 
-          <Button onPress={() => openModal(ModalIds.RegisterVehicle)} size="xs">
+          <Button onPress={() => modalState.openModal(ModalIds.RegisterVehicle)} size="xs">
             {t("addVehicle")}
           </Button>
         </header>
@@ -180,12 +180,12 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
 
       <RegisterVehicleModal
         onCreate={(vehicle) => {
-          closeModal(ModalIds.RegisterVehicle);
+          modalState.closeModal(ModalIds.RegisterVehicle);
           asyncTable.append(vehicle);
         }}
         onUpdate={(previousVehicle, newVehicle) => {
           asyncTable.update(previousVehicle.id, newVehicle);
-          closeModal(ModalIds.RegisterVehicle);
+          modalState.closeModal(ModalIds.RegisterVehicle);
         }}
         vehicle={tempVehicle}
         onClose={() => vehicleState.setTempId(null)}

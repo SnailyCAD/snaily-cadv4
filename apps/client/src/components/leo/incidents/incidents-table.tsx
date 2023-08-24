@@ -54,7 +54,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
   const { hasPermissions } = usePermission();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { state, execute } = useFetch();
@@ -77,7 +77,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
     });
 
     if (json) {
-      closeModal(ModalIds.AlertDeleteIncident);
+      modalState.closeModal(ModalIds.AlertDeleteIncident);
       incidentState.setTempId(null);
 
       asyncTable.remove(tempIncident.id);
@@ -85,12 +85,12 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
   }
 
   function onDeleteClick(incident: T) {
-    openModal(ModalIds.AlertDeleteIncident);
+    modalState.openModal(ModalIds.AlertDeleteIncident);
     incidentState.setTempId(incident.id);
   }
 
   function onEditClick(incident: T) {
-    openModal(ModalIds.ManageIncident);
+    modalState.openModal(ModalIds.ManageIncident);
     incidentState.setTempId(incident.id);
   }
 
@@ -115,7 +115,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
 
     if (typeof json === "boolean" && json) {
       asyncTable.remove(...selectedRows);
-      closeModal(ModalIds.AlertPurgeIncidents);
+      modalState.closeModal(ModalIds.AlertPurgeIncidents);
     }
   }
 
@@ -127,7 +127,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
         <>
           {hasPurgePermissions ? (
             <Button
-              onPress={() => openModal(ModalIds.AlertPurgeIncidents)}
+              onPress={() => modalState.openModal(ModalIds.AlertPurgeIncidents)}
               className="flex items-center gap-2 my-2 min-w-fit"
               disabled={state === "loading" || isEmpty(tableState.rowSelection)}
             >

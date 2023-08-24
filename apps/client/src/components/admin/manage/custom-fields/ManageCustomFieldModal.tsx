@@ -24,13 +24,13 @@ const CATEGORIES = Object.values(CustomFieldCategory).map((v) => ({
 
 export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageCustomField);
+    modalState.closeModal(ModalIds.ManageCustomField);
   }
 
   async function onSubmit(
@@ -46,7 +46,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageCustomField);
+        modalState.closeModal(ModalIds.ManageCustomField);
         onUpdate?.(json);
       }
     } else {
@@ -58,7 +58,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageCustomField);
+        modalState.closeModal(ModalIds.ManageCustomField);
         onCreate?.(json);
       }
     }
@@ -76,7 +76,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
       className="w-[600px]"
       title={field ? t("editCustomField") : t("createCustomField")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageCustomField)}
+      isOpen={modalState.isOpen(ModalIds.ManageCustomField)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (

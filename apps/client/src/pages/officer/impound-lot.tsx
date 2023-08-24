@@ -25,7 +25,7 @@ interface Props {
 export default function ImpoundLot({ vehicles: data }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const [search, setSearch] = React.useState("");
 
   const { hasPermissions } = usePermission();
@@ -48,7 +48,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
 
   function handleCheckoutClick(item: ImpoundedVehicle) {
     vehicleState.setTempId(item.id);
-    openModal(ModalIds.AlertCheckoutImpoundedVehicle);
+    modalState.openModal(ModalIds.AlertCheckoutImpoundedVehicle);
   }
 
   return (

@@ -31,7 +31,7 @@ interface Props {
 
 export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -41,7 +41,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const { department, division } = useValues();
 
   function handleClose() {
-    closeModal(ModalIds.ManageDeputy);
+    modalState.closeModal(ModalIds.ManageDeputy);
     onClose?.();
   }
 
@@ -100,7 +100,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     }
 
     if (deputyId) {
-      closeModal(ModalIds.ManageDeputy);
+      modalState.closeModal(ModalIds.ManageDeputy);
     }
   }
 
@@ -121,7 +121,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     <Modal
       title={deputy ? t("Ems.editDeputy") : t("Ems.createDeputy")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageDeputy)}
+      isOpen={modalState.isOpen(ModalIds.ManageDeputy)}
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>

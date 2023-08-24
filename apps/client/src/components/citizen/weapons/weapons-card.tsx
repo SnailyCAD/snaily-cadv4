@@ -18,7 +18,7 @@ import { SearchArea } from "components/shared/search/search-area";
 export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const [search, setSearch] = React.useState("");
 
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Weapons");
@@ -53,18 +53,18 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
     if (typeof json === "boolean" && json) {
       asyncTable.remove(tempWeapon.id);
       weaponState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteWeapon);
+      modalState.closeModal(ModalIds.AlertDeleteWeapon);
     }
   }
 
   function handleEditClick(weapon: Omit<Weapon, "citizen">) {
     weaponState.setTempId(weapon.id);
-    openModal(ModalIds.RegisterWeapon);
+    modalState.openModal(ModalIds.RegisterWeapon);
   }
 
   function handleDeleteClick(weapon: Omit<Weapon, "citizen">) {
     weaponState.setTempId(weapon.id);
-    openModal(ModalIds.AlertDeleteWeapon);
+    modalState.openModal(ModalIds.AlertDeleteWeapon);
   }
 
   // weapon registration is disabled, don't bother showing this card.
@@ -78,7 +78,7 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourWeapons")}</h1>
 
-          <Button onPress={() => openModal(ModalIds.RegisterWeapon)} size="xs">
+          <Button onPress={() => modalState.openModal(ModalIds.RegisterWeapon)} size="xs">
             {t("addWeapon")}
           </Button>
         </header>
@@ -132,12 +132,12 @@ export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
 
       <RegisterWeaponModal
         onCreate={(weapon) => {
-          closeModal(ModalIds.RegisterWeapon);
+          modalState.closeModal(ModalIds.RegisterWeapon);
           asyncTable.append(weapon);
         }}
         onUpdate={(previousWeapon, newWeapon) => {
           asyncTable.update(previousWeapon.id, newWeapon);
-          closeModal(ModalIds.RegisterWeapon);
+          modalState.closeModal(ModalIds.RegisterWeapon);
         }}
         weapon={tempWeapon}
         onClose={() => weaponState.setTempId(null)}

@@ -19,7 +19,7 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
   const t = useTranslations();
   const features = useFeatureEnabled();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const router = useRouter();
   const { user } = useAuth();
 
@@ -37,7 +37,7 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
       id={button.nameKey[1]}
       disabled={buttonProps.disabled}
       title={buttonProps.disabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))}
-      onPress={() => openModal(button.modalId)}
+      onPress={() => modalState.openModal(button.modalId)}
       type="button"
       {...buttonProps}
       className="text-base"

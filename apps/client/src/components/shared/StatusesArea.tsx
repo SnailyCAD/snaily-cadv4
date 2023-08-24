@@ -45,7 +45,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 }: Props<T>) {
   const isMounted = useMounted();
   const { codes10 } = useValues();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { execute } = useFetch();
   const { user } = useAuth();
   const router = useRouter();
@@ -71,7 +71,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
   function handleOnDuty(onDutyCode: StatusValue | undefined) {
     if (isUnitOffDuty) {
-      return openModal(modalId);
+      return modalState.openModal(modalId);
     }
 
     onDutyCode && handleStatusUpdate(onDutyCode);

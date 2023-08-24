@@ -30,7 +30,7 @@ export function QualificationsTable({
   unit,
 }: Props) {
   const t = useTranslations("Leo");
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const awards =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -53,7 +53,10 @@ export function QualificationsTable({
           <div>
             <Button
               onPress={() =>
-                openModal(ModalIds.ManageUnitQualifications, QualificationValueType.QUALIFICATION)
+                modalState.openModal(
+                  ModalIds.ManageUnitQualifications,
+                  QualificationValueType.QUALIFICATION,
+                )
               }
             >
               {t("addQualification")}
@@ -79,7 +82,10 @@ export function QualificationsTable({
             <Button
               isDisabled={areFormFieldsDisabled}
               onPress={() =>
-                openModal(ModalIds.ManageUnitQualifications, QualificationValueType.AWARD)
+                modalState.openModal(
+                  ModalIds.ManageUnitQualifications,
+                  QualificationValueType.AWARD,
+                )
               }
             >
               {t("addAward")}
@@ -113,12 +119,12 @@ function QualificationAwardsTable({
   const tableState = useTableState();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   function handleDeleteClick(qualification: UnitQualification) {
     qualificationState.setTempId(qualification.id);
-    openModal(ModalIds.AlertDeleteUnitQualification);
+    modalState.openModal(ModalIds.AlertDeleteUnitQualification);
   }
 
   async function handleSuspendOrUnsuspend(
@@ -161,7 +167,7 @@ function QualificationAwardsTable({
         qualifications: p.qualifications.filter((v) => v.id !== tempQualification.id),
       }));
       qualificationState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteUnitQualification);
+      modalState.closeModal(ModalIds.AlertDeleteUnitQualification);
     }
   }
 

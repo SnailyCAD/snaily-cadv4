@@ -94,7 +94,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   const panic = usePanicButton();
 
   const { CALLS_911, ACTIVE_INCIDENTS } = useFeatureEnabled();
-  const { isOpen } = useModal();
+  const modalState = useModal();
 
   React.useEffect(() => {
     set911Calls(props.calls.calls);
@@ -143,7 +143,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
       <Modals.NotepadModal />
       {/* name search have their own vehicle/weapon search modal */}
-      {isOpen(ModalIds.NameSearch) ? null : (
+      {modalState.isOpen(ModalIds.NameSearch) ? null : (
         <>
           <Modals.WeaponSearchModal id={ModalIds.WeaponSearch} />
           <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />

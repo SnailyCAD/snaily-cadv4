@@ -27,7 +27,7 @@ export function CourthousePostsTab() {
 
   const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts]);
@@ -43,18 +43,18 @@ export function CourthousePostsTab() {
     if (typeof json === "boolean") {
       asyncTable.remove(tempPost.id);
       postState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteCourthousePost);
+      modalState.closeModal(ModalIds.AlertDeleteCourthousePost);
     }
   }
 
   function handleManageClick(post: CourthousePost) {
     postState.setTempId(post.id);
-    openModal(ModalIds.ManageCourthousePost);
+    modalState.openModal(ModalIds.ManageCourthousePost);
   }
 
   function handleDeleteClick(post: CourthousePost) {
     postState.setTempId(post.id);
-    openModal(ModalIds.AlertDeleteCourthousePost);
+    modalState.openModal(ModalIds.AlertDeleteCourthousePost);
   }
 
   return (
@@ -63,7 +63,7 @@ export function CourthousePostsTab() {
         <h3 className="text-2xl font-semibold">{t("courthousePosts")}</h3>
 
         {hasManagePermissions ? (
-          <Button onPress={() => openModal(ModalIds.ManageCourthousePost)}>
+          <Button onPress={() => modalState.openModal(ModalIds.ManageCourthousePost)}>
             {t("addCourthousePost")}
           </Button>
         ) : null}

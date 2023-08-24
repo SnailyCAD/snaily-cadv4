@@ -18,7 +18,7 @@ import { ImageWrapper } from "components/shared/image-wrapper";
 export function ResultsTab() {
   const currentResult = useVehicleSearch((state) => state.currentResult);
   const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { BUSINESS, DMV } = useFeatureEnabled();
 
   const common = useTranslations("Common");
@@ -32,18 +32,18 @@ export function ResultsTab() {
   function handleEditVehicleFlags() {
     if (!hasSearchResults(currentResult)) return;
 
-    openModal(ModalIds.ManageVehicleFlags);
+    modalState.openModal(ModalIds.ManageVehicleFlags);
   }
 
   function handleNameClick() {
     if (!hasSearchResults(currentResult)) return;
     if (!currentResult.citizen) return;
 
-    openModal(ModalIds.NameSearch, {
+    modalState.openModal(ModalIds.NameSearch, {
       ...currentResult.citizen,
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
-    closeModal(ModalIds.VehicleSearchWithinName);
+    modalState.closeModal(ModalIds.VehicleSearchWithinName);
   }
 
   if (!hasSearchResults(currentResult)) {

@@ -21,7 +21,7 @@ interface Props {
 
 export function TonesModal({ types }: Props) {
   const { state, execute } = useFetch();
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
 
   const { activeTones } = useGetActiveTone();
   const t = useTranslations("Leo");
@@ -88,8 +88,8 @@ export function TonesModal({ types }: Props) {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.Tones)}
-      onClose={() => closeModal(ModalIds.Tones)}
+      isOpen={modalState.isOpen(ModalIds.Tones)}
+      onClose={() => modalState.closeModal(ModalIds.Tones)}
       title={t("tones")}
       className="w-[600px]"
     >
@@ -177,7 +177,7 @@ export function TonesModal({ types }: Props) {
             <footer className="flex justify-end gap-2">
               <Button
                 variant="cancel"
-                onPress={() => closeModal(ModalIds.Tones)}
+                onPress={() => modalState.closeModal(ModalIds.Tones)}
                 className="flex items-center"
                 type="reset"
               >

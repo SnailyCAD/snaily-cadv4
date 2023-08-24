@@ -45,7 +45,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   const [search, setSearch] = React.useState("");
 
   const { state, execute } = useFetch();
-  const { closeModal, openModal } = useModal();
+  const modalState = useModal();
   const bolosState = useBolos();
   const isMounted = useMounted();
   const bolos = isMounted ? bolosState.bolos : initialBolos.bolos;
@@ -99,18 +99,22 @@ export function ActiveBolos({ initialBolos }: Props) {
       bolosState.setBolos(bolos.filter((v) => v.id !== tempBolo.id));
 
       boloState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteBolo);
+      modalState.closeModal(ModalIds.AlertDeleteBolo);
     }
   }
 
   function handleEditClick(bolo: Bolo) {
     boloState.setTempId(bolo.id);
-    openModal(ModalIds.ManageBolo);
+    modalState.openModal(ModalIds.ManageBolo);
   }
 
   function handleDeleteClick(bolo: Bolo) {
     boloState.setTempId(bolo.id);
-    openModal(ModalIds.AlertDeleteBolo);
+    modalState.openModal(ModalIds.AlertDeleteBolo);
+  }
+
+  function handleCreateBolo() {
+    modalState.openModal(ModalIds.ManageBolo);
   }
 
   return (
@@ -118,11 +122,19 @@ export function ActiveBolos({ initialBolos }: Props) {
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h3 className="text-xl font-semibold">{t("Bolos.activeBolos")}</h3>
 
-        <div>
+        <div className="flex gap-1">
+          <Button
+            variant={null}
+            className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
+            onPress={handleCreateBolo}
+            disabled={!hasActiveDispatchers}
+          >
+            {t("Bolos.createBolo")}
+          </Button>
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              "px-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters(!showFilters)}
@@ -132,6 +144,7 @@ export function ActiveBolos({ initialBolos }: Props) {
             <Filter
               className={classNames("group-hover:fill-white", showFilters && "text-white")}
               aria-label={t("Bolos.filters")}
+              size={18}
             />
           </Button>
         </div>

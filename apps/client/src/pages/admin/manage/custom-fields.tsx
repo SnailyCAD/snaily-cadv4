@@ -27,7 +27,7 @@ interface Props {
 export default function ManageCustomFields({ customFields: data }: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const hasManagePermissions = hasPermissions([Permissions.ManageCustomFields]);
@@ -62,18 +62,18 @@ export default function ManageCustomFields({ customFields: data }: Props) {
     if (typeof json === "boolean" && json) {
       asyncTable.remove(tempField.id);
       tempFieldState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteCustomField);
+      modalState.closeModal(ModalIds.AlertDeleteCustomField);
     }
   }
 
   function handleEditClick(field: CustomField) {
     tempFieldState.setTempId(field.id);
-    openModal(ModalIds.ManageCustomField);
+    modalState.openModal(ModalIds.ManageCustomField);
   }
 
   function handleDeleteClick(field: CustomField) {
     tempFieldState.setTempId(field.id);
-    openModal(ModalIds.AlertDeleteCustomField);
+    modalState.openModal(ModalIds.AlertDeleteCustomField);
   }
 
   return (
@@ -93,7 +93,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
 
         {hasManagePermissions ? (
           <div>
-            <Button onPress={() => openModal(ModalIds.ManageCustomField)}>
+            <Button onPress={() => modalState.openModal(ModalIds.ManageCustomField)}>
               {t("createCustomField")}
             </Button>
           </div>

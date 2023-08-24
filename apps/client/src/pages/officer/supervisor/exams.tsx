@@ -28,7 +28,7 @@ interface Props {
 export default function CitizenLogs({ data }: Props) {
   const [search, setSearch] = React.useState("");
   const { hasPermissions } = usePermission();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -63,7 +63,7 @@ export default function CitizenLogs({ data }: Props) {
     });
 
     if (typeof json === "boolean") {
-      closeModal(ModalIds.AlertDeleteExam);
+      modalState.closeModal(ModalIds.AlertDeleteExam);
 
       asyncTable.remove(tempExam.id);
       examState.setTempId(null);
@@ -72,12 +72,12 @@ export default function CitizenLogs({ data }: Props) {
 
   function handleDeleteClick(exam: LicenseExam) {
     examState.setTempId(exam.id);
-    openModal(ModalIds.AlertDeleteExam);
+    modalState.openModal(ModalIds.AlertDeleteExam);
   }
 
   function handleEditClick(exam: LicenseExam) {
     examState.setTempId(exam.id);
-    openModal(ModalIds.ManageExam);
+    modalState.openModal(ModalIds.ManageExam);
   }
 
   return (
@@ -92,7 +92,7 @@ export default function CitizenLogs({ data }: Props) {
 
         {hasManagePermissions ? (
           <div>
-            <Button onPress={() => openModal(ModalIds.ManageExam)}>
+            <Button onPress={() => modalState.openModal(ModalIds.ManageExam)}>
               {t("licenseExams.createExam")}
             </Button>
           </div>

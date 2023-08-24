@@ -19,7 +19,7 @@ export function RequestExpungement({
   onSuccess(json: PostExpungementRequestByCitizenIdData): void;
 }) {
   const { state, execute } = useFetch();
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
 
   const [result, setResult] = React.useState<false | null | GetExpungementRequestByCitizenIdData>(
     null,
@@ -30,7 +30,7 @@ export function RequestExpungement({
 
   function handleClose() {
     setResult(null);
-    closeModal(ModalIds.RequestExpungement);
+    modalState.closeModal(ModalIds.RequestExpungement);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -54,7 +54,7 @@ export function RequestExpungement({
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.RequestExpungement)}
+      isOpen={modalState.isOpen(ModalIds.RequestExpungement)}
       onClose={handleClose}
       title={t("requestExpungement")}
       className="w-[600px]"

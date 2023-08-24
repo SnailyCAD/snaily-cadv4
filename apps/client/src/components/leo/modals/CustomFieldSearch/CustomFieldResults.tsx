@@ -44,7 +44,7 @@ export function CustomFieldResults({ results }: Props) {
 }
 
 function CitizenResults({ results }: any) {
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const setCurrentResult = useNameSearch((state) => state.setCurrentResult);
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -53,8 +53,8 @@ function CitizenResults({ results }: any) {
   const citizens = results as NameSearchResult[];
 
   function handleOpen(citizen: any) {
-    closeModal(ModalIds.CustomFieldSearch);
-    openModal(ModalIds.NameSearch, {
+    modalState.closeModal(ModalIds.CustomFieldSearch);
+    modalState.openModal(ModalIds.NameSearch, {
       ...citizen,
       name: `${citizen.name} ${citizen.surname}`,
     });
@@ -82,7 +82,7 @@ function CitizenResults({ results }: any) {
 }
 
 function WeaponResults({ results }: any) {
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const setCurrentResult = useWeaponSearch((state) => state.setCurrentResult);
   const t = useTranslations();
   const tableState = useTableState();
@@ -90,8 +90,8 @@ function WeaponResults({ results }: any) {
   const citizens = results as NonNullable<WeaponSearchResult>[];
 
   function handleOpen(weapon: any) {
-    closeModal(ModalIds.CustomFieldSearch);
-    openModal(ModalIds.WeaponSearch);
+    modalState.closeModal(ModalIds.CustomFieldSearch);
+    modalState.openModal(ModalIds.WeaponSearch);
     setCurrentResult(weapon);
   }
 
@@ -118,7 +118,7 @@ function WeaponResults({ results }: any) {
 }
 
 function VehicleResults({ results }: any) {
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const setCurrentResult = useVehicleSearch((state) => state.setCurrentResult);
   const t = useTranslations();
   const tableState = useTableState();
@@ -126,8 +126,8 @@ function VehicleResults({ results }: any) {
   const citizens = results as VehicleSearchResult[];
 
   function handleOpen(vehicle: any) {
-    closeModal(ModalIds.CustomFieldSearch);
-    openModal(ModalIds.VehicleSearch);
+    modalState.closeModal(ModalIds.CustomFieldSearch);
+    modalState.openModal(ModalIds.VehicleSearch);
     setCurrentResult(vehicle);
   }
 

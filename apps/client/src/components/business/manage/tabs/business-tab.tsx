@@ -15,7 +15,7 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 
 export function ManageBusinessTab() {
   const { state, execute } = useFetch();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
   const router = useRouter();
@@ -105,7 +105,7 @@ export function ManageBusinessTab() {
 
             <footer className="flex justify-between mt-5">
               <Button
-                onPress={() => openModal(ModalIds.AlertDeleteBusiness)}
+                onPress={() => modalState.openModal(ModalIds.AlertDeleteBusiness)}
                 type="reset"
                 variant="danger"
               >

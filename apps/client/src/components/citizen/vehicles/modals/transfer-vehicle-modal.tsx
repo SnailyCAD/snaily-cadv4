@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Vehicles");
   const { state, execute } = useFetch();
@@ -31,7 +31,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
 
     if (json.id) {
       onTransfer?.({ ...vehicle, ...json });
-      closeModal(ModalIds.TransferVehicle);
+      modalState.closeModal(ModalIds.TransferVehicle);
     }
   }
 
@@ -44,8 +44,8 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
   return (
     <Modal
       title={t("transferVehicle")}
-      onClose={() => closeModal(ModalIds.TransferVehicle)}
-      isOpen={isOpen(ModalIds.TransferVehicle)}
+      onClose={() => modalState.closeModal(ModalIds.TransferVehicle)}
+      isOpen={modalState.isOpen(ModalIds.TransferVehicle)}
       className="w-[750px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -74,7 +74,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             <footer className="mt-5 flex justify-end">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.TransferVehicle)}
+                onPress={() => modalState.closeModal(ModalIds.TransferVehicle)}
                 variant="cancel"
               >
                 {common("cancel")}

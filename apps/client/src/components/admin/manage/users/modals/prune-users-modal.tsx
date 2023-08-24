@@ -27,7 +27,7 @@ export function PruneUsersModal() {
   const { state, execute } = useFetch();
   const t = useTranslations("Management");
 
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const asyncTable = useAsyncTable({
     totalCount: initialData.totalCount,
     initialData: initialData.data,
@@ -58,16 +58,16 @@ export function PruneUsersModal() {
         title: t("usersPruned"),
         message: t("usersPrunedMessage", { count: json.count }),
       });
-      closeModal(ModalIds.PruneUsers);
+      modalState.closeModal(ModalIds.PruneUsers);
     }
   }
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.PruneUsers)}
+      onClose={() => modalState.closeModal(ModalIds.PruneUsers)}
       className="w-[600px]"
       title={t("pruneUsers")}
-      isOpen={isOpen(ModalIds.PruneUsers)}
+      isOpen={modalState.isOpen(ModalIds.PruneUsers)}
     >
       <SelectField
         isDisabled={asyncTable.isLoading}

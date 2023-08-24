@@ -25,7 +25,7 @@ export function CourtEntriesTab() {
 
   const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const tableState = useTableState();
 
@@ -40,18 +40,18 @@ export function CourtEntriesTab() {
     if (typeof json === "boolean") {
       asyncTable.remove(tempEntry.id);
       entryState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteCourtEntry);
+      modalState.closeModal(ModalIds.AlertDeleteCourtEntry);
     }
   }
 
   function handleManageClick(entry: CourtEntry) {
     entryState.setTempId(entry.id);
-    openModal(ModalIds.ManageCourtEntry);
+    modalState.openModal(ModalIds.ManageCourtEntry);
   }
 
   function handleDeleteClick(entry: CourtEntry) {
     entryState.setTempId(entry.id);
-    openModal(ModalIds.AlertDeleteCourtEntry);
+    modalState.openModal(ModalIds.AlertDeleteCourtEntry);
   }
 
   return (
@@ -59,7 +59,9 @@ export function CourtEntriesTab() {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("courtEntries")}</h3>
 
-        <Button onPress={() => openModal(ModalIds.ManageCourtEntry)}>{t("addCourtEntry")}</Button>
+        <Button onPress={() => modalState.openModal(ModalIds.ManageCourtEntry)}>
+          {t("addCourtEntry")}
+        </Button>
       </header>
 
       {asyncTable.noItemsAvailable ? (

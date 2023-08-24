@@ -18,11 +18,11 @@ interface Props {
 }
 
 export default function Tow(props: Props) {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Calls");
 
   function onCreateClick() {
-    openModal(ModalIds.ManageTowCall);
+    modalState.openModal(ModalIds.ManageTowCall);
   }
 
   return (

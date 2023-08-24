@@ -12,7 +12,7 @@ import { remarkGitHubReferences } from "lib/editor/remarkGitHubReferences";
 import useFetch from "lib/useFetch";
 
 export function ChangelogModal() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { cad } = useAuth();
   const [body, setBody] = React.useState<string | null>(null);
   const { state, execute } = useFetch();
@@ -37,8 +37,8 @@ export function ChangelogModal() {
     <Modal
       className="w-[800px]"
       title={`What's New in ${cad?.version?.currentVersion}`}
-      isOpen={isOpen(ModalIds.Changelog)}
-      onClose={() => closeModal(ModalIds.Changelog)}
+      isOpen={modalState.isOpen(ModalIds.Changelog)}
+      onClose={() => modalState.closeModal(ModalIds.Changelog)}
     >
       {!body || state === "loading" ? (
         <div className="mt-5 grid place-content-center h-40">

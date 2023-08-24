@@ -89,7 +89,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
   const set911Calls = useCall911State((state) => state.setCalls);
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
-  const { isOpen } = useModal();
+  const modalState = useModal();
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
@@ -136,7 +136,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
           <NotepadModal />
 
           <SearchMedicalRecordModal />
-          {isOpen(ModalIds.SearchMedicalRecord) ? null : (
+          {modalState.isOpen(ModalIds.SearchMedicalRecord) ? null : (
             <>
               <CreateMedicalRecordModal />
               <CreateDoctorVisitModal />

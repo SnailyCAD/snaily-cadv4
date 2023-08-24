@@ -17,7 +17,7 @@ interface Props {
 export function ManageRolesModal({ roles, user, onUpdate }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -30,7 +30,7 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
     });
 
     if (json.id) {
-      closeModal(ModalIds.ManageRoles);
+      modalState.closeModal(ModalIds.ManageRoles);
       onUpdate?.(json);
     }
   }
@@ -43,8 +43,8 @@ export function ManageRolesModal({ roles, user, onUpdate }: Props) {
     <Modal
       className="w-[750px]"
       title={t("manageRoles")}
-      onClose={() => closeModal(ModalIds.ManageRoles)}
-      isOpen={isOpen(ModalIds.ManageRoles)}
+      onClose={() => modalState.closeModal(ModalIds.ManageRoles)}
+      isOpen={modalState.isOpen(ModalIds.ManageRoles)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values }) => {

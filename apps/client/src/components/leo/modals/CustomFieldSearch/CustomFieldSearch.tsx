@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 export type CustomFieldResults = PostSearchCustomFieldData<true>;
 
 export function CustomFieldSearch() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
@@ -55,8 +55,8 @@ export function CustomFieldSearch() {
   return (
     <Modal
       title={t("customFieldSearch")}
-      onClose={() => closeModal(ModalIds.CustomFieldSearch)}
-      isOpen={isOpen(ModalIds.CustomFieldSearch)}
+      onClose={() => modalState.closeModal(ModalIds.CustomFieldSearch)}
+      isOpen={modalState.isOpen(ModalIds.CustomFieldSearch)}
       className="w-[850px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -91,7 +91,7 @@ export function CustomFieldSearch() {
             <footer className="mt-4 pt-3 flex justify-end">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.CustomFieldSearch)}
+                onPress={() => modalState.closeModal(ModalIds.CustomFieldSearch)}
                 variant="cancel"
               >
                 {common("cancel")}

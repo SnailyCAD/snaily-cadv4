@@ -12,7 +12,7 @@ import type { PutCitizenLicensesByIdData } from "@snailycad/types/api";
 const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"] as const;
 
 export function LicensesCard() {
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { citizen, setCurrentCitizen } = useCitizen(false);
   const { ALLOW_CITIZEN_UPDATE_LICENSE, LICENSE_EXAMS, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const t = useTranslations("Citizen");
@@ -34,7 +34,7 @@ export function LicensesCard() {
 
     if (json?.id) {
       setCurrentCitizen({ ...citizen, ...json });
-      closeModal(ModalIds.ManageLicenses);
+      modalState.closeModal(ModalIds.ManageLicenses);
     }
   }
 
@@ -44,7 +44,7 @@ export function LicensesCard() {
         <h1 className="text-2xl font-semibold">{t("licenses")}</h1>
 
         {showManageLicensesButtonModal ? (
-          <Button onPress={() => openModal(ModalIds.ManageLicenses)} size="xs">
+          <Button onPress={() => modalState.openModal(ModalIds.ManageLicenses)} size="xs">
             {t("manageLicenses")}
           </Button>
         ) : null}

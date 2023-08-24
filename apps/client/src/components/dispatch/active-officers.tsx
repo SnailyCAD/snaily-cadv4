@@ -61,7 +61,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   });
 
   const { activeOfficers: _activeOfficers, setActiveOfficers } = useActiveOfficers();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasPermissions } = usePermission();
@@ -94,7 +94,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     officerState.setTempId(officer.id);
-    openModal(ModalIds.ManageUnit);
+    modalState.openModal(ModalIds.ManageUnit);
   }
 
   return (
@@ -109,7 +109,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               className={classNames(
                 "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               )}
-              onPress={() => openModal(ModalIds.CreateTemporaryUnit, "officer")}
+              onPress={() => modalState.openModal(ModalIds.CreateTemporaryUnit, "officer")}
             >
               {t("createTemporaryUnit")}
             </Button>
@@ -118,7 +118,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              "px-2 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showLeoFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("leo", !showLeoFilters)}
@@ -128,6 +128,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
             <Filter
               className={classNames("group-hover:fill-white", showLeoFilters && "text-white")}
               aria-label={common("filters")}
+              size={18}
             />
           </Button>
         </div>

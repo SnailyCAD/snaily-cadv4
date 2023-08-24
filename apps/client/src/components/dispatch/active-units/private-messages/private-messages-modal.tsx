@@ -19,9 +19,9 @@ import { useListener } from "@casperiv/use-socket.io";
 const fakeMessages = new Array(10).fill(0);
 
 export function PrivateMessagesModal() {
-  const { isOpen, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Leo");
-  const unit = getPayload<ActiveOfficer | ActiveDeputy>(ModalIds.PrivateMessage);
+  const unit = modalState.getPayload<ActiveOfficer | ActiveDeputy>(ModalIds.PrivateMessage);
   const [messages, setMessages] = React.useState<DispatchChat[]>([]);
   const endListItemRef = React.useRef<HTMLLIElement | null>(null);
   const { generateCallsign } = useGenerateCallsign();
@@ -47,7 +47,7 @@ export function PrivateMessagesModal() {
   });
 
   function handleClose() {
-    closeModal(ModalIds.PrivateMessage);
+    modalState.closeModal(ModalIds.PrivateMessage);
   }
 
   function handleSend(message: DispatchChat) {
@@ -88,7 +88,7 @@ export function PrivateMessagesModal() {
   return (
     <Modal
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.PrivateMessage)}
+      isOpen={modalState.isOpen(ModalIds.PrivateMessage)}
       title={t("privateMessage")}
       className="w-[600px]"
     >

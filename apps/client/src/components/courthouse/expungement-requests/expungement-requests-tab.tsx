@@ -32,12 +32,12 @@ export function ExpungementRequestsTab(props: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
   const leo = useTranslations("Leo");
-  const { closeModal, openModal } = useModal();
+  const modalState = useModal();
   const tableState = useTableState();
   const { execute, state } = useFetch();
 
   function handleCancelClick(request: GetExpungementRequestsData[number]) {
-    openModal(ModalIds.AlertCancelExpungementRequest);
+    modalState.openModal(ModalIds.AlertCancelExpungementRequest);
     requestState.setTempId(request.id);
   }
 
@@ -50,7 +50,7 @@ export function ExpungementRequestsTab(props: Props) {
     });
 
     if (json) {
-      closeModal(ModalIds.AlertCancelExpungementRequest);
+      modalState.closeModal(ModalIds.AlertCancelExpungementRequest);
       list.update(tempRequest.id, { ...tempRequest, status: ExpungementRequestStatus.CANCELED });
     }
   }
@@ -60,7 +60,7 @@ export function ExpungementRequestsTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("expungementRequests")}</h3>
 
-        <Button onPress={() => openModal(ModalIds.RequestExpungement)}>
+        <Button onPress={() => modalState.openModal(ModalIds.RequestExpungement)}>
           {t("requestExpungement")}
         </Button>
       </header>

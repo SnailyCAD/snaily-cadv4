@@ -31,7 +31,7 @@ interface BleeterProfilePageProps {
 }
 
 export default function BleeterProfilePage(props: BleeterProfilePageProps) {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { user } = useAuth();
   const { execute, state } = useFetch();
   const followersData = useFollowers({ profileHandle: props.data.handle });
@@ -93,14 +93,14 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
             {user?.id === props.data.userId ? (
               <>
                 <Button
-                  onPress={() => openModal(ModalIds.ManageBleeterProfile)}
+                  onPress={() => modalState.openModal(ModalIds.ManageBleeterProfile)}
                   className="text-sm"
                   size="xs"
                 >
                   {t("editProfile")}
                 </Button>
                 <Button
-                  onPress={() => openModal(ModalIds.ManageBleetModal)}
+                  onPress={() => modalState.openModal(ModalIds.ManageBleetModal)}
                   className="inline-flex gap-2 items-center text-sm"
                   size="xs"
                 >
@@ -144,7 +144,7 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
           </li>
           <li
             role="button"
-            onClick={() => followersCount && openModal(ModalIds.Followers)}
+            onClick={() => followersCount && modalState.openModal(ModalIds.Followers)}
             className={classNames("text-center", followersCount && "cursor-pointer")}
           >
             <h3 className="text-lg font-semibold text-neutral-800 dark:text-gray-300">
@@ -154,7 +154,7 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
           </li>
           <li
             role="button"
-            onClick={() => followingCount && openModal(ModalIds.Following)}
+            onClick={() => followingCount && modalState.openModal(ModalIds.Following)}
             className={classNames("text-center", followingCount && "cursor-pointer")}
           >
             <h3 className="text-lg font-semibold text-neutral-800 dark:text-gray-300">

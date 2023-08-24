@@ -27,7 +27,7 @@ interface CallItemProps {
 export function UnitItem({ setTempUnit, player }: CallItemProps) {
   const { generateCallsign } = useGenerateCallsign();
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Leo");
   const { RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
 
@@ -39,7 +39,7 @@ export function UnitItem({ setTempUnit, player }: CallItemProps) {
 
   function handleStatusClick() {
     setTempUnit(player.unit);
-    openModal(ModalIds.ManageUnit);
+    modalState.openModal(ModalIds.ManageUnit);
   }
 
   function handleShowOnMap() {

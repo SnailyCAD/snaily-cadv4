@@ -13,7 +13,7 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function VehiclesTab() {
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const bus = useTranslations("Business");
   const t = useTranslations();
@@ -29,12 +29,12 @@ export function VehiclesTab() {
 
   function handleManageClick(vehicle: RegisteredVehicle) {
     vehicleState.setTempId(vehicle.id);
-    openModal(ModalIds.RegisterVehicle);
+    modalState.openModal(ModalIds.RegisterVehicle);
   }
 
   function handleDeleteClick(vehicle: RegisteredVehicle) {
     vehicleState.setTempId(vehicle.id);
-    openModal(ModalIds.AlertDeleteVehicle);
+    modalState.openModal(ModalIds.AlertDeleteVehicle);
   }
 
   async function handleDelete() {
@@ -52,7 +52,7 @@ export function VehiclesTab() {
       };
       setCurrentBusiness(updated);
       vehicleState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteVehicle);
+      modalState.closeModal(ModalIds.AlertDeleteVehicle);
     }
   }
 
@@ -66,7 +66,7 @@ export function VehiclesTab() {
         <h3 className="text-2xl font-semibold">{bus("businessVehicles")}</h3>
 
         <div>
-          <Button onPress={() => openModal(ModalIds.RegisterVehicle)}>
+          <Button onPress={() => modalState.openModal(ModalIds.RegisterVehicle)}>
             {t("Citizen.registerVehicle")}
           </Button>
         </div>
@@ -132,14 +132,14 @@ export function VehiclesTab() {
       <RegisterVehicleModal
         onClose={() => vehicleState.setTempId(null)}
         onCreate={(vehicle) => {
-          closeModal(ModalIds.RegisterVehicle);
+          modalState.closeModal(ModalIds.RegisterVehicle);
           setCurrentBusiness({
             ...currentBusiness,
             vehicles: [vehicle, ...currentBusiness.vehicles],
           });
         }}
         onUpdate={(oldVehicle, newVehicle) => {
-          closeModal(ModalIds.RegisterVehicle);
+          modalState.closeModal(ModalIds.RegisterVehicle);
           setCurrentBusiness({
             ...currentBusiness,
             vehicles: currentBusiness.vehicles.map((v) => {

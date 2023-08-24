@@ -46,14 +46,14 @@ export function CallsignsTab({ units }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const tableState = useTableState(asyncTable);
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers]);
   const { department } = useValues();
 
   function handleManageClick(unit: Unit) {
     unitState.setTempId(unit.id);
-    openModal(ModalIds.ManageUnitCallsign);
+    modalState.openModal(ModalIds.ManageUnitCallsign);
   }
 
   const LABELS = {

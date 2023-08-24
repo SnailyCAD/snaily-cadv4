@@ -19,11 +19,11 @@ type Props = Pick<ModalProps, "title" | "className"> & {
 
 export function AlertModal(props: Props) {
   const common = useTranslations("Common");
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
 
   function handleClose() {
     props.onClose?.();
-    closeModal(props.id);
+    modalState.closeModal(props.id);
   }
 
   return (
@@ -31,7 +31,7 @@ export function AlertModal(props: Props) {
       className={classNames("w-[550px]", props.className)}
       title={props.title}
       onClose={handleClose}
-      isOpen={props.forceOpen ?? isOpen(props.id)}
+      isOpen={props.forceOpen ?? modalState.isOpen(props.id)}
       isAlert
     >
       <div className="my-3 dark:text-gray-300">{props.description}</div>

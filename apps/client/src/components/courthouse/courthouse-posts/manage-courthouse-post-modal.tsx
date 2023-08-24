@@ -20,7 +20,7 @@ interface Props {
 }
 
 export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Props) {
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const t = useTranslations("Courthouse");
@@ -33,7 +33,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageCourthousePost);
+    modalState.closeModal(ModalIds.ManageCourthousePost);
   }
 
   async function onSubmit(
@@ -50,7 +50,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
 
       if (json.id) {
         onUpdate?.(json);
-        closeModal(ModalIds.ManageCourthousePost);
+        modalState.closeModal(ModalIds.ManageCourthousePost);
       }
     } else {
       const { json } = await execute<PostCourthousePostsData, typeof INITIAL_VALUES>({
@@ -62,7 +62,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
 
       if (json.id) {
         onCreate?.(json);
-        closeModal(ModalIds.ManageCourthousePost);
+        modalState.closeModal(ModalIds.ManageCourthousePost);
       }
     }
   }
@@ -70,7 +70,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
   return (
     <Modal
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageCourthousePost)}
+      isOpen={modalState.isOpen(ModalIds.ManageCourthousePost)}
       title={post ? t("manageCourthousePost") : t("addCourthousePost")}
       className="w-[750px]"
     >

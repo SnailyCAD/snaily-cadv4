@@ -33,7 +33,7 @@ interface Props {
 export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
 
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -42,7 +42,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
   const { state, execute } = useFetch();
 
   function handleClose() {
-    closeModal(ModalIds.ManageOfficer);
+    modalState.closeModal(ModalIds.ManageOfficer);
     onClose?.();
   }
 
@@ -106,7 +106,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     }
 
     if (officerId) {
-      closeModal(ModalIds.ManageOfficer);
+      modalState.closeModal(ModalIds.ManageOfficer);
     }
   }
 
@@ -117,7 +117,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     <Modal
       title={officer ? t("editOfficer") : t("createOfficer")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageOfficer)}
+      isOpen={modalState.isOpen(ModalIds.ManageOfficer)}
       className={officer ? "w-[1000px]" : "w-[650px]"}
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>

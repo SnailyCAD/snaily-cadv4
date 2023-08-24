@@ -13,7 +13,7 @@ import { Permissions } from "@snailycad/permissions";
 
 export default function ImportCitizensPage() {
   const t = useTranslations("Management");
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   return (
     <AdminLayout
@@ -26,7 +26,9 @@ export default function ImportCitizensPage() {
           <Title className="!mb-0">{t("IMPORT_CITIZENS")}</Title>
 
           <div className="min-w-fit w-fit">
-            <Button onPress={() => openModal(ModalIds.ImportCitizens)}>{t("importViaFile")}</Button>
+            <Button onPress={() => modalState.openModal(ModalIds.ImportCitizens)}>
+              {t("importViaFile")}
+            </Button>
           </div>
         </div>
 

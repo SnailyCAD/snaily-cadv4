@@ -14,7 +14,7 @@ export function PetMedicalRecordsCard() {
   const { currentPet, setCurrentPet } = usePetsState();
   const t = useTranslations("MedicalRecords");
   const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const tableState = useTableState();
   const { state, execute } = useFetch();
 
@@ -23,12 +23,12 @@ export function PetMedicalRecordsCard() {
 
   function handleEditClick(medicalRecord: PetMedicalRecord) {
     recordState.setTempId(medicalRecord.id);
-    openModal(ModalIds.ManagePetMedicalRecord);
+    modalState.openModal(ModalIds.ManagePetMedicalRecord);
   }
 
   function handleDeleteClick(medicalRecord: PetMedicalRecord) {
     recordState.setTempId(medicalRecord.id);
-    openModal(ModalIds.AlertDeleteMedicalRecord);
+    modalState.openModal(ModalIds.AlertDeleteMedicalRecord);
   }
 
   async function handleDelete() {
@@ -44,7 +44,7 @@ export function PetMedicalRecordsCard() {
         ...currentPet,
         medicalRecords: medicalRecords.filter((v) => v.id !== recordState.tempId),
       });
-      closeModal(ModalIds.AlertDeleteMedicalRecord);
+      modalState.closeModal(ModalIds.AlertDeleteMedicalRecord);
     }
   }
 
@@ -57,7 +57,7 @@ export function PetMedicalRecordsCard() {
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{t("petMedicalRecords")}</h1>
 
-        <Button onPress={() => openModal(ModalIds.ManagePetMedicalRecord)} size="xs">
+        <Button onPress={() => modalState.openModal(ModalIds.ManagePetMedicalRecord)} size="xs">
           {t("addMedicalRecord")}
         </Button>
       </header>
@@ -108,7 +108,7 @@ export function PetMedicalRecordsCard() {
             medicalRecords: [...medicalRecords, record],
           });
 
-          closeModal(ModalIds.ManagePetMedicalRecord);
+          modalState.closeModal(ModalIds.ManagePetMedicalRecord);
         }}
         onUpdate={(record) => {
           if (!currentPet) return;
@@ -120,7 +120,7 @@ export function PetMedicalRecordsCard() {
             ),
           });
 
-          closeModal(ModalIds.ManagePetMedicalRecord);
+          modalState.closeModal(ModalIds.ManagePetMedicalRecord);
         }}
         medicalRecord={tempRecord}
         onClose={() => recordState.setTempId(null)}

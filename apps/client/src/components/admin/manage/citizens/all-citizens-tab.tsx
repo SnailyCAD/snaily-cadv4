@@ -55,7 +55,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers]);
 
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
 
   const tCitizen = useTranslations("Citizen");
   const t = useTranslations("Management");
@@ -63,7 +63,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
   function handleDeleteClick(value: CitizenWithUser) {
     valueState.setTempId(value.id);
-    openModal(ModalIds.AlertDeleteCitizen);
+    modalState.openModal(ModalIds.AlertDeleteCitizen);
   }
 
   async function handleDelete() {
@@ -77,7 +77,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
     if (json) {
       setCitizens((p) => p.filter((v) => v.id !== tempValue.id));
       valueState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteCitizen);
+      modalState.closeModal(ModalIds.AlertDeleteCitizen);
     }
   }
 

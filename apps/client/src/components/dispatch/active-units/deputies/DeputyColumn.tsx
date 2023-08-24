@@ -49,7 +49,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
   const { setStatus } = useUnitStatusChange({ setUnits: setActiveDeputies, units: activeDeputies });
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
 
   const t = useTranslations("Leo");
@@ -83,7 +83,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
 
   function handleMerge(deputy: ActiveDeputy) {
     setTempUnit(deputy.id);
-    openModal(ModalIds.MergeUnit);
+    modalState.openModal(ModalIds.MergeUnit);
   }
 
   async function handleunMerge(id: string) {
@@ -110,7 +110,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
     },
     {
       name: t("privateMessage"),
-      onClick: () => openModal(ModalIds.PrivateMessage, deputy),
+      onClick: () => modalState.openModal(ModalIds.PrivateMessage, deputy),
     },
     ...dispatchCodes,
   ];

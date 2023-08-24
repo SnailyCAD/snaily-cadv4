@@ -5,7 +5,7 @@ import { ModalIds } from "types/modal-ids";
 import { LoginForm } from "./LoginForm";
 
 export function ReauthorizeSessionModal() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
 
   function handleSubmit() {
     toastMessage({
@@ -14,15 +14,15 @@ export function ReauthorizeSessionModal() {
       message: "You have been reauthorized. You can now continue to use SnailyCAD.",
     });
 
-    closeModal(ModalIds.ReauthorizeSession);
+    modalState.closeModal(ModalIds.ReauthorizeSession);
   }
 
   return (
     <Modal
       className="w-[448px]"
       title="Reauthorize Session"
-      onClose={() => closeModal(ModalIds.ReauthorizeSession)}
-      isOpen={isOpen(ModalIds.ReauthorizeSession)}
+      onClose={() => modalState.closeModal(ModalIds.ReauthorizeSession)}
+      isOpen={modalState.isOpen(ModalIds.ReauthorizeSession)}
     >
       <LoginForm isWithinModal onFormSubmitted={handleSubmit} />
     </Modal>

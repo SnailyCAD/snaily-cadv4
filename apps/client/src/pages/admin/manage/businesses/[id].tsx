@@ -40,7 +40,7 @@ interface Props {
 
 export default function ManageBusinesses({ business, businessId }: Props) {
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([
     Permissions.ManageBusinesses,
@@ -81,7 +81,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
     if (json) {
       asyncTable.remove(tempEmployee.id);
       employeeState.setTempId(null);
-      closeModal(ModalIds.AlertFireEmployee);
+      modalState.closeModal(ModalIds.AlertFireEmployee);
     }
   }
 
@@ -135,7 +135,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
               <Button
                 onPress={() => {
                   employeeState.setTempId(employee.id);
-                  openModal(ModalIds.ManageEmployee);
+                  modalState.openModal(ModalIds.ManageEmployee);
                 }}
                 size="xs"
                 variant="success"
@@ -146,7 +146,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
               <Button
                 onPress={() => {
                   employeeState.setTempId(employee.id);
-                  openModal(ModalIds.AlertFireEmployee);
+                  modalState.openModal(ModalIds.AlertFireEmployee);
                 }}
                 size="xs"
                 disabled={isBusinessPendingApproval || employee.role?.as === EmployeeAsEnum.OWNER}

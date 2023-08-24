@@ -24,7 +24,7 @@ interface Props {
 
 export function OptionsDropdown({ type, valueLength }: Props) {
   const t = useTranslations("Values");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const download = useDownload();
   const { state, execute } = useFetch();
 
@@ -54,7 +54,7 @@ export function OptionsDropdown({ type, valueLength }: Props) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent alignOffset={0} align="end">
-        <DropdownMenuItem onClick={() => openModal(ModalIds.ImportValues)}>
+        <DropdownMenuItem onClick={() => modalState.openModal(ModalIds.ImportValues)}>
           {t("importValues")}
         </DropdownMenuItem>
         <DropdownMenuItem

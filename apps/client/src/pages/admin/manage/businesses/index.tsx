@@ -28,7 +28,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   const { cad } = useAuth();
 
   const { state, execute } = useFetch();
-  const { isOpen, openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { hasPermissions } = usePermission();
   const [search, setSearch] = React.useState("");
 
@@ -67,7 +67,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
   function handleDeleteClick(value: GetManageBusinessesData["businesses"][number]) {
     valueState.setTempId(value.id);
-    openModal(ModalIds.AlertDeleteBusiness);
+    modalState.openModal(ModalIds.AlertDeleteBusiness);
   }
 
   async function handleDelete() {
@@ -82,7 +82,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       asyncTable.remove(tempValue.id);
 
       valueState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteBusiness);
+      modalState.closeModal(ModalIds.AlertDeleteBusiness);
     }
   }
 
@@ -171,15 +171,15 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
       <Modal
         title={t("deleteBusiness")}
-        onClose={() => closeModal(ModalIds.AlertDeleteBusiness)}
-        isOpen={isOpen(ModalIds.AlertDeleteBusiness)}
+        onClose={() => modalState.closeModal(ModalIds.AlertDeleteBusiness)}
+        isOpen={modalState.isOpen(ModalIds.AlertDeleteBusiness)}
         className="max-w-2xl"
       >
         <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
-            onPress={() => closeModal(ModalIds.AlertDeleteBusiness)}
+            onPress={() => modalState.closeModal(ModalIds.AlertDeleteBusiness)}
           >
             {common("cancel")}
           </Button>

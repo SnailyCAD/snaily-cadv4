@@ -33,11 +33,11 @@ export function ImageSelectInput({
 
   const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
   const common = useTranslations("Common");
-  const { openModal, closeModal, isOpen } = useModal();
+  const modalState = useModal();
 
   function onCropSuccess(url: Blob, filename: string) {
     setImage(new File([url], filename, { type: url.type }));
-    closeModal(ModalIds.CropImageModal);
+    modalState.closeModal(ModalIds.CropImageModal);
   }
 
   function handleSetURL(v: boolean) {
@@ -88,7 +88,7 @@ export function ImageSelectInput({
           disabled={!urlImageData}
           type="button"
           onPress={() => {
-            openModal(ModalIds.CropImageModal);
+            modalState.openModal(ModalIds.CropImageModal);
           }}
         >
           {common("crop")}
@@ -108,8 +108,8 @@ export function ImageSelectInput({
       </Link>
 
       <CropImageModal
-        isOpen={isOpen(ModalIds.CropImageModal)}
-        onClose={() => closeModal(ModalIds.CropImageModal)}
+        isOpen={modalState.isOpen(ModalIds.CropImageModal)}
+        onClose={() => modalState.closeModal(ModalIds.CropImageModal)}
         image={urlImageData}
         onSuccess={onCropSuccess}
       />
@@ -137,7 +137,7 @@ export function ImageSelectInput({
             className="mr-2 min-w-fit"
             type="button"
             onPress={() => {
-              openModal(ModalIds.CropImageModal);
+              modalState.openModal(ModalIds.CropImageModal);
             }}
           >
             {common("crop")}
@@ -170,8 +170,8 @@ export function ImageSelectInput({
 
       {typeof image !== "string" ? (
         <CropImageModal
-          isOpen={isOpen(ModalIds.CropImageModal)}
-          onClose={() => closeModal(ModalIds.CropImageModal)}
+          isOpen={modalState.isOpen(ModalIds.CropImageModal)}
+          onClose={() => modalState.closeModal(ModalIds.CropImageModal)}
           image={image}
           onSuccess={onCropSuccess}
         />

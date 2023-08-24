@@ -11,17 +11,17 @@ import { toastMessage } from "lib/toastMessage";
 import { io } from "socket.io-client";
 
 export function SelectMapServerModal() {
-  const { getPayload, isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { cad } = useAuth();
   const liveMapURLs = createLiveMapURLs(cad?.miscCadSettings ?? null);
   const { currentMapServerURL, setCurrentMapServerURL } = useDispatchMapState();
   const { socket, setSocket } = useSocketStore();
-  const payload = getPayload<{ showAlert?: true }>(ModalIds.SelectMapServer);
+  const payload = modalState.getPayload<{ showAlert?: true }>(ModalIds.SelectMapServer);
 
   function handleClose() {
-    closeModal(ModalIds.SelectMapServer);
+    modalState.closeModal(ModalIds.SelectMapServer);
   }
 
   function handleSave(key: string | null) {
@@ -38,7 +38,7 @@ export function SelectMapServerModal() {
   return (
     <Modal
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.SelectMapServer)}
+      isOpen={modalState.isOpen(ModalIds.SelectMapServer)}
       title={t("selectMapServer")}
       className="w-[600px]"
     >

@@ -11,15 +11,15 @@ export function BusinessSearchEmployeesTab() {
   const t = useTranslations();
   const { currentResult } = useBusinessSearch();
   const tableState = useTableState();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
 
   if (!currentResult) {
     return null;
   }
 
   function handleOpenInNameSearch(citizen: Pick<BaseCitizen, "name" | "surname" | "id">) {
-    closeModal(ModalIds.BusinessSearch);
-    openModal(ModalIds.NameSearch, {
+    modalState.closeModal(ModalIds.BusinessSearch);
+    modalState.openModal(ModalIds.NameSearch, {
       ...citizen,
       name: `${citizen.name} ${citizen.surname}`,
     });

@@ -40,7 +40,7 @@ export function ActiveIncidentColumn({ unitId, incidentId, isDispatch, size = "m
   });
 
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const { hasActiveDispatchers } = useActiveDispatchers();
   const isBtnDisabled = !hasActiveDispatchers && isDispatch;
@@ -49,7 +49,7 @@ export function ActiveIncidentColumn({ unitId, incidentId, isDispatch, size = "m
     if (isBtnDisabled) return;
 
     setTempIncident(incident);
-    openModal(ModalIds.ManageIncident);
+    modalState.openModal(ModalIds.ManageIncident);
   }
 
   if (!incidentId) {

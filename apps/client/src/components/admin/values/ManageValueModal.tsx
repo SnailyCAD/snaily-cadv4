@@ -82,7 +82,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
 
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations(type);
   const common = useTranslations("Common");
   const tValues = useTranslations("Values");
@@ -132,7 +132,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageValue);
+        modalState.closeModal(ModalIds.ManageValue);
         await handleValueImageUpload(type.toLowerCase(), value.id, helpers);
         onUpdate(value, json);
       }
@@ -146,7 +146,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
 
       if (json?.id) {
         await handleValueImageUpload(type.toLowerCase(), json.id, helpers);
-        closeModal(ModalIds.ManageValue);
+        modalState.closeModal(ModalIds.ManageValue);
         onCreate(json);
       }
     }
@@ -263,8 +263,8 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
     <Modal
       className="w-[600px]"
       title={title}
-      onClose={() => closeModal(ModalIds.ManageValue)}
-      isOpen={isOpen(ModalIds.ManageValue)}
+      onClose={() => modalState.closeModal(ModalIds.ManageValue)}
+      isOpen={modalState.isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (
@@ -388,7 +388,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.ManageValue)}
+                onPress={() => modalState.closeModal(ModalIds.ManageValue)}
                 variant="cancel"
               >
                 {common("cancel")}

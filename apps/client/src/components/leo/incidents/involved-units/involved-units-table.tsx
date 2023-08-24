@@ -34,7 +34,7 @@ export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
   const tableState = useTableState();
   const { user } = useAuth();
   const t = useTranslations("Leo");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { activeIncidents, setActiveIncidents } = useDispatchState((state) => ({
     setActiveIncidents: state.setActiveIncidents,
@@ -76,7 +76,11 @@ export function InvolvedUnitsTable<T extends LeoIncident | EmsFdIncident>({
         <h2 className="font-semibold text-2xl">{t("involvedUnits")}</h2>
 
         {isDisabled ? null : (
-          <Button size="xs" type="button" onPress={() => openModal(ModalIds.AddInvolvedUnit)}>
+          <Button
+            size="xs"
+            type="button"
+            onPress={() => modalState.openModal(ModalIds.AddInvolvedUnit)}
+          >
             {t("addUnit")}
           </Button>
         )}

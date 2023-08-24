@@ -19,26 +19,27 @@ const BusinessSearchTabsContainer = dynamic(
 );
 
 export function BusinessSearchModal() {
-  const { isOpen, closeModal, openModal, getPayload } = useModal();
-
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const tableState = useTableState();
 
-  const payloadBusiness = getPayload<BusinessSearchResult | null>(ModalIds.BusinessSearch);
+  const payloadBusiness = modalState.getPayload<BusinessSearchResult | null>(
+    ModalIds.BusinessSearch,
+  );
   const { setCurrentResult, setResults, results, currentResult } = useBusinessSearch();
 
   React.useEffect(() => {
-    if (!isOpen(ModalIds.BusinessSearch)) {
+    if (!modalState.isOpen(ModalIds.BusinessSearch)) {
       setResults(null);
       setCurrentResult(null);
     }
-  }, [isOpen, setCurrentResult, setResults]);
+  }, [modalState, setCurrentResult, setResults]);
 
   function handleOpenInNameSearch(citizen: Pick<BaseCitizen, "surname" | "name" | "id">) {
-    closeModal(ModalIds.BusinessSearch);
-    openModal(ModalIds.NameSearch, {
+    modalState.closeModal(ModalIds.BusinessSearch);
+    modalState.openModal(ModalIds.NameSearch, {
       ...citizen,
       name: `${citizen.name} ${citizen.surname}`,
     });
@@ -80,8 +81,8 @@ export function BusinessSearchModal() {
   return (
     <Modal
       title={t("businessSearch")}
-      onClose={() => closeModal(ModalIds.BusinessSearch)}
-      isOpen={isOpen(ModalIds.BusinessSearch)}
+      onClose={() => modalState.closeModal(ModalIds.BusinessSearch)}
+      isOpen={modalState.isOpen(ModalIds.BusinessSearch)}
       className="w-[800px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -191,7 +192,7 @@ export function BusinessSearchModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.BusinessSearch)}
+                onPress={() => modalState.closeModal(ModalIds.BusinessSearch)}
                 variant="cancel"
               >
                 {common("cancel")}

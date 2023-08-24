@@ -22,7 +22,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const tPermission = useTranslations("Permissions");
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const userPermissions = getPermissions(user);
   const { state, execute } = useFetch();
   const { DEPRECATED_PERMISSIONS, groups, handleToggleAll } = usePermissionsModal({ isReadOnly });
@@ -37,7 +37,7 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
     });
 
     if (json.id) {
-      closeModal(ModalIds.ManagePermissions);
+      modalState.closeModal(ModalIds.ManagePermissions);
       onUpdate?.(json);
     }
   }
@@ -50,8 +50,8 @@ export function ManagePermissionsModal({ user, onUpdate, isReadOnly }: Props) {
     <Modal
       className="w-[1200px]"
       title={t("managePermissions")}
-      onClose={() => closeModal(ModalIds.ManagePermissions)}
-      isOpen={isOpen(ModalIds.ManagePermissions)}
+      onClose={() => modalState.closeModal(ModalIds.ManagePermissions)}
+      isOpen={modalState.isOpen(ModalIds.ManagePermissions)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, setValues, values }) => (

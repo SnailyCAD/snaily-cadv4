@@ -20,7 +20,7 @@ interface Props {
 
 export function AssignCitizenToTowOrTaxiCall({ call, onClose, onSuccess }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const router = useRouter();
@@ -52,20 +52,20 @@ export function AssignCitizenToTowOrTaxiCall({ call, onClose, onSuccess }: Props
     });
 
     if (json.id) {
-      closeModal(ModalIds.AssignToTowCall);
+      modalState.closeModal(ModalIds.AssignToTowCall);
       onSuccess(call, json);
     }
   }
 
   function handleClose() {
-    closeModal(ModalIds.AssignToTowCall);
+    modalState.closeModal(ModalIds.AssignToTowCall);
     onClose?.();
   }
 
   return (
     <Modal
       title={t("selectUnit")}
-      isOpen={isOpen(ModalIds.AssignToTowCall)}
+      isOpen={modalState.isOpen(ModalIds.AssignToTowCall)}
       onClose={handleClose}
       className="w-[500px]"
     >

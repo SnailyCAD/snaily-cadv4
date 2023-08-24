@@ -34,10 +34,10 @@ export function RecordsTab({
 }: RecordsTabProps) {
   const t = useTranslations();
   const { state, execute } = useFetch();
-  const { getPayload, closeModal } = useModal();
+  const modalState = useModal();
 
-  const tempItem = getPayload<Record>(ModalIds.AlertDeleteRecord);
-  const tempEditRecord = getPayload<Record>(ModalIds.ManageRecord);
+  const tempItem = modalState.getPayload<Record>(ModalIds.AlertDeleteRecord);
+  const tempEditRecord = modalState.getPayload<Record>(ModalIds.ManageRecord);
 
   if (!currentResult && !isCitizen) {
     return null;
@@ -79,7 +79,7 @@ export function RecordsTab({
         Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
       });
 
-      closeModal(ModalIds.AlertDeleteRecord);
+      modalState.closeModal(ModalIds.AlertDeleteRecord);
     }
   }
 
@@ -148,7 +148,7 @@ export function RecordsTable({
   const [exportState, setExportState] = React.useState<"loading" | "idle">("idle");
 
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations();
   const router = useRouter();
 
@@ -175,7 +175,7 @@ export function RecordsTable({
     }
 
     if (!_hasDeletePermissions) return;
-    openModal(ModalIds.AlertDeleteRecord, record);
+    modalState.openModal(ModalIds.AlertDeleteRecord, record);
   }
 
   function downloadFile(url: string, filename: string) {
@@ -214,7 +214,7 @@ export function RecordsTable({
       return;
     }
 
-    openModal(ModalIds.ManageRecord, {
+    modalState.openModal(ModalIds.ManageRecord, {
       ...record,
       citizenName: `${currentResult?.name} ${currentResult?.surname}`,
       businessId: currentResult?.id,

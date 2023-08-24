@@ -35,7 +35,7 @@ export function ManageCustomFieldsModal({
   customFields,
   onUpdate,
 }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
@@ -49,7 +49,7 @@ export function ManageCustomFieldsModal({
 
     if (json.id) {
       onUpdate(json);
-      closeModal(ModalIds.ManageCitizenCustomFields);
+      modalState.closeModal(ModalIds.ManageCitizenCustomFields);
     }
   }
 
@@ -81,8 +81,8 @@ export function ManageCustomFieldsModal({
   return (
     <Modal
       title={t("manageCustomFields")}
-      isOpen={isOpen(ModalIds.ManageCitizenCustomFields)}
-      onClose={() => closeModal(ModalIds.ManageCitizenCustomFields)}
+      isOpen={modalState.isOpen(ModalIds.ManageCitizenCustomFields)}
+      onClose={() => modalState.closeModal(ModalIds.ManageCitizenCustomFields)}
       className="w-[700px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -114,7 +114,7 @@ export function ManageCustomFieldsModal({
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onPress={() => closeModal(ModalIds.ManageCitizenCustomFields)}
+                onPress={() => modalState.closeModal(ModalIds.ManageCitizenCustomFields)}
                 variant="cancel"
               >
                 {common("cancel")}

@@ -16,7 +16,7 @@ const ManagePermissionsModal = dynamic(
 export function AccountInfoTab() {
   const { user } = useAuth();
   const t = useTranslations();
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const INITIAL_VALUES = {
     ...(user ?? {}),
@@ -24,7 +24,7 @@ export function AccountInfoTab() {
   };
 
   function handleViewPermissions() {
-    openModal(ModalIds.ManagePermissions);
+    modalState.openModal(ModalIds.ManagePermissions);
   }
 
   if (!user) {

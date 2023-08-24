@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { codes10 } = useValues();
@@ -41,7 +41,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageUnit);
+    modalState.closeModal(ModalIds.ManageUnit);
   }
 
   async function handleUnmerge() {
@@ -84,7 +84,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.ManageUnit)}
+      isOpen={modalState.isOpen(ModalIds.ManageUnit)}
       onClose={handleClose}
       title={title}
       className="w-[600px]"

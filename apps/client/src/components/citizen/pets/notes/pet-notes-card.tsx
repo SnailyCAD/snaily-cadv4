@@ -13,7 +13,7 @@ import useFetch from "lib/useFetch";
 export function PetNotesCard() {
   const { currentPet, setCurrentPet } = usePetsState();
   const t = useTranslations();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { execute, state } = useFetch();
 
   const notes = currentPet?.notes ?? [];
@@ -33,18 +33,18 @@ export function PetNotesCard() {
         ...currentPet,
         notes: notes.filter((v) => v.id !== noteState.tempId),
       });
-      closeModal(ModalIds.AlertDeleteNote);
+      modalState.closeModal(ModalIds.AlertDeleteNote);
     }
   }
 
   function handleEditClick(note: Note) {
     noteState.setTempId(note.id);
-    openModal(ModalIds.ManageNote);
+    modalState.openModal(ModalIds.ManageNote);
   }
 
   function handleDeleteClick(note: Note) {
     noteState.setTempId(note.id);
-    openModal(ModalIds.AlertDeleteNote);
+    modalState.openModal(ModalIds.AlertDeleteNote);
   }
 
   if (!currentPet) {
@@ -56,7 +56,7 @@ export function PetNotesCard() {
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{t("Pets.notes")}</h1>
 
-        <Button onPress={() => openModal(ModalIds.ManageNote)} size="xs">
+        <Button onPress={() => modalState.openModal(ModalIds.ManageNote)} size="xs">
           {t("Pets.addNote")}
         </Button>
       </header>
@@ -105,7 +105,7 @@ export function PetNotesCard() {
       <ManagePetNoteModal
         onClose={() => {
           noteState.setTempId(null);
-          closeModal(ModalIds.ManageNote);
+          modalState.closeModal(ModalIds.ManageNote);
         }}
         onCreate={(note) => {
           if (!currentPet) return;

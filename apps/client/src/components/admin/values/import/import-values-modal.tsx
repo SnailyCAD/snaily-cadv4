@@ -19,7 +19,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
   const [file, setFile] = React.useState<File | null>(null);
 
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Values");
   const common = useTranslations("Common");
 
@@ -45,7 +45,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
       onImport(json);
     }
 
-    closeModal(ModalIds.ImportValues);
+    modalState.closeModal(ModalIds.ImportValues);
   }
 
   const INITIAL_VALUES = {
@@ -56,8 +56,8 @@ export function ImportValuesModal({ onImport, type }: Props) {
     <Modal
       className="w-[600px]"
       title={t("importValues")}
-      onClose={() => closeModal(ModalIds.ImportValues)}
-      isOpen={isOpen(ModalIds.ImportValues)}
+      onClose={() => modalState.closeModal(ModalIds.ImportValues)}
+      isOpen={modalState.isOpen(ModalIds.ImportValues)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
@@ -90,7 +90,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.ImportValues)}
+                onPress={() => modalState.closeModal(ModalIds.ImportValues)}
                 variant="cancel"
               >
                 {common("cancel")}

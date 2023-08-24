@@ -35,7 +35,7 @@ interface Props {
 export default function BleetPost({ post }: Props) {
   const { state, execute } = useFetch();
   const { user } = useAuth();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Bleeter");
   const router = useRouter();
@@ -79,11 +79,14 @@ export default function BleetPost({ post }: Props) {
         <div>
           {user?.id === post.userId ? (
             <>
-              <Button onPress={() => openModal(ModalIds.ManageBleetModal)} variant="success">
+              <Button
+                onPress={() => modalState.openModal(ModalIds.ManageBleetModal)}
+                variant="success"
+              >
                 {common("edit")}
               </Button>
               <Button
-                onPress={() => openModal(ModalIds.AlertDeleteBleet)}
+                onPress={() => modalState.openModal(ModalIds.AlertDeleteBleet)}
                 className="ml-2"
                 variant="danger"
               >

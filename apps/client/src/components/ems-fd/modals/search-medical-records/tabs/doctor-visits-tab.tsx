@@ -17,7 +17,7 @@ interface DoctorVisitsTabProps {
 export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
   const tableState = useTableState();
   const t = useTranslations();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
 
   if (!("DoctorVisit" in props.results)) {
     return null;
@@ -28,7 +28,7 @@ export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
       <header className="flex items-center justify-between my-3">
         <h1 className="text-xl font-semibold">{t("Ems.doctorVisits")}</h1>
 
-        <Button size="xs" onClick={() => openModal(ModalIds.CreateDoctorVisit)}>
+        <Button size="xs" onClick={() => modalState.openModal(ModalIds.CreateDoctorVisit)}>
           {t("Ems.add")}
         </Button>
       </header>
@@ -70,7 +70,7 @@ export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
             DoctorVisit: [...props.results.DoctorVisit, doctorVisit],
           });
 
-          closeModal(ModalIds.ManageMedicalRecords);
+          modalState.closeModal(ModalIds.ManageMedicalRecords);
         }}
         citizen={props.results}
       />

@@ -36,7 +36,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }));
   const { bolos } = useBolos();
 
-  const { isOpen, openModal, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
   const cT = useTranslations("Citizen");
@@ -46,7 +46,9 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
-  const payloadVehicle = getPayload<Partial<RegisteredVehicle> | null>(ModalIds.VehicleSearch);
+  const payloadVehicle = modalState.getPayload<Partial<RegisteredVehicle> | null>(
+    ModalIds.VehicleSearch,
+  );
   const isLeo = router.pathname === "/officer";
   const showMarkVehicleAsStolenButton =
     hasSearchResults(currentResult) && isLeo && !currentResult.reportedStolen;
@@ -68,10 +70,10 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }, [bolos, currentResult]);
 
   React.useEffect(() => {
-    if (!isOpen(id)) {
+    if (!modalState.isOpen(id)) {
       setCurrentResult("initial");
     }
-  }, [id, isOpen, setCurrentResult]);
+  }, [id, modalState, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute<VehicleSearchResult>({
@@ -91,7 +93,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   function handleEditLicenses() {
     if (!currentResult) return;
 
-    openModal(ModalIds.ManageVehicleLicenses);
+    modalState.openModal(ModalIds.ManageVehicleLicenses);
   }
 
   async function handleMarkStolen(stolen: boolean) {
@@ -126,7 +128,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }
 
   async function handleImpoundVehicle() {
-    openModal(ModalIds.ImpoundVehicle);
+    modalState.openModal(ModalIds.ImpoundVehicle);
   }
 
   const INITIAL_VALUES = {
@@ -140,8 +142,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   return (
     <Modal
       title={t("plateSearch")}
-      onClose={() => closeModal(id)}
-      isOpen={isOpen(id)}
+      onClose={() => modalState.closeModal(id)}
+      isOpen={modalState.isOpen(id)}
       className={currentResult ? "w-[900px]" : "w-[650px]"}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -240,7 +242,10 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
             >
               <div>
                 {showCreateVehicleButton ? (
-                  <Button type="button" onPress={() => openModal(ModalIds.RegisterVehicle)}>
+                  <Button
+                    type="button"
+                    onPress={() => modalState.openModal(ModalIds.RegisterVehicle)}
+                  >
                     {t("createVehicle")}
                   </Button>
                 ) : null}
@@ -279,7 +284,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                     ) : (
                       <Button
                         type="button"
-                        onPress={() => openModal(ModalIds.AlertCheckoutImpoundedVehicle)}
+                        onPress={() => modalState.openModal(ModalIds.AlertCheckoutImpoundedVehicle)}
                         variant="cancel"
                         className="px-1.5"
                       >
@@ -302,7 +307,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               </div>
 
               <div className="flex">
-                <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
+                <Button type="reset" onPress={() => modalState.closeModal(id)} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button
@@ -344,7 +349,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       {CREATE_USER_CITIZEN_LEO && isLeo ? (
         <RegisterVehicleModal
           onCreate={(vehicle) => {
-            closeModal(ModalIds.RegisterVehicle);
+            modalState.closeModal(ModalIds.RegisterVehicle);
             setCurrentResult(vehicle as VehicleSearchResult);
           }}
           vehicle={null}
@@ -355,8 +360,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 }
 
 function AutoSubmit() {
-  const { getPayload } = useModal();
-  const payloadVehicle = getPayload<Partial<RegisteredVehicle>>(ModalIds.VehicleSearch);
+  const modalState = useModal();
+  const payloadVehicle = modalState.getPayload<Partial<RegisteredVehicle>>(ModalIds.VehicleSearch);
   const { submitForm } = useFormikContext();
 
   // if there's a name, auto-submit the form.

@@ -5,7 +5,7 @@ import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 
 export function TwoFactorAuthArea() {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Account");
   const { user } = useAuth();
   const is2faEnabled = user?.twoFactorEnabled;
@@ -18,7 +18,7 @@ export function TwoFactorAuthArea() {
         className="mt-3"
         variant={is2faEnabled ? "danger" : "default"}
         type="button"
-        onPress={() => openModal(ModalIds.Manage2FA, Boolean(is2faEnabled))}
+        onPress={() => modalState.openModal(ModalIds.Manage2FA, Boolean(is2faEnabled))}
       >
         {is2faEnabled ? t("disable2FA") : t("enable2FA")}
       </Button>

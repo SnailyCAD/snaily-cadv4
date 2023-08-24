@@ -18,7 +18,7 @@ export function NewBleeterExperienceForm(props: Props) {
   const t = useTranslations("Bleeter");
   const { state, execute } = useFetch();
   const router = useRouter();
-  const { closeModal } = useModal();
+  const modalState = useModal();
 
   async function handleSubmit(
     values: typeof INITIAL_VALUES,
@@ -33,7 +33,7 @@ export function NewBleeterExperienceForm(props: Props) {
 
     if (json) {
       router.push(`/bleeter/@/${values.handle}`);
-      closeModal(ModalIds.ManageBleeterProfile);
+      modalState.closeModal(ModalIds.ManageBleeterProfile);
     }
   }
 

@@ -23,10 +23,10 @@ interface Props {
 }
 
 export function CreateTemporaryUnitModal({ onClose }: Props) {
-  const { isOpen, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const type = getPayload(ModalIds.CreateTemporaryUnit) as "ems-fd" | "officer";
+  const type = modalState.getPayload(ModalIds.CreateTemporaryUnit) as "ems-fd" | "officer";
 
   const { DIVISIONS, BADGE_NUMBERS } = useFeatureEnabled();
   const { division, department } = useValues();
@@ -35,7 +35,7 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.CreateTemporaryUnit);
+    modalState.closeModal(ModalIds.CreateTemporaryUnit);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -69,7 +69,7 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.CreateTemporaryUnit)}
+      isOpen={modalState.isOpen(ModalIds.CreateTemporaryUnit)}
       onClose={handleClose}
       title={t("Leo.createTemporaryUnit")}
       className="w-[600px]"

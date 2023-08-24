@@ -24,7 +24,7 @@ const JoinBusinessModal = dynamic(
 );
 
 export default function BusinessPage(props: GetBusinessesData) {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Business");
   const setJoinableBusinesses = useBusinessState((s) => s.setJoinableBusinesses);
   const { hasPermissions } = usePermission();
@@ -40,9 +40,11 @@ export default function BusinessPage(props: GetBusinessesData) {
         <Title className="!mb-0">{t("businesses")}</Title>
 
         <div>
-          <Button onPress={() => openModal(ModalIds.JoinBusiness)}>{t("joinBusiness")}</Button>
+          <Button onPress={() => modalState.openModal(ModalIds.JoinBusiness)}>
+            {t("joinBusiness")}
+          </Button>
           {hasCreateBusinessesPerms ? (
-            <Button className="ml-2" onPress={() => openModal(ModalIds.CreateBusiness)}>
+            <Button className="ml-2" onPress={() => modalState.openModal(ModalIds.CreateBusiness)}>
               {t("createBusiness")}
             </Button>
           ) : null}

@@ -10,15 +10,15 @@ export function BusinessSearchVehiclesTab() {
   const t = useTranslations();
   const { currentResult } = useBusinessSearch();
   const tableState = useTableState();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
 
   if (!currentResult) {
     return null;
   }
 
   function handleOpenInVehicleSearch(vehicle: RegisteredVehicle) {
-    closeModal(ModalIds.BusinessSearch);
-    openModal(ModalIds.VehicleSearch, vehicle);
+    modalState.closeModal(ModalIds.BusinessSearch);
+    modalState.openModal(ModalIds.VehicleSearch, vehicle);
   }
 
   return (

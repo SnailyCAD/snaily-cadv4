@@ -12,7 +12,7 @@ import { PutSearchActionsLicensePointsData } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";
 
 export function ManageLicensePointsModal() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations();
   const { state, execute } = useFetch();
@@ -44,7 +44,7 @@ export function ManageLicensePointsModal() {
 
     if (json) {
       setCurrentResult({ ...currentResult, ...json });
-      closeModal(ModalIds.ManageLicensePoints);
+      modalState.closeModal(ModalIds.ManageLicensePoints);
 
       toastMessage({
         icon: "success",
@@ -58,8 +58,8 @@ export function ManageLicensePointsModal() {
   return (
     <Modal
       title={t("Leo.editLicensePoints")}
-      isOpen={isOpen(ModalIds.ManageLicensePoints)}
-      onClose={() => closeModal(ModalIds.ManageLicensePoints)}
+      isOpen={modalState.isOpen(ModalIds.ManageLicensePoints)}
+      onClose={() => modalState.closeModal(ModalIds.ManageLicensePoints)}
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -81,7 +81,7 @@ export function ManageLicensePointsModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.ManageLicensePoints)}
+                onPress={() => modalState.closeModal(ModalIds.ManageLicensePoints)}
                 variant="cancel"
               >
                 {common("cancel")}

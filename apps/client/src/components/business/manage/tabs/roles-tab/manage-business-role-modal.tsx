@@ -36,7 +36,7 @@ export function ManageBusinessRoleModal({ onCreate, onUpdate, onClose, value }: 
   }));
 
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Business");
   const common = useTranslations("Common");
 
@@ -45,7 +45,7 @@ export function ManageBusinessRoleModal({ onCreate, onUpdate, onClose, value }: 
 
   function handleClose() {
     onClose();
-    closeModal(ModalIds.ManageBusinessRole);
+    modalState.closeModal(ModalIds.ManageBusinessRole);
   }
 
   async function onSubmit(
@@ -61,7 +61,7 @@ export function ManageBusinessRoleModal({ onCreate, onUpdate, onClose, value }: 
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageBusinessRole);
+        modalState.closeModal(ModalIds.ManageBusinessRole);
         onUpdate(value, json);
       }
     } else {
@@ -73,7 +73,7 @@ export function ManageBusinessRoleModal({ onCreate, onUpdate, onClose, value }: 
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageBusinessRole);
+        modalState.closeModal(ModalIds.ManageBusinessRole);
         onCreate(json);
       }
     }
@@ -91,7 +91,7 @@ export function ManageBusinessRoleModal({ onCreate, onUpdate, onClose, value }: 
       className="w-[600px]"
       title={title}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageBusinessRole)}
+      isOpen={modalState.isOpen(ModalIds.ManageBusinessRole)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (

@@ -46,7 +46,7 @@ export default function PenalCodeGroupsPage(props: Props) {
   const t = useTranslations("PENAL_CODE");
   const valuesT = useTranslations("Values");
   const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { execute, state } = useFetch();
   const router = useRouter();
   const groupId = router.query.groupId as string;
@@ -74,12 +74,12 @@ export default function PenalCodeGroupsPage(props: Props) {
 
   function handleDeleteClick(penalCodeId: string) {
     penalCodeState.setTempId(penalCodeId);
-    openModal(ModalIds.AlertDeleteValue);
+    modalState.openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(penalCodeId: string) {
     penalCodeState.setTempId(penalCodeId);
-    openModal(ModalIds.ManageValue);
+    modalState.openModal(ModalIds.ManageValue);
   }
 
   async function handleDeleteSelected() {
@@ -95,7 +95,7 @@ export default function PenalCodeGroupsPage(props: Props) {
       asyncTable.remove(...selectedRows);
 
       tableState.setRowSelection({});
-      closeModal(ModalIds.AlertDeleteSelectedValues);
+      modalState.closeModal(ModalIds.AlertDeleteSelectedValues);
 
       toastMessage({
         title: "Delete Values",
@@ -126,12 +126,12 @@ export default function PenalCodeGroupsPage(props: Props) {
       });
 
       penalCodeState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteValue);
+      modalState.closeModal(ModalIds.AlertDeleteValue);
     } else {
       if (json) {
         asyncTable.remove(tempPenalCode.id);
         penalCodeState.setTempId(null);
-        closeModal(ModalIds.AlertDeleteValue);
+        modalState.closeModal(ModalIds.AlertDeleteValue);
       }
     }
   }
@@ -157,7 +157,10 @@ export default function PenalCodeGroupsPage(props: Props) {
 
         <div className="flex gap-2">
           {isEmpty(tableState.rowSelection) ? null : (
-            <Button onPress={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+            <Button
+              onPress={() => modalState.openModal(ModalIds.AlertDeleteSelectedValues)}
+              variant="danger"
+            >
               {valuesT("deleteSelectedValues")}
             </Button>
           )}
@@ -168,7 +171,7 @@ export default function PenalCodeGroupsPage(props: Props) {
             <ArrowLeft /> View all groups
           </Link>
 
-          <Button onPress={() => openModal(ModalIds.ManageValue)}>{t("ADD")}</Button>
+          <Button onPress={() => modalState.openModal(ModalIds.ManageValue)}>{t("ADD")}</Button>
         </div>
       </header>
 

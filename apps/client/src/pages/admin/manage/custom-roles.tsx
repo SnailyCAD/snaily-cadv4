@@ -35,7 +35,7 @@ interface Props {
 export default function ManageCustomRoles({ customRoles: data }: Props) {
   const { state, execute } = useFetch();
   const { hasPermissions } = usePermission();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const hasManagePermissions = hasPermissions([Permissions.ManageCustomRoles]);
@@ -70,18 +70,18 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
     if (typeof json === "boolean" && json) {
       asyncTable.remove(tempRole.id);
       tempRoleState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteCustomRole);
+      modalState.closeModal(ModalIds.AlertDeleteCustomRole);
     }
   }
 
   function handleEditClick(field: CustomRole) {
     tempRoleState.setTempId(field.id);
-    openModal(ModalIds.ManageCustomRole);
+    modalState.openModal(ModalIds.ManageCustomRole);
   }
 
   function handleDeleteClick(field: CustomRole) {
     tempRoleState.setTempId(field.id);
-    openModal(ModalIds.AlertDeleteCustomRole);
+    modalState.openModal(ModalIds.AlertDeleteCustomRole);
   }
 
   return (
@@ -101,7 +101,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 
         <div>
           {hasManagePermissions ? (
-            <Button onPress={() => openModal(ModalIds.ManageCustomRole)}>
+            <Button onPress={() => modalState.openModal(ModalIds.ManageCustomRole)}>
               {t("createCustomRole")}
             </Button>
           ) : null}

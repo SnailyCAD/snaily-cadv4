@@ -18,7 +18,7 @@ interface Props {
 }
 
 export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Props) {
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
 
@@ -30,11 +30,11 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageCourtDate);
+    modalState.closeModal(ModalIds.ManageCourtDate);
   }
 
   function onSubmit(values: typeof INITIAL_VALUES) {
-    closeModal(ModalIds.ManageCourtDate);
+    modalState.closeModal(ModalIds.ManageCourtDate);
 
     if (date) {
       onUpdate({ ...date, ...values });
@@ -46,7 +46,7 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
   return (
     <Modal
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageCourtDate)}
+      isOpen={modalState.isOpen(ModalIds.ManageCourtDate)}
       title={t("manageCourtDate")}
       className="w-[600px]"
     >

@@ -22,7 +22,7 @@ interface Props {
 
 export function ManageUnitCallsignModal({ onUpdate, unit }: Props) {
   const t = useTranslations();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   async function handleSubmit(values: typeof INITIAL_VALUES) {
@@ -33,7 +33,7 @@ export function ManageUnitCallsignModal({ onUpdate, unit }: Props) {
     });
 
     if (json.id) {
-      closeModal(ModalIds.ManageUnitCallsign);
+      modalState.closeModal(ModalIds.ManageUnitCallsign);
       onUpdate?.(json);
     }
   }
@@ -53,8 +53,8 @@ export function ManageUnitCallsignModal({ onUpdate, unit }: Props) {
   return (
     <Modal
       title={t("Common.manage")}
-      onClose={() => closeModal(ModalIds.ManageUnitCallsign)}
-      isOpen={isOpen(ModalIds.ManageUnitCallsign)}
+      onClose={() => modalState.closeModal(ModalIds.ManageUnitCallsign)}
+      isOpen={modalState.isOpen(ModalIds.ManageUnitCallsign)}
       className="min-w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
@@ -84,7 +84,7 @@ export function ManageUnitCallsignModal({ onUpdate, unit }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.ManageUnitCallsign)}
+                onPress={() => modalState.closeModal(ModalIds.ManageUnitCallsign)}
                 variant="cancel"
               >
                 {t("Common.cancel")}

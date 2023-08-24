@@ -34,17 +34,17 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
   const { hasPermissions } = usePermission();
   const hasDeclarePermissions = hasPermissions([Permissions.DeclareCitizenDead]);
   const t = useTranslations();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { execute, state } = useFetch();
 
   function handleDeleteClick(record: MedicalRecord) {
     recordState.setTempId(record.id);
-    openModal(ModalIds.AlertDeleteMedicalRecord);
+    modalState.openModal(ModalIds.AlertDeleteMedicalRecord);
   }
 
   function handleEditClick(record: MedicalRecord) {
     recordState.setTempId(record.id);
-    openModal(ModalIds.ManageMedicalRecords);
+    modalState.openModal(ModalIds.ManageMedicalRecords);
   }
 
   function handleBloodgroupStateChange(prevState: MedicalRecord[], bloodGroup: Value | null) {
@@ -65,7 +65,7 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
         medicalRecords: medicalRecords.filter((v) => v.id !== tempRecord.id),
       });
 
-      closeModal(ModalIds.AlertDeleteMedicalRecord);
+      modalState.closeModal(ModalIds.AlertDeleteMedicalRecord);
       recordState.setTempId(null);
     }
   }
@@ -82,7 +82,7 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
       <header className="flex items-center justify-between my-3">
         <h1 className="text-xl font-semibold">{t("Ems.medicalRecords")}</h1>
 
-        <Button size="xs" onClick={() => openModal(ModalIds.ManageMedicalRecords)}>
+        <Button size="xs" onClick={() => modalState.openModal(ModalIds.ManageMedicalRecords)}>
           {t("Ems.add")}
         </Button>
       </header>
@@ -142,7 +142,7 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
             ],
           });
 
-          closeModal(ModalIds.ManageMedicalRecords);
+          modalState.closeModal(ModalIds.ManageMedicalRecords);
         }}
         onUpdate={(old, newR) => {
           if (!("dead" in props.results)) return;
@@ -155,7 +155,7 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
             ...props.results,
             medicalRecords: handleBloodgroupStateChange(copy, newR.bloodGroup),
           });
-          closeModal(ModalIds.ManageMedicalRecords);
+          modalState.closeModal(ModalIds.ManageMedicalRecords);
         }}
         medicalRecord={tempRecord}
         onClose={() => recordState.setTempId(null)}

@@ -30,7 +30,7 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
   const common = useTranslations("Common");
 
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { hasPermissions } = usePermission();
   const hasMangeDeadCitizensPermissions = hasPermissions([Permissions.ManageDeadCitizens]);
 
@@ -49,14 +49,14 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
           name: `${tempCitizen.name} ${tempCitizen.surname}`,
         }),
       });
-      closeModal(ModalIds.AlertDeclareCitizenAlive);
+      modalState.closeModal(ModalIds.AlertDeclareCitizenAlive);
       tempCitizenState.setTempId(null);
     }
   }
 
   function handleDeclareCitizenAliveClick(citizenId: string) {
     tempCitizenState.setTempId(citizenId);
-    openModal(ModalIds.AlertDeclareCitizenAlive);
+    modalState.openModal(ModalIds.AlertDeclareCitizenAlive);
   }
 
   const asyncTable = useAsyncTable<Citizen>({

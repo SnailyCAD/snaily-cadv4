@@ -20,14 +20,14 @@ interface Props {
 }
 
 export function ManagePetNoteModal(props: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Pets");
   const { state, execute } = useFetch();
   const { currentPet } = usePetsState();
 
   function handleClose() {
-    closeModal(ModalIds.ManageNote);
+    modalState.closeModal(ModalIds.ManageNote);
     props.onClose?.();
   }
 
@@ -67,7 +67,7 @@ export function ManagePetNoteModal(props: Props) {
   return (
     <Modal
       title={t("manageNote")}
-      isOpen={isOpen(ModalIds.ManageNote)}
+      isOpen={modalState.isOpen(ModalIds.ManageNote)}
       onClose={handleClose}
       className="w-[600px]"
     >

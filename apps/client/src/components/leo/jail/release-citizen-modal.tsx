@@ -28,7 +28,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
 
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   async function onSubmit(
@@ -58,8 +58,8 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
   return (
     <Modal
       title={t("release")}
-      onClose={() => closeModal(ModalIds.AlertReleaseCitizen)}
-      isOpen={isOpen(ModalIds.AlertReleaseCitizen)}
+      onClose={() => modalState.closeModal(ModalIds.AlertReleaseCitizen)}
+      isOpen={modalState.isOpen(ModalIds.AlertReleaseCitizen)}
       className="w-[650px]"
     >
       <p className="my-3">{t("releaseCitizen")}</p>
@@ -90,7 +90,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.AlertReleaseCitizen)}
+                onPress={() => modalState.closeModal(ModalIds.AlertReleaseCitizen)}
                 variant="cancel"
               >
                 Cancel

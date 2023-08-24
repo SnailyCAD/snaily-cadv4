@@ -38,7 +38,7 @@ interface Props {
 
 export function SearchMedicalRecordModal({ onClose }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
@@ -49,7 +49,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   const [results, setResults] = React.useState<SearchResult | null | undefined>(undefined);
 
   function handleClose() {
-    closeModal(ModalIds.SearchMedicalRecord);
+    modalState.closeModal(ModalIds.SearchMedicalRecord);
     onClose?.();
   }
 
@@ -93,16 +93,16 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   };
 
   React.useEffect(() => {
-    if (!isOpen(ModalIds.SearchMedicalRecord)) {
+    if (!modalState.isOpen(ModalIds.SearchMedicalRecord)) {
       setResults(undefined);
     }
-  }, [isOpen]);
+  }, [modalState]);
 
   return (
     <Modal
       title={t("Ems.searchMedicalRecord")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.SearchMedicalRecord)}
+      isOpen={modalState.isOpen(ModalIds.SearchMedicalRecord)}
       className="w-[850px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -209,7 +209,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                     {results.imageId ? (
                       <button
                         type="button"
-                        onClick={() => openModal(ModalIds.CitizenImage)}
+                        onClick={() => modalState.openModal(ModalIds.CitizenImage)}
                         className="cursor-pointer"
                       >
                         <ImageWrapper
@@ -327,7 +327,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               <div className="flex gap-2">
                 <Button
                   type="reset"
-                  onPress={() => closeModal(ModalIds.SearchMedicalRecord)}
+                  onPress={() => modalState.closeModal(ModalIds.SearchMedicalRecord)}
                   variant="cancel"
                 >
                   {t("Common.cancel")}

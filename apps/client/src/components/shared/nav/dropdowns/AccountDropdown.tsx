@@ -31,7 +31,7 @@ export function AccountDropdown(props: AccountDropdownProps) {
   const { user, setUser, cad } = useAuth();
   const router = useRouter();
   const t = useTranslations("Nav");
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   async function handleLogout() {
     const success = await logout();
@@ -81,7 +81,7 @@ export function AccountDropdown(props: AccountDropdownProps) {
 
               <DropdownMenuItem
                 className="flex items-center gap-2"
-                onClick={() => openModal(ModalIds.Changelog)}
+                onClick={() => modalState.openModal(ModalIds.Changelog)}
               >
                 {t("whatsNew")}
               </DropdownMenuItem>

@@ -38,7 +38,7 @@ interface Props {
 export function ManageCallModal(props: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const { isOpen, closeModal, openModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();
 
@@ -63,7 +63,7 @@ export function ManageCallModal(props: Props) {
 
     if (json) {
       props.onDelete?.(props.call);
-      closeModal(ModalIds.ManageTowCall);
+      modalState.closeModal(ModalIds.ManageTowCall);
     }
   }
 
@@ -100,7 +100,7 @@ export function ManageCallModal(props: Props) {
   }
 
   function handleClose() {
-    closeModal(ModalIds.ManageTowCall);
+    modalState.closeModal(ModalIds.ManageTowCall);
     props.onClose?.();
   }
 
@@ -121,7 +121,7 @@ export function ManageCallModal(props: Props) {
     <Modal
       onClose={handleClose}
       title={title}
-      isOpen={isOpen(ModalIds.ManageTowCall)}
+      isOpen={modalState.isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
     >
       <Formik
@@ -157,7 +157,7 @@ export function ManageCallModal(props: Props) {
                   className="flex items-center mr-2"
                   disabled={state === "loading"}
                   type="button"
-                  onPress={() => openModal(ModalIds.AlertEndTowCall)}
+                  onPress={() => modalState.openModal(ModalIds.AlertEndTowCall)}
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}
                   {t("endCall")}

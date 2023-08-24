@@ -21,12 +21,12 @@ interface Props {
 export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("TruckLogs");
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageTruckLog);
+    modalState.closeModal(ModalIds.ManageTruckLog);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -39,7 +39,7 @@ export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props)
 
       if (json.id) {
         onUpdate?.(log, json);
-        closeModal(ModalIds.ManageTruckLog);
+        modalState.closeModal(ModalIds.ManageTruckLog);
       }
     } else {
       const { json } = await execute<PostTruckLogsData>({
@@ -50,7 +50,7 @@ export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props)
 
       if (json.id) {
         onCreate?.(json);
-        closeModal(ModalIds.ManageTruckLog);
+        modalState.closeModal(ModalIds.ManageTruckLog);
       }
     }
   }
@@ -71,7 +71,7 @@ export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props)
     <Modal
       onClose={handleClose}
       title={log ? t("editTruckLog") : t("createTruckLog")}
-      isOpen={isOpen(ModalIds.ManageTruckLog)}
+      isOpen={modalState.isOpen(ModalIds.ManageTruckLog)}
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>

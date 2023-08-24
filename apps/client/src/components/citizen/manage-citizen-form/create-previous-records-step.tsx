@@ -17,7 +17,7 @@ export function CreatePreviousRecordsStep() {
   const [type, setType] = React.useState<RecordType | null>(null);
   const [selectedRecord, setSelectedRecord] = React.useState<Record | null>(null);
 
-  const { isOpen, openModal } = useModal();
+  const modalState = useModal();
   const { values, setFieldValue } = useFormikContext<any>();
 
   useLoadValuesClientSide({
@@ -40,7 +40,7 @@ export function CreatePreviousRecordsStep() {
     setType(type);
 
     const fullName = `${values?.name} ${values?.surname}`;
-    openModal(id, { citizenName: fullName, citizenId: fullName });
+    modalState.openModal(id, { citizenName: fullName, citizenId: fullName });
   }
 
   function handleAdd(data: any) {
@@ -63,7 +63,7 @@ export function CreatePreviousRecordsStep() {
     const fullName = `${values?.name} ${values?.surname}`;
     setSelectedRecord(record);
 
-    openModal(ModalIds.ManageRecord, {
+    modalState.openModal(ModalIds.ManageRecord, {
       ...record,
       citizenId: fullName,
       citizenName: fullName,
@@ -120,7 +120,7 @@ export function CreatePreviousRecordsStep() {
         />
       ) : null}
 
-      {selectedRecord && isOpen(ModalIds.ManageRecord) ? (
+      {selectedRecord && modalState.isOpen(ModalIds.ManageRecord) ? (
         <ManageRecordModal
           customSubmitHandler={handleEdit}
           hideCitizenField

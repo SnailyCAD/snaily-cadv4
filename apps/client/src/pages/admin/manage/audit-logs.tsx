@@ -34,7 +34,7 @@ export default function ManageAuditLogs({ data }: Props) {
 
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const asyncTable = useAsyncTable({
     search,
@@ -88,7 +88,10 @@ export default function ManageAuditLogs({ data }: Props) {
             executor: auditLog.executor?.username ?? "Public API",
             createdAt: <FullDate>{auditLog.createdAt}</FullDate>,
             actions: (
-              <Button onPress={() => openModal(ModalIds.ViewAuditLogData, auditLog)} size="xs">
+              <Button
+                onPress={() => modalState.openModal(ModalIds.ViewAuditLogData, auditLog)}
+                size="xs"
+              >
                 {t("viewDiff")}
               </Button>
             ),

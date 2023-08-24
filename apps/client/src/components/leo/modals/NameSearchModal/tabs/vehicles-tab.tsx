@@ -12,7 +12,7 @@ export function NameSearchVehiclesTab() {
   const common = useTranslations("Common");
   const { DMV } = useFeatureEnabled();
   const currentResult = useNameSearch((state) => state.currentResult);
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
   const tableState = useTableState();
 
@@ -20,7 +20,7 @@ export function NameSearchVehiclesTab() {
     if (!currentResult || currentResult.isConfidential) return;
 
     setVehicleResult({ ...vehicle, citizen: currentResult });
-    openModal(ModalIds.VehicleSearchWithinName);
+    modalState.openModal(ModalIds.VehicleSearchWithinName);
   }
 
   if (!currentResult || currentResult.isConfidential) {

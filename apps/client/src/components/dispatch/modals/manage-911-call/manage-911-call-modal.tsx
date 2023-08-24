@@ -35,7 +35,7 @@ interface Props {
 export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, onClose }: Props) {
   const [showAlert, setShowAlert] = React.useState(false);
 
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Calls");
   const { state, execute } = useFetch();
   const { setCalls, calls } = useCall911State((state) => ({
@@ -79,7 +79,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
     onClose?.();
 
     setShowAlert(false);
-    closeModal(ModalIds.Manage911Call);
+    modalState.closeModal(ModalIds.Manage911Call);
   }
 
   async function handleDelete() {
@@ -107,7 +107,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
 
   return (
     <Modal
-      isOpen={forceOpen ?? isOpen(ModalIds.Manage911Call)}
+      isOpen={forceOpen ?? modalState.isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={call ? t("manage911Call") : t("create911Call")}
       className={call ? "!max-w-[100rem] w-full" : "w-[650px]"}

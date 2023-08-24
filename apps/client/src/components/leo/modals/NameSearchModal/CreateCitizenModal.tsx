@@ -15,7 +15,7 @@ import type {
 } from "@snailycad/types/api";
 
 export function CreateOrManageCitizenModal() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const { currentResult, setCurrentResult, setResults } = useNameSearch((state) => ({
@@ -30,7 +30,7 @@ export function CreateOrManageCitizenModal() {
   });
 
   function handleClose() {
-    closeModal(ModalIds.CreateOrManageCitizen);
+    modalState.closeModal(ModalIds.CreateOrManageCitizen);
   }
 
   async function onSubmit({
@@ -117,7 +117,7 @@ export function CreateOrManageCitizenModal() {
   return (
     <Modal
       title={t("createCitizen")}
-      isOpen={isOpen(ModalIds.CreateOrManageCitizen)}
+      isOpen={modalState.isOpen(ModalIds.CreateOrManageCitizen)}
       onClose={handleClose}
       className="w-[1000px]"
     >

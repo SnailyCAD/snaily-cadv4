@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function RequestNameChangeModal({ onCreate }: Props) {
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const t = useTranslations("Courthouse");
@@ -42,14 +42,14 @@ export function RequestNameChangeModal({ onCreate }: Props) {
 
     if (json.id) {
       onCreate?.(json);
-      closeModal(ModalIds.RequestNameChange);
+      modalState.closeModal(ModalIds.RequestNameChange);
     }
   }
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.RequestNameChange)}
-      isOpen={isOpen(ModalIds.RequestNameChange)}
+      onClose={() => modalState.closeModal(ModalIds.RequestNameChange)}
+      isOpen={modalState.isOpen(ModalIds.RequestNameChange)}
       title={t("requestNameChange")}
       className="w-[600px]"
     >
@@ -92,7 +92,7 @@ export function RequestNameChangeModal({ onCreate }: Props) {
 
             <footer className="flex justify-end mt-5">
               <Button
-                onPress={() => closeModal(ModalIds.RequestNameChange)}
+                onPress={() => modalState.closeModal(ModalIds.RequestNameChange)}
                 variant="cancel"
                 type="reset"
               >

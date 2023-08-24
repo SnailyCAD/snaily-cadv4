@@ -11,7 +11,7 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
   const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const [tempItem, itemState] = useTemporaryItem(values.seizedItems);
 
   const tableState = useTableState();
@@ -20,7 +20,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
 
   function handleEditClick(item: SeizedItem) {
     itemState.setTempId(item.id);
-    openModal(ModalIds.ManageSeizedItems);
+    modalState.openModal(ModalIds.ManageSeizedItems);
   }
 
   function handleDeleteClick(item: SeizedItem) {

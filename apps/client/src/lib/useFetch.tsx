@@ -43,7 +43,7 @@ let handleRequest: typeof import("./fetch").handleRequest | undefined;
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { user } = useAuth();
 
   const t = useTranslations("Errors");
@@ -95,11 +95,11 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       console.error(JSON.stringify({ DEBUG: errorObj }, null, 2));
 
       if (response?.response?.status === 401) {
-        openModal(ModalIds.ReauthorizeSession);
+        modalState.openModal(ModalIds.ReauthorizeSession);
       }
 
       if (error === "noActiveOfficer") {
-        openModal(ModalIds.SelectOfficer, { includeStatuses: true });
+        modalState.openModal(ModalIds.SelectOfficer, { includeStatuses: true });
       }
 
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.

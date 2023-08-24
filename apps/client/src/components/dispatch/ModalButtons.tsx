@@ -54,7 +54,7 @@ export function DispatchModalButtons() {
   const setUserActiveDispatcher = useActiveDispatcherState((s) => s.setUserActiveDispatcher);
 
   const { ACTIVE_DISPATCHERS, TONES } = useFeatureEnabled();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { calls, setCalls } = useCall911State((state) => ({
     calls: state.calls,
     setCalls: state.setCalls,
@@ -84,7 +84,7 @@ export function DispatchModalButtons() {
 
       setCalls(calls.map((call) => ({ ...call, isSignal100: false })));
     } else {
-      openModal(ModalIds.EnableSignal100);
+      modalState.openModal(ModalIds.EnableSignal100);
     }
   }
 
@@ -99,7 +99,7 @@ export function DispatchModalButtons() {
       </Button>
 
       {TONES ? (
-        <Button disabled={!isActive} onPress={() => openModal(ModalIds.Tones)}>
+        <Button disabled={!isActive} onPress={() => modalState.openModal(ModalIds.Tones)}>
           {t("Leo.tones")}
         </Button>
       ) : null}

@@ -34,7 +34,7 @@ interface Props<Value extends SelectValue = SelectValue<any>>
 export function Select({ name, onChange, ...rest }: Props) {
   const { user } = useAuth();
   const common = useTranslations("Common");
-  const { canBeClosed } = useModal();
+  const modalState = useModal();
 
   const value =
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
@@ -71,7 +71,7 @@ export function Select({ name, onChange, ...rest }: Props) {
     <ReactSelect
       {...rest}
       placeholder={common("select")}
-      isDisabled={rest.disabled ?? !canBeClosed}
+      isDisabled={rest.disabled ?? !modalState.canBeClosed}
       isClearable={fixedClearable ? value.some((v) => !v.isFixed) : rest.isClearable}
       value={value}
       options={rest.values}

@@ -48,7 +48,7 @@ interface Props {
 export default function PenalCodeGroupsPage(props: Props) {
   const t = useTranslations("PENAL_CODE_GROUP");
   const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { execute, state } = useFetch();
   const router = useRouter();
 
@@ -107,12 +107,12 @@ export default function PenalCodeGroupsPage(props: Props) {
 
   function handleEditGroup(groupId: string) {
     groupState.setTempId(groupId);
-    openModal(ModalIds.ManagePenalCodeGroup);
+    modalState.openModal(ModalIds.ManagePenalCodeGroup);
   }
 
   function handleDeleteGroupClick(groupId: string) {
     groupState.setTempId(groupId);
-    openModal(ModalIds.AlertDeleteGroup);
+    modalState.openModal(ModalIds.AlertDeleteGroup);
   }
 
   async function handleDeleteGroup() {
@@ -126,7 +126,7 @@ export default function PenalCodeGroupsPage(props: Props) {
     if (json) {
       asyncTable.remove(tempGroup.id);
       groupState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteGroup);
+      modalState.closeModal(ModalIds.AlertDeleteGroup);
     }
   }
 
@@ -150,7 +150,9 @@ export default function PenalCodeGroupsPage(props: Props) {
         </div>
 
         <div className="flex gap-2">
-          <Button onPress={() => openModal(ModalIds.ManagePenalCodeGroup)}>{t("ADD")}</Button>
+          <Button onPress={() => modalState.openModal(ModalIds.ManagePenalCodeGroup)}>
+            {t("ADD")}
+          </Button>
           {/* values is set to non-empty array */}
           <OptionsDropdown type={ValueType.PENAL_CODE} valueLength={asyncTable.items.length} />
         </div>

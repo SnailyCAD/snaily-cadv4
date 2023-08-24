@@ -42,7 +42,7 @@ export function DispatchCallTowModal({ call }: Props) {
 
   const common = useTranslations("Common");
   const t = useTranslations();
-  const { isOpen, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const { impoundLot } = useValues();
   const { state, execute } = useFetch();
 
@@ -52,7 +52,7 @@ export function DispatchCallTowModal({ call }: Props) {
   const activeUnit = isLeo ? activeOfficer : isEmsFd ? activeDeputy : null;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const payload = getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
+    const payload = modalState.getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
     const { json } = await execute<PostTowCallsData>({
       path: "/tow",
       method: "POST",
@@ -67,7 +67,7 @@ export function DispatchCallTowModal({ call }: Props) {
       });
     }
 
-    closeModal(ModalIds.ManageTowCall);
+    modalState.closeModal(ModalIds.ManageTowCall);
   }
 
   const validate = handleValidate(TOW_SCHEMA);
@@ -89,9 +89,9 @@ export function DispatchCallTowModal({ call }: Props) {
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.ManageTowCall)}
+      onClose={() => modalState.closeModal(ModalIds.ManageTowCall)}
       title={t("Calls.createTowCall")}
-      isOpen={isOpen(ModalIds.ManageTowCall)}
+      isOpen={modalState.isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -169,7 +169,7 @@ export function DispatchCallTowModal({ call }: Props) {
               <div className="flex items-center">
                 <Button
                   type="reset"
-                  onPress={() => closeModal(ModalIds.ManageTowCall)}
+                  onPress={() => modalState.closeModal(ModalIds.ManageTowCall)}
                   variant="cancel"
                 >
                   {common("cancel")}

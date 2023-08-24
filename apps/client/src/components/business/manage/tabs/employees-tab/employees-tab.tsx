@@ -14,7 +14,7 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 export function EmployeesTab() {
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
 
@@ -61,20 +61,20 @@ export function EmployeesTab() {
         employees: currentBusiness.employees.filter((v) => v.id !== tempEmployee.id),
       });
       employeeState.setTempId(null);
-      closeModal(ModalIds.AlertFireEmployee);
+      modalState.closeModal(ModalIds.AlertFireEmployee);
     }
   }
 
   function handleManageClick(employee: Employee) {
     if (employee.role?.as === EmployeeAsEnum.OWNER) return;
     employeeState.setTempId(employee.id);
-    openModal(ModalIds.ManageEmployee);
+    modalState.openModal(ModalIds.ManageEmployee);
   }
 
   function handleFireClick(employee: Employee) {
     if (employee.role?.as === EmployeeAsEnum.OWNER) return;
     employeeState.setTempId(employee.id);
-    openModal(ModalIds.AlertFireEmployee);
+    modalState.openModal(ModalIds.AlertFireEmployee);
   }
 
   return (

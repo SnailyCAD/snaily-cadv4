@@ -11,7 +11,7 @@ import { ModalIds } from "types/modal-ids";
 import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
 
 export function ManageCitizenFlagsModal() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
@@ -33,7 +33,7 @@ export function ManageCitizenFlagsModal() {
 
     if (json.flags) {
       setCurrentResult({ ...currentResult, ...json });
-      closeModal(ModalIds.ManageCitizenFlags);
+      modalState.closeModal(ModalIds.ManageCitizenFlags);
     }
   }
 
@@ -52,8 +52,8 @@ export function ManageCitizenFlagsModal() {
   return (
     <Modal
       title={t("manageCitizenFlags")}
-      isOpen={isOpen(ModalIds.ManageCitizenFlags)}
-      onClose={() => closeModal(ModalIds.ManageCitizenFlags)}
+      isOpen={modalState.isOpen(ModalIds.ManageCitizenFlags)}
+      onClose={() => modalState.closeModal(ModalIds.ManageCitizenFlags)}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -72,7 +72,7 @@ export function ManageCitizenFlagsModal() {
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onPress={() => closeModal(ModalIds.ManageCitizenFlags)}
+                onPress={() => modalState.closeModal(ModalIds.ManageCitizenFlags)}
                 variant="cancel"
               >
                 {common("cancel")}

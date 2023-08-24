@@ -53,7 +53,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const [image, setImage] = React.useState<File | string | null>(null);
 
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
   const common = useTranslations("Common");
@@ -78,7 +78,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
   const validate = handleValidate(schema);
 
   function handleClose() {
-    closeModal(ModalIds.RegisterVehicle);
+    modalState.closeModal(ModalIds.RegisterVehicle);
     onClose?.();
   }
 
@@ -182,7 +182,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     <Modal
       title={t("registerVehicle")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.RegisterVehicle)}
+      isOpen={modalState.isOpen(ModalIds.RegisterVehicle)}
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

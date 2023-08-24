@@ -32,7 +32,7 @@ export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
   const currentMapServerURL = useDispatchMapState((state) => state.currentMapServerURL);
-  const { openModal, isOpen } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { socket, setStatus, setSocket } = useSocketStore((state) => ({
     socket: state.socket,
@@ -187,8 +187,8 @@ export function useMapPlayers() {
 
   React.useEffect(() => {
     if (!currentMapServerURL) {
-      openModal(ModalIds.SelectMapServer, { showAlert: true });
-    } else if (!isOpen(ModalIds.SelectMapServer) && !socket?.connected) {
+      modalState.openModal(ModalIds.SelectMapServer, { showAlert: true });
+    } else if (!modalState.isOpen(ModalIds.SelectMapServer) && !socket?.connected) {
       socket?.close();
 
       const newSocket = makeSocketConnection(currentMapServerURL);

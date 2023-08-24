@@ -26,7 +26,7 @@ interface Props {
 export default function ManageUsers({ data }: Props) {
   const t = useTranslations("Management");
   const pending = data.users.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING);
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { hasPermissions } = usePermission();
 
   const hasManagePermissions = hasPermissions([
@@ -56,7 +56,9 @@ export default function ManageUsers({ data }: Props) {
 
         {hasManagePermissions ? (
           <div>
-            <Button onClick={() => openModal(ModalIds.PruneUsers)}>{t("pruneUsers")}</Button>
+            <Button onClick={() => modalState.openModal(ModalIds.PruneUsers)}>
+              {t("pruneUsers")}
+            </Button>
           </div>
         ) : null}
       </header>

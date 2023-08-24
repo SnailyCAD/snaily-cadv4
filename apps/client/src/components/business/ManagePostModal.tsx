@@ -25,7 +25,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
     currentBusiness: state.currentBusiness,
     currentEmployee: state.currentEmployee,
   }));
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
@@ -35,7 +35,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
   }
 
   function handleClose() {
-    closeModal(ModalIds.ManageBusinessPost);
+    modalState.closeModal(ModalIds.ManageBusinessPost);
     onClose?.();
   }
 
@@ -50,7 +50,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageBusinessPost);
+        modalState.closeModal(ModalIds.ManageBusinessPost);
         onUpdate(post, json);
       }
     } else {
@@ -61,7 +61,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageBusinessPost);
+        modalState.closeModal(ModalIds.ManageBusinessPost);
         onCreate(json);
       }
     }
@@ -79,7 +79,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
     <Modal
       className="w-[600px]"
       title={post ? t("editPost") : t("createPost")}
-      isOpen={isOpen(ModalIds.ManageBusinessPost)}
+      isOpen={modalState.isOpen(ModalIds.ManageBusinessPost)}
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

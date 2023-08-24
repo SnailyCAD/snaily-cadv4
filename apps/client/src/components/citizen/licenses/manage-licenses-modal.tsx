@@ -37,7 +37,7 @@ export function ManageLicensesModal({
   allowRemoval = true,
   onSubmit,
 }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Citizen");
 
@@ -47,8 +47,8 @@ export function ManageLicensesModal({
   return (
     <Modal
       title={t("manageLicenses")}
-      isOpen={isOpen(ModalIds.ManageLicenses)}
-      onClose={() => closeModal(ModalIds.ManageLicenses)}
+      isOpen={modalState.isOpen(ModalIds.ManageLicenses)}
+      onClose={() => modalState.closeModal(ModalIds.ManageLicenses)}
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -60,7 +60,7 @@ export function ManageLicensesModal({
               <footer className="flex justify-end mt-5">
                 <Button
                   type="reset"
-                  onPress={() => closeModal(ModalIds.ManageLicenses)}
+                  onPress={() => modalState.closeModal(ModalIds.ManageLicenses)}
                   variant="cancel"
                 >
                   {common("cancel")}

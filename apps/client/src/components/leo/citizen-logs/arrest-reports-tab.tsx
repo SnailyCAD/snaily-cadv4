@@ -50,7 +50,7 @@ export function ArrestReportsTab({ arrestReports }: Props) {
     initialData: arrestReports.arrestReports,
   });
 
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -60,7 +60,7 @@ export function ArrestReportsTab({ arrestReports }: Props) {
   function handleViewClick(item: GetManagePendingArrestReports["arrestReports"][number]) {
     setTempRecord(item.records!);
 
-    openModal(ModalIds.ManageRecord, {
+    modalState.openModal(ModalIds.ManageRecord, {
       citizenName: `${item.citizen?.name} ${item.citizen?.surname}`,
       businessId: item.business?.id,
       businessName: item.business?.name,

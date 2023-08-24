@@ -16,7 +16,7 @@ export function AllowImpoundedVehicleCheckoutModal<T extends ImpoundedVehicle | 
   vehicle,
   onCheckout,
 }: Props<T>) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const t = useTranslations();
 
@@ -30,22 +30,22 @@ export function AllowImpoundedVehicleCheckoutModal<T extends ImpoundedVehicle | 
 
     if (typeof json === "boolean") {
       onCheckout(vehicle);
-      closeModal(ModalIds.AlertCheckoutImpoundedVehicle);
+      modalState.closeModal(ModalIds.AlertCheckoutImpoundedVehicle);
     }
   }
 
   return (
     <Modal
       title={t("Leo.allowCheckout")}
-      onClose={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
-      isOpen={isOpen(ModalIds.AlertCheckoutImpoundedVehicle)}
+      onClose={() => modalState.closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
+      isOpen={modalState.isOpen(ModalIds.AlertCheckoutImpoundedVehicle)}
     >
       <p className="my-3">{t("Leo.alert_allowCheckout")}</p>
       <div className="flex items-center justify-end gap-2 mt-2">
         <Button
           variant="cancel"
           disabled={state === "loading"}
-          onPress={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
+          onPress={() => modalState.closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
         >
           {t("Common.no")}
         </Button>

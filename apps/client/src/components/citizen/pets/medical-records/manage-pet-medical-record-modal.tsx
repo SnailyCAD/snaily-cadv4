@@ -23,13 +23,13 @@ interface Props {
 
 export function ManagePetMedicalRecordModal(props: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const { currentPet } = usePetsState();
 
   function handleClose() {
-    closeModal(ModalIds.ManagePetMedicalRecord);
+    modalState.closeModal(ModalIds.ManagePetMedicalRecord);
     props.onClose?.();
   }
 
@@ -70,7 +70,7 @@ export function ManagePetMedicalRecordModal(props: Props) {
     <Modal
       title={props.medicalRecord ? t("editMedicalRecord") : t("addMedicalRecord")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManagePetMedicalRecord)}
+      isOpen={modalState.isOpen(ModalIds.ManagePetMedicalRecord)}
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

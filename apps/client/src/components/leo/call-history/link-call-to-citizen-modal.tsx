@@ -22,7 +22,7 @@ interface Props {
 export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -35,7 +35,7 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
     });
 
     if (json) {
-      closeModal(ModalIds.LinkCallToIncident);
+      modalState.closeModal(ModalIds.LinkCallToIncident);
       onSave({ ...call, ...json });
     }
   }
@@ -49,8 +49,8 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
   return (
     <Modal
       title={t("linkToIncident")}
-      isOpen={isOpen(ModalIds.LinkCallToIncident)}
-      onClose={() => closeModal(ModalIds.LinkCallToIncident)}
+      isOpen={modalState.isOpen(ModalIds.LinkCallToIncident)}
+      onClose={() => modalState.closeModal(ModalIds.LinkCallToIncident)}
       className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -73,7 +73,7 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.LinkCallToIncident)}
+                onPress={() => modalState.closeModal(ModalIds.LinkCallToIncident)}
                 variant="cancel"
               >
                 {common("cancel")}

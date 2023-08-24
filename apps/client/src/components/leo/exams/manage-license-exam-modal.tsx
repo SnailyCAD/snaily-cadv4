@@ -31,7 +31,7 @@ interface Props {
 export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { driverslicenseCategory, license } = useValues();
   const { options } = useFeatureEnabled();
@@ -42,7 +42,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   ];
 
   function handleClose() {
-    closeModal(ModalIds.ManageExam);
+    modalState.closeModal(ModalIds.ManageExam);
     onClose?.();
   }
 
@@ -60,7 +60,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageExam);
+        modalState.closeModal(ModalIds.ManageExam);
         onUpdate?.(exam, json);
       }
     } else {
@@ -71,7 +71,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
       });
 
       if (json.id) {
-        closeModal(ModalIds.ManageExam);
+        modalState.closeModal(ModalIds.ManageExam);
         onCreate?.(json);
       }
     }
@@ -102,7 +102,7 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   return (
     <Modal
       title={exam ? t("licenseExams.editExam") : t("licenseExams.createExam")}
-      isOpen={isOpen(ModalIds.ManageExam)}
+      isOpen={modalState.isOpen(ModalIds.ManageExam)}
       onClose={handleClose}
       className="min-w-[600px]"
     >

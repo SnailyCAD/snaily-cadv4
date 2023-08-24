@@ -34,7 +34,7 @@ interface Props {
 
 export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { pathname } = useRouter();
   const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
 
@@ -50,7 +50,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
   const isLeo = pathname.includes("/officer");
 
   function handleClose() {
-    closeModal(ModalIds.RegisterWeapon);
+    modalState.closeModal(ModalIds.RegisterWeapon);
     onClose?.();
   }
 
@@ -106,7 +106,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
     <Modal
       title={t("registerWeapon")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.RegisterWeapon)}
+      isOpen={modalState.isOpen(ModalIds.RegisterWeapon)}
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

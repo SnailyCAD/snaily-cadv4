@@ -7,7 +7,7 @@ import { ModalIds } from "types/modal-ids";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/editor";
 
 export function NotepadModal() {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const [value, setValue] = useNotepad();
   const common = useTranslations("Common");
 
@@ -17,8 +17,8 @@ export function NotepadModal() {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.Notepad)}
-      onClose={() => closeModal(ModalIds.Notepad)}
+      isOpen={modalState.isOpen(ModalIds.Notepad)}
+      onClose={() => modalState.closeModal(ModalIds.Notepad)}
       title="Notepad"
       className="w-[600px]"
     >
@@ -28,7 +28,11 @@ export function NotepadModal() {
         <Button onPress={handleReset} variant="danger">
           {common("reset")}
         </Button>
-        <Button onPress={() => closeModal(ModalIds.Notepad)} className="ml-2" type="submit">
+        <Button
+          onPress={() => modalState.closeModal(ModalIds.Notepad)}
+          className="ml-2"
+          type="submit"
+        >
           {common("save")}
         </Button>
       </footer>

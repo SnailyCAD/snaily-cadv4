@@ -29,14 +29,14 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
   const [discordRoles, setDiscordRoles] = React.useState<DiscordRole[]>([]);
 
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
   const tPermission = useTranslations("Permissions");
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.ManageCustomRole);
+    modalState.closeModal(ModalIds.ManageCustomRole);
   }
 
   async function refreshRoles() {
@@ -76,7 +76,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
 
       if (json?.id) {
         jsonId = json.id;
-        closeModal(ModalIds.ManageCustomRole);
+        modalState.closeModal(ModalIds.ManageCustomRole);
         onUpdate?.(json);
       }
     } else {
@@ -89,7 +89,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
 
       if (json?.id) {
         jsonId = json.id;
-        closeModal(ModalIds.ManageCustomRole);
+        modalState.closeModal(ModalIds.ManageCustomRole);
         onCreate?.(json);
       }
     }
@@ -126,7 +126,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
       className="w-[600px]"
       title={role ? t("editCustomRole") : t("createCustomRole")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageCustomRole)}
+      isOpen={modalState.isOpen(ModalIds.ManageCustomRole)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (

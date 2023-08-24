@@ -140,7 +140,7 @@ export default function OfficerDashboard({
   const signal100 = useSignal100();
   const tones = useTones(ActiveToneType.LEO);
   const panic = usePanicButton();
-  const { isOpen } = useModal();
+  const modalState = useModal();
   const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
   const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
@@ -209,7 +209,7 @@ export default function OfficerDashboard({
           <Modals.NotepadModal />
 
           {/* name search have their own vehicle/weapon search modal */}
-          {isOpen(ModalIds.NameSearch) ? null : (
+          {modalState.isOpen(ModalIds.NameSearch) ? null : (
             <>
               <Modals.WeaponSearchModal />
               <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />

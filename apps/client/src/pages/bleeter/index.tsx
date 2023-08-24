@@ -27,7 +27,7 @@ interface Props {
 
 export default function Bleeter({ data }: Props) {
   const t = useTranslations("Bleeter");
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const list = useList({
     initialData: data.posts,
@@ -44,7 +44,9 @@ export default function Bleeter({ data }: Props) {
         <Title className="!mb-0">{t("bleeter")}</Title>
 
         <div className="flex gap-2">
-          <Button onPress={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
+          <Button onPress={() => modalState.openModal(ModalIds.ManageBleetModal)}>
+            {t("createBleet")}
+          </Button>
           <Link className={buttonVariants()} href={`/bleeter/@/${data.userBleeterProfile.handle}`}>
             {t("myProfile")}
           </Link>

@@ -24,7 +24,7 @@ interface Props {
 
 export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, penalCode }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations(type);
   const common = useTranslations("Common");
   const { LEO_BAIL } = useFeatureEnabled();
@@ -54,7 +54,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageValue);
+        modalState.closeModal(ModalIds.ManageValue);
         onUpdate(penalCode, json);
       }
     } else {
@@ -65,14 +65,14 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
       });
 
       if (json?.id) {
-        closeModal(ModalIds.ManageValue);
+        modalState.closeModal(ModalIds.ManageValue);
         onCreate(json);
       }
     }
   }
 
   function handleClose() {
-    closeModal(ModalIds.ManageValue);
+    modalState.closeModal(ModalIds.ManageValue);
     onClose();
   }
 
@@ -110,7 +110,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
       className="w-[1000px] min-h-[600px]"
       title={title}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageValue)}
+      isOpen={modalState.isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (

@@ -22,7 +22,7 @@ interface Props extends GetDispatchData {
 
 export default function LeoIncidents({ activeOfficer, incidents: initialData }: Props) {
   const t = useTranslations("Leo");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
   const { hasPermissions } = usePermission();
 
@@ -59,7 +59,7 @@ export default function LeoIncidents({ activeOfficer, incidents: initialData }: 
           <Button
             title={!isOfficerOnDuty ? "You must have an active officer." : ""}
             disabled={!isOfficerOnDuty}
-            onPress={() => openModal(ModalIds.ManageIncident)}
+            onPress={() => modalState.openModal(ModalIds.ManageIncident)}
           >
             {t("createIncident")}
           </Button>

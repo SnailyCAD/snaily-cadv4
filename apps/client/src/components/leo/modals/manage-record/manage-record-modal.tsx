@@ -138,7 +138,7 @@ export function ManageRecordModal(props: Props) {
   const [isBusinessRecord, setIsBusinessRecord] = React.useState(
     Boolean(props.record?.businessId && !props.record.citizenId),
   );
-  const { isOpen, closeModal, openModal, getPayload } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const tCourt = useTranslations("Courthouse");
@@ -178,7 +178,7 @@ export function ManageRecordModal(props: Props) {
 
   function handleClose() {
     props.onClose?.();
-    closeModal(data[props.type].id);
+    modalState.closeModal(data[props.type].id);
   }
 
   async function onSubmit(
@@ -245,7 +245,7 @@ export function ManageRecordModal(props: Props) {
     }
   }
 
-  const payload = getPayload<{
+  const payload = modalState.getPayload<{
     citizenId?: string;
     citizenName?: string;
     businessId?: string;
@@ -266,7 +266,7 @@ export function ManageRecordModal(props: Props) {
     <Modal
       title={t(data[props.type].title)}
       onClose={handleClose}
-      isOpen={isOpen(data[props.type].id)}
+      isOpen={modalState.isOpen(data[props.type].id)}
       className="w-[800px]"
     >
       <Formik
@@ -346,7 +346,7 @@ export function ManageRecordModal(props: Props) {
                   <Button
                     className="absolute right-0 top-0"
                     type="button"
-                    onPress={() => openModal(ModalIds.ManageCourtEntry)}
+                    onPress={() => modalState.openModal(ModalIds.ManageCourtEntry)}
                   >
                     {tCourt("manageCourtEntry")}
                   </Button>
@@ -405,7 +405,7 @@ export function ManageRecordModal(props: Props) {
 
             <ManageCourtEntryModal
               submitHandler={(values) => {
-                closeModal(ModalIds.ManageCourtEntry);
+                modalState.closeModal(ModalIds.ManageCourtEntry);
                 setFieldValue("courtEntry", values);
               }}
               courtEntry={values.courtEntry}

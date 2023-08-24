@@ -34,7 +34,7 @@ interface Props {
 type SetValues<Values> = (values: React.SetStateAction<Values>) => void;
 
 export function AddUnitToCallModal({ onClose }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
@@ -48,7 +48,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.AddAssignedUnit);
+    modalState.closeModal(ModalIds.AddAssignedUnit);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -157,7 +157,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.AddAssignedUnit)}
+      isOpen={modalState.isOpen(ModalIds.AddAssignedUnit)}
       onClose={handleClose}
       title={t("addUnit")}
       className="w-[600px]"

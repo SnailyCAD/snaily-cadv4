@@ -10,14 +10,14 @@ interface Props {
 }
 
 export function CitizenImageModal({ citizen }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { makeImageUrl } = useImageUrl();
 
   return (
     <Modal
       title={`${citizen.name} ${citizen.surname}`}
-      onClose={() => closeModal(ModalIds.CitizenImage)}
-      isOpen={isOpen(ModalIds.CitizenImage)}
+      onClose={() => modalState.closeModal(ModalIds.CitizenImage)}
+      isOpen={modalState.isOpen(ModalIds.CitizenImage)}
     >
       <div className="flex items-center justify-center mt-10">
         <ImageWrapper

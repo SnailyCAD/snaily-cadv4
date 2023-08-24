@@ -103,7 +103,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const { state, execute } = useFetch();
 
-  const { isOpen, openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Values");
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
@@ -153,12 +153,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
   function handleDeleteClick(value: AnyValue) {
     valueState.setTempId(value.id);
-    openModal(ModalIds.AlertDeleteValue);
+    modalState.openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(value: AnyValue) {
     valueState.setTempId(value.id);
-    openModal(ModalIds.ManageValue);
+    modalState.openModal(ModalIds.ManageValue);
   }
 
   async function handleDeleteSelected() {
@@ -181,7 +181,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
       setAllSelected(false);
       tableState.setRowSelection({});
-      closeModal(ModalIds.AlertDeleteSelectedValues);
+      modalState.closeModal(ModalIds.AlertDeleteSelectedValues);
 
       toastMessage({
         title: "Delete Values",
@@ -196,12 +196,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
   React.useEffect(() => {
     // reset form values
-    if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
+    if (!modalState.isOpen(ModalIds.ManageValue) && !modalState.isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
       setTimeout(() => valueState.setTempId(null), 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [modalState]);
 
   if (!Object.keys(ValueType).includes(path)) {
     return (
@@ -238,11 +238,14 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
 
         <div className="flex gap-2">
           {isEmpty(tableState.rowSelection) ? null : (
-            <Button onPress={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+            <Button
+              onPress={() => modalState.openModal(ModalIds.AlertDeleteSelectedValues)}
+              variant="danger"
+            >
               {t("deleteSelectedValues")}
             </Button>
           )}
-          <Button onPress={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
+          <Button onPress={() => modalState.openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <OptionsDropdown type={type} valueLength={asyncTable.items.length} />
         </div>
       </header>

@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
-  const { isOpen, openModal, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const wT = useTranslations("Weapons");
   const t = useTranslations("Leo");
@@ -30,19 +30,19 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
   const { BUREAU_OF_FIREARMS } = useFeatureEnabled();
 
   React.useEffect(() => {
-    if (!isOpen(id)) {
+    if (!modalState.isOpen(id)) {
       setCurrentResult(undefined);
     }
-  }, [id, isOpen, setCurrentResult]);
+  }, [id, modalState, setCurrentResult]);
 
   function handleNameClick() {
     if (!currentResult) return;
 
-    openModal(ModalIds.NameSearch, {
+    modalState.openModal(ModalIds.NameSearch, {
       ...currentResult.citizen,
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
-    closeModal(ModalIds.WeaponSearchWithinName);
+    modalState.closeModal(ModalIds.WeaponSearchWithinName);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -68,8 +68,8 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
   return (
     <Modal
       title={t("weaponSearch")}
-      onClose={() => closeModal(id)}
-      isOpen={isOpen(id)}
+      onClose={() => modalState.closeModal(id)}
+      isOpen={modalState.isOpen(id)}
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -161,7 +161,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                           size="xs"
                           type="button"
                           className="mt-2"
-                          onPress={() => openModal(ModalIds.ManageWeaponFlags)}
+                          onPress={() => modalState.openModal(ModalIds.ManageWeaponFlags)}
                         >
                           {t("manageWeaponFlags")}
                         </Button>
@@ -175,7 +175,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
             )}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onPress={() => closeModal(id)} variant="cancel">
+              <Button type="reset" onPress={() => modalState.closeModal(id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

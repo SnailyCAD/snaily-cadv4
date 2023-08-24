@@ -11,7 +11,7 @@ import { formatCitizenAddress } from "lib/utils";
 import type { PostDispatchAddressSearchData } from "@snailycad/types/api";
 
 export function AddressSearchModal() {
-  const { isOpen, closeModal, openModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
@@ -20,14 +20,14 @@ export function AddressSearchModal() {
   const [results, setResults] = React.useState<AddressSearchResult | null | boolean>(null);
 
   React.useEffect(() => {
-    if (!isOpen(ModalIds.AddressSearch)) {
+    if (!modalState.isOpen(ModalIds.AddressSearch)) {
       setResults(null);
     }
-  }, [isOpen]);
+  }, [modalState]);
 
   function handleOpen(citizen: AddressSearchResult[number]) {
-    closeModal(ModalIds.AddressSearch);
-    openModal(ModalIds.NameSearch, {
+    modalState.closeModal(ModalIds.AddressSearch);
+    modalState.openModal(ModalIds.NameSearch, {
       ...citizen,
       name: `${citizen.name} ${citizen.surname}`,
     });
@@ -56,8 +56,8 @@ export function AddressSearchModal() {
   return (
     <Modal
       title={t("addressSearch")}
-      onClose={() => closeModal(ModalIds.AddressSearch)}
-      isOpen={isOpen(ModalIds.AddressSearch)}
+      onClose={() => modalState.closeModal(ModalIds.AddressSearch)}
+      isOpen={modalState.isOpen(ModalIds.AddressSearch)}
       className="w-[800px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -126,7 +126,7 @@ export function AddressSearchModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.AddressSearch)}
+                onPress={() => modalState.closeModal(ModalIds.AddressSearch)}
                 variant="cancel"
               >
                 {common("cancel")}

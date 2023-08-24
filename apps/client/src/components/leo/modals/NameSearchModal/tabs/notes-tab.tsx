@@ -26,7 +26,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
 }: Props<T>) {
   const [open, setOpen] = React.useState(false);
   const t = useTranslations();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   const tableState = useTableState();
@@ -48,25 +48,25 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         notes: notes?.filter((v) => v.id !== tempNote.id),
       } as T);
       noteState.setTempId(null);
-      closeModal(ModalIds.AlertDeleteNote);
+      modalState.closeModal(ModalIds.AlertDeleteNote);
     }
   }
 
   function handleEditClick(note: Note) {
     noteState.setTempId(note.id);
-    openModal(ModalIds.ManageNote);
+    modalState.openModal(ModalIds.ManageNote);
     setOpen(true);
   }
 
   function handleDeleteClick(note: Note) {
     noteState.setTempId(note.id);
-    openModal(ModalIds.AlertDeleteNote);
+    modalState.openModal(ModalIds.AlertDeleteNote);
     setOpen(true);
   }
 
   function handleAddClick() {
     setOpen(true);
-    openModal(ModalIds.ManageNote);
+    modalState.openModal(ModalIds.ManageNote);
   }
 
   const isConfidential = "isConfidential" in currentResult && currentResult.isConfidential;

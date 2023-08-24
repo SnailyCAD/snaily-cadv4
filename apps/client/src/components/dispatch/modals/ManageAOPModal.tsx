@@ -10,7 +10,7 @@ import type { PostDispatchAopData } from "@snailycad/types/api";
 
 export function ManageAOPModal() {
   const { state, execute } = useFetch();
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const { cad, setCad } = useAuth();
 
   const t = useTranslations("Leo");
@@ -26,7 +26,7 @@ export function ManageAOPModal() {
     });
 
     if (json) {
-      closeModal(ModalIds.ManageAOP);
+      modalState.closeModal(ModalIds.ManageAOP);
       setCad({ ...cad, ...json });
     }
   }
@@ -37,8 +37,8 @@ export function ManageAOPModal() {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.ManageAOP)}
-      onClose={() => closeModal(ModalIds.ManageAOP)}
+      isOpen={modalState.isOpen(ModalIds.ManageAOP)}
+      onClose={() => modalState.closeModal(ModalIds.ManageAOP)}
       title={t("updateAOP")}
       className="w-[600px]"
     >
@@ -57,7 +57,7 @@ export function ManageAOPModal() {
             <footer className="flex justify-end gap-2">
               <Button
                 variant="cancel"
-                onPress={() => closeModal(ModalIds.ManageAOP)}
+                onPress={() => modalState.closeModal(ModalIds.ManageAOP)}
                 className="flex items-center"
                 type="reset"
               >

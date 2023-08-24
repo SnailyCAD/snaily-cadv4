@@ -44,10 +44,10 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   incident: tempIncident,
   type,
 }: Props<T>) {
-  const { isOpen, closeModal, getPayload } = useModal();
+  const modalState = useModal();
 
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
-  const payloadIncident = getPayload<LeoIncident | null>(ModalIds.ManageIncident);
+  const payloadIncident = modalState.getPayload<LeoIncident | null>(ModalIds.ManageIncident);
   const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
   const incident = payloadIncident ?? foundIncident ?? tempIncident ?? null;
 
@@ -71,7 +71,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   }
 
   function handleClose() {
-    closeModal(ModalIds.ManageIncident);
+    modalState.closeModal(ModalIds.ManageIncident);
     onClose?.();
   }
 
@@ -107,9 +107,9 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     }
 
     if (id && values.openModalAfterCreation && isDispatch) {
-      closeModal(ModalIds.ManageIncident);
+      modalState.closeModal(ModalIds.ManageIncident);
     } else if (id) {
-      closeModal(ModalIds.ManageIncident);
+      modalState.closeModal(ModalIds.ManageIncident);
     }
   }
 
@@ -130,7 +130,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     <Modal
       title={incident ? t("manageIncident") : t("createIncident")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageIncident)}
+      isOpen={modalState.isOpen(ModalIds.ManageIncident)}
       className={incident ? "w-[1200px] " : "w-[750px]"}
     >
       <div className={classNames(incident && "flex flex-col md:flex-row min-h-[450px] gap-3")}>

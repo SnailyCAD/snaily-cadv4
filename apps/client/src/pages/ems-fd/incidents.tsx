@@ -22,7 +22,7 @@ interface Props extends GetDispatchData {
 
 export default function EmsFdIncidents({ activeDeputy, incidents: initialData }: Props) {
   const t = useTranslations("Leo");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
 
   const { hasPermissions } = usePermission();
@@ -48,7 +48,7 @@ export default function EmsFdIncidents({ activeDeputy, incidents: initialData }:
           <Button
             title={!isDeputyOnDuty ? "You must have an active ems/fd deputy." : ""}
             disabled={!isDeputyOnDuty}
-            onPress={() => openModal(ModalIds.ManageIncident)}
+            onPress={() => modalState.openModal(ModalIds.ManageIncident)}
           >
             {t("createIncident")}
           </Button>

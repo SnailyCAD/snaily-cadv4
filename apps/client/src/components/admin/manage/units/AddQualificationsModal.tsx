@@ -21,13 +21,13 @@ interface Props {
 export function AddQualificationsModal({ unit, setUnit }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations();
-  const { isOpen, closeModal, getPayload } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { qualification } = useValues();
-  const type = getPayload<QualificationValueType>(ModalIds.ManageUnitQualifications);
+  const type = modalState.getPayload<QualificationValueType>(ModalIds.ManageUnitQualifications);
 
   function handleClose() {
-    closeModal(ModalIds.ManageUnitQualifications);
+    modalState.closeModal(ModalIds.ManageUnitQualifications);
   }
 
   async function handleSubmit(values: typeof INITIAL_VALUES) {
@@ -39,7 +39,7 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
 
     if (json.id) {
       setUnit((p) => ({ ...p, qualifications: [json, ...p.qualifications] }));
-      closeModal(ModalIds.ManageUnitQualifications);
+      modalState.closeModal(ModalIds.ManageUnitQualifications);
     }
   }
 
@@ -50,8 +50,8 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
   return (
     <Modal
       title={type === QualificationValueType.AWARD ? t("Leo.addAward") : t("Leo.addQualification")}
-      onClose={() => closeModal(ModalIds.ManageUnitQualifications)}
-      isOpen={isOpen(ModalIds.ManageUnitQualifications)}
+      onClose={() => modalState.closeModal(ModalIds.ManageUnitQualifications)}
+      isOpen={modalState.isOpen(ModalIds.ManageUnitQualifications)}
       className="min-w-[600px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>

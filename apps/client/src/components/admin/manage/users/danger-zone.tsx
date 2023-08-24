@@ -20,7 +20,7 @@ interface Props {
 export function DangerZone({ user, setUser }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Management");
 
   const formDisabled = user.rank === "OWNER";
@@ -34,7 +34,7 @@ export function DangerZone({ user, setUser }: Props) {
     });
 
     if (json) {
-      closeModal(ModalIds.AlertDisableUser2FA);
+      modalState.closeModal(ModalIds.AlertDisableUser2FA);
       setUser({ ...user, twoFactorEnabled: false });
     }
   }
@@ -61,7 +61,7 @@ export function DangerZone({ user, setUser }: Props) {
     });
 
     if (json) {
-      closeModal(ModalIds.AlertRevokePersonalApiToken);
+      modalState.closeModal(ModalIds.AlertRevokePersonalApiToken);
       setUser({ ...user, apiToken: null, apiTokenId: null });
     }
   }
@@ -75,7 +75,7 @@ export function DangerZone({ user, setUser }: Props) {
           variant="danger"
           className="flex items-center"
           disabled={state === "loading"}
-          onPress={() => openModal(ModalIds.AlertDeleteUser)}
+          onPress={() => modalState.openModal(ModalIds.AlertDeleteUser)}
         >
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Delete User
@@ -85,7 +85,7 @@ export function DangerZone({ user, setUser }: Props) {
           variant="danger"
           className="flex items-center ml-2"
           disabled={state === "loading"}
-          onPress={() => openModal(ModalIds.AlertGiveTempPassword)}
+          onPress={() => modalState.openModal(ModalIds.AlertGiveTempPassword)}
         >
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Temporary Password
@@ -96,7 +96,7 @@ export function DangerZone({ user, setUser }: Props) {
             variant="danger"
             className="flex items-center ml-2"
             disabled={state === "loading"}
-            onPress={() => openModal(ModalIds.AlertDisableUser2FA)}
+            onPress={() => modalState.openModal(ModalIds.AlertDisableUser2FA)}
           >
             {state === "loading" ? <Loader className="mr-3" /> : null}
             Disable Two Factor Authentication
@@ -108,7 +108,7 @@ export function DangerZone({ user, setUser }: Props) {
             variant="danger"
             className="flex items-center ml-2"
             disabled={state === "loading"}
-            onPress={() => openModal(ModalIds.AlertRevokePersonalApiToken)}
+            onPress={() => modalState.openModal(ModalIds.AlertRevokePersonalApiToken)}
           >
             {state === "loading" ? <Loader className="mr-3" /> : null}
             Revoke Personal API Token
@@ -125,8 +125,8 @@ export function DangerZone({ user, setUser }: Props) {
 
       <AlertModal
         onDeleteClick={() => {
-          closeModal(ModalIds.AlertGiveTempPassword);
-          openModal(ModalIds.GiveTempPassword);
+          modalState.closeModal(ModalIds.AlertGiveTempPassword);
+          modalState.openModal(ModalIds.GiveTempPassword);
         }}
         title={t("giveTempPassword")}
         description={`Are you sure you want to give ${user.username} a temporary password? They will not be able to log in to their account with their previous password. They will only be able to login with the password provided in the next step.`}

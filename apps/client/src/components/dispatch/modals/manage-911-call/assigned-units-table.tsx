@@ -30,7 +30,7 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
   const tableState = useTableState();
   const { user } = useAuth();
   const t = useTranslations("Calls");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   async function handleUnassignFromCall(unit: AssignedUnit) {
@@ -62,7 +62,11 @@ export function AssignedUnitsTable({ isDisabled }: Props) {
         <h2 className="font-semibold text-2xl">{t("assignedUnits")}</h2>
 
         {isDisabled ? null : (
-          <Button size="xs" type="button" onPress={() => openModal(ModalIds.AddAssignedUnit)}>
+          <Button
+            size="xs"
+            type="button"
+            onPress={() => modalState.openModal(ModalIds.AddAssignedUnit)}
+          >
             {t("addUnit")}
           </Button>
         )}

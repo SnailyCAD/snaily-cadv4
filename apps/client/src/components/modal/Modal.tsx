@@ -25,12 +25,12 @@ export function Modal({
   dialogClassName,
   onClose,
 }: ModalProps) {
-  const { canBeClosed } = useModal();
+  const modalState = useModal();
 
   const handleClose = React.useCallback(() => {
-    if (!canBeClosed) return;
+    if (!modalState.canBeClosed) return;
     onClose();
-  }, [canBeClosed, onClose]);
+  }, [modalState, onClose]);
 
   return (
     <Transition show={isOpen} appear as={React.Fragment}>

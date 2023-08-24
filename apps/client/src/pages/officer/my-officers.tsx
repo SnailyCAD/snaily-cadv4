@@ -40,7 +40,7 @@ export default function MyOfficers({ officers: data }: Props) {
 
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
@@ -59,7 +59,7 @@ export default function MyOfficers({ officers: data }: Props) {
     });
 
     if (json) {
-      closeModal(ModalIds.AlertDeleteOfficer);
+      modalState.closeModal(ModalIds.AlertDeleteOfficer);
       setOfficers((p) => p.filter((v) => v.id !== tempOfficer.id));
       officerState.setTempId(null);
     }
@@ -67,12 +67,12 @@ export default function MyOfficers({ officers: data }: Props) {
 
   function handleEditClick(officer: Officer) {
     officerState.setTempId(officer.id);
-    openModal(ModalIds.ManageOfficer);
+    modalState.openModal(ModalIds.ManageOfficer);
   }
 
   function handleDeleteClick(officer: Officer) {
     officerState.setTempId(officer.id);
-    openModal(ModalIds.AlertDeleteOfficer);
+    modalState.openModal(ModalIds.AlertDeleteOfficer);
   }
 
   return (
@@ -80,7 +80,9 @@ export default function MyOfficers({ officers: data }: Props) {
       <header className="flex items-center justify-between">
         <Title className="!mb-0">{t("myOfficers")}</Title>
 
-        <Button onPress={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
+        <Button onPress={() => modalState.openModal(ModalIds.ManageOfficer)}>
+          {t("createOfficer")}
+        </Button>
       </header>
 
       {officers.length <= 0 ? (

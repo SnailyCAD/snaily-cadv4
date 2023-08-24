@@ -33,7 +33,7 @@ export function PruneUnitsModal() {
   const { department } = useValues();
   const { state, execute } = useFetch();
   const t = useTranslations();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
 
   const asyncTable = useAsyncTable({
@@ -71,16 +71,16 @@ export function PruneUnitsModal() {
         title: "Units Pruned",
         message: `Pruned ${json.count} units`,
       });
-      closeModal(ModalIds.PruneUnits);
+      modalState.closeModal(ModalIds.PruneUnits);
     }
   }
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.PruneUnits)}
+      onClose={() => modalState.closeModal(ModalIds.PruneUnits)}
       className="w-[800px]"
       title={t("Management.pruneUnits")}
-      isOpen={isOpen(ModalIds.PruneUnits)}
+      isOpen={modalState.isOpen(ModalIds.PruneUnits)}
     >
       <p className="my-2 text-neutral-700 dark:text-gray-400">
         {t("Management.pruneUnitsDescription")}

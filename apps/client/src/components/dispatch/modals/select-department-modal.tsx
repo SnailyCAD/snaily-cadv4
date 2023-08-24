@@ -13,7 +13,7 @@ import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ValueType } from "@snailycad/types";
 
 export function SelectDepartmentModal() {
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
 
   const { userActiveDispatcher, setUserActiveDispatcher } = useActiveDispatcherState((s) => ({
@@ -39,7 +39,7 @@ export function SelectDepartmentModal() {
     if (json) {
       router.reload();
       setUserActiveDispatcher(json);
-      closeModal(ModalIds.SelectDepartment);
+      modalState.closeModal(ModalIds.SelectDepartment);
     }
   }
 
@@ -49,8 +49,8 @@ export function SelectDepartmentModal() {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.SelectDepartment)}
-      onClose={() => closeModal(ModalIds.SelectDepartment)}
+      isOpen={modalState.isOpen(ModalIds.SelectDepartment)}
+      onClose={() => modalState.closeModal(ModalIds.SelectDepartment)}
       title={t("selectDepartment")}
       className="w-[600px]"
     >
@@ -69,7 +69,7 @@ export function SelectDepartmentModal() {
             <footer className="flex justify-end gap-2">
               <Button
                 variant="cancel"
-                onPress={() => closeModal(ModalIds.SelectDepartment)}
+                onPress={() => modalState.closeModal(ModalIds.SelectDepartment)}
                 className="flex items-center"
                 type="reset"
               >

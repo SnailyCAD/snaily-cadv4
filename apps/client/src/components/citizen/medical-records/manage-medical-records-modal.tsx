@@ -35,13 +35,13 @@ export function ManageMedicalRecordsModal({
   citizen,
 }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const { bloodGroup } = useValues();
 
   function handleClose() {
-    closeModal(ModalIds.ManageMedicalRecords);
+    modalState.closeModal(ModalIds.ManageMedicalRecords);
     onClose?.();
   }
 
@@ -88,7 +88,7 @@ export function ManageMedicalRecordsModal({
     <Modal
       title={medicalRecord ? t("editMedicalRecord") : t("addMedicalRecord")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageMedicalRecords)}
+      isOpen={modalState.isOpen(ModalIds.ManageMedicalRecords)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, errors, values, isValid }) => (

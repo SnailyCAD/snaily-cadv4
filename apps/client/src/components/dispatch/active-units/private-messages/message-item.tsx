@@ -17,7 +17,7 @@ export function MessageItem(props: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
   const setCurrentlySelectedCall = useCall911State((state) => state.setCurrentlySelectedCall);
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   const unitCallsign = props.message.creator?.unit
     ? generateCallsign(props.message.creator.unit, getTemplateId(props.message))
@@ -30,13 +30,13 @@ export function MessageItem(props: Props) {
     if (!props.message.call) return;
 
     setCurrentlySelectedCall(props.message.call as Full911Call);
-    openModal(ModalIds.Manage911Call);
+    modalState.openModal(ModalIds.Manage911Call);
   }
 
   function handleIncidentPress() {
     if (!props.message.incident) return;
 
-    openModal(ModalIds.ManageIncident, props.message.incident);
+    modalState.openModal(ModalIds.ManageIncident, props.message.incident);
   }
 
   return (

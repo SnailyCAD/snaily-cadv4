@@ -13,7 +13,7 @@ interface Props {
 export function NameSearchLicensesSection(props: Props) {
   const currentResult = useNameSearch((state) => state.currentResult);
   const t = useTranslations();
-  const { openModal } = useModal();
+  const modalState = useModal();
 
   if (!currentResult || currentResult.isConfidential) {
     return null;
@@ -31,7 +31,7 @@ export function NameSearchLicensesSection(props: Props) {
             size="xs"
             type="button"
             className="mt-2"
-            onPress={() => openModal(ModalIds.ManageLicenses)}
+            onPress={() => modalState.openModal(ModalIds.ManageLicenses)}
           >
             {t("Leo.editLicenses")}
           </Button>
@@ -46,7 +46,7 @@ export function NameSearchLicensesSection(props: Props) {
             size="xs"
             type="button"
             className="mt-2"
-            onPress={() => openModal(ModalIds.ManageLicensePoints)}
+            onPress={() => modalState.openModal(ModalIds.ManageLicensePoints)}
           >
             {t("Leo.editLicensePoints")}
           </Button>

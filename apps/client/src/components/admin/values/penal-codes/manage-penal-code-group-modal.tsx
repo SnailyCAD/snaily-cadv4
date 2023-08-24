@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Props) {
-  const { closeModal, isOpen } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
 
@@ -24,7 +24,7 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
   const title = group ? "Manage Group" : "Add Group";
 
   function handleClose() {
-    closeModal(ModalIds.ManagePenalCodeGroup);
+    modalState.closeModal(ModalIds.ManagePenalCodeGroup);
     onClose?.();
   }
 
@@ -63,7 +63,7 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
       className="w-[650px]"
       title={title}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManagePenalCodeGroup)}
+      isOpen={modalState.isOpen(ModalIds.ManagePenalCodeGroup)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (

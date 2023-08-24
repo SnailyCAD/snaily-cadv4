@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function PrivateMessagesButton(props: Props) {
-  const { openModal, isOpen } = useModal();
+  const modalState = useModal();
   const { execute } = useFetch();
   const t = useTranslations("Leo");
 
@@ -39,7 +39,7 @@ export function PrivateMessagesButton(props: Props) {
       if (data.unitId === props.unit?.id) {
         refetch();
 
-        if (isOpen(ModalIds.PrivateMessage)) return;
+        if (modalState.isOpen(ModalIds.PrivateMessage)) return;
 
         toastMessage({
           icon: "success",
@@ -47,7 +47,10 @@ export function PrivateMessagesButton(props: Props) {
             <>
               <p className="mb-3">{data.chat.message}</p>
 
-              <Button size="sm" onClick={() => openModal(ModalIds.PrivateMessage, props.unit)}>
+              <Button
+                size="sm"
+                onClick={() => modalState.openModal(ModalIds.PrivateMessage, props.unit)}
+              >
                 {t("privateMessages")}
               </Button>
             </>
@@ -66,7 +69,7 @@ export function PrivateMessagesButton(props: Props) {
   return (
     <Button
       className="grid place-content-center w-fit h-8"
-      onPress={() => openModal(ModalIds.PrivateMessage, props.unit)}
+      onPress={() => modalState.openModal(ModalIds.PrivateMessage, props.unit)}
       isDisabled={!data?.length}
     >
       {data?.length ?? 0} available

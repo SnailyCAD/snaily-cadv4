@@ -31,8 +31,8 @@ export function Manage2FAModal() {
 
   const common = useTranslations("Common");
   const t = useTranslations("Account");
-  const { isOpen, closeModal, getPayload } = useModal();
-  const shouldDisable = getPayload<boolean>(ModalIds.Manage2FA);
+  const modalState = useModal();
+  const shouldDisable = modalState.getPayload<boolean>(ModalIds.Manage2FA);
 
   const { state, execute } = useFetch();
 
@@ -63,7 +63,7 @@ export function Manage2FAModal() {
 
         if (typeof json === "boolean" && json) {
           setUser({ ...user!, twoFactorEnabled: false });
-          closeModal(ModalIds.Manage2FA);
+          modalState.closeModal(ModalIds.Manage2FA);
           toastMessage({
             title: common("success"),
             message: t("disable2faSuccess"),
@@ -113,7 +113,7 @@ export function Manage2FAModal() {
   }
 
   function reset() {
-    closeModal(ModalIds.Manage2FA);
+    modalState.closeModal(ModalIds.Manage2FA);
     setCurrentStep(Steps.EnterPassword);
     setCurrentPassword("");
   }
@@ -127,7 +127,7 @@ export function Manage2FAModal() {
     <Modal
       onClose={onCancel}
       title={shouldDisable ? t("disable2FA") : t("enable2FA")}
-      isOpen={isOpen(ModalIds.Manage2FA)}
+      isOpen={modalState.isOpen(ModalIds.Manage2FA)}
       className="w-[500px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>

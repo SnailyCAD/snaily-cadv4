@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function CustomFieldsArea({ currentResult, isLeo }: Props) {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasPermissions } = usePermission();
@@ -48,7 +48,7 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
           size="xs"
           type="button"
           className="mt-2"
-          onPress={() => openModal(ModalIds.ManageCitizenCustomFields)}
+          onPress={() => modalState.openModal(ModalIds.ManageCitizenCustomFields)}
         >
           {t("manageCustomFields")}
         </Button>

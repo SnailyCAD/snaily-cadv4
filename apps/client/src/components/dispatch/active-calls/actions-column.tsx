@@ -27,7 +27,7 @@ export function ActiveCallsActionsColumn({
   call,
   handleAssignUnassignToCall,
 }: Props) {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { TOW } = useFeatureEnabled();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { hasPermissions } = usePermission();
@@ -46,13 +46,13 @@ export function ActiveCallsActionsColumn({
 
   function handleManageClick(call: Full911Call) {
     setCurrentlySelectedCall(call);
-    openModal(ModalIds.Manage911Call, call);
+    modalState.openModal(ModalIds.Manage911Call, call);
   }
 
   function handleCallTow(call: Full911Call) {
     if (!TOW) return;
     setCurrentlySelectedCall(call);
-    openModal(ModalIds.ManageTowCall, { call911Id: call.id });
+    modalState.openModal(ModalIds.ManageTowCall, { call911Id: call.id });
   }
 
   return (

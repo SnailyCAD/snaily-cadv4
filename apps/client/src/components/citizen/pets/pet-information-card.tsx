@@ -24,7 +24,7 @@ export function PetInformationCard() {
   const t = useTranslations("Pets");
   const { cad } = useAuth();
   const { currentPet } = usePetsState();
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
@@ -39,7 +39,7 @@ export function PetInformationCard() {
 
     if (json) {
       router.push("/pets");
-      closeModal(ModalIds.AlertDeletePet);
+      modalState.closeModal(ModalIds.AlertDeletePet);
     }
   }
 
@@ -100,11 +100,17 @@ export function PetInformationCard() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent alignOffset={0} align="end">
-          <DropdownMenuItem onClick={() => openModal(ModalIds.ManagePet)} variant="danger">
+          <DropdownMenuItem
+            onClick={() => modalState.openModal(ModalIds.ManagePet)}
+            variant="danger"
+          >
             {t("editPet")}
           </DropdownMenuItem>
 
-          <DropdownMenuItem onClick={() => openModal(ModalIds.AlertDeletePet)} variant="danger">
+          <DropdownMenuItem
+            onClick={() => modalState.openModal(ModalIds.AlertDeletePet)}
+            variant="danger"
+          >
             {t("deletePet")}
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -16,7 +16,7 @@ export function NameSearchFooter(props: Props) {
   const currentResult = useNameSearch((state) => state.currentResult);
   const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const t = useTranslations();
-  const { closeModal } = useModal();
+  const modalState = useModal();
 
   const showActions = (currentResult || CREATE_USER_CITIZEN_LEO) && props.isLeo;
 
@@ -27,7 +27,11 @@ export function NameSearchFooter(props: Props) {
       {showActions ? <NameSearchFooterActions isLeo={props.isLeo} /> : null}
 
       <div className="flex">
-        <Button type="reset" onPress={() => closeModal(ModalIds.NameSearch)} variant="cancel">
+        <Button
+          type="reset"
+          onPress={() => modalState.closeModal(ModalIds.NameSearch)}
+          variant="cancel"
+        >
           {t("Common.cancel")}
         </Button>
         <Button

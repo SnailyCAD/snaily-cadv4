@@ -53,7 +53,7 @@ interface FollowersFollowingModalProps {
 }
 
 export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations("Bleeter");
   const modalId = props.type === "followers" ? ModalIds.Followers : ModalIds.Following;
 
@@ -65,9 +65,9 @@ export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
   return (
     <Modal
       className="w-[600px]"
-      onClose={() => closeModal(modalId)}
+      onClose={() => modalState.closeModal(modalId)}
       title={t(props.type)}
-      isOpen={isOpen(modalId)}
+      isOpen={modalState.isOpen(modalId)}
     >
       {isLoading || !data ? (
         <Loader />
@@ -85,7 +85,7 @@ export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
               <li key={profile?.handle}>
                 <Link
                   className="hover:underline"
-                  onClick={() => closeModal(modalId)}
+                  onClick={() => modalState.closeModal(modalId)}
                   href={`/bleeter/@/${profile?.handle}`}
                 >
                   <h3>{profile?.name}</h3>

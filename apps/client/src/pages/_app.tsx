@@ -1,6 +1,5 @@
 import * as React from "react";
 import type { AppProps } from "next/app";
-import { SSRProvider } from "@react-aria/ssr";
 import { NextIntlProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
 import { ValuesProvider } from "context/ValuesContext";
@@ -77,38 +76,36 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SSRProvider>
-        <SocketProvider uri={url}>
-          <AuthProvider initialData={pageProps}>
-            <NextIntlProvider
-              defaultTranslationValues={{
-                span: (children) => <span className="font-semibold">{children}</span>,
-              }}
-              onError={console.warn}
-              locale={locale}
-              messages={pageProps.messages}
-              now={new Date()}
-            >
-              <DndProviderWrapper>
-                <ValuesProvider router={router} initialData={pageProps}>
-                  <CitizenProvider initialData={pageProps}>
-                    <Head>
-                      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                    </Head>
-                    {isMounted ? (
-                      <>
-                        <ReauthorizeSessionModal />
-                        <Toaster position="top-right" />
-                      </>
-                    ) : null}
-                    <Component {...pageProps} err={(rest as any).err} />
-                  </CitizenProvider>
-                </ValuesProvider>
-              </DndProviderWrapper>
-            </NextIntlProvider>
-          </AuthProvider>
-        </SocketProvider>
-      </SSRProvider>
+      <SocketProvider uri={url}>
+        <AuthProvider initialData={pageProps}>
+          <NextIntlProvider
+            defaultTranslationValues={{
+              span: (children) => <span className="font-semibold">{children}</span>,
+            }}
+            onError={console.warn}
+            locale={locale}
+            messages={pageProps.messages}
+            now={new Date()}
+          >
+            <DndProviderWrapper>
+              <ValuesProvider router={router} initialData={pageProps}>
+                <CitizenProvider initialData={pageProps}>
+                  <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  </Head>
+                  {isMounted ? (
+                    <>
+                      <ReauthorizeSessionModal />
+                      <Toaster position="top-right" />
+                    </>
+                  ) : null}
+                  <Component {...pageProps} err={(rest as any).err} />
+                </CitizenProvider>
+              </ValuesProvider>
+            </DndProviderWrapper>
+          </NextIntlProvider>
+        </AuthProvider>
+      </SocketProvider>
     </QueryClientProvider>
   );
 }

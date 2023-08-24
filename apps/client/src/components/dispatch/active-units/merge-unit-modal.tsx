@@ -46,7 +46,7 @@ export function MergeUnitModal({
   onClose,
   type,
 }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -55,7 +55,7 @@ export function MergeUnitModal({
 
   function handleClose() {
     onClose?.();
-    closeModal(ModalIds.MergeUnit);
+    modalState.closeModal(ModalIds.MergeUnit);
   }
 
   function makeValuesOption(unit: Officer | EmsFdDeputy, fixed?: boolean) {
@@ -117,7 +117,7 @@ export function MergeUnitModal({
   return (
     <Modal
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.MergeUnit)}
+      isOpen={modalState.isOpen(ModalIds.MergeUnit)}
       title={title}
       className="w-[600px]"
     >

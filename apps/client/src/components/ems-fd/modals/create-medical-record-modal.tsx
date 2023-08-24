@@ -22,7 +22,7 @@ interface Props {
 
 export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   const { state, execute } = useFetch();
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const { bloodGroup } = useValues();
@@ -30,7 +30,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
 
   function handleClose() {
-    closeModal(ModalIds.CreateMedicalRecord);
+    modalState.closeModal(ModalIds.CreateMedicalRecord);
     onClose?.();
   }
 
@@ -43,7 +43,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
 
     if (json?.id) {
       onCreate?.(json);
-      closeModal(ModalIds.CreateMedicalRecord);
+      modalState.closeModal(ModalIds.CreateMedicalRecord);
     }
   }
 
@@ -60,7 +60,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
     <Modal
       title={t("addMedicalRecord")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.CreateMedicalRecord)}
+      isOpen={modalState.isOpen(ModalIds.CreateMedicalRecord)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, errors, values, isValid }) => (
@@ -99,7 +99,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.CreateMedicalRecord)}
+                onPress={() => modalState.closeModal(ModalIds.CreateMedicalRecord)}
                 variant="cancel"
               >
                 {common("cancel")}

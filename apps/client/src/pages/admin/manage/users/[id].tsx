@@ -67,7 +67,7 @@ export default function ManageCitizens(props: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { hasPermissions } = usePermission();
   const { cad } = useAuth();
 
@@ -187,7 +187,7 @@ export default function ManageCitizens(props: Props) {
                 <Button
                   disabled={isUserPendingApproval || isUserDenied || user.rank === Rank.OWNER}
                   type="button"
-                  onPress={() => openModal(ModalIds.ManagePermissions)}
+                  onPress={() => modalState.openModal(ModalIds.ManagePermissions)}
                 >
                   {t("managePermissions")}
                 </Button>
@@ -197,7 +197,7 @@ export default function ManageCitizens(props: Props) {
                   className="ml-2 text-base"
                   disabled={isUserPendingApproval || isUserDenied || user.rank === Rank.OWNER}
                   type="button"
-                  onPress={() => openModal(ModalIds.ManageRoles)}
+                  onPress={() => modalState.openModal(ModalIds.ManageRoles)}
                 >
                   {t("manageRoles")}
                 </Button>

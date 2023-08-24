@@ -41,7 +41,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
   const { activeDeputies: _activeDeputies, setActiveDeputies } = useActiveDeputies();
   const { hasPermissions } = usePermission();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
@@ -73,7 +73,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
   function handleEditClick(deputy: ActiveDeputy) {
     deputyState.setTempId(deputy.id);
-    openModal(ModalIds.ManageUnit);
+    modalState.openModal(ModalIds.ManageUnit);
   }
 
   return (
@@ -88,7 +88,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               className={classNames(
                 "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               )}
-              onPress={() => openModal(ModalIds.CreateTemporaryUnit, "ems-fd")}
+              onPress={() => modalState.openModal(ModalIds.CreateTemporaryUnit, "ems-fd")}
             >
               {t("Leo.createTemporaryUnit")}
             </Button>
@@ -96,7 +96,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
           <Button
             variant="cancel"
             className={classNames(
-              "px-1.5 py-2  dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              "px-2 py-2  dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("ems-fd", !showEmsFilters)}
@@ -106,6 +106,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
             <Filter
               className={classNames("group-hover:fill-white", showEmsFilters && "text-white")}
               aria-label={common("filters")}
+              size={18}
             />
           </Button>
         </div>

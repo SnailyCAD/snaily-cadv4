@@ -38,7 +38,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
 }: EventItemProps<T>) {
   const [isEditable, setIsEditable] = React.useState(!disabled);
 
-  const { openModal, closeModal } = useModal();
+  const modalState = useModal();
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
   const t = useTranslations("Calls");
@@ -49,12 +49,12 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
 
   function handleOpen() {
     setOpen(true);
-    openModal(ModalIds.AlertDeleteCallEvent);
+    modalState.openModal(ModalIds.AlertDeleteCallEvent);
   }
 
   function handleClose() {
     setOpen(false);
-    closeModal(ModalIds.AlertDeleteCallEvent);
+    modalState.closeModal(ModalIds.AlertDeleteCallEvent);
   }
 
   async function deleteEvent() {

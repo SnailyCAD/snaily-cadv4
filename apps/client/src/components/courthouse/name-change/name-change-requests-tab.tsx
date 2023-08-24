@@ -16,7 +16,7 @@ interface Props {
 export function NameChangeRequestTab(props: Props) {
   const [requests, setRequests] = React.useState(props.requests);
   const t = useTranslations("Courthouse");
-  const { openModal } = useModal();
+  const modalState = useModal();
   const common = useTranslations("Common");
   const tableState = useTableState();
 
@@ -25,7 +25,7 @@ export function NameChangeRequestTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("nameChangeRequests")}</h3>
 
-        <Button onPress={() => openModal(ModalIds.RequestNameChange)}>
+        <Button onPress={() => modalState.openModal(ModalIds.RequestNameChange)}>
           {t("requestNameChange")}
         </Button>
       </header>

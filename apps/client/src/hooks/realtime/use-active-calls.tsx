@@ -32,7 +32,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
     setCurrentlySelectedCall: state.setCurrentlySelectedCall,
   }));
   const { user } = useAuth();
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
 
@@ -134,7 +134,7 @@ export function useActiveCalls({ unit, calls }: UseActiveCallsOptions) {
 
           <Button
             onPress={() => {
-              openModal(ModalIds.Manage911Call);
+              modalState.openModal(ModalIds.Manage911Call);
               call911State.setCurrentlySelectedCall({
                 ...previousCall,
                 ...call,

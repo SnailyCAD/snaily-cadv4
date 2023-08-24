@@ -16,7 +16,7 @@ import { useInvalidateQuery } from "hooks/use-invalidate-query";
 type PendingWarrant = GetManagePendingWarrants["pendingWarrants"][number];
 
 export function PendingWarrantsTab() {
-  const { openModal } = useModal();
+  const modalState = useModal();
   const t = useTranslations();
   const common = useTranslations("Common");
   const tableState = useTableState();
@@ -37,7 +37,7 @@ export function PendingWarrantsTab() {
 
   function handleViewWarrant(warrant: Warrant) {
     warrantState.setTempId(warrant.id);
-    openModal(ModalIds.CreateWarrant, { isActive: true });
+    modalState.openModal(ModalIds.CreateWarrant, { isActive: true });
   }
 
   async function handleUpdate(id: string, type: WhitelistStatus) {

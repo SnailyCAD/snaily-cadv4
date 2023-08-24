@@ -17,7 +17,7 @@ import { hasSearchResults } from "../VehicleSearchModal";
 
 export function ManageVehicleLicensesModal() {
   const common = useTranslations("Common");
-  const { isOpen, closeModal } = useModal();
+  const modalState = useModal();
   const { license } = useValues();
   const { currentResult, setCurrentResult } = useVehicleSearch();
   const nameSearchState = useNameSearch((state) => ({
@@ -42,7 +42,7 @@ export function ManageVehicleLicensesModal() {
       const updatedVehicle = { ...currentResult, ...json };
 
       setCurrentResult(updatedVehicle);
-      closeModal(ModalIds.ManageVehicleLicenses);
+      modalState.closeModal(ModalIds.ManageVehicleLicenses);
 
       if (nameSearchState.currentResult && !nameSearchState.currentResult.isConfidential) {
         nameSearchState.setCurrentResult({
@@ -69,8 +69,8 @@ export function ManageVehicleLicensesModal() {
   return (
     <Modal
       title={t("Leo.editLicenses")}
-      isOpen={isOpen(ModalIds.ManageVehicleLicenses)}
-      onClose={() => closeModal(ModalIds.ManageVehicleLicenses)}
+      isOpen={modalState.isOpen(ModalIds.ManageVehicleLicenses)}
+      onClose={() => modalState.closeModal(ModalIds.ManageVehicleLicenses)}
       className="min-w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -118,7 +118,7 @@ export function ManageVehicleLicensesModal() {
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button
                 type="reset"
-                onPress={() => closeModal(ModalIds.ManageVehicleLicenses)}
+                onPress={() => modalState.closeModal(ModalIds.ManageVehicleLicenses)}
                 variant="cancel"
               >
                 {common("cancel")}
