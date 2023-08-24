@@ -1,6 +1,5 @@
-import type * as Prisma from "@prisma/client";
 import type * as Types from "../index.js";
-import type { PenalCodeGroup, AnyValue } from "../index.js";
+import type { PenalCodeGroup, AnyValue, ValueType } from "../index.js";
 
 /**
  * @method GET
@@ -8,7 +7,7 @@ import type { PenalCodeGroup, AnyValue } from "../index.js";
  */
 export type GetValuesData<Value extends AnyValue = AnyValue> = {
   values: Value[];
-  type: Prisma.ValueType;
+  type: ValueType;
   totalCount: number;
 }[];
 
