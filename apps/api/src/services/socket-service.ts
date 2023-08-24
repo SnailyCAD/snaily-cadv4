@@ -15,6 +15,7 @@ import {
   Warrant,
   ActiveTone,
   DispatchChat,
+  Citizen,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
 import {
@@ -24,6 +25,8 @@ import {
   unitProperties,
 } from "utils/leo/includes";
 import { Injectable } from "@tsed/di";
+import { generateCallsign } from "@snailycad/utils";
+import { MiscCadSettings } from "@snailycad/types";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
 
@@ -162,11 +165,28 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 
-  emitPanicButtonLeo(unit: CombinedLeoUnit | Officer | EmsFdDeputy | null, type?: "ON" | "OFF") {
+  emitPanicButtonLeo(
+    unit:
+      | CombinedLeoUnit
+      | (Officer & { citizen: Pick<Citizen, "name" | "surname"> })
+      | (EmsFdDeputy & { citizen: Pick<Citizen, "name" | "surname"> })
+      | null,
+    miscCadSettings: MiscCadSettings,
+    type?: "ON" | "OFF",
+  ) {
     if (type === "OFF") {
       this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, unit);
     } else {
-      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, unit);
+      const unitName =
+        unit && "citizen" in unit ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
+
+      const officerCallsign = unit
+        ? generateCallsign(unit as any, miscCadSettings.callsignTemplate)
+        : "";
+
+      const formattedUnitData = unit ? `${officerCallsign} ${unitName}` : "";
+
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, { ...unit, formattedUnitData });
     }
   }
 
