@@ -32,7 +32,6 @@ export const ContextMenuItem = React.forwardRef<
 >(({ className, size, variant, ...props }, ref) => (
   <ContextMenuPrimitive.Item
     ref={ref}
-    // todo: cn
     className={buttonVariants({
       variant: "transparent",
       className: cn(

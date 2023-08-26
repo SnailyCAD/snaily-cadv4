@@ -23,6 +23,7 @@ interface AsyncListFieldFetchOptions {
   apiPath: string | ((query: string | undefined) => string);
   method?: "POST" | "GET" | null;
   bodyKey?: string;
+  url?: string;
 }
 
 export interface AsyncListFieldProps<T extends object>
@@ -66,7 +67,8 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         ? { [props.fetchOptions.bodyKey]: filterText }
         : undefined;
 
-      const res = await fetch(`${getAPIUrl()}${apiPath}`, {
+      const url = props.fetchOptions.url ?? getAPIUrl();
+      const res = await fetch(`${url}${apiPath}`, {
         credentials: "include",
         signal,
         method: props.fetchOptions.method ?? "GET",
