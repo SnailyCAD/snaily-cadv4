@@ -98,7 +98,7 @@
     "@react-types/overlays": "^3.8.0",
     "@react-types/select": "^3.8.1",
     "@react-types/shared": "^3.18.1",
-    "@snailycad/utils": "1.68.4",
+    "@snailycad/utils": "^1.68.4",
     "class-variance-authority": "^0.7.0",
     "mxcn": "^2.0.0",
     "react-bootstrap-icons": "^1.10.3",
