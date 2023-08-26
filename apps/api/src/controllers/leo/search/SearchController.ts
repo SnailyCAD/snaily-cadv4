@@ -154,9 +154,15 @@ export class LeoSearchController {
       return [];
     }
 
+    if (!fromAuthUserOnly) {
+      // todo: check for LEO perms
+    }
+
+    const checkUserId = shouldCheckCitizenUserId({ cad, user });
+
     if (citizenId) {
       const citizens = await prisma.citizen.findMany({
-        where: { id: citizenId },
+        where: { id: citizenId, userId: fromAuthUserOnly && checkUserId ? user.id : undefined },
         take: 35,
         ...citizenSearchIncludeOrSelect(user, cad),
       });
@@ -170,7 +176,6 @@ export class LeoSearchController {
       return citizensWithConfidential as APITypes.PostLeoSearchCitizenData;
     }
 
-    const checkUserId = shouldCheckCitizenUserId({ cad, user });
     const citizens = await prisma.citizen.findMany({
       where: {
         userId: fromAuthUserOnly && checkUserId ? user.id : undefined,

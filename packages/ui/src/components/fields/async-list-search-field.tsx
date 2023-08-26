@@ -9,6 +9,7 @@ import { ErrorMessage } from "../error-message";
 import { Popover } from "../overlays/async-list/popover";
 import { AsyncListFieldListBox } from "../list/async-list/async-list-list-box";
 import { useAsyncList } from "@react-stately/data";
+import { USER_API_TOKEN_HEADER } from "@snailycad/config";
 
 import { useDebounce } from "react-use";
 import type { Node } from "@react-types/shared";
@@ -24,6 +25,7 @@ interface AsyncListFieldFetchOptions {
   method?: "POST" | "GET" | null;
   bodyKey?: string;
   url?: string;
+  userApiToken?: string;
 }
 
 export interface AsyncListFieldProps<T extends object>
@@ -75,6 +77,9 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         body: body && props.fetchOptions.method === "POST" ? JSON.stringify(body) : undefined,
         headers: {
           "content-type": "application/json",
+          ...(props.fetchOptions.userApiToken
+            ? { [USER_API_TOKEN_HEADER]: props.fetchOptions.userApiToken }
+            : {}),
         },
       });
       const json = await res.json();

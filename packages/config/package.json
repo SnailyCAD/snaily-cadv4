@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/config",
-  "version": "1.68.4",
+  "version": "1.68.5",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

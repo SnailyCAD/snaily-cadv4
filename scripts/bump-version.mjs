@@ -32,13 +32,13 @@ for (const pkg of allPackages) {
       const isWorkspace = isInDep.startsWith("workspace:");
       packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = isWorkspace
         ? "workspace:*"
-        : version;
+        : `^${version}`;
     } else if (isInDevDep) {
       const isWorkspace = isInDevDep.startsWith("workspace:");
 
       packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = isWorkspace
         ? "workspace:*"
-        : version;
+        : `^${version}`;
     }
   }
 
