@@ -5690,7 +5690,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@snailycad/permissions@1.68.4, @snailycad/permissions@workspace:*, @snailycad/permissions@workspace:packages/permissions":
+"@snailycad/permissions@^1.68.4, @snailycad/permissions@workspace:*, @snailycad/permissions@workspace:packages/permissions":
   version: 0.0.0-use.local
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
@@ -5725,11 +5725,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.68.4, @snailycad/types@workspace:*, @snailycad/types@workspace:packages/types":
+"@snailycad/types@^1.68.4, @snailycad/types@workspace:*, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
-    "@snailycad/permissions": 1.68.4
+    "@snailycad/permissions": ^1.68.4
     discord-api-types: 0.37.51
     tsup: 6.6.2
     typescript: ^5.1.6
@@ -5781,7 +5781,7 @@ __metadata:
     "@react-types/select": ^3.8.1
     "@react-types/shared": ^3.18.1
     "@snailycad/types": "workspace:*"
-    "@snailycad/utils": 1.68.4
+    "@snailycad/utils": ^1.68.4
     "@storybook/addon-essentials": ^7.2.0
     "@storybook/addon-interactions": ^7.2.0
     "@storybook/addon-links": ^7.2.0
@@ -5817,11 +5817,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/utils@1.68.4, @snailycad/utils@workspace:packages/utils":
+"@snailycad/utils@1.68.4, @snailycad/utils@^1.68.4, @snailycad/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@snailycad/utils@workspace:packages/utils"
   dependencies:
-    "@snailycad/types": 1.68.4
+    "@snailycad/types": ^1.68.4
     c8: ^8.0.1
     tslib: ^2.6.1
     tsup: 6.6.2
