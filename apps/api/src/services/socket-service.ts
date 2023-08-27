@@ -112,6 +112,7 @@ export class Socket {
         include: leoProperties,
       }),
       prisma.combinedLeoUnit.findMany({
+        orderBy: { lastStatusChangeTimestamp: "desc" },
         include: combinedUnitProperties,
       }),
     ]);
@@ -128,12 +129,14 @@ export class Socket {
   async emitUpdateDeputyStatus() {
     const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.findMany({
+        orderBy: { updatedAt: "desc" },
         where: {
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
         },
         include: unitProperties,
       }),
       prisma.combinedEmsFdUnit.findMany({
+        orderBy: { lastStatusChangeTimestamp: "desc" },
         include: combinedEmsFdUnitProperties,
       }),
     ]);

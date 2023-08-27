@@ -31,6 +31,7 @@ export class MyOfficersController {
       prisma.officer.count({ where: { userId: user.id } }),
       prisma.officer.findMany({
         where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
         include: {
           ...leoProperties,
           qualifications: { include: { qualification: { include: { value: true } } } },

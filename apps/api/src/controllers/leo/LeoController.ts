@@ -86,6 +86,7 @@ export class LeoController {
       prisma.officer.findMany({
         take: includeAll ? undefined : 12,
         skip: includeAll ? undefined : skip,
+        orderBy: { updatedAt: "desc" },
         where: {
           departmentId: activeDispatcher?.departmentId || undefined,
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
@@ -96,6 +97,7 @@ export class LeoController {
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
+        orderBy: { lastStatusChangeTimestamp: "desc" },
         where: {
           ...unitsInactivityFilter?.filter,
           departmentId: activeDispatcher?.departmentId || undefined,

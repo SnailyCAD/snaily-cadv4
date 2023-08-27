@@ -57,6 +57,7 @@ export class EmsFdController {
   async getUserDeputies(@Context("user") user: User): Promise<APITypes.GetMyDeputiesData> {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: { userId: user.id },
+      orderBy: { updatedAt: "desc" },
       include: {
         ...unitProperties,
         qualifications: { include: { qualification: { include: { value: true } } } },
@@ -206,6 +207,7 @@ export class EmsFdController {
 
     const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.findMany({
+        orderBy: { updatedAt: "desc" },
         where: {
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
           departmentId: activeDispatcher?.departmentId || undefined,
@@ -215,6 +217,7 @@ export class EmsFdController {
       }),
       prisma.combinedEmsFdUnit.findMany({
         include: combinedEmsFdUnitProperties,
+        orderBy: { lastStatusChangeTimestamp: "desc" },
         where: {
           ...unitsInactivityFilter?.filter,
           departmentId: activeDispatcher?.departmentId || undefined,
