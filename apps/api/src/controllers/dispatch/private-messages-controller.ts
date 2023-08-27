@@ -75,7 +75,7 @@ export class DispatchPrivateMessagesController {
       const { unit } = await findUnit(unitId);
 
       if (unit?.id !== activeOfficer?.id || unit?.id !== activeDeputy?.id) {
-        throw new ExtendedBadRequest({ message: "Insufficient permissions" });
+        throw new ExtendedBadRequest({ message: "onlyDispatchCanStartPrivateMessage" });
       }
     }
 

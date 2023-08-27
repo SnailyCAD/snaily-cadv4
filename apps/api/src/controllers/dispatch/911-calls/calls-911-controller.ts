@@ -138,7 +138,6 @@ export class Calls911Controller {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async getCallById(@PathParams("id") id: string): Promise<APITypes.Get911CallByIdData> {
-    console.log("idOrCaseNumber", Number(id));
     let where: Prisma.Call911WhereInput = {};
 
     if (Number.isNaN(parseInt(id))) {
