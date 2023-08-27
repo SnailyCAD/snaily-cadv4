@@ -166,7 +166,7 @@ export function NameSearchModal() {
       title={t("nameSearch")}
       onClose={() => modalState.closeModal(ModalIds.NameSearch)}
       isOpen={modalState.isOpen(ModalIds.NameSearch)}
-      className={currentResult ? "w-[1200px]" : "w-[650px]"}
+      className={currentResult ? "min-w-[1200px]" : "w-[650px]"}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ setValues, errors, values }) => (

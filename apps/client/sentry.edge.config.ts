@@ -18,5 +18,6 @@ init({
     /Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node./gi,
     "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.",
     "The object can not be found here.",
+    /AbortError/gi,
   ],
 });
