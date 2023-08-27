@@ -5740,6 +5740,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/ui@workspace:packages/ui"
   dependencies:
+    "@casperiv/useful": ^3.0.0
     "@internationalized/date": ^3.3.0
     "@radix-ui/react-accordion": ^1.1.2
     "@radix-ui/react-context-menu": ^2.1.4
@@ -5793,6 +5794,7 @@ __metadata:
     "@storybook/testing-library": ^0.2.0
     autoprefixer: ^10.4.14
     class-variance-authority: ^0.7.0
+    formik: ^2.4.3
     mxcn: ^2.0.0
     postcss: ^8.4.27
     prop-types: ^15.8.1
@@ -5801,6 +5803,7 @@ __metadata:
     react-dnd: 16.0.1
     react-dnd-html5-backend: 16.0.1
     react-dom: ^18.2.0
+    react-use: ^17.4.0
     rimraf: ^5.0.1
     storybook: ^7.2.0
     tailwind-merge: ^1.14.0

@@ -58,6 +58,7 @@
     ]
   },
   "dependencies": {
+    "@casperiv/useful": "^3.0.0",
     "@internationalized/date": "^3.3.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-context-menu": "^2.1.4",
@@ -101,10 +102,12 @@
     "@snailycad/config": "^1.68.6",
     "@snailycad/utils": "^1.68.6",
     "class-variance-authority": "^0.7.0",
+    "formik": "^2.4.3",
     "mxcn": "^2.0.0",
     "react-bootstrap-icons": "^1.10.3",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
+    "react-use": "^17.4.0",
     "tailwind-merge": "^1.14.0"
   },
   "peerDependencies": {
