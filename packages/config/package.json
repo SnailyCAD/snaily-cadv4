@@ -20,7 +20,8 @@
     "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit",
     "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "test": "yarn vitest run",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "tsup": "6.6.2",

@@ -33,7 +33,8 @@
   "scripts": {
     "build": "yarn workspace @snailycad/api generate && yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
+    "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "@snailycad/permissions": "^1.68.7",
