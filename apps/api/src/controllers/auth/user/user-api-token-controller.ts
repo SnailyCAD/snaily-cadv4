@@ -39,7 +39,7 @@ export class AccountController {
     const apiToken = await prisma.apiToken.create({
       data: {
         enabled: true,
-        token: nanoid(56),
+        token: `snp_${nanoid(56)}`,
       },
     });
 
@@ -98,7 +98,7 @@ export class AccountController {
     const updated = await prisma.user.update({
       where: { id: user.id },
       data: {
-        apiToken: { update: { token: nanoid(56) } },
+        apiToken: { update: { token: `snp_${nanoid(56)}` } },
       },
       select: userProperties,
     });

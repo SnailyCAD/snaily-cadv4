@@ -7,7 +7,7 @@ import {
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context, QueryParams } from "@tsed/platform-params";
-import { ContentType, Delete, Get, Put } from "@tsed/schema";
+import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { CAD_SELECT, IsAuth, setCADFeatures } from "middlewares/auth/is-auth";
 import { BadRequest } from "@tsed/exceptions";
@@ -386,7 +386,7 @@ export class CADSettingsController {
       data: {
         cad: { connect: { id: cad.id } },
         enabled: true,
-        token: nanoid(56),
+        token: `sng_${nanoid(56)}`,
       },
     });
 
@@ -404,6 +404,7 @@ export class CADSettingsController {
 
   @Delete("/api-token")
   @UseBefore(IsAuth)
+  @Description("Regenerate the global API token")
   @UsePermissions({
     permissions: [Permissions.ManageCADSettings],
   })
@@ -420,7 +421,7 @@ export class CADSettingsController {
         id: cad.apiTokenId,
       },
       data: {
-        token: nanoid(56),
+        token: `sng_${nanoid(56)}`,
       },
     });
 
