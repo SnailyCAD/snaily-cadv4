@@ -23,10 +23,11 @@ export function SendMessageForm(props: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute<DispatchChat>({
+    const { json } = await execute<DispatchChat, typeof INITIAL_VALUES>({
       path: `/dispatch/private-message/${props.unitId}`,
       method: "POST",
       data: values,
+      helpers,
     });
 
     if (json.id) {

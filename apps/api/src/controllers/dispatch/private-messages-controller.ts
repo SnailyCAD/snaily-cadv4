@@ -73,8 +73,9 @@ export class DispatchPrivateMessagesController {
       ]);
 
       const { unit } = await findUnit(unitId);
+      const activeUnit = activeOfficer ?? activeDeputy;
 
-      if (unit?.id !== activeOfficer?.id || unit?.id !== activeDeputy?.id) {
+      if (unit?.id !== activeUnit?.id) {
         throw new ExtendedBadRequest({ message: "onlyDispatchCanStartPrivateMessage" });
       }
     }
@@ -126,8 +127,9 @@ export class DispatchPrivateMessagesController {
         getActiveDeputy({ ctx, user, req: request }).catch(() => null),
       ]);
 
-      if (unit?.id !== activeOfficer?.id || unit?.id !== activeDeputy?.id) {
-        throw new ExtendedBadRequest({ message: "Insufficient permissions" });
+      const activeUnit = activeOfficer ?? activeDeputy;
+      if (unit?.id !== activeUnit?.id) {
+        throw new ExtendedBadRequest({ message: "onlyDispatchCanStartPrivateMessage" });
       }
     }
 
