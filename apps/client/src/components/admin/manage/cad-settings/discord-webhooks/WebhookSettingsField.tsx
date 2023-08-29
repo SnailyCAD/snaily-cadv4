@@ -10,7 +10,7 @@ import { DiscordWebhookType } from "@snailycad/types";
 interface FieldProps {
   description?: string;
   label: string;
-  fieldName: DiscordWebhookType;
+  fieldName: DiscordWebhookType | (string & {});
   channels?: GetCADDiscordWebhooksData;
   isRawWebhook?: boolean;
   disabled?: boolean;

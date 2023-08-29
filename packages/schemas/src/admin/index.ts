@@ -93,7 +93,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
 
 /** discord webhooks */
 const DISCORD_WEBHOOK_TYPE =
-  /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON|VEHICLE_IMPOUNDED|CITIZEN_RECORD|WARRANTS|BLEETER_POST|CITIZEN_DECLARED_DEAD/;
+  /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON|VEHICLE_IMPOUNDED|CITIZEN_RECORD|WARRANTS|BLEETER_POST|CITIZEN_DECLARED_DEAD|USER_WHITELIST_STATUS|DEPARTMENT_WHITELIST_STATUS/;
 
 export const DISCORD_WEBHOOK = z.object({
   id: z.string().max(255).nullish(),
@@ -105,17 +105,10 @@ export const RAW_WEBHOOK = DISCORD_WEBHOOK.omit({ extraMessage: true }).extend({
   url: z.string().nullish(),
 });
 
-export const DISCORD_WEBHOOKS_SCHEMA = z.object({
-  call911Webhook: DISCORD_WEBHOOK,
-  statusesWebhook: DISCORD_WEBHOOK,
-  panicButtonWebhook: DISCORD_WEBHOOK,
-  boloWebhook: DISCORD_WEBHOOK,
-  vehicleImpoundedWebhook: DISCORD_WEBHOOK,
-  citizenRecordsWebhook: DISCORD_WEBHOOK,
-  warrantsWebhook: DISCORD_WEBHOOK,
-  bleeterPostWebhook: DISCORD_WEBHOOK,
-  citizenDeclaredDeadWebhook: DISCORD_WEBHOOK,
-});
+export const DISCORD_WEBHOOKS_SCHEMA = z.record(
+  z.string().regex(DISCORD_WEBHOOK_TYPE),
+  DISCORD_WEBHOOK,
+);
 
 export const RAW_WEBHOOKS_SCHEMA = z.object({
   call911Webhook: RAW_WEBHOOK,
