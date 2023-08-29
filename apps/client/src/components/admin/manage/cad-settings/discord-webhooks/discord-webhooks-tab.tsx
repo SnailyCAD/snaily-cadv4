@@ -10,6 +10,14 @@ import { WebhookSettingsField } from "./WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
 
+function createInitialValues(cad: cad | null) {
+  const webhookTypes = Object.values(DiscordWebhookType);
+
+  return webhookTypes.map((type) => ({
+    [type]: makeInitialValue(cad, type),
+  }));
+}
+
 export function DiscordWebhooksTab() {
   const [channels, setChannels] = React.useState<GetCADDiscordWebhooksData>([]);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
@@ -20,17 +28,7 @@ export function DiscordWebhooksTab() {
   const { cad, setCad } = useAuth();
   const t = useTranslations("DiscordWebhooksTab");
 
-  const INITIAL_VALUES = {
-    call911Webhook: makeInitialValue(cad, DiscordWebhookType.CALL_911),
-    statusesWebhook: makeInitialValue(cad, DiscordWebhookType.UNIT_STATUS),
-    panicButtonWebhook: makeInitialValue(cad, DiscordWebhookType.PANIC_BUTTON),
-    boloWebhook: makeInitialValue(cad, DiscordWebhookType.BOLO),
-    vehicleImpoundedWebhook: makeInitialValue(cad, DiscordWebhookType.VEHICLE_IMPOUNDED),
-    citizenRecordsWebhook: makeInitialValue(cad, DiscordWebhookType.CITIZEN_RECORD),
-    warrantsWebhook: makeInitialValue(cad, DiscordWebhookType.WARRANTS),
-    bleeterPostWebhook: makeInitialValue(cad, DiscordWebhookType.BLEETER_POST),
-    citizenDeclaredDeadWebhook: makeInitialValue(cad, DiscordWebhookType.CITIZEN_DECLARED_DEAD),
-  };
+  const INITIAL_VALUES = createInitialValues(cad);
 
   React.useEffect(() => {
     void refreshChannels();
@@ -100,7 +98,7 @@ export function DiscordWebhooksTab() {
           <Form className="mt-5 space-y-5">
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="call911Webhook"
+              fieldName={DiscordWebhookType.CALL_911}
               channels={channels}
               description={t("calls911ChannelInfo")}
               label={t("calls911Channel")}
@@ -108,7 +106,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="statusesWebhook"
+              fieldName={DiscordWebhookType.UNIT_STATUS}
               channels={channels}
               description={t("statusUpdatesChannelInfo")}
               label={t("statusUpdatesChannel")}
@@ -116,7 +114,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="panicButtonWebhook"
+              fieldName={DiscordWebhookType.PANIC_BUTTON}
               channels={channels}
               description={t("panicButtonChannelInfo")}
               label={t("panicButtonChannel")}
@@ -124,7 +122,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="boloWebhook"
+              fieldName={DiscordWebhookType.BOLO}
               channels={channels}
               description={t("bolosChannelInfo")}
               label={t("bolosChannel")}
@@ -132,7 +130,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="vehicleImpoundedWebhook"
+              fieldName={DiscordWebhookType.VEHICLE_IMPOUNDED}
               channels={channels}
               description={t("impoundedVehicleChannelInfo")}
               label={t("impoundedVehicleChannel")}
@@ -140,7 +138,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="citizenRecordsWebhook"
+              fieldName={DiscordWebhookType.CITIZEN_RECORD}
               channels={channels}
               description={t("citizenRecordsChannelInfo")}
               label={t("citizenRecordsChannel")}
@@ -148,7 +146,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="warrantsWebhook"
+              fieldName={DiscordWebhookType.WARRANTS}
               channels={channels}
               description={t("warrantsChannelInfo")}
               label={t("warrantsChannel")}
@@ -156,7 +154,7 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="bleeterPostWebhook"
+              fieldName={DiscordWebhookType.BLEETER_POST}
               channels={channels}
               description={t("bleeterPostChannelInfo")}
               label={t("bleeterPostChannel")}
@@ -164,10 +162,26 @@ export function DiscordWebhooksTab() {
 
             <WebhookSettingsField
               disabled={Boolean(fetchError)}
-              fieldName="citizenDeclaredDeadWebhook"
+              fieldName={DiscordWebhookType.CITIZEN_DECLARED_DEAD}
               channels={channels}
               description={t("citizenDeclaredDeadChannelInfo")}
               label={t("citizenDeclaredDeadChannel")}
+            />
+
+            <WebhookSettingsField
+              disabled={Boolean(fetchError)}
+              fieldName={DiscordWebhookType.DEPARTMENT_WHITELIST_STATUS}
+              channels={channels}
+              description={t("departmentWhitelistStatusChannelInfo")}
+              label={t("departmentWhitelistStatusChannel")}
+            />
+
+            <WebhookSettingsField
+              disabled={Boolean(fetchError)}
+              fieldName={DiscordWebhookType.USER_WHITELIST_STATUS}
+              channels={channels}
+              description={t("userWhitelistStatusChannelInfo")}
+              label={t("userWhitelistStatusChannel")}
             />
 
             <Button

@@ -5,11 +5,12 @@ import { FormField } from "components/form/FormField";
 import { useFormikContext } from "formik";
 import type { GetCADDiscordWebhooksData } from "@snailycad/types/api";
 import { useTranslations } from "use-intl";
+import { DiscordWebhookType } from "@snailycad/types";
 
 interface FieldProps {
   description?: string;
   label: string;
-  fieldName: string;
+  fieldName: DiscordWebhookType;
   channels?: GetCADDiscordWebhooksData;
   isRawWebhook?: boolean;
   disabled?: boolean;
