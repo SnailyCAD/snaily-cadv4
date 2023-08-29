@@ -13,9 +13,13 @@ import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@sna
 function createInitialValues(cad: cad | null) {
   const webhookTypes = Object.values(DiscordWebhookType);
 
-  return webhookTypes.map((type) => ({
-    [type]: makeInitialValue(cad, type),
-  }));
+  return webhookTypes.reduce(
+    (obj, type) => ({
+      ...obj,
+      [type]: makeInitialValue(cad, type),
+    }),
+    {},
+  );
 }
 
 export function DiscordWebhooksTab() {
