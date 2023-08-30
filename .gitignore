@@ -20,14 +20,6 @@ apps/client/public/sounds/*.mp3
 # eslint
 .eslintcache
 
-# yarn
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
 # typescript
 tsconfig.tsbuildinfo
 
