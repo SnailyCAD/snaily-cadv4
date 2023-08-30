@@ -1,4 +1,13 @@
-import { Feature, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
+/* eslint-disable unicorn/number-literal-case */
+import {
+  Feature,
+  WhitelistStatus,
+  cad,
+  MiscCadSettings,
+  DiscordWebhookType,
+  Officer,
+  User,
+} from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import {
   PathParams,
@@ -39,6 +48,10 @@ import {
   combinedUnitProperties,
   combinedEmsFdUnitProperties,
 } from "utils/leo/includes";
+import { getTranslator } from "~/utils/get-translator";
+import { APIEmbed } from "discord-api-types/v10";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { EmsFdDeputy, LeoWhitelistStatus } from "@snailycad/types";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = (typeof ACTIONS)[number];
@@ -605,6 +618,7 @@ export class AdminManageUnitsController {
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: AcceptDeclineType | null,
     @Context("sessionUserId") sessionUserId: string,
+    @Context("user") user: User,
   ): Promise<APITypes.PostManageUnitAcceptDeclineDepartmentData> {
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
@@ -666,6 +680,8 @@ export class AdminManageUnitsController {
         executorId: sessionUserId,
       });
 
+      await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
+
       return updated;
     }
 
@@ -682,6 +698,8 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
+
+        await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
 
         return { ...updated, deleted: true };
       }
@@ -705,6 +723,8 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
+
+        await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
 
         return updated;
       }
@@ -736,6 +756,7 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
+        await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
 
         return updated;
       }
@@ -935,4 +956,42 @@ export class AdminManageUnitsController {
 
     return true;
   }
+}
+
+export async function sendUnitWhitelistStatusChangeWebhook(
+  unit: (Officer | EmsFdDeputy) & { whitelistStatus: LeoWhitelistStatus },
+  locale: string,
+) {
+  const t = await getTranslator({
+    type: "webhooks",
+    namespace: "WhitelistStatusChange",
+    locale,
+  });
+
+  const statuses = {
+    [WhitelistStatus.ACCEPTED]: { color: 0x00ff00, name: t("accepted") },
+    [WhitelistStatus.PENDING]: { color: 0xffa500, name: t("pending") },
+    [WhitelistStatus.DECLINED]: { color: 0xff0000, name: t("declined") },
+  } as const;
+
+  const status = statuses[unit.whitelistStatus.status].name;
+  const color = statuses[user.whitelistStatus.status].color;
+
+  const description = t("departmentChangeDescription", {
+    status,
+    unit: "Unit Name Here",
+  });
+
+  const embeds: APIEmbed[] = [
+    {
+      description,
+      color,
+      title: t("departmentChangeTitle"),
+    },
+  ];
+
+  await sendDiscordWebhook({
+    data: { embeds },
+    type: DiscordWebhookType.DEPARTMENT_WHITELIST_STATUS,
+  });
 }

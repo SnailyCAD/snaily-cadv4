@@ -1,4 +1,12 @@
-import { Rank, WhitelistStatus, User, Prisma, CustomRole } from "@prisma/client";
+/* eslint-disable unicorn/number-literal-case */
+import {
+  Rank,
+  WhitelistStatus,
+  User,
+  Prisma,
+  CustomRole,
+  DiscordWebhookType,
+} from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -24,6 +32,9 @@ import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isDiscordIdInUse } from "lib/discord/utils";
+import { getTranslator } from "~/utils/get-translator";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { APIEmbed } from "discord-api-types/v10";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({
@@ -505,7 +516,7 @@ export class ManageUsersController {
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: { whitelistStatus },
-      select: { id: true, username: true, whitelistStatus: true },
+      select: { id: true, username: true, whitelistStatus: true, locale: true, discordId: true },
     });
 
     await createAuditLogEntry({
@@ -517,6 +528,7 @@ export class ManageUsersController {
       prisma,
       executorId: sessionUserId,
     });
+    await sendUserWhitelistStatusChangeWebhook(updatedUser);
 
     return true;
   }
@@ -600,4 +612,42 @@ export class ManageUsersController {
 
     return permissions;
   }
+}
+
+export async function sendUserWhitelistStatusChangeWebhook(
+  user: Pick<User, "id" | "username" | "discordId" | "whitelistStatus" | "locale">,
+) {
+  const t = await getTranslator({
+    type: "webhooks",
+    namespace: "WhitelistStatusChange",
+    locale: user.locale,
+  });
+
+  const statuses = {
+    [WhitelistStatus.ACCEPTED]: { color: 0x00ff00, name: t("accepted") },
+    [WhitelistStatus.PENDING]: { color: 0xffa500, name: t("pending") },
+    [WhitelistStatus.DECLINED]: { color: 0xff0000, name: t("declined") },
+  } as const;
+
+  const status = statuses[user.whitelistStatus].name;
+  const color = statuses[user.whitelistStatus].color;
+
+  const description = t("userChangeDescription", {
+    status,
+    user: user.username,
+  });
+
+  const embeds: APIEmbed[] = [
+    {
+      description,
+      color,
+      title: t("userChangeTitle"),
+    },
+  ];
+
+  await sendDiscordWebhook({
+    data: { embeds },
+    type: DiscordWebhookType.USER_WHITELIST_STATUS,
+    extraMessageData: { userDiscordId: user.discordId },
+  });
 }
