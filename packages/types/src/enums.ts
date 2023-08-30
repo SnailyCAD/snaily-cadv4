@@ -75,6 +75,8 @@ export const DiscordWebhookType = {
   WARRANTS: "WARRANTS",
   BLEETER_POST: "BLEETER_POST",
   CITIZEN_DECLARED_DEAD: "CITIZEN_DECLARED_DEAD",
+  DEPARTMENT_WHITELIST_STATUS: "DEPARTMENT_WHITELIST_STATUS",
+  USER_WHITELIST_STATUS: "USER_WHITELIST_STATUS",
 } as const;
 
 export type DiscordWebhookType = (typeof DiscordWebhookType)[keyof typeof DiscordWebhookType];

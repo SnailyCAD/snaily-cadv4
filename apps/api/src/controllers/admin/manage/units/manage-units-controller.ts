@@ -1,4 +1,12 @@
-import { Feature, WhitelistStatus, cad, MiscCadSettings } from "@prisma/client";
+/* eslint-disable unicorn/number-literal-case */
+import {
+  Feature,
+  WhitelistStatus,
+  cad,
+  MiscCadSettings,
+  DiscordWebhookType,
+  Officer,
+} from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import {
   PathParams,
@@ -39,6 +47,11 @@ import {
   combinedUnitProperties,
   combinedEmsFdUnitProperties,
 } from "utils/leo/includes";
+import { getTranslator } from "~/utils/get-translator";
+import { APIEmbed } from "discord-api-types/v10";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { Citizen, EmsFdDeputy, LeoWhitelistStatus } from "@snailycad/types";
+import { generateCallsign } from "@snailycad/utils";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = (typeof ACTIONS)[number];
@@ -666,6 +679,8 @@ export class AdminManageUnitsController {
         executorId: sessionUserId,
       });
 
+      await sendUnitWhitelistStatusChangeWebhook(updated);
+
       return updated;
     }
 
@@ -682,6 +697,8 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
+
+        await sendUnitWhitelistStatusChangeWebhook(updated);
 
         return { ...updated, deleted: true };
       }
@@ -705,6 +722,8 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
+
+        await sendUnitWhitelistStatusChangeWebhook(updated);
 
         return updated;
       }
@@ -736,6 +755,7 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
+        await sendUnitWhitelistStatusChangeWebhook(updated);
 
         return updated;
       }
@@ -935,4 +955,52 @@ export class AdminManageUnitsController {
 
     return true;
   }
+}
+
+export async function sendUnitWhitelistStatusChangeWebhook(
+  unit: (Officer | EmsFdDeputy) & {
+    citizen: Pick<Citizen, "name" | "surname">;
+    whitelistStatus: LeoWhitelistStatus;
+  },
+) {
+  const t = await getTranslator({
+    type: "webhooks",
+    namespace: "WhitelistStatusChange",
+  });
+
+  const statuses = {
+    [WhitelistStatus.ACCEPTED]: { color: 0x00ff00, name: t("accepted") },
+    [WhitelistStatus.PENDING]: { color: 0xffa500, name: t("pending") },
+    [WhitelistStatus.DECLINED]: { color: 0xff0000, name: t("declined") },
+  } as const;
+
+  const cad = await prisma.cad.findFirst({
+    select: { miscCadSettings: { select: { callsignTemplate: true } } },
+  });
+
+  const status = statuses[unit.whitelistStatus.status].name;
+  const color = statuses[unit.whitelistStatus.status].color;
+  const unitName = `${unit.citizen.name} ${unit.citizen.surname}`;
+  const unitCallsign = generateCallsign(
+    unit as any,
+    cad?.miscCadSettings?.callsignTemplate ?? null,
+  );
+
+  const description = t("departmentChangeDescription", {
+    status,
+    unit: `${unitCallsign} ${unitName}`,
+  });
+
+  const embeds: APIEmbed[] = [
+    {
+      description,
+      color,
+      title: t("departmentChangeTitle"),
+    },
+  ];
+
+  await sendDiscordWebhook({
+    data: { embeds },
+    type: DiscordWebhookType.DEPARTMENT_WHITELIST_STATUS,
+  });
 }

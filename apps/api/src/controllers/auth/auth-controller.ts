@@ -17,6 +17,7 @@ import { setUserTokenCookies } from "lib/auth/setUserTokenCookies";
 import { validateGoogleCaptcha } from "lib/auth/validate-google-captcha";
 import { validateDiscordAndSteamId } from "lib/auth/validate-discord-steam-id";
 import { createFeaturesObject } from "middlewares/is-enabled";
+import { sendUserWhitelistStatusChangeWebhook } from "../admin/manage/manage-users-controller";
 
 @Controller("/auth")
 @ContentType("application/json")
@@ -179,6 +180,10 @@ export class AuthController {
             whitelistStatus: cad.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
             permissions,
           };
+
+    if (cad.whitelisted && extraUserData.whitelistStatus === WhitelistStatus.PENDING) {
+      await sendUserWhitelistStatusChangeWebhook({ ...user, ...extraUserData });
+    }
 
     await prisma.user.update({
       where: { id: user.id },

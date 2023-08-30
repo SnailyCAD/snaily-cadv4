@@ -80,5 +80,14 @@
     "createdAt": "Created At",
     "officer": "Officer",
     "socialSecurityNumber": "Social Security Number"
+  },
+  "WhitelistStatusChange": {
+    "accepted": "accepted",
+    "declined": "declined",
+    "pending": "pending",
+    "userChangeDescription": "User: {user}'s whitelist status has been changed to {status}.",
+    "userChangeTitle": "User Whitelist Status Change",
+    "departmentChangeDescription": "Unit: {unit}'s whitelist status has been changed to {status}.",
+    "departmentChangeTitle": "Unit Department Whitelist Status Change"
   }
 }
