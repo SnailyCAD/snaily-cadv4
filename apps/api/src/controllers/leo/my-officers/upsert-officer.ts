@@ -28,6 +28,8 @@ import { leoProperties } from "utils/leo/includes";
 import type * as APITypes from "@snailycad/types/api";
 import type { ZodSchema } from "zod";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
+import { WhitelistStatus } from "@snailycad/types";
+import { sendUnitWhitelistStatusChangeWebhook } from "~/controllers/admin/manage/units/manage-units-controller";
 
 interface CreateOfficerOptions {
   schema?: ZodSchema;
@@ -93,8 +95,6 @@ export async function upsertOfficer({
       unitId: existingOfficer?.id,
     });
   }
-
-  console.log({ allowMultipleOfficersWithSameDeptPerUser });
 
   await validateDuplicateCallsigns({
     callsign1: data.callsign,
@@ -179,6 +179,10 @@ export async function upsertOfficer({
     update: createUpdateFields,
     include: leoProperties,
   });
+
+  if (officer.whitelistStatus?.status === WhitelistStatus.PENDING) {
+    await sendUnitWhitelistStatusChangeWebhook(officer, user?.locale ?? "en");
+  }
 
   if (divisionsEnabled) {
     const disconnectConnectArr = manyToManyHelper(

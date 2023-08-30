@@ -51,7 +51,8 @@ import {
 import { getTranslator } from "~/utils/get-translator";
 import { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
-import { EmsFdDeputy, LeoWhitelistStatus } from "@snailycad/types";
+import { Citizen, EmsFdDeputy, LeoWhitelistStatus } from "@snailycad/types";
+import { generateCallsign } from "@snailycad/utils";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = (typeof ACTIONS)[number];
@@ -959,7 +960,10 @@ export class AdminManageUnitsController {
 }
 
 export async function sendUnitWhitelistStatusChangeWebhook(
-  unit: (Officer | EmsFdDeputy) & { whitelistStatus: LeoWhitelistStatus },
+  unit: (Officer | EmsFdDeputy) & {
+    citizen: Pick<Citizen, "name" | "surname">;
+    whitelistStatus: LeoWhitelistStatus;
+  },
   locale: string,
 ) {
   const t = await getTranslator({
@@ -974,12 +978,21 @@ export async function sendUnitWhitelistStatusChangeWebhook(
     [WhitelistStatus.DECLINED]: { color: 0xff0000, name: t("declined") },
   } as const;
 
+  const cad = await prisma.cad.findFirst({
+    select: { miscCadSettings: { select: { callsignTemplate: true } } },
+  });
+
   const status = statuses[unit.whitelistStatus.status].name;
-  const color = statuses[user.whitelistStatus.status].color;
+  const color = statuses[unit.whitelistStatus.status].color;
+  const unitName = `${unit.citizen.name} ${unit.citizen.surname}`;
+  const unitCallsign = generateCallsign(
+    unit as any,
+    cad?.miscCadSettings?.callsignTemplate ?? null,
+  );
 
   const description = t("departmentChangeDescription", {
     status,
-    unit: "Unit Name Here",
+    unit: `${unitCallsign} ${unitName}`,
   });
 
   const embeds: APIEmbed[] = [
