@@ -19,15 +19,20 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx rimraf ./dist && pnpm workspace @snailycad/api generate && pnpm tsup",
+    "build": "npx rimraf ./dist && pnpm --filter \"@snailycad/api\" generate && pnpm tsup",
     "watch": "pnpm tsup --watch --silent=false",
     "typecheck": "pnpm tsc --noEmit"
   },
   "devDependencies": {
     "@snailycad/types": "workspace:*",
+    "rimraf": "^5.0.1",
     "tsup": "6.6.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.8"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=5",
+    "@sentry/node": ">= 7.66.0"
   },
   "tsup": {
     "entry": [

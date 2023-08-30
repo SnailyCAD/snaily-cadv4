@@ -31,9 +31,9 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "pnpm workspace @snailycad/api generate && pnpm tsup",
+    "build": "pnpm --filter \"@snailycad/api\" generate && pnpm tsup",
     "watch": "pnpm tsup --watch --silent=false",
-    "typecheck": "pnpm workspace @snailycad/api generate && pnpm tsc --noEmit",
+    "typecheck": "pnpm --filter \"@snailycad/api\" generate && pnpm tsc --noEmit",
     "prepublish": "pnpm build"
   },
   "devDependencies": {

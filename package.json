@@ -3,7 +3,7 @@
   "name": "snailycad",
   "version": "1.68.7",
   "scripts": {
-    "start": "pnpm concurrently \"pnpm workspace @snailycad/client start\" \"pnpm workspace @snailycad/api generate && pnpm workspace @snailycad/api start\"",
+    "start": "pnpm concurrently \"pnpm --filter \"@snailycad/client\" start\" \"pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/api\" start\"",
     "build": "pnpm turbo run build --filter=\"{packages/**/**}\" && pnpm turbo run build --filter=\"{apps/**/**}\"",
     "dev": "docker compose up -d && pnpm turbo run watch --parallel --concurrency 11",
     "format": "prettier --write \"./(packages|apps)/**/**/*.{js,jsx,ts,mjs,tsx,md,css,json}\" --ignore-path .gitignore",

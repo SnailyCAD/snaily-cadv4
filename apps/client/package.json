@@ -5,7 +5,7 @@
   "scripts": {
     "dev": " pnpm next dev",
     "watch": "npm run dev",
-    "build": "pnpm validate && pnpm workspace @snailycad/api generate && pnpm workspace @snailycad/ui build && pnpm next-build",
+    "build": "pnpm validate && pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/ui\" build && pnpm next-build",
     "next-build": "pnpm next build",
     "start": "pnpm next start",
     "start:proxy-experimental": "pnpm next start --port 80",
