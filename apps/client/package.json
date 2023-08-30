@@ -26,8 +26,9 @@
     "@radix-ui/react-tooltip": "^1.0.6",
     "@react-aria/label": "^3.6.1",
     "@react-aria/ssr": "^3.7.1",
-    "@sentry/nextjs": "^7.63.0",
-    "@sentry/tracing": "^7.63.0",
+    "@sentry/browser": "^7.66.0",
+    "@sentry/nextjs": "^7.66.0",
+    "@sentry/tracing": "^7.66.0",
     "@snailycad/audit-logger": "workspace:*",
     "@snailycad/config": "^1.68.7",
     "@snailycad/permissions": "workspace:*",
@@ -83,7 +84,10 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@react-types/shared": "^3.18.1",
     "@types/color": "^3.0.3",
+    "@types/connect": "^3.4.35",
+    "@types/is-hotkey": "^0.1.7",
     "@types/leaflet": "^1.9.3",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.2.20",
