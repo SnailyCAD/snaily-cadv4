@@ -615,12 +615,11 @@ export class ManageUsersController {
 }
 
 export async function sendUserWhitelistStatusChangeWebhook(
-  user: Pick<User, "id" | "username" | "discordId" | "whitelistStatus" | "locale">,
+  user: Pick<User, "id" | "username" | "discordId" | "whitelistStatus">,
 ) {
   const t = await getTranslator({
     type: "webhooks",
     namespace: "WhitelistStatusChange",
-    locale: user.locale,
   });
 
   const statuses = {

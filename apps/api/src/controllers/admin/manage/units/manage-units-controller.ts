@@ -6,7 +6,6 @@ import {
   MiscCadSettings,
   DiscordWebhookType,
   Officer,
-  User,
 } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import {
@@ -619,7 +618,6 @@ export class AdminManageUnitsController {
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: AcceptDeclineType | null,
     @Context("sessionUserId") sessionUserId: string,
-    @Context("user") user: User,
   ): Promise<APITypes.PostManageUnitAcceptDeclineDepartmentData> {
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
@@ -681,7 +679,7 @@ export class AdminManageUnitsController {
         executorId: sessionUserId,
       });
 
-      await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
+      await sendUnitWhitelistStatusChangeWebhook(updated);
 
       return updated;
     }
@@ -700,7 +698,7 @@ export class AdminManageUnitsController {
           executorId: sessionUserId,
         });
 
-        await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
+        await sendUnitWhitelistStatusChangeWebhook(updated);
 
         return { ...updated, deleted: true };
       }
@@ -725,7 +723,7 @@ export class AdminManageUnitsController {
           executorId: sessionUserId,
         });
 
-        await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
+        await sendUnitWhitelistStatusChangeWebhook(updated);
 
         return updated;
       }
@@ -757,7 +755,7 @@ export class AdminManageUnitsController {
           prisma,
           executorId: sessionUserId,
         });
-        await sendUnitWhitelistStatusChangeWebhook(updated, user.locale);
+        await sendUnitWhitelistStatusChangeWebhook(updated);
 
         return updated;
       }
@@ -964,12 +962,10 @@ export async function sendUnitWhitelistStatusChangeWebhook(
     citizen: Pick<Citizen, "name" | "surname">;
     whitelistStatus: LeoWhitelistStatus;
   },
-  locale: string,
 ) {
   const t = await getTranslator({
     type: "webhooks",
     namespace: "WhitelistStatusChange",
-    locale,
   });
 
   const statuses = {

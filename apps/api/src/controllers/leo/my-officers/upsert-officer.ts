@@ -181,7 +181,7 @@ export async function upsertOfficer({
   });
 
   if (officer.whitelistStatus?.status === WhitelistStatus.PENDING) {
-    await sendUnitWhitelistStatusChangeWebhook(officer, user?.locale ?? "en");
+    await sendUnitWhitelistStatusChangeWebhook(officer);
   }
 
   if (divisionsEnabled) {
