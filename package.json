@@ -11,7 +11,8 @@
     "lint:fix": "pnpm eslint . --ext .ts,.js,.tsx,.jsx,.mjs --fix",
     "prepare": "husky install",
     "bump-version": "node scripts/bump-version.mjs",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "typecheck": "pnpm turbo run typecheck"
   },
   "license": "MIT",
   "devDependencies": {
