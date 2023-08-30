@@ -29,9 +29,9 @@ async function addPortToClientPackageJson() {
     const json = JSON.parse(await readFile(jsonFilePath, "utf8"));
 
     if (!json.scripts.start.includes(`-p ${DEFAULT_PORT}`) && port === DEFAULT_PORT) {
-      json.scripts.start = "yarn next start"; // reset the port back to default
+      json.scripts.start = "pnpm next start"; // reset the port back to default
     } else {
-      json.scripts.start = `yarn next start -p ${port}`;
+      json.scripts.start = `pnpm next start -p ${port}`;
     }
 
     await writeFile(jsonFilePath, JSON.stringify(json, null, 2) + EOL);

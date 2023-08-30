@@ -2,14 +2,14 @@
   "name": "@snailycad/api",
   "version": "1.68.7",
   "scripts": {
-    "watch": "yarn prisma generate && yarn nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec node --loader ts-node/esm src/main.ts",
-    "start": "yarn prisma migrate deploy && yarn prisma generate && node --loader ts-node/esm src/main.ts",
-    "format": "yarn prisma format",
-    "generate": "yarn prisma generate",
-    "typecheck": "yarn run generate && tsc --noEmit",
+    "watch": "pnpm prisma generate && pnpm nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec node --loader ts-node/esm src/main.ts",
+    "start": "pnpm prisma migrate deploy && pnpm prisma generate && node --loader ts-node/esm src/main.ts",
+    "format": "pnpm prisma format",
+    "generate": "pnpm prisma generate",
+    "typecheck": "pnpm generate && tsc --noEmit",
     "copy-env": "node ../../scripts/copy-env.mjs --api",
-    "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "test:watch": "pnpm vitest --watch",
+    "test": "pnpm vitest run"
   },
   "devDependencies": {
     "@swc/core": "^1.3.76",
@@ -27,7 +27,6 @@
     "@types/node": "^20.4.9",
     "@types/qrcode": "^1.5.1",
     "@types/sharp": "^0.31.1",
-    "@vitest/coverage-c8": "^0.33.0",
     "dotenv": "^16.3.1",
     "esbuild": "^0.17.19",
     "esbuild-register": "^3.4.2",

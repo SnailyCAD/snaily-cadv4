@@ -68,11 +68,11 @@
     }
   },
   "scripts": {
-    "build": "yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit",
-    "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "build": "pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit",
+    "test:watch": "pnpm vitest --watch",
+    "test": "pnpm vitest run"
   },
   "devDependencies": {
     "@snailycad/types": "^1.68.7",

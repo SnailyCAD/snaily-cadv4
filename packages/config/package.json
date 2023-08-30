@@ -16,12 +16,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit",
-    "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run",
-    "prepublish": "yarn build"
+    "build": "pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit",
+    "test:watch": "pnpm vitest --watch",
+    "test": "pnpm vitest run",
+    "prepublish": "pnpm build"
   },
   "devDependencies": {
     "tsup": "6.6.2",

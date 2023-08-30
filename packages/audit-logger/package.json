@@ -19,9 +19,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx rimraf ./dist && yarn workspace @snailycad/api generate && yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit"
+    "build": "npx rimraf ./dist && pnpm workspace @snailycad/api generate && pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit"
   },
   "devDependencies": {
     "@snailycad/types": "workspace:*",

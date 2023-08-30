@@ -22,15 +22,14 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit",
-    "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run",
-    "prepublish": "yarn build"
+    "build": "pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit",
+    "test:watch": "pnpm vitest --watch",
+    "test": "pnpm vitest run",
+    "prepublish": "pnpm build"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^0.34.0",
     "tsup": "6.6.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.8",
