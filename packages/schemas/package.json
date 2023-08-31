@@ -19,9 +19,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit"
+    "build": "pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit"
   },
   "devDependencies": {
     "tslib": "^2.6.1",

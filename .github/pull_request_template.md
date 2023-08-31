@@ -13,6 +13,6 @@ Thanks for opening a PR! Your contribution is much appreciated!
 
 ## Translations
 
-- [ ] `.json` files are formatted: `yarn format`
+- [ ] `.json` files are formatted: `pnpm format`
 - [ ] Translations are correct
 - [ ] New translation? It's been added to `i18n.config.mjs`

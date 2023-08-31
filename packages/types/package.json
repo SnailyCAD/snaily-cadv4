@@ -31,10 +31,10 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "yarn workspace @snailycad/api generate && yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit",
-    "prepublish": "yarn build"
+    "build": "pnpm --filter \"@snailycad/api\" generate && pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm --filter \"@snailycad/api\" generate && pnpm tsc --noEmit",
+    "prepublish": "pnpm build"
   },
   "devDependencies": {
     "@snailycad/permissions": "^1.68.7",

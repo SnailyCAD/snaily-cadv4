@@ -68,15 +68,18 @@
     }
   },
   "scripts": {
-    "build": "yarn tsup",
-    "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit",
-    "test:watch": "yarn vitest --watch",
-    "test": "yarn vitest run"
+    "build": "pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit",
+    "test:watch": "pnpm vitest --watch",
+    "test": "pnpm vitest run"
   },
   "devDependencies": {
     "@snailycad/types": "^1.68.7",
+    "@types/node": "^20.4.9",
     "c8": "^8.0.1",
+    "slate-history": "^0.93.0",
+    "slate-react": "^0.98.1",
     "tslib": "^2.6.1",
     "tsup": "6.6.2",
     "typescript": "^5.1.6",
@@ -98,5 +101,10 @@
       "esm"
     ]
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "date-fns": "^2.30.0",
+    "undici": "5.23.0",
+    "slate": "0.94.1"
+  }
 }

@@ -5,12 +5,12 @@ WORKDIR /snailycad
 
 COPY . ./
 
-RUN yarn config set httpTimeout 1200000 && \
+RUN pnpm config set httpTimeout 1200000 && \
   npx turbo prune --scope=@snailycad/client --docker && \
-  yarn install
+  pnpm install
 
-RUN yarn turbo run build --filter=@snailycad/client
+RUN pnpm turbo run build --filter=@snailycad/client
 
 ENV NODE_ENV="production"
 
-CMD ["yarn", "workspace", "@snailycad/client", "start"]
+CMD ["pnpm", "workspace", "@snailycad/client", "start"]
