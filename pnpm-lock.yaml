@@ -69,7 +69,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/audit-logger
       "@snailycad/config":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../../packages/config
       "@snailycad/image-data-uri":
         specifier: ^3.2.0
@@ -87,7 +87,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/types
       "@snailycad/utils":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../../packages/utils
       "@tsed/common":
         specifier: ^7.34.2
@@ -322,7 +322,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/audit-logger
       "@snailycad/config":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../../packages/config
       "@snailycad/permissions":
         specifier: workspace:*
@@ -337,7 +337,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       "@snailycad/utils":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../../packages/utils
       "@tailwindcss/typography":
         specifier: ^0.5.9
@@ -610,7 +610,7 @@ importers:
   packages/types:
     devDependencies:
       "@snailycad/permissions":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../permissions
       discord-api-types:
         specifier: 0.37.51
@@ -748,10 +748,10 @@ importers:
         specifier: ^3.18.1
         version: 3.19.0(react@18.2.0)
       "@snailycad/config":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../config
       "@snailycad/utils":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../utils
       class-variance-authority:
         specifier: ^0.7.0
@@ -873,7 +873,7 @@ importers:
         version: 5.23.0
     devDependencies:
       "@snailycad/types":
-        specifier: ^1.68.7
+        specifier: ^1.70.0
         version: link:../types
       "@types/node":
         specifier: ^20.4.9

@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.68.7",
+  "version": "1.70.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -75,7 +75,7 @@
     "test": "pnpm vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "^1.68.7",
+    "@snailycad/types": "^1.70.0",
     "@types/node": "^20.4.9",
     "c8": "^8.0.1",
     "slate-history": "^0.93.0",
