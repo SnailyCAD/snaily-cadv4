@@ -185,6 +185,9 @@ importers:
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.13
       sharp:
         specifier: ^0.32.5
         version: 0.32.5
