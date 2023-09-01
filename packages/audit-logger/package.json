@@ -27,8 +27,8 @@
     "@snailycad/types": "workspace:*",
     "rimraf": "^5.0.1",
     "tsup": "6.6.2",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.8"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
   },
   "peerDependencies": {
     "@prisma/client": ">=5",

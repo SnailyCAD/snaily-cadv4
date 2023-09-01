@@ -24,12 +24,12 @@
     "typecheck": "pnpm tsc --noEmit"
   },
   "devDependencies": {
-    "tslib": "^2.6.1",
+    "tslib": "^2.6.2",
     "tsup": "6.6.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   },
   "tsup": {
     "entry": [
