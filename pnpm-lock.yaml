@@ -134,6 +134,9 @@ importers:
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
+      colorette:
+        specifier: 2.0.20
+        version: 2.0.20
       command-exists:
         specifier: ^1.2.9
         version: 1.2.9
@@ -146,6 +149,9 @@ importers:
       cookie-parser:
         specifier: 1.4.6
         version: 1.4.6
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -12347,7 +12353,6 @@ packages:
       {
         integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==,
       }
-    dev: true
 
   /colors@1.4.0:
     resolution:

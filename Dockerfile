@@ -2,13 +2,14 @@ FROM node:18 as base
 
 RUN npm install -g pnpm
 
+RUN pnpm config set httpTimeout 1200000
+
 WORKDIR /snailycad
 
 COPY . ./
 
 FROM base as deps
 
-RUN pnpm config set httpTimeout 1200000
 RUN pnpm install
 
 FROM deps as api
