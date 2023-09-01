@@ -13,7 +13,7 @@ importers:
     devDependencies:
       "@casperiv/eslint-config":
         specifier: 8.0.0
-        version: 8.0.0(eslint@8.48.0)(prettier@3.0.2)(typescript@5.1.6)
+        version: 8.0.0(eslint@8.48.0)(prettier@3.0.3)(typescript@5.1.6)
       "@casperiv/eslint-config-next":
         specifier: 8.0.0
         version: 8.0.0(eslint@8.48.0)(next@13.4.13)(typescript@5.1.6)
@@ -39,14 +39,14 @@ importers:
         specifier: ^8.0.3
         version: 8.0.3
       lerna:
-        specifier: ^7.1.5
-        version: 7.1.5
+        specifier: ^7.2.0
+        version: 7.2.0
       lint-staged:
         specifier: ^14.0.1
         version: 14.0.1
       prettier:
-        specifier: 3.0.2
-        version: 3.0.2
+        specifier: 3.0.3
+        version: 3.0.3
       turbo:
         specifier: 1.10.13
         version: 1.10.13
@@ -2629,7 +2629,7 @@ packages:
       eslint-plugin-react-hooks: 4.6.0(eslint@8.48.0)
     dev: true
 
-  /@casperiv/eslint-config@8.0.0(eslint@8.48.0)(prettier@3.0.2)(typescript@5.1.6):
+  /@casperiv/eslint-config@8.0.0(eslint@8.48.0)(prettier@3.0.3)(typescript@5.1.6):
     resolution:
       {
         integrity: sha512-SQpUAvR/u8iweOjuP/76a7eNSdAXC+rmPdVOfWKiRIoPFRHlOEN6rKFjOJmQAPsUUj6SUjQ0eC07Umqai9uEdQ==,
@@ -2643,10 +2643,10 @@ packages:
       eslint: 8.48.0
       eslint-config-prettier: 9.0.0(eslint@8.48.0)
       eslint-plugin-json: 3.1.0
-      eslint-plugin-prettier: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.48.0)(prettier@3.0.2)
+      eslint-plugin-prettier: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.48.0)(prettier@3.0.3)
       eslint-plugin-promise: 6.1.1(eslint@8.48.0)
       eslint-plugin-unicorn: 48.0.1(eslint@8.48.0)
-      prettier: 3.0.2
+      prettier: 3.0.3
     transitivePeerDependencies:
       - "@types/eslint"
       - supports-color
@@ -3871,10 +3871,10 @@ packages:
         integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==,
       }
 
-  /@lerna/child-process@7.1.5:
+  /@lerna/child-process@7.2.0:
     resolution:
       {
-        integrity: sha512-YXmxzxXTP3u9HQpSXvK8qqoAm7VWQIFria3FVMQKkOSkWkph1TNnvt3Q1JvKT7/Jgd1HfTc3QrK09a2FND9+8A==,
+        integrity: sha512-8cRsYYX8rGZTXL1KcLBv0RHD9PMvphWZay8yg4qf2giX6x86dQyTetSU4SplG2LBGVClilmNHJa/CQwvPQNUFA==,
       }
     engines: { node: ^14.17.0 || >=16.0.0 }
     dependencies:
@@ -3883,14 +3883,14 @@ packages:
       strong-log-transformer: 2.1.0
     dev: true
 
-  /@lerna/create@7.1.5:
+  /@lerna/create@7.2.0:
     resolution:
       {
-        integrity: sha512-/CDI/cvXJbycgSDzWXzP7DBuJ10qL/uYEouFt3/mxi9+hSfM885fu6lbVPV7QOf8A0otXcTs7PN2dVyMrnWQeg==,
+        integrity: sha512-bBypNfwqOQNcfR2nXJ3mWUeIAIoSFpXg8MjuFSf87PzIiyeTEKa3Z57vAa3bDbHQtcB7x6f0rWysK1eQZSH15Q==,
       }
     engines: { node: ^14.17.0 || >=16.0.0 }
     dependencies:
-      "@lerna/child-process": 7.1.5
+      "@lerna/child-process": 7.2.0
       "@npmcli/run-script": 6.0.2
       "@nx/devkit": 16.7.4(nx@16.7.4)
       "@octokit/plugin-enterprise-rest": 6.0.1
@@ -3915,6 +3915,7 @@ packages:
       ini: 1.3.8
       init-package-json: 5.0.0
       inquirer: 8.2.6
+      is-ci: 3.0.1
       is-stream: 2.0.0
       js-yaml: 4.1.0
       libnpmpublish: 7.3.0
@@ -13912,7 +13913,7 @@ packages:
       object.fromentries: 2.0.6
       semver: 6.3.1
 
-  /eslint-plugin-prettier@5.0.0(eslint-config-prettier@9.0.0)(eslint@8.48.0)(prettier@3.0.2):
+  /eslint-plugin-prettier@5.0.0(eslint-config-prettier@9.0.0)(eslint@8.48.0)(prettier@3.0.3):
     resolution:
       {
         integrity: sha512-AgaZCVuYDXHUGxj/ZGu1u8H8CYgDY3iG6w5kUFw4AzMVXzB7VvbKgYR4nATIN+OvUrghMbiDLeimVjVY5ilq3w==,
@@ -13931,7 +13932,7 @@ packages:
     dependencies:
       eslint: 8.48.0
       eslint-config-prettier: 9.0.0(eslint@8.48.0)
-      prettier: 3.0.2
+      prettier: 3.0.3
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.5
     dev: true
@@ -17346,16 +17347,16 @@ packages:
       }
     dev: false
 
-  /lerna@7.1.5:
+  /lerna@7.2.0:
     resolution:
       {
-        integrity: sha512-5bvfmoIH4Czk5mdoLaRPYkM3M63Ei6+TOuXs3MgXmvqD8vs+vQpHuBVmiYFp5Mwsck3FkidJ+eTxfucltA2Lmw==,
+        integrity: sha512-E13iAY4Tdo+86m4ClAe0j0bP7f8QG2neJReglILPOe+gAOoX17TGqEWanmkDELlUXOrTTwnte0ewc6I6/NOqpg==,
       }
     engines: { node: ^14.17.0 || >=16.0.0 }
     hasBin: true
     dependencies:
-      "@lerna/child-process": 7.1.5
-      "@lerna/create": 7.1.5
+      "@lerna/child-process": 7.2.0
+      "@lerna/create": 7.2.0
       "@npmcli/run-script": 6.0.2
       "@nx/devkit": 16.7.4(nx@16.7.4)
       "@octokit/plugin-enterprise-rest": 6.0.1
@@ -20866,10 +20867,10 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier@3.0.2:
+  /prettier@3.0.3:
     resolution:
       {
-        integrity: sha512-o2YR9qtniXvwEZlOKbveKfDQVyqxbEIWn48Z8m3ZJjBjcCmUy3xZGIv+7AkaeuaTr6yPXJjwv07ZWlsWbEy1rQ==,
+        integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==,
       }
     engines: { node: ">=14" }
     hasBin: true
