@@ -12,36 +12,17 @@ services:
       - ./.data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  api:
-    container_name: "snaily-cad-api"
+  snailycad:
+    container_name: "snailycad-v4"
     build:
       context: .
-      dockerfile: ./apps/api/Dockerfile
+      dockerfile: ./Dockerfile
     ports:
       - "${PORT_API}:${PORT_API}"
     expose:
       - ${PORT_API}
     depends_on:
       - postgres
-    networks:
-      - cad_web
-    restart: always
-    volumes:
-      - ./apps/api/public:/snailycad/apps/api/public
-
-  client:
-    container_name: "snaily-cad-client"
-    build:
-      context: .
-      dockerfile: ./apps/client/Dockerfile
-    ports:
-      - "${PORT_CLIENT}:${PORT_CLIENT}"
-    expose:
-      - ${PORT_CLIENT}
-    env_file:
-      - .env
-    depends_on:
-      - api
     networks:
       - cad_web
     restart: always
