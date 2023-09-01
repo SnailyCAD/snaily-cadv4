@@ -1,6 +1,8 @@
 #build
 FROM node:18 as builder
 
+RUN npm install -g pnpm
+
 WORKDIR /snailycad
 
 COPY . ./
