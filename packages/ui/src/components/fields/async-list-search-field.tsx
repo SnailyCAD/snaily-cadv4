@@ -100,26 +100,31 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   );
 
   function handleSelectionChange(key?: React.Key, value?: string) {
-    if (props.isClearable && key === "cleared") {
-      props.setValues({ localValue: "", node: null });
-      return;
-    }
-
-    if (!key) {
-      // if there are no items to select from, and the value is empty, then we should clear the value
-      // only if we do not allow custom values
-      if (list.items.length <= 0 && !value && !props.allowsCustomValue) {
-        props.setValues({ localValue: "" });
+    try {
+      if (props.isClearable && key === "cleared") {
+        props.setValues({ localValue: "", node: null });
         return;
       }
 
-      props.setValues({ localValue: value });
-      return;
-    }
+      if (!key) {
+        // if there are no items to select from, and the value is empty, then we should clear the value
+        // only if we do not allow custom values
+        if (list.items.length <= 0 && !value && !props.allowsCustomValue) {
+          props.setValues({ localValue: "" });
+          return;
+        }
 
-    const item = state.collection.getItem(key) as Node<T> | null;
-    if (item) {
-      props.setValues({ localValue: item.textValue, node: item });
+        props.setValues({ localValue: value });
+        return;
+      }
+
+      const item = state.collection.getItem(key) as Node<T> | null;
+      if (item) {
+        props.setValues({ localValue: item.textValue, node: item });
+      }
+    } catch (err) {
+      console.error(err);
+      props.setValues({ localValue: value });
     }
   }
 
