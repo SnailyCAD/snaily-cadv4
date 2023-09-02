@@ -49,13 +49,13 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
+      - name: Run turbo typecheck
+        run: pnpm turbo run typecheck
+
       - name: Build apps
         run: pnpm turbo run build --filter="{apps/**/**}"
         env:
           NODE_OPTIONS: --max-old-space-size=6144
-
-      - name: Run turbo typecheck
-        run: pnpm turbo run typecheck
 
       - name: Run turbo test
         run: pnpm turbo run test --parallel

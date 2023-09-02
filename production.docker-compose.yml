@@ -2,6 +2,11 @@ services:
   postgres:
     container_name: "snaily-cad-postgres"
     image: postgres:latest
+    environment:
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     env_file:
       - .env
     ports:
@@ -14,9 +19,12 @@ services:
 
   api:
     container_name: "snaily-cad-api"
+    env_file:
+      - .env
     build:
       context: .
-      dockerfile: ./apps/api/Dockerfile
+      dockerfile: ./Dockerfile
+      target: api
     ports:
       - "${PORT_API}:${PORT_API}"
     expose:
@@ -31,17 +39,18 @@ services:
 
   client:
     container_name: "snaily-cad-client"
+    env_file:
+      - .env
     build:
       context: .
-      dockerfile: ./apps/client/Dockerfile
+      dockerfile: ./Dockerfile
+      target: client
     ports:
       - "${PORT_CLIENT}:${PORT_CLIENT}"
     expose:
       - ${PORT_CLIENT}
-    env_file:
-      - .env
     depends_on:
-      - api
+      - postgres
     networks:
       - cad_web
     restart: always

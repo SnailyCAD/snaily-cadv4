@@ -15,6 +15,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // prettier-ignore
   images: { // start images
     formats: ["image/avif", "image/webp"],
