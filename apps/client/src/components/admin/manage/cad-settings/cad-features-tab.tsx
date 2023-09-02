@@ -10,7 +10,7 @@ import {
   Feature,
   LicenseExamType,
 } from "@snailycad/types";
-import { Button, Loader, TextField, TabsContent, SelectField, SwitchField } from "@snailycad/ui";
+import { Button, Loader, TextField, SelectField, SwitchField } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
@@ -18,6 +18,7 @@ import { DEFAULT_DISABLED_FEATURES, DEFAULT_FEATURE_OPTIONS } from "hooks/useFea
 import type { PutCADFeaturesData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 const featuresWithURL: string[] = [
   Feature.BLEETER,

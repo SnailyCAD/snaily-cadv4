@@ -1,5 +1,5 @@
 import type * as React from "react";
-import { Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
+import { Button, Loader, SwitchField, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
@@ -9,6 +9,7 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { DeleteCADApiTokenData, PutCADApiTokenData } from "@snailycad/types/api";
 import { getAPIUrl } from "@snailycad/utils/api-url";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 export function ApiTokenTab() {
   const common = useTranslations("Common");

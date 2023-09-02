@@ -1,6 +1,6 @@
 import * as Popover from "@radix-ui/react-popover";
 import * as React from "react";
-import { Alert, Button, Input, Loader, TabsContent, TextField } from "@snailycad/ui";
+import { Alert, Button, Input, Loader, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
@@ -13,6 +13,7 @@ import Link from "next/link";
 import { BoxArrowUpRight, ChevronDown } from "react-bootstrap-icons";
 import { Table, useTableState } from "components/shared/Table";
 import { MiscCadSettings, LiveMapURL } from "@snailycad/types";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 const TILE_NAMES = [
   "minimap_sea_0_0",

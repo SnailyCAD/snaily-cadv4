@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Select, SelectValue } from "components/form/Select";
-import { Alert, Button, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Loader } from "@snailycad/ui";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -14,6 +14,7 @@ import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 function makeRoleValues(roles: DiscordRole[] | undefined) {
   if (!roles) return [];

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Alert, Button, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Loader } from "@snailycad/ui";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -10,6 +10,7 @@ import { WebhookSettingsField } from "../discord-webhooks/WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
 import { useQuery } from "@tanstack/react-query";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 export function RawWebhooksTab() {
   const [fetchError, setFetchError] = React.useState<string | null>(null);

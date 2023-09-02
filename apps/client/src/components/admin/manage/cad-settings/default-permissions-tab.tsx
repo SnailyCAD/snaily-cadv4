@@ -1,7 +1,7 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Alert, Button, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
+import { Alert, Button, Loader, SwitchField, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import type { cad } from "@snailycad/types";
@@ -10,6 +10,7 @@ import { toastMessage } from "lib/toastMessage";
 import type { PutCADDefaultPermissionsData } from "@snailycad/types/api";
 import { usePermissionsModal } from "hooks/use-permissions-modal";
 import { PermissionNames, getPermissions, defaultPermissions } from "@snailycad/permissions";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 export function DefaultPermissionsTab() {
   const common = useTranslations("Common");

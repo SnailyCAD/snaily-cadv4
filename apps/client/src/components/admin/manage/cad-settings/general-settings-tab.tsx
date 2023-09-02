@@ -2,7 +2,7 @@ import * as React from "react";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
-import { Button, Input, Loader, SwitchField, TabsContent, TextField } from "@snailycad/ui";
+import { Button, Input, Loader, SwitchField, TextField, Textarea } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -12,9 +12,13 @@ import { Formik, FormikHelpers } from "formik";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADSettingsData } from "@snailycad/types/api";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 export function GeneralSettingsTab() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
+  const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
+  const [bgId, setBgId] = React.useState<(File | string) | null>(null);
+
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const { AOP } = useFeatureEnabled();
@@ -28,11 +32,26 @@ export function GeneralSettingsTab() {
     if (!cad) return;
 
     const fd = new FormData();
-    const validatedImage = validateFile(logo, helpers);
+    const validatedLogo = validateFile(logo, helpers);
+    const header = validateFile(headerId, helpers);
+    const background = validateFile(bgId, helpers);
+    let authImgCount = 0;
 
-    if (validatedImage) {
-      if (typeof validatedImage !== "string") {
-        fd.set("image", validatedImage, validatedImage.name);
+    if (header || background) {
+      if (header && typeof header !== "string") {
+        authImgCount += 1;
+        fd.append("files", header, "authScreenHeaderImageId");
+      }
+
+      if (background && typeof background !== "string") {
+        authImgCount += 1;
+        fd.append("files", background, "authScreenBgImageId");
+      }
+    }
+
+    if (validatedLogo) {
+      if (typeof validatedLogo !== "string") {
+        fd.set("image", validatedLogo, validatedLogo.name);
       }
     }
 
@@ -44,7 +63,7 @@ export function GeneralSettingsTab() {
     });
 
     if (json?.id) {
-      if (validatedImage && typeof validatedImage === "object") {
+      if (validatedLogo && typeof validatedLogo === "object") {
         const {
           json: { logoId },
         } = await execute<PutCADSettingsData, typeof INITIAL_VALUES>({
@@ -58,6 +77,17 @@ export function GeneralSettingsTab() {
         });
 
         json.logoId = logoId;
+
+        if (authImgCount > 0) {
+          await execute({
+            path: "/admin/manage/cad-settings/image/auth",
+            method: "POST",
+            data: fd,
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          });
+        }
       }
 
       toastMessage({
@@ -85,6 +115,7 @@ export function GeneralSettingsTab() {
     registrationCode: cad.registrationCode ?? "",
     roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
     logoId: cad.logoId ?? "",
+    cadOGDescription: cad.miscCadSettings?.cadOGDescription ?? "",
   };
 
   return (
@@ -108,16 +139,16 @@ export function GeneralSettingsTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              errorMessage={errors.name}
-              action="input"
-              label={t("cadLogo")}
-              description={t.rich("cadLogoDescription", {
-                span: (children) => (
-                  <span className="text-base italic font-semibold">{children}</span>
-                ),
-              })}
+              label={t("cadOpenGraphDescription")}
+              description={t("cadOpenGraphDescriptionInfo")}
+              errorMessage={errors.cadOGDescription}
+              optional
             >
-              <ImageSelectInput label={t("cadLogo")} image={logo} setImage={setLogo} />
+              <Textarea
+                name="cadOGDescription"
+                value={values.cadOGDescription}
+                onChange={handleChange}
+              />
             </SettingsFormField>
 
             {AOP ? (
@@ -161,6 +192,37 @@ export function GeneralSettingsTab() {
                 aria-label={t("roleplayEnabled")}
                 isSelected={values.roleplayEnabled}
                 onChange={(isSelected) => setFieldValue("roleplayEnabled", isSelected)}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.name}
+              action="input"
+              label={t("cadLogo")}
+              description={t.rich("cadLogoDescription", {
+                span: (children) => (
+                  <span className="text-base italic font-semibold">{children}</span>
+                ),
+              })}
+            >
+              <ImageSelectInput label={t("cadLogo")} image={logo} setImage={setLogo} />
+            </SettingsFormField>
+
+            <SettingsFormField optional label={t("authScreenHeaderImage")} description={null}>
+              <ImageSelectInput
+                label={t("authScreenHeaderImage")}
+                image={headerId}
+                setImage={setHeaderId}
+                valueKey="authScreenHeaderImageId"
+              />
+            </SettingsFormField>
+
+            <SettingsFormField optional label={t("authScreenBackgroundImage")} description={null}>
+              <ImageSelectInput
+                label={t("authScreenBackgroundImage")}
+                image={bgId}
+                setImage={setBgId}
+                valueKey="authScreenBgImageId"
               />
             </SettingsFormField>
 

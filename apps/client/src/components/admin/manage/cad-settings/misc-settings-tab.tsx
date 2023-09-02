@@ -1,12 +1,11 @@
 import * as React from "react";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
 import { useTranslations } from "use-intl";
 
-import { Textarea, Loader, Input, Button, TabsContent } from "@snailycad/ui";
+import { Loader, Input, Button } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { JailTimeScale, MiscCadSettings } from "@snailycad/types";
-import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { Select } from "components/form/Select";
@@ -17,11 +16,9 @@ import { InactivityTimeoutSection } from "./misc-features/inactivity-timeout-sec
 import { LicenseNumbersSection } from "./misc-features/license-number-section";
 import { TemplateSection } from "./misc-features/template-section";
 import { MaxLicensePointsSection } from "./misc-features/max-license-points";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 export function MiscFeatures() {
-  const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
-  const [bgId, setBgId] = React.useState<(File | string) | null>(null);
-
   const common = useTranslations("Common");
   const t = useTranslations("MiscSettingsTab");
   const { state, execute } = useFetch();
@@ -59,10 +56,7 @@ export function MiscFeatures() {
     return newValues;
   }
 
-  async function onSubmit(
-    values: typeof INITIAL_VALUES,
-    helpers: FormikHelpers<typeof INITIAL_VALUES>,
-  ) {
+  async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
 
     const { json } = await execute<PutCADMiscSettingsData>({
@@ -70,34 +64,6 @@ export function MiscFeatures() {
       method: "PUT",
       data: cleanValues(values),
     });
-
-    const fd = new FormData();
-    const header = validateFile(headerId, helpers);
-    const background = validateFile(bgId, helpers);
-
-    if (header || background) {
-      let imgCount = 0;
-      if (header && typeof header !== "string") {
-        imgCount += 1;
-        fd.append("files", header, "authScreenHeaderImageId");
-      }
-
-      if (background && typeof background !== "string") {
-        imgCount += 1;
-        fd.append("files", background, "authScreenBgImageId");
-      }
-
-      if (imgCount > 0) {
-        await execute({
-          path: "/admin/manage/cad-settings/image/auth",
-          method: "POST",
-          data: fd,
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        });
-      }
-    }
 
     if (json.id) {
       setCad({ ...cad, ...json });
@@ -111,7 +77,6 @@ export function MiscFeatures() {
 
   const miscSettings = cad?.miscCadSettings ?? ({} as MiscCadSettings);
   const INITIAL_VALUES = {
-    cadOGDescription: miscSettings.cadOGDescription ?? "",
     weightPrefix: miscSettings.weightPrefix,
     heightPrefix: miscSettings.heightPrefix,
     maxBusinessesPerCitizen: miscSettings.maxBusinessesPerCitizen ?? Infinity,
@@ -167,32 +132,6 @@ export function MiscFeatures() {
           <Form className="mt-3 space-y-5">
             <section>
               <h3 className="font-semibold text-xl mb-3">{t("cadRelated")}</h3>
-
-              <ImageSelectInput
-                label={t("authScreenHeaderImage")}
-                image={headerId}
-                setImage={setHeaderId}
-                valueKey="authScreenHeaderImageId"
-              />
-
-              <ImageSelectInput
-                label={t("authScreenBackgroundImage")}
-                image={bgId}
-                setImage={setBgId}
-                valueKey="authScreenBgImageId"
-              />
-
-              <SettingsFormField
-                label={t("cadOpenGraphDescription")}
-                description={t("cadOpenGraphDescriptionInfo")}
-                errorMessage={errors.cadOGDescription}
-              >
-                <Textarea
-                  name="cadOGDescription"
-                  value={values.cadOGDescription}
-                  onChange={handleChange}
-                />
-              </SettingsFormField>
             </section>
 
             <InactivityTimeoutSection />

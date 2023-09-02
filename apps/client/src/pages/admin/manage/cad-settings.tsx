@@ -1,13 +1,10 @@
-import { AdminLayout } from "components/admin/AdminLayout";
-import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { TabList } from "@snailycad/ui";
 import { requestAll } from "lib/utils";
-import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general-settings-tab";
+import { CadSettingsLayout } from "components/admin/cad-settings/layout";
 
 const Tabs = {
   CADFeaturesTab: dynamic(
@@ -66,37 +63,18 @@ export enum SettingsTabs {
 }
 
 export default function CadSettings() {
-  const t = useTranslations("Management");
-
-  const SETTINGS_TABS = [
-    { name: t(SettingsTabs.GeneralSettings), value: SettingsTabs.GeneralSettings },
-    { name: t(SettingsTabs.Features), value: SettingsTabs.Features },
-    { name: t(SettingsTabs.MiscSettings), value: SettingsTabs.MiscSettings },
-    { name: t(SettingsTabs.DefaultPermissions), value: SettingsTabs.DefaultPermissions },
-    { name: t(SettingsTabs.LiveMap), value: SettingsTabs.LiveMap },
-    { name: t(SettingsTabs.APIToken), value: SettingsTabs.APIToken },
-    { name: t(SettingsTabs.DiscordRoles), value: SettingsTabs.DiscordRoles },
-    { name: t(SettingsTabs.DiscordWebhooks), value: SettingsTabs.DiscordWebhooks },
-    { name: t(SettingsTabs.RawWebhooks), value: SettingsTabs.RawWebhooks },
-  ];
-
   return (
-    <AdminLayout>
-      <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
-
-      <TabList tabs={SETTINGS_TABS}>
-        <GeneralSettingsTab />
-
-        <Tabs.CADFeaturesTab />
-        <Tabs.MiscFeatures />
-        <Tabs.DefaultPermissionsTab />
-        <Tabs.LiveMapTab />
-        <Tabs.ApiTokenTab />
-        <Tabs.DiscordRolesTab />
-        <Tabs.DiscordWebhooksTab />
-        <Tabs.RawWebhooksTab />
-      </TabList>
-    </AdminLayout>
+    <CadSettingsLayout>
+      <GeneralSettingsTab />
+      <Tabs.CADFeaturesTab />
+      <Tabs.MiscFeatures />
+      <Tabs.DefaultPermissionsTab />
+      <Tabs.LiveMapTab />
+      <Tabs.ApiTokenTab />
+      <Tabs.DiscordRolesTab />
+      <Tabs.DiscordWebhooksTab />
+      <Tabs.RawWebhooksTab />
+    </CadSettingsLayout>
   );
 }
 

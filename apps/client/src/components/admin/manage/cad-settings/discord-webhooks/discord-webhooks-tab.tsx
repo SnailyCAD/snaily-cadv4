@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Alert, Button, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Loader } from "@snailycad/ui";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -9,6 +9,7 @@ import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { WebhookSettingsField } from "./WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
+import { TabsContent } from "@radix-ui/react-tabs";
 
 function createInitialValues(cad: cad | null) {
   const webhookTypes = Object.values(DiscordWebhookType);
