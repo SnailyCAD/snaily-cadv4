@@ -11,6 +11,7 @@
     "lint:fix": "pnpm eslint . --ext .ts,.js,.tsx,.jsx,.mjs --fix",
     "prepare": "husky install",
     "bump-version": "node scripts/bump-version.mjs",
+    "create-images-domain": "node scripts/create-images-domain.mjs",
     "postinstall": "husky install",
     "typecheck": "pnpm turbo run typecheck"
   },

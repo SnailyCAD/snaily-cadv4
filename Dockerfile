@@ -26,6 +26,10 @@ FROM deps as client
 
 ENV NODE_ENV="production"
 
+RUN rm -rf /snailycad/apps/client/.next
+
+RUN pnpm create-images-domain
+
 RUN pnpm turbo run build --filter=@snailycad/client
 
 WORKDIR /snailycad/apps/client
