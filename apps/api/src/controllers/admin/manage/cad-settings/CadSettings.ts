@@ -148,7 +148,10 @@ export class CADSettingsController {
     });
 
     this.socket.emitUpdateAop(updated.areaOfPlay);
-    this.socket.emitUpdateRoleplayStopped(data.roleplayEnabled);
+
+    if (typeof data.roleplayEnabled !== "undefined") {
+      this.socket.emitUpdateRoleplayStopped(data.roleplayEnabled);
+    }
 
     await createAuditLogEntry({
       action: {
