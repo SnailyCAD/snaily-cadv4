@@ -13,12 +13,24 @@ importers:
       colorette:
         specifier: 2.0.20
         version: 2.0.20
+      concurrently:
+        specifier: ^8.2.1
+        version: 8.2.1
       copy:
         specifier: ^0.3.2
         version: 0.3.2
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
+      husky:
+        specifier: ^8.0.3
+        version: 8.0.3
+      prettier:
+        specifier: 3.0.3
+        version: 3.0.3
+      turbo:
+        specifier: 1.10.13
+        version: 1.10.13
     devDependencies:
       "@casperiv/eslint-config":
         specifier: 8.0.0
@@ -29,27 +41,15 @@ importers:
       "@casperiv/eslint-config-react":
         specifier: 8.0.0
         version: 8.0.0(eslint@8.48.0)
-      concurrently:
-        specifier: ^8.2.1
-        version: 8.2.1
       eslint:
         specifier: 8.48.0
         version: 8.48.0
-      husky:
-        specifier: ^8.0.3
-        version: 8.0.3
       lerna:
         specifier: ^7.2.0
         version: 7.2.0
       lint-staged:
         specifier: ^14.0.1
         version: 14.0.1
-      prettier:
-        specifier: 3.0.3
-        version: 3.0.3
-      turbo:
-        specifier: 1.10.13
-        version: 1.10.13
 
   apps/api:
     dependencies:
@@ -12534,7 +12534,7 @@ packages:
       supports-color: 8.1.1
       tree-kill: 1.2.2
       yargs: 17.7.2
-    dev: true
+    dev: false
 
   /console-control-strings@1.1.0:
     resolution:
@@ -12970,6 +12970,7 @@ packages:
     engines: { node: ">=0.11" }
     dependencies:
       "@babel/runtime": 7.22.11
+    dev: false
 
   /date-format@4.0.14:
     resolution:
@@ -16135,7 +16136,7 @@ packages:
       }
     engines: { node: ">=14" }
     hasBin: true
-    dev: true
+    dev: false
 
   /hyphenate-style-name@1.0.4:
     resolution:
@@ -21268,7 +21269,6 @@ packages:
       }
     engines: { node: ">=14" }
     hasBin: true
-    dev: true
 
   /pretty-bytes@6.1.1:
     resolution:
@@ -22802,7 +22802,6 @@ packages:
       }
     dependencies:
       tslib: 2.6.2
-    dev: true
 
   /sade@1.8.1:
     resolution:
@@ -23136,7 +23135,7 @@ packages:
       {
         integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==,
       }
-    dev: true
+    dev: false
 
   /side-channel@1.0.4:
     resolution:
@@ -23521,7 +23520,7 @@ packages:
       {
         integrity: sha512-zC8zGoGkmc8J9ndvml8Xksr1Amk9qBujgbF0JAIWO7kXr43w0h/0GJNM/Vustixu+YE8N/MTrQ7N31FvHUACxQ==,
       }
-    dev: true
+    dev: false
 
   /spdx-correct@3.2.0:
     resolution:
@@ -24063,7 +24062,6 @@ packages:
     engines: { node: ">=10" }
     dependencies:
       has-flag: 4.0.0
-    dev: true
 
   /supports-hyperlinks@2.3.0:
     resolution:
@@ -24839,7 +24837,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-darwin-arm64@1.10.13:
@@ -24850,7 +24848,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-linux-64@1.10.13:
@@ -24861,7 +24859,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-linux-arm64@1.10.13:
@@ -24872,7 +24870,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-windows-64@1.10.13:
@@ -24883,7 +24881,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-windows-arm64@1.10.13:
@@ -24894,7 +24892,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo@1.10.13:
@@ -24910,7 +24908,7 @@ packages:
       turbo-linux-arm64: 1.10.13
       turbo-windows-64: 1.10.13
       turbo-windows-arm64: 1.10.13
-    dev: true
+    dev: false
 
   /type-check@0.4.0:
     resolution:
@@ -26425,7 +26423,6 @@ packages:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 21.1.1
-    dev: true
 
   /yauzl@2.10.0:
     resolution:
