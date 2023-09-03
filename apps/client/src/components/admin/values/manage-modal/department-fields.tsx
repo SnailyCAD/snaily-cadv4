@@ -3,8 +3,8 @@ import { useFormikContext } from "formik";
 import { DepartmentType, ValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
-import { CALLSIGN_TEMPLATE_VARIABLES } from "components/admin/manage/cad-settings/misc-features/template-section";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { CALLSIGN_TEMPLATE_VARIABLES } from "components/admin/manage/cad-settings/misc-features/template-tab";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
