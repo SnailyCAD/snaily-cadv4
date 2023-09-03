@@ -12,11 +12,38 @@ import { Select } from "components/form/Select";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { InactivityTimeoutSection } from "./misc-features/inactivity-timeout-section";
-import { LicenseNumbersSection } from "./misc-features/license-number-section";
-import { TemplateSection } from "./misc-features/template-section";
-import { MaxLicensePointsSection } from "./misc-features/max-license-points";
 import { TabsContent } from "@radix-ui/react-tabs";
+
+// infinity -> null, "" -> null
+export function cleanValues(values: Record<string, any>) {
+  const newValues: Record<string, any> = {};
+  const excluded = ["heightPrefix", "weightPrefix", "callsignTemplate"];
+  const toBeRemoved = ["authScreenHeaderImageId", "authScreenBgImageId"];
+
+  for (const key in values) {
+    const value = values[key];
+
+    if (toBeRemoved.includes(key)) {
+      newValues[key] = undefined;
+      continue;
+    }
+
+    if (excluded.includes(key)) {
+      newValues[key] = value;
+      continue;
+    }
+
+    if (typeof value === "string" && value.trim() === "") {
+      newValues[key] = null;
+    } else if (typeof value === "number" && value === Infinity) {
+      newValues[key] = null;
+    } else {
+      newValues[key] = values[key];
+    }
+  }
+
+  return newValues;
+}
 
 export function MiscFeatures() {
   const common = useTranslations("Common");
@@ -24,37 +51,6 @@ export function MiscFeatures() {
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
   const { DIVISIONS } = useFeatureEnabled();
-
-  // infinity -> null, "" -> null
-  function cleanValues(values: typeof INITIAL_VALUES) {
-    const newValues: Record<string, any> = {};
-    const excluded = ["heightPrefix", "weightPrefix", "callsignTemplate"];
-    const toBeRemoved = ["authScreenHeaderImageId", "authScreenBgImageId"];
-
-    for (const key in values) {
-      const value = values[key as keyof typeof INITIAL_VALUES];
-
-      if (toBeRemoved.includes(key)) {
-        newValues[key] = undefined;
-        continue;
-      }
-
-      if (excluded.includes(key)) {
-        newValues[key] = value;
-        continue;
-      }
-
-      if (typeof value === "string" && value.trim() === "") {
-        newValues[key] = null;
-      } else if (typeof value === "number" && value === Infinity) {
-        newValues[key] = null;
-      } else {
-        newValues[key] = values[key as keyof typeof INITIAL_VALUES];
-      }
-    }
-
-    return newValues;
-  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
@@ -87,35 +83,9 @@ export function MiscFeatures() {
     maxAssignmentsToIncidents: miscSettings.maxAssignmentsToIncidents ?? Infinity,
     maxAssignmentsToCalls: miscSettings.maxAssignmentsToCalls ?? Infinity,
     maxOfficersPerUser: miscSettings.maxOfficersPerUser ?? Infinity,
-    callsignTemplate: miscSettings.callsignTemplate ?? "",
-    caseNumberTemplate: miscSettings.caseNumberTemplate ?? "",
-    pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
+
     liveMapURL: miscSettings.liveMapURL ?? "",
     jailTimeScaling: miscSettings.jailTimeScale ?? null,
-
-    call911InactivityTimeout: miscSettings.call911InactivityTimeout ?? "",
-    incidentInactivityTimeout: miscSettings.incidentInactivityTimeout ?? "",
-    unitInactivityTimeout: miscSettings.unitInactivityTimeout ?? "",
-    activeWarrantsInactivityTimeout: miscSettings.activeWarrantsInactivityTimeout ?? "",
-    boloInactivityTimeout: miscSettings.boloInactivityTimeout ?? "",
-    activeDispatchersInactivityTimeout: miscSettings.activeDispatchersInactivityTimeout ?? "",
-
-    driversLicenseNumberLength: miscSettings.driversLicenseNumberLength ?? 8,
-    driversLicenseTemplate: miscSettings.driversLicenseTemplate ?? "",
-
-    weaponLicenseNumberLength: miscSettings.weaponLicenseNumberLength ?? 8,
-    pilotLicenseTemplate: miscSettings.pilotLicenseTemplate ?? "",
-
-    pilotLicenseNumberLength: miscSettings.pilotLicenseNumberLength ?? 6,
-    weaponLicenseTemplate: miscSettings.weaponLicenseTemplate ?? "",
-
-    waterLicenseNumberLength: miscSettings.waterLicenseNumberLength ?? 8,
-    waterLicenseTemplate: miscSettings.waterLicenseTemplate ?? "",
-
-    driversLicenseMaxPoints: miscSettings.driversLicenseMaxPoints ?? 12,
-    pilotLicenseMaxPoints: miscSettings.pilotLicenseMaxPoints ?? 12,
-    weaponLicenseMaxPoints: miscSettings.weaponLicenseMaxPoints ?? 12,
-    waterLicenseMaxPoints: miscSettings.waterLicenseMaxPoints ?? 12,
 
     // how many times a signal 100 should be repeated.
     signal100RepeatAmount: miscSettings.signal100RepeatAmount ?? 1,
@@ -130,15 +100,6 @@ export function MiscFeatures() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form className="mt-3 space-y-5">
-            <section>
-              <h3 className="font-semibold text-xl mb-3">{t("cadRelated")}</h3>
-            </section>
-
-            <InactivityTimeoutSection />
-            <LicenseNumbersSection />
-            <MaxLicensePointsSection />
-            <TemplateSection />
-
             <section>
               <h3 className="font-semibold text-xl mb-3">{t("other")}</h3>
 

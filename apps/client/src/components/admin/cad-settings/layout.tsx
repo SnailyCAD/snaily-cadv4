@@ -23,6 +23,7 @@ export enum SettingsTabs {
   MaxLicensePoints = "MAX_LICENSE_POINTS",
   Templates = "TEMPLATES",
   Other = "OTHER",
+  Limits = "LIMITS",
 
   /** integrations */
   LiveMap = "LIVE_MAP",
@@ -96,6 +97,7 @@ function CadSettingsSidebar() {
         SettingsTabs.CitizenLicensePoints,
         SettingsTabs.MaxLicensePoints,
         SettingsTabs.Templates,
+        SettingsTabs.Limits,
         SettingsTabs.Other,
       ],
     },

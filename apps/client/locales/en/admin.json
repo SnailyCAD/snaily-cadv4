@@ -163,7 +163,8 @@
     "MAX_LICENSE_POINTS": "Max License Points",
     "TEMPLATES": "Templates",
     "OTHER": "Other",
-    "integrations": "Integrations"
+    "integrations": "Integrations",
+    "LIMITS": "Limits"
   },
   "AuditLogs": {
     "userBanned": "User: <span>{value}</span> has been banned.",

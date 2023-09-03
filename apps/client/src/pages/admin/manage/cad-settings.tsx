@@ -12,11 +12,6 @@ const Tabs = {
       (await import("components/admin/manage/cad-settings/cad-features-tab")).CADFeaturesTab,
     { ssr: false },
   ),
-  MiscFeatures: dynamic(
-    async () =>
-      (await import("components/admin/manage/cad-settings/misc-settings-tab")).MiscFeatures,
-    { ssr: false },
-  ),
   DefaultPermissionsTab: dynamic(
     async () =>
       (await import("components/admin/manage/cad-settings/default-permissions-tab"))
@@ -48,6 +43,29 @@ const Tabs = {
     async () => (await import("components/admin/manage/cad-settings/live-map-tab")).LiveMapTab,
     { ssr: false },
   ),
+  InactivityTimeoutTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/inactivity-timeout-tab"))
+        .InactivityTimeoutTab,
+    { ssr: false },
+  ),
+  CitizenLicenseNumbersTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/license-number-tab"))
+        .LicenseNumbersTab,
+    { ssr: false },
+  ),
+  MaxLicensePointsTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/max-license-points-tab"))
+        .MaxLicensePointsSection,
+    { ssr: false },
+  ),
+  TemplatesTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/template-tab")).TemplateTab,
+    { ssr: false },
+  ),
 };
 
 export enum SettingsTabs {
@@ -67,7 +85,10 @@ export default function CadSettings() {
     <CadSettingsLayout>
       <GeneralSettingsTab />
       <Tabs.CADFeaturesTab />
-      <Tabs.MiscFeatures />
+      <Tabs.InactivityTimeoutTab />
+      <Tabs.MaxLicensePointsTab />
+      <Tabs.CitizenLicenseNumbersTab />
+      <Tabs.TemplatesTab />
       <Tabs.DefaultPermissionsTab />
       <Tabs.LiveMapTab />
       <Tabs.ApiTokenTab />
