@@ -5,12 +5,12 @@ import { Alert, Button, Loader, SwitchField, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import type { cad } from "@snailycad/types";
-import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADDefaultPermissionsData } from "@snailycad/types/api";
 import { usePermissionsModal } from "hooks/use-permissions-modal";
 import { PermissionNames, getPermissions, defaultPermissions } from "@snailycad/permissions";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { SettingsTabs } from "components/admin/cad-settings/layout";
 
 export function DefaultPermissionsTab() {
   const common = useTranslations("Common");
@@ -134,7 +134,11 @@ export function DefaultPermissionsTab() {
                 })}
             </div>
 
-            <Button className="flex items-center" type="submit" disabled={state === "loading"}>
+            <Button
+              className="flex items-center float-right"
+              type="submit"
+              disabled={state === "loading"}
+            >
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>

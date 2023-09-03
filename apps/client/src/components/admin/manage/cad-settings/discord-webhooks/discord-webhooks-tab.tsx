@@ -5,11 +5,11 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import { cad, DiscordWebhookType } from "@snailycad/types";
-import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { WebhookSettingsField } from "./WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { SettingsTabs } from "components/admin/cad-settings/layout";
 
 function createInitialValues(cad: cad | null) {
   const webhookTypes = Object.values(DiscordWebhookType);
@@ -190,9 +190,9 @@ export function DiscordWebhooksTab() {
             />
 
             <Button
-              className="flex items-center"
+              className="flex items-center float-right"
               type="submit"
-              disabled={Boolean(fetchError) || state === "loading"}
+              disabled={state === "loading"}
             >
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}

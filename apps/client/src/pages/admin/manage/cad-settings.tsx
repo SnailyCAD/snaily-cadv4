@@ -3,13 +3,19 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
-import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general-settings-tab";
+import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general/general-settings-tab";
 import { CadSettingsLayout } from "components/admin/cad-settings/layout";
 
 const Tabs = {
+  WhitelistTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/general/whitelist-tab")).WhitelistTab,
+    { ssr: false },
+  ),
   CADFeaturesTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/cad-features-tab")).CADFeaturesTab,
+      (await import("components/admin/manage/cad-settings/general/cad-features-tab"))
+        .CADFeaturesTab,
     { ssr: false },
   ),
   DefaultPermissionsTab: dynamic(
@@ -66,25 +72,27 @@ const Tabs = {
       (await import("components/admin/manage/cad-settings/misc-features/template-tab")).TemplateTab,
     { ssr: false },
   ),
+  LimitsTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/limits-tab")).LimitsTab,
+    { ssr: false },
+  ),
+  OtherMiscTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/other-misc-tab"))
+        .OtherMiscTab,
+    { ssr: false },
+  ),
 };
-
-export enum SettingsTabs {
-  GeneralSettings = "GENERAL_SETTINGS",
-  Features = "FEATURES",
-  MiscSettings = "MISC_SETTINGS",
-  DefaultPermissions = "DEFAULT_PERMISSIONS",
-  LiveMap = "LIVE_MAP",
-  APIToken = "API_TOKEN",
-  DiscordRoles = "DISCORD_ROLES",
-  DiscordWebhooks = "DISCORD_WEBHOOKS",
-  RawWebhooks = "RAW_WEBHOOKS",
-}
 
 export default function CadSettings() {
   return (
     <CadSettingsLayout>
       <GeneralSettingsTab />
+      <Tabs.WhitelistTab />
       <Tabs.CADFeaturesTab />
+      <Tabs.LimitsTab />
+      <Tabs.OtherMiscTab />
       <Tabs.InactivityTimeoutTab />
       <Tabs.MaxLicensePointsTab />
       <Tabs.CitizenLicenseNumbersTab />

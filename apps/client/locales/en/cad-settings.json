@@ -15,7 +15,7 @@
     "registrationCodeDescription": "Users are required to enter this code when creating a new account.",
     "roleplayEnabled": "Roleplay Enabled",
     "roleplayEnabledDescription": "When disabled, this will display a banner displaying that roleplay is currently disabled.",
-    "whitelisting": "whitelisting",
+    "whitelisting": "Whitelisting",
     "cadWhitelist": "CAD Whitelist",
     "cadWhitelistDescription": "The CAD will be whitelisted. Any new user will need to be reviewed, then they can be approved or denied.",
     "towWhitelist": "Tow Whitelist",
@@ -193,7 +193,8 @@
     "signal100RepeatAmountDescription": "The amount of times Signal 100 should be repeated. (Default: 1)",
     "signal100RepeatAmount": "Signal 100 Repeat Amount",
     "signal100RepeatIntervalMsDescription": "The amount of time between each Signal 100 message in milliseconds. (Default: 1000)",
-    "signal100RepeatIntervalMs": "Signal 100 Repeat Interval (ms)"
+    "signal100RepeatIntervalMs": "Signal 100 Repeat Interval (ms)",
+    "limits": "Limits"
   },
   "Features": {
     "enableOrDisableFeatures": "Enable or Disable Features",

@@ -6,7 +6,6 @@ import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
-import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import Link from "next/link";
@@ -14,6 +13,7 @@ import { BoxArrowUpRight, ChevronDown } from "react-bootstrap-icons";
 import { Table, useTableState } from "components/shared/Table";
 import { MiscCadSettings, LiveMapURL } from "@snailycad/types";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { SettingsTabs } from "components/admin/cad-settings/layout";
 
 const TILE_NAMES = [
   "minimap_sea_0_0",
@@ -280,12 +280,14 @@ export function LiveMapTab() {
               />
             </SettingsFormField>
 
-            <div className="flex">
-              <Button className="flex items-center" type="submit" disabled={state === "loading"}>
-                {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
-                {common("save")}
-              </Button>
-            </div>
+            <Button
+              className="flex items-center float-right"
+              type="submit"
+              disabled={state === "loading"}
+            >
+              {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
+              {common("save")}
+            </Button>
           </Form>
         )}
       </Formik>

@@ -9,12 +9,12 @@ import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormField } from "components/form/FormField";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { SettingsTabs } from "components/admin/cad-settings/layout";
 
 function makeRoleValues(roles: DiscordRole[] | undefined) {
   if (!roles) return [];
@@ -375,9 +375,9 @@ export function DiscordRolesTab() {
             </SettingsFormField>
 
             <Button
-              className="flex items-center"
+              className="flex items-center float-right"
               type="submit"
-              disabled={Boolean(fetchError) || state === "loading"}
+              disabled={state === "loading"}
             >
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}

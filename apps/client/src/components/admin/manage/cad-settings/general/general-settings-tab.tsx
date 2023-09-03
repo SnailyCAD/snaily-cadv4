@@ -9,10 +9,10 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Formik, FormikHelpers } from "formik";
-import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADSettingsData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { SettingsTabs } from "components/admin/cad-settings/layout";
 
 export function GeneralSettingsTab() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
@@ -108,13 +108,8 @@ export function GeneralSettingsTab() {
     name: cad.name ?? "",
     areaOfPlay: cad.areaOfPlay ?? "",
     steamApiKey: cad.steamApiKey ?? "",
-    towWhitelisted: cad.towWhitelisted ?? false,
-    taxiWhitelisted: cad.taxiWhitelisted ?? false,
-    whitelisted: cad.whitelisted ?? false,
-    businessWhitelisted: cad.businessWhitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
     roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
-    logoId: cad.logoId ?? "",
     cadOGDescription: cad.miscCadSettings?.cadOGDescription ?? "",
   };
 
@@ -226,63 +221,11 @@ export function GeneralSettingsTab() {
               />
             </SettingsFormField>
 
-            <section>
-              <h3 className="font-semibold text-xl mb-3">{t("whitelisting")}</h3>
-
-              <SettingsFormField
-                errorMessage={errors.whitelisted}
-                action="checkbox"
-                label={t("cadWhitelist")}
-                description={t("cadWhitelistDescription")}
-              >
-                <SwitchField
-                  aria-label={t("cadWhitelist")}
-                  isSelected={values.whitelisted}
-                  onChange={(isSelected) => setFieldValue("whitelisted", isSelected)}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                errorMessage={errors.towWhitelisted}
-                action="checkbox"
-                label={t("towWhitelist")}
-                description={t("towWhitelistDescription")}
-              >
-                <SwitchField
-                  aria-label={t("towWhitelist")}
-                  isSelected={values.towWhitelisted}
-                  onChange={(isSelected) => setFieldValue("towWhitelisted", isSelected)}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                errorMessage={errors.taxiWhitelisted}
-                action="checkbox"
-                label={t("taxiWhitelist")}
-                description={t("taxiWhitelistDescription")}
-              >
-                <SwitchField
-                  aria-label={t("taxiWhitelist")}
-                  isSelected={values.taxiWhitelisted}
-                  onChange={(isSelected) => setFieldValue("taxiWhitelisted", isSelected)}
-                />
-              </SettingsFormField>
-
-              <SettingsFormField
-                errorMessage={errors.businessWhitelisted}
-                action="checkbox"
-                label={t("businessWhitelist")}
-                description={t("businessWhitelistDescription")}
-              >
-                <SwitchField
-                  aria-label={t("businessWhitelist")}
-                  isSelected={values.businessWhitelisted}
-                  onChange={(isSelected) => setFieldValue("businessWhitelisted", isSelected)}
-                />
-              </SettingsFormField>
-            </section>
-
-            <Button disabled={state === "loading"} className="flex items-center" type="submit">
+            <Button
+              disabled={state === "loading"}
+              className="flex items-center float-right"
+              type="submit"
+            >
               {state === "loading" ? <Loader className="mr-3" /> : null}
               {common("save")}
             </Button>

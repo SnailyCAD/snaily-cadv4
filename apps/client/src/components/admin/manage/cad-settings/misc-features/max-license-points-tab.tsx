@@ -3,7 +3,7 @@ import { Button, Input, Loader } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { toastMessage } from "lib/toastMessage";
 import { useTranslations } from "use-intl";
-import { cleanValues } from "../misc-settings-tab";
+import { cleanValues } from "./other-misc-tab";
 import { PutCADMiscSettingsData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { useAuth } from "context/AuthContext";
@@ -47,7 +47,7 @@ export function MaxLicensePointsSection() {
   return (
     <TabsContent value={SettingsTabs.MaxLicensePoints}>
       <header className="mb-3">
-        <h3 className="font-semibold text-xl">{t("maxLicensePoints")}</h3>
+        <h3 className="font-semibold text-2xl">{t("maxLicensePoints")}</h3>
         <p className="text-neutral-700 dark:text-gray-400">{t("maxLicensePointsDescription")}</p>
       </header>
 

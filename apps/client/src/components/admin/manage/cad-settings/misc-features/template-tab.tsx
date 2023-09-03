@@ -5,7 +5,7 @@ import { useAuth } from "context/AuthContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { cleanValues } from "../misc-settings-tab";
+import { cleanValues } from "./other-misc-tab";
 import { toastMessage } from "lib/toastMessage";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { SettingsTabs } from "components/admin/cad-settings/layout";
@@ -76,7 +76,7 @@ export function TemplateTab() {
 
   return (
     <TabsContent value={SettingsTabs.Templates}>
-      <h3 className="font-semibold text-xl mb-3">{t("templateSection")}</h3>
+      <h3 className="font-semibold text-2xl mb-3">{t("templateSection")}</h3>
 
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ errors, values, handleChange }) => (

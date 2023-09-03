@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { cleanValues } from "../misc-settings-tab";
+import { cleanValues } from "./other-misc-tab";
 
 export function InactivityTimeoutTab() {
   const t = useTranslations("MiscSettingsTab");
