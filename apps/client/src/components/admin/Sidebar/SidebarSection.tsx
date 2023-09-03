@@ -1,4 +1,5 @@
 import { usePermission, Permissions } from "hooks/usePermission";
+import { classNames } from "lib/classNames";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -6,9 +7,10 @@ interface Props {
   title: string;
   children: ReactNode;
   icon: ReactNode;
+  marginTop?: "mt-6" | "mt-4";
 }
 
-export function SidebarSection({ icon, title, permissions, children }: Props) {
+export function SidebarSection({ icon, title, marginTop, permissions, children }: Props) {
   const { hasPermissions } = usePermission();
 
   if (permissions && !hasPermissions(permissions)) {
@@ -16,7 +18,7 @@ export function SidebarSection({ icon, title, permissions, children }: Props) {
   }
 
   return (
-    <section className="mt-6 first:mt-0">
+    <section className={classNames("first:mt-0 w-full", marginTop === "mt-4" ? "mt-4" : "mt-6")}>
       <header className="flex items-center gap-2 px-3">
         <span aria-hidden>{icon}</span>
 

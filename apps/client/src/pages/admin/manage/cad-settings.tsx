@@ -1,23 +1,21 @@
-import { AdminLayout } from "components/admin/AdminLayout";
-import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { TabList } from "@snailycad/ui";
 import { requestAll } from "lib/utils";
-import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
-import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general-settings-tab";
+import { GeneralSettingsTab } from "components/admin/manage/cad-settings/general/general-settings-tab";
+import { CadSettingsLayout } from "components/admin/cad-settings/layout";
 
 const Tabs = {
-  CADFeaturesTab: dynamic(
+  WhitelistTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/cad-features-tab")).CADFeaturesTab,
+      (await import("components/admin/manage/cad-settings/general/whitelist-tab")).WhitelistTab,
     { ssr: false },
   ),
-  MiscFeatures: dynamic(
+  CADFeaturesTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/misc-settings-tab")).MiscFeatures,
+      (await import("components/admin/manage/cad-settings/general/cad-features-tab"))
+        .CADFeaturesTab,
     { ssr: false },
   ),
   DefaultPermissionsTab: dynamic(
@@ -51,52 +49,61 @@ const Tabs = {
     async () => (await import("components/admin/manage/cad-settings/live-map-tab")).LiveMapTab,
     { ssr: false },
   ),
+  InactivityTimeoutTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/inactivity-timeout-tab"))
+        .InactivityTimeoutTab,
+    { ssr: false },
+  ),
+  CitizenLicenseNumbersTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/license-number-tab"))
+        .LicenseNumbersTab,
+    { ssr: false },
+  ),
+  MaxLicensePointsTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/max-license-points-tab"))
+        .MaxLicensePointsSection,
+    { ssr: false },
+  ),
+  TemplatesTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/template-tab")).TemplateTab,
+    { ssr: false },
+  ),
+  LimitsTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/limits-tab")).LimitsTab,
+    { ssr: false },
+  ),
+  OtherMiscTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/misc-features/other-misc-tab"))
+        .OtherMiscTab,
+    { ssr: false },
+  ),
 };
 
-export enum SettingsTabs {
-  GeneralSettings = "GENERAL_SETTINGS",
-  Features = "FEATURES",
-  MiscSettings = "MISC_SETTINGS",
-  DefaultPermissions = "DEFAULT_PERMISSIONS",
-  LiveMap = "LIVE_MAP",
-  APIToken = "API_TOKEN",
-  DiscordRoles = "DISCORD_ROLES",
-  DiscordWebhooks = "DISCORD_WEBHOOKS",
-  RawWebhooks = "RAW_WEBHOOKS",
-}
-
 export default function CadSettings() {
-  const t = useTranslations("Management");
-
-  const SETTINGS_TABS = [
-    { name: t(SettingsTabs.GeneralSettings), value: SettingsTabs.GeneralSettings },
-    { name: t(SettingsTabs.Features), value: SettingsTabs.Features },
-    { name: t(SettingsTabs.MiscSettings), value: SettingsTabs.MiscSettings },
-    { name: t(SettingsTabs.DefaultPermissions), value: SettingsTabs.DefaultPermissions },
-    { name: t(SettingsTabs.LiveMap), value: SettingsTabs.LiveMap },
-    { name: t(SettingsTabs.APIToken), value: SettingsTabs.APIToken },
-    { name: t(SettingsTabs.DiscordRoles), value: SettingsTabs.DiscordRoles },
-    { name: t(SettingsTabs.DiscordWebhooks), value: SettingsTabs.DiscordWebhooks },
-    { name: t(SettingsTabs.RawWebhooks), value: SettingsTabs.RawWebhooks },
-  ];
-
   return (
-    <AdminLayout>
-      <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
-
-      <TabList tabs={SETTINGS_TABS}>
-        <GeneralSettingsTab />
-
-        <Tabs.CADFeaturesTab />
-        <Tabs.MiscFeatures />
-        <Tabs.DefaultPermissionsTab />
-        <Tabs.LiveMapTab />
-        <Tabs.ApiTokenTab />
-        <Tabs.DiscordRolesTab />
-        <Tabs.DiscordWebhooksTab />
-        <Tabs.RawWebhooksTab />
-      </TabList>
-    </AdminLayout>
+    <CadSettingsLayout>
+      <GeneralSettingsTab />
+      <Tabs.WhitelistTab />
+      <Tabs.CADFeaturesTab />
+      <Tabs.LimitsTab />
+      <Tabs.OtherMiscTab />
+      <Tabs.InactivityTimeoutTab />
+      <Tabs.MaxLicensePointsTab />
+      <Tabs.CitizenLicenseNumbersTab />
+      <Tabs.TemplatesTab />
+      <Tabs.DefaultPermissionsTab />
+      <Tabs.LiveMapTab />
+      <Tabs.ApiTokenTab />
+      <Tabs.DiscordRolesTab />
+      <Tabs.DiscordWebhooksTab />
+      <Tabs.RawWebhooksTab />
+    </CadSettingsLayout>
   );
 }
 

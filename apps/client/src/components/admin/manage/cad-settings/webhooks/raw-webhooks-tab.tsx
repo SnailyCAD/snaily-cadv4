@@ -1,15 +1,16 @@
 import * as React from "react";
-import { Alert, Button, Loader, TabsContent } from "@snailycad/ui";
+import { Alert, Button, Loader } from "@snailycad/ui";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import { DiscordWebhookType } from "@snailycad/types";
-import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { WebhookSettingsField } from "../discord-webhooks/WebhookSettingsField";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordWebhooksData, PostCADDiscordWebhooksData } from "@snailycad/types/api";
 import { useQuery } from "@tanstack/react-query";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { SettingsTabs } from "components/admin/cad-settings/layout";
 
 export function RawWebhooksTab() {
   const [fetchError, setFetchError] = React.useState<string | null>(null);
@@ -69,7 +70,6 @@ export function RawWebhooksTab() {
     <TabsContent value={SettingsTabs.RawWebhooks}>
       <header>
         <h2 className="text-2xl font-semibold">{t("rawWebhooks")}</h2>
-
         <p className="my-3 text-neutral-700 dark:text-gray-400 max-w-2xl">{t("rawWebhooksInfo")}</p>
       </header>
 
@@ -127,7 +127,11 @@ export function RawWebhooksTab() {
               label={t("warrantsWebhookURL")}
             />
 
-            <Button className="flex items-center" type="submit" disabled={state === "loading"}>
+            <Button
+              className="flex items-center float-right"
+              type="submit"
+              disabled={state === "loading"}
+            >
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>

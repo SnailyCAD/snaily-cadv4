@@ -4,6 +4,11 @@ services:
     image: postgres
     env_file:
       - .env
+    environment:
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "${DB_PORT}:5432"
     volumes:

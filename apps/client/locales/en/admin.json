@@ -153,7 +153,18 @@
     "alert_deleteUnit": "Are you sure you want to delete <span>{unit}</span>? This action cannot be undone!",
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
-    "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
+    "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone.",
+    "webhooks": "Webhooks",
+    "general": "General",
+    "miscellaneous": "Miscellaneous",
+    "WHITELIST_SETTINGS": "Whitelist Settings",
+    "INACTIVITY_TIMEOUTS": "Inactivity Timeouts",
+    "CITIZEN_LICENSE_POINTS": "Citizen License Points",
+    "MAX_LICENSE_POINTS": "Max License Points",
+    "TEMPLATES": "Templates",
+    "OTHER": "Other",
+    "integrations": "Integrations",
+    "LIMITS": "Limits"
   },
   "AuditLogs": {
     "userBanned": "User: <span>{value}</span> has been banned.",

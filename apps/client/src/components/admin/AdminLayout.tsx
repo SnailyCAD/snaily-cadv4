@@ -36,7 +36,7 @@ export function AdminLayout({ children, className, permissions }: Props) {
 
   const isNewVersionAvailable =
     cad?.version?.latestReleaseVersion &&
-    parseVersion(cad.version.latestReleaseVersion) > parseVersion(cad.version.currentVersion);
+    parseCadVersion(cad.version.latestReleaseVersion) > parseCadVersion(cad.version.currentVersion);
 
   return (
     <>
@@ -70,6 +70,6 @@ export function AdminLayout({ children, className, permissions }: Props) {
   );
 }
 
-function parseVersion(version: string) {
+export function parseCadVersion(version: string) {
   return parseInt(version.replaceAll(".", ""), 10);
 }
