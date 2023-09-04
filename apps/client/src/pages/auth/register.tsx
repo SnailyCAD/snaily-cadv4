@@ -15,7 +15,7 @@ import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { LocalhostDetector } from "components/auth/localhost-decector";
+import { LocalhostDetector } from "components/auth/localhost-detector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
 import type { PostRegisterUserData } from "@snailycad/types/api";
@@ -26,13 +26,16 @@ import { ApiVerification } from "components/auth/api-verification";
 
 interface Props {
   cad: Pick<cad, "registrationCode" | "version">;
+  isLocalhost: boolean;
+  isCORSError: boolean;
+  CORS_ORIGIN_URL: string | null;
 }
 
 const hasGoogleCaptchaSiteKey =
   typeof process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY === "string" &&
   process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_SITE_KEY.length > 0;
 
-function Register({ cad }: Props) {
+function Register({ cad, CORS_ORIGIN_URL, isLocalhost, isCORSError }: Props) {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations();
@@ -113,8 +116,8 @@ function Register({ cad }: Props) {
 
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />
-        <LocalhostDetector />
-        <ApiVerification />
+        <LocalhostDetector isLocalhost={isLocalhost} />
+        <ApiVerification CORS_ORIGIN_URL={CORS_ORIGIN_URL} isCORSError={isCORSError} />
 
         <Formik
           enableReinitialize
@@ -236,8 +239,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     data: null,
   }));
 
+  const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL ?? null;
+  const NEXT_PUBLIC_CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL ?? null;
+
+  const isWildcard = CORS_ORIGIN_URL?.includes("*") ?? false;
+  const isLocalhost =
+    (CORS_ORIGIN_URL?.includes("localhost") || NEXT_PUBLIC_CLIENT_URL?.includes("localhost")) ??
+    false;
+  const doURLsMatch = isWildcard ? true : CORS_ORIGIN_URL === NEXT_PUBLIC_CLIENT_URL;
+
   return {
     props: {
+      isLocalhost,
+      isCORSError: !doURLsMatch,
+      CORS_ORIGIN_URL: !doURLsMatch ? CORS_ORIGIN_URL : null,
       cad: data ?? {},
       userSavedIsDarkTheme,
       messages: await getTranslations(["auth"], userSavedLocale ?? locale),
