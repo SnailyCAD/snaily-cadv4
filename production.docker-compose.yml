@@ -11,6 +11,8 @@ services:
       - .env
     ports:
       - "${DB_PORT}:5432"
+    expose:
+      - ${DB_PORT}
     networks:
       - cad_web
     volumes:
@@ -36,6 +38,10 @@ services:
     restart: always
     volumes:
       - ./apps/api/public:/snailycad/apps/api/public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.snaily-cad-api.entrypoints=web"
+      - "traefik.http.routers.snaily-cad-api.rule=Host(`${DOCKER_API_DOMAIN}`)"
 
   client:
     container_name: "snaily-cad-client"
@@ -51,6 +57,31 @@ services:
       - ${PORT_CLIENT}
     depends_on:
       - postgres
+    networks:
+      - cad_web
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.snaily-cad-client.entrypoints=web"
+      - "traefik.http.routers.snaily-cad-client.rule=Host(`${DOCKER_CLIENT_DOMAIN}`)"
+
+  traefik:
+    container_name: "snaily-cad-traefik"
+    image: traefik
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.traefik.address=:8080"
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./.docker-config/letsencrypt:/letsencrypt"
     networks:
       - cad_web
     restart: always

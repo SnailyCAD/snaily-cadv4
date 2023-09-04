@@ -39,3 +39,6 @@ build-storybook.log
 
 # Prisma generated types
 **/prisma/index.ts
+
+# Docker generated stuff
+.docker-config/*
