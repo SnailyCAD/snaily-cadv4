@@ -2,9 +2,13 @@ import * as React from "react";
 import { CheckCircleFill, ExclamationDiamondFill } from "react-bootstrap-icons";
 import { useLocation } from "react-use";
 
-export function LocalhostDetector() {
+interface Props {
+  isLocalhost: boolean;
+}
+
+export function LocalhostDetector(props: Props) {
   const location = useLocation();
-  const [isLocalhost, setIsLocalhost] = React.useState<boolean | undefined>(false);
+  const [isLocalhost, setIsLocalhost] = React.useState<boolean | undefined>(props.isLocalhost);
 
   React.useEffect(() => {
     const isDevelopmentMode = process.env.NODE_ENV === "development";
