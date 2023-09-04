@@ -8,7 +8,7 @@ $log.level = "info";
 
 $log.info("Checking requirements");
 
-const commands = ["node", "npm", "yarn", "git"];
+const commands = ["node", "npm", "pnpm", "git"];
 
 export async function areRequiredCommandsInstalled() {
   const list = [];
