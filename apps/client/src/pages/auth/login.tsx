@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
-import { LocalhostDetector } from "components/auth/LocalhostDetector";
+import { LocalhostDetector } from "components/auth/localhost-detector";
 import { DemoDetector } from "components/auth/demo-detector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
