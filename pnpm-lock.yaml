@@ -321,6 +321,9 @@ importers:
       "@react-aria/ssr":
         specifier: ^3.7.1
         version: 3.7.1(react@18.2.0)
+      "@react-types/shared":
+        specifier: ^3.19.0
+        version: 3.19.0(react@18.2.0)
       "@sentry/browser":
         specifier: ^7.66.0
         version: 7.66.0
@@ -360,6 +363,36 @@ importers:
       "@tanstack/react-table":
         specifier: 8.9.3
         version: 8.9.3(react-dom@18.2.0)(react@18.2.0)
+      "@types/color":
+        specifier: ^3.0.3
+        version: 3.0.3
+      "@types/connect":
+        specifier: ^3.4.35
+        version: 3.4.35
+      "@types/is-hotkey":
+        specifier: ^0.1.7
+        version: 0.1.7
+      "@types/leaflet":
+        specifier: ^1.9.4
+        version: 1.9.4
+      "@types/nprogress":
+        specifier: ^0.2.0
+        version: 0.2.0
+      "@types/react":
+        specifier: ^18.2.21
+        version: 18.2.21
+      "@types/react-dom":
+        specifier: ^18.2.7
+        version: 18.2.7
+      "@types/sortablejs":
+        specifier: ^1.15.2
+        version: 1.15.2
+      "@types/uuid":
+        specifier: ^9.0.3
+        version: 9.0.3
+      autoprefixer:
+        specifier: ^10.4.15
+        version: 10.4.15(postcss@8.4.29)
       axios:
         specifier: ^1.5.0
         version: 1.5.0
@@ -490,48 +523,12 @@ importers:
         specifier: ^4.4.1
         version: 4.4.1(@types/react@18.2.21)(react@18.2.0)
     devDependencies:
-      "@react-types/shared":
-        specifier: ^3.19.0
-        version: 3.19.0(react@18.2.0)
-      "@types/color":
-        specifier: ^3.0.3
-        version: 3.0.3
-      "@types/connect":
-        specifier: ^3.4.35
-        version: 3.4.35
-      "@types/is-hotkey":
-        specifier: ^0.1.7
-        version: 0.1.7
-      "@types/leaflet":
-        specifier: ^1.9.4
-        version: 1.9.4
-      "@types/nprogress":
-        specifier: ^0.2.0
-        version: 0.2.0
-      "@types/react":
-        specifier: ^18.2.21
-        version: 18.2.21
-      "@types/react-dom":
-        specifier: ^18.2.7
-        version: 18.2.7
-      "@types/sortablejs":
-        specifier: ^1.15.2
-        version: 1.15.2
-      "@types/uuid":
-        specifier: ^9.0.3
-        version: 9.0.3
-      autoprefixer:
-        specifier: ^10.4.15
-        version: 10.4.15(postcss@8.4.29)
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
       postcss:
         specifier: ^8.4.29
         version: 8.4.29
-      rimraf:
-        specifier: ^5.0.1
-        version: 5.0.1
       sass:
         specifier: ^1.66.1
         version: 1.66.1
@@ -6957,6 +6954,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       react: 18.2.0
+    dev: false
 
   /@react-types/switch@3.4.0(react@18.2.0):
     resolution:
@@ -9488,14 +9486,14 @@ packages:
       }
     dependencies:
       "@types/color-name": 1.1.1
-    dev: true
+    dev: false
 
   /@types/color-name@1.1.1:
     resolution:
       {
         integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==,
       }
-    dev: true
+    dev: false
 
   /@types/color@3.0.3:
     resolution:
@@ -9504,7 +9502,7 @@ packages:
       }
     dependencies:
       "@types/color-convert": 2.0.0
-    dev: true
+    dev: false
 
   /@types/command-exists@1.2.0:
     resolution:
@@ -9680,7 +9678,7 @@ packages:
       {
         integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==,
       }
-    dev: true
+    dev: false
 
   /@types/glob@7.2.0:
     resolution:
@@ -9731,6 +9729,7 @@ packages:
       {
         integrity: sha512-yB5C7zcOM7idwYZZ1wKQ3pTfjA9BbvFqRWvKB46GFddxnJtHwi/b9y84ykQtxQPg5qhdpg4Q/kWU3EGoCTmLzQ==,
       }
+    dev: false
 
   /@types/istanbul-lib-coverage@2.0.4:
     resolution:
@@ -9800,7 +9799,7 @@ packages:
       }
     dependencies:
       "@types/geojson": 7946.0.10
-    dev: true
+    dev: false
 
   /@types/lodash@4.14.197:
     resolution:
@@ -9922,7 +9921,7 @@ packages:
       {
         integrity: sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==,
       }
-    dev: true
+    dev: false
 
   /@types/parse-json@4.0.0:
     resolution:
@@ -10056,6 +10055,7 @@ packages:
       {
         integrity: sha512-mOIv/EnPMzAZAVbuh9uGjOZ1BBdimP9Y6IPGntsvQJtko5yapSDKB7GwB3AOlF5N3bkpk4sBwQRpS3aEkiUbaA==,
       }
+    dev: false
 
   /@types/unist@2.0.7:
     resolution:
@@ -10075,7 +10075,7 @@ packages:
       {
         integrity: sha512-taHQQH/3ZyI3zP8M/puluDEIEvtQHVYcC6y3N8ijFtAd28+Ey/G4sg1u2gB01S8MwybLOKAp9/yCMu/uR5l3Ug==,
       }
-    dev: true
+    dev: false
 
   /@types/yargs-parser@21.0.0:
     resolution:
@@ -11276,7 +11276,6 @@ packages:
       picocolors: 1.0.0
       postcss: 8.4.29
       postcss-value-parser: 4.2.0
-    dev: true
 
   /available-typed-arrays@1.0.5:
     resolution:
@@ -15116,7 +15115,6 @@ packages:
       {
         integrity: sha512-/KxoyCnPM0GwYI4NN0Iag38Tqt+od3/mLuguepLgCAKPn0ZhC544nssAW0tG2/00zXEYl9W+7hwAIpLHo6Oc7Q==,
       }
-    dev: true
 
   /fresh@0.5.2:
     resolution:
@@ -19881,7 +19879,6 @@ packages:
         integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==,
       }
     engines: { node: ">=0.10.0" }
-    dev: true
 
   /npm-bundled@1.1.2:
     resolution:
@@ -22725,6 +22722,7 @@ packages:
     hasBin: true
     dependencies:
       glob: 10.3.4
+    dev: false
 
   /rollup@2.78.0:
     resolution:
