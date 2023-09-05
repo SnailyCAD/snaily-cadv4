@@ -24,8 +24,6 @@
     "typecheck": "pnpm tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/types": "workspace:*",
-    "rimraf": "^5.0.1",
     "tsup": "6.6.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"
@@ -51,6 +49,8 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@snailycad/types": "workspace:*",
+    "rimraf": "^5.0.1",
     "superjson": "^1.13.1"
   },
   "typesVersions": {

@@ -556,16 +556,16 @@ importers:
       "@sentry/node":
         specifier: ">= 7.66.0"
         version: 7.66.0
-      superjson:
-        specifier: ^1.13.1
-        version: 1.13.1
-    devDependencies:
       "@snailycad/types":
         specifier: workspace:*
         version: link:../types
       rimraf:
         specifier: ^5.0.1
         version: 5.0.1
+      superjson:
+        specifier: ^1.13.1
+        version: 1.13.1
+    devDependencies:
       tsup:
         specifier: 6.6.2
         version: 6.6.2(postcss@8.4.29)(typescript@5.2.2)
@@ -22725,7 +22725,6 @@ packages:
     hasBin: true
     dependencies:
       glob: 10.3.4
-    dev: true
 
   /rollup@2.78.0:
     resolution:
