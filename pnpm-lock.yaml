@@ -766,9 +766,18 @@ importers:
       "@snailycad/config":
         specifier: ^1.70.0
         version: link:../config
+      "@snailycad/types":
+        specifier: workspace:*
+        version: link:../types
       "@snailycad/utils":
         specifier: ^1.70.0
         version: link:../utils
+      "@types/react":
+        specifier: ^18.2.21
+        version: 18.2.21
+      "@types/react-dom":
+        specifier: ^18.2.7
+        version: 18.2.7
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -787,6 +796,9 @@ importers:
       next-intl:
         specifier: ">=2.20.0"
         version: 2.20.0(next@13.4.13)(react@18.2.0)
+      react:
+        specifier: ">=18.2.0"
+        version: 18.2.0
       react-bootstrap-icons:
         specifier: ^1.10.3
         version: 1.10.3(react@18.2.0)
@@ -796,19 +808,25 @@ importers:
       react-dnd-html5-backend:
         specifier: 16.0.1
         version: 16.0.1
+      react-dom:
+        specifier: ">=18.2.0"
+        version: 18.2.0(react@18.2.0)
       react-use:
         specifier: ^17.4.0
         version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
+      rimraf:
+        specifier: ^5.0.1
+        version: 5.0.1
       tailwind-merge:
         specifier: ^1.14.0
         version: 1.14.0
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
       use-intl:
         specifier: ">=2.20.0"
         version: 2.20.0(react@18.2.0)
     devDependencies:
-      "@snailycad/types":
-        specifier: workspace:*
-        version: link:../types
       "@storybook/addon-essentials":
         specifier: ^7.4.0
         version: 7.4.0(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -833,12 +851,6 @@ importers:
       "@storybook/testing-library":
         specifier: ^0.2.0
         version: 0.2.0
-      "@types/react":
-        specifier: ^18.2.21
-        version: 18.2.21
-      "@types/react-dom":
-        specifier: ^18.2.7
-        version: 18.2.7
       autoprefixer:
         specifier: ^10.4.15
         version: 10.4.15(postcss@8.4.29)
@@ -848,24 +860,12 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
-      rimraf:
-        specifier: ^5.0.1
-        version: 5.0.1
       storybook:
         specifier: ^7.4.0
         version: 7.4.0
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.3
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
       tsup:
         specifier: 6.6.2
         version: 6.6.2(postcss@8.4.29)(typescript@5.2.2)
