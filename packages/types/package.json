@@ -36,9 +36,11 @@
     "typecheck": "pnpm --filter \"@snailycad/api\" generate && pnpm tsc --noEmit",
     "prepublish": "pnpm build"
   },
-  "devDependencies": {
+  "dependencies": {
     "@snailycad/permissions": "^1.70.0",
-    "discord-api-types": "0.37.56",
+    "discord-api-types": "0.37.56"
+  },
+  "devDependencies": {
     "tsup": "6.6.2",
     "typescript": "^5.2.2"
   },
