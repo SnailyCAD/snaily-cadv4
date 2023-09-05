@@ -173,6 +173,9 @@ importers:
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
+      multer:
+        specifier: ^1.4.5-lts.1
+        version: 1.4.5-lts.1
       nanoid:
         specifier: ^3.3.4
         version: 3.3.6
@@ -200,6 +203,12 @@ importers:
       socket.io:
         specifier: ^4.7.2
         version: 4.7.2
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.1(@swc/core@1.3.82)(@types/node@20.5.7)(typescript@5.2.2)
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
       undici:
         specifier: ^5.23.0
         version: 5.23.0
@@ -261,27 +270,12 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      esbuild-register:
-        specifier: ^3.4.2
-        version: 3.4.2(esbuild@0.17.19)
-      multer:
-        specifier: ^1.4.5-lts.1
-        version: 1.4.5-lts.1
       regenerator-runtime:
         specifier: ^0.14.0
         version: 0.14.0
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@swc/core@1.3.82)(@types/node@20.5.7)(typescript@5.2.2)
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -2724,7 +2718,7 @@ packages:
     engines: { node: ">=12" }
     dependencies:
       "@jridgewell/trace-mapping": 0.3.9
-    dev: true
+    dev: false
 
   /@discordjs/collection@1.5.3:
     resolution:
@@ -3854,7 +3848,7 @@ packages:
     dependencies:
       "@jridgewell/resolve-uri": 3.1.1
       "@jridgewell/sourcemap-codec": 1.4.15
-    dev: true
+    dev: false
 
   /@juggle/resize-observer@3.4.0:
     resolution:
@@ -8676,7 +8670,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-darwin-x64@1.3.82:
@@ -8688,7 +8681,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-linux-arm-gnueabihf@1.3.82:
@@ -8700,7 +8692,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-linux-arm64-gnu@1.3.82:
@@ -8712,7 +8703,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-linux-arm64-musl@1.3.82:
@@ -8724,7 +8714,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-linux-x64-gnu@1.3.82:
@@ -8736,7 +8725,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-linux-x64-musl@1.3.82:
@@ -8748,7 +8736,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-win32-arm64-msvc@1.3.82:
@@ -8760,7 +8747,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-win32-ia32-msvc@1.3.82:
@@ -8772,7 +8758,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core-win32-x64-msvc@1.3.82:
@@ -8784,7 +8769,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@swc/core@1.3.82(@swc/helpers@0.5.1):
@@ -8813,7 +8797,6 @@ packages:
       "@swc/core-win32-arm64-msvc": 1.3.82
       "@swc/core-win32-ia32-msvc": 1.3.82
       "@swc/core-win32-x64-msvc": 1.3.82
-    dev: true
 
   /@swc/helpers@0.4.14:
     resolution:
@@ -8847,7 +8830,6 @@ packages:
       {
         integrity: sha512-z/G02d+59gyyUb7KYhKi9jOhicek6QD2oMaotUyG+lUkybpXoV49dY9bj7Ah5Q+y7knK2jU67UTX9FyfGzaxQg==,
       }
-    dev: true
 
   /@tailwindcss/typography@0.5.9(tailwindcss@3.3.3):
     resolution:
@@ -8964,28 +8946,28 @@ packages:
       {
         integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==,
       }
-    dev: true
+    dev: false
 
   /@tsconfig/node12@1.0.11:
     resolution:
       {
         integrity: sha512-cqefuRsh12pWyGsIoBKJA9luFu3mRxCA+ORZvA4ktLSzIuCUtWVxGIuXigEwO5/ywWFMZ2QEGKWvkZG1zDMTag==,
       }
-    dev: true
+    dev: false
 
   /@tsconfig/node14@1.0.3:
     resolution:
       {
         integrity: sha512-ysT8mhdixWK6Hw3i1V2AeRqZ5WfXg1G43mqoYlM2nc6388Fq5jcXyr5mRsqViLx/GJYdoL0bfXD8nmF+Zn/Iow==,
       }
-    dev: true
+    dev: false
 
   /@tsconfig/node16@1.0.4:
     resolution:
       {
         integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==,
       }
-    dev: true
+    dev: false
 
   /@tsed/common@7.34.6(@tsed/engines@7.34.6)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.2)(@tsed/openspec@7.34.6):
     resolution:
@@ -10651,7 +10633,6 @@ packages:
         integrity: sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==,
       }
     engines: { node: ">=0.4.0" }
-    dev: true
 
   /acorn@7.4.1:
     resolution:
@@ -10889,6 +10870,7 @@ packages:
       {
         integrity: sha512-klpgFSWLW1ZEs8svjfb7g4qWY0YS5imI82dTg+QahUvJ8YqAY0P10Uk8tTyh9ZGuYEZEMaeJYCF5BFuX552hsw==,
       }
+    dev: false
 
   /aproba@2.0.0:
     resolution:
@@ -10958,7 +10940,7 @@ packages:
       {
         integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==,
       }
-    dev: true
+    dev: false
 
   /arg@5.0.2:
     resolution:
@@ -12832,7 +12814,7 @@ packages:
       {
         integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==,
       }
-    dev: true
+    dev: false
 
   /cropperjs@1.5.13:
     resolution:
@@ -13339,7 +13321,7 @@ packages:
         integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==,
       }
     engines: { node: ">=0.3.1" }
-    dev: true
+    dev: false
 
   /diff@5.1.0:
     resolution:
@@ -13875,20 +13857,6 @@ packages:
       {
         integrity: sha512-jyfL/pwPqaFXyKnj8lP8iLk6Z0m099uXR45aSN8Av1XD4vhvQutxxPzgA2bTcAwQpa1zCXDcWOlhFgyP3GKqhQ==,
       }
-    dev: true
-
-  /esbuild-register@3.4.2(esbuild@0.17.19):
-    resolution:
-      {
-        integrity: sha512-kG/XyTDyz6+YDuyfB9ZoSIOOmgyFCH+xPRtsCa8W85HLRV5Csp+o3jWVbOSHgSLfyLc5DmP+KFDNwty4mEjC+Q==,
-      }
-    peerDependencies:
-      esbuild: ">=0.12 <1"
-    dependencies:
-      debug: 4.3.4
-      esbuild: 0.17.19
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /esbuild-register@3.4.2(esbuild@0.18.20):
@@ -18303,7 +18271,7 @@ packages:
       {
         integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==,
       }
-    dev: true
+    dev: false
 
   /make-fetch-happen@11.1.1:
     resolution:
@@ -19342,6 +19310,7 @@ packages:
       object-assign: 4.1.1
       type-is: 1.6.18
       xtend: 4.0.2
+    dev: false
 
   /multimatch@5.0.0:
     resolution:
@@ -24657,7 +24626,7 @@ packages:
       typescript: 5.2.2
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: true
+    dev: false
 
   /ts-pattern@4.3.0:
     resolution:
@@ -25570,7 +25539,7 @@ packages:
       {
         integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==,
       }
-    dev: true
+    dev: false
 
   /v8-compile-cache@2.3.0:
     resolution:
@@ -26428,7 +26397,7 @@ packages:
         integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==,
       }
     engines: { node: ">=6" }
-    dev: true
+    dev: false
 
   /yocto-queue@0.1.0:
     resolution:
