@@ -33,11 +33,12 @@
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
     "colorette": "2.0.20",
+    "concurrently": "^8.2.1",
     "copy": "^0.3.2",
     "dotenv": "^16.3.1",
     "husky": "^8.0.3",
     "prettier": "3.0.3",
-    "turbo": "1.10.13",
-    "concurrently": "^8.2.1"
+    "tsup": "6.6.2",
+    "turbo": "1.10.13"
   }
 }
