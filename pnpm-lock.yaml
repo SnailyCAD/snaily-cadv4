@@ -878,25 +878,15 @@ importers:
 
   packages/utils:
     dependencies:
+      "@snailycad/types":
+        specifier: ^1.70.0
+        version: link:../types
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
       slate:
         specifier: 0.94.1
         version: 0.94.1
-      undici:
-        specifier: 5.23.0
-        version: 5.23.0
-    devDependencies:
-      "@snailycad/types":
-        specifier: ^1.70.0
-        version: link:../types
-      "@types/node":
-        specifier: ^20.5.7
-        version: 20.5.7
-      c8:
-        specifier: ^8.0.1
-        version: 8.0.1
       slate-history:
         specifier: ^0.93.0
         version: 0.93.0(slate@0.94.1)
@@ -906,6 +896,16 @@ importers:
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
+      undici:
+        specifier: 5.23.0
+        version: 5.23.0
+    devDependencies:
+      "@types/node":
+        specifier: ^20.5.7
+        version: 20.5.7
+      c8:
+        specifier: ^8.0.1
+        version: 8.0.1
       tsup:
         specifier: 6.6.2
         version: 6.6.2(postcss@8.4.29)(typescript@5.2.2)
@@ -12469,6 +12469,7 @@ packages:
       {
         integrity: sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==,
       }
+    dev: false
 
   /concat-map@0.0.1:
     resolution:
@@ -13371,6 +13372,7 @@ packages:
         integrity: sha512-GYqKi1aH7PJXxdhTeZBFrg8vUBeKXi+cNprXsC1kpJcbcVnV9wBsrOu1cQEdG0WeQwlfHiy3XvnKfIrJ2R0NzQ==,
       }
     hasBin: true
+    dev: false
 
   /discord-api-types@0.37.50:
     resolution:
@@ -16224,6 +16226,7 @@ packages:
       {
         integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==,
       }
+    dev: false
 
   /immutable@4.3.3:
     resolution:
@@ -16715,6 +16718,7 @@ packages:
       {
         integrity: sha512-qs3NZ1INIS+H+yeo7cD9pDfwYV/jqRh1JG9S9zYrNudkoUQg7OL7ziXqRKu+InFjUIDoP2o6HIkLYMh1pcWgyQ==,
       }
+    dev: false
 
   /is-hotkey@0.2.0:
     resolution:
@@ -22925,6 +22929,7 @@ packages:
       }
     dependencies:
       compute-scroll-into-view: 1.0.20
+    dev: false
 
   /semver@5.7.2:
     resolution:
@@ -23236,6 +23241,7 @@ packages:
     dependencies:
       is-plain-object: 5.0.0
       slate: 0.94.1
+    dev: false
 
   /slate-react@0.98.3(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1):
     resolution:
@@ -23259,6 +23265,7 @@ packages:
       scroll-into-view-if-needed: 2.2.31
       slate: 0.94.1
       tiny-invariant: 1.0.6
+    dev: false
 
   /slate@0.94.1:
     resolution:
@@ -23269,6 +23276,7 @@ packages:
       immer: 9.0.21
       is-plain-object: 5.0.0
       tiny-warning: 1.0.3
+    dev: false
 
   /slice-ansi@3.0.0:
     resolution:
@@ -24390,6 +24398,7 @@ packages:
       {
         integrity: sha512-FOyLWWVjG+aC0UqG76V53yAWdXfH8bO6FNmyZOuUrzDzK8DI3/JRY25UD7+g49JWM1LXwymsKERB+DzI0dTEQA==,
       }
+    dev: false
 
   /tiny-invariant@1.2.0:
     resolution:
@@ -24410,6 +24419,7 @@ packages:
       {
         integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==,
       }
+    dev: false
 
   /tinybench@2.5.0:
     resolution:
