@@ -39,7 +39,7 @@ services:
     volumes:
       - ./apps/api/public:/snailycad/apps/api/public
     labels:
-      - "traefik.enable=true"
+      - "traefik.enable=${TRAEFIK_ENALBED}"
       - "traefik.http.routers.snaily-cad-api.entrypoints=web"
       - "traefik.http.routers.snaily-cad-api.rule=Host(`${DOCKER_API_DOMAIN}`)"
 
@@ -61,7 +61,7 @@ services:
       - cad_web
     restart: always
     labels:
-      - "traefik.enable=true"
+      - "traefik.enable=${TRAEFIK_ENALBED}"
       - "traefik.http.routers.snaily-cad-client.entrypoints=web"
       - "traefik.http.routers.snaily-cad-client.rule=Host(`${DOCKER_CLIENT_DOMAIN}`)"
 
@@ -69,7 +69,7 @@ services:
     container_name: "snaily-cad-traefik"
     image: traefik
     command:
-      - "--api.dashboard=true"
+      - "--api.dashboard=${TRAEFIK_ENALBED}"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
@@ -78,7 +78,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8090:8080"
+      - "9383:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./.docker-config/letsencrypt:/letsencrypt"
