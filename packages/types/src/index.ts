@@ -59,6 +59,8 @@ export type DiscordWebhook = Prisma.DiscordWebhook;
 
 export type AutoSetUserProperties = Prisma.AutoSetUserProperties;
 
+export type BlacklistedWord = Prisma.BlacklistedWord;
+
 export type ApiToken = Prisma.ApiToken & {
   logs?: ApiTokenLog[];
 };

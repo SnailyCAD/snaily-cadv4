@@ -83,6 +83,12 @@ const Tabs = {
         .OtherMiscTab,
     { ssr: false },
   ),
+  BlacklistedWordsTab: dynamic(
+    async () =>
+      (await import("components/admin/manage/cad-settings/general/blacklisted-words-tab"))
+        .BlacklistedWordsTab,
+    { ssr: false },
+  ),
 };
 
 export default function CadSettings() {
@@ -103,6 +109,7 @@ export default function CadSettings() {
       <Tabs.DiscordRolesTab />
       <Tabs.DiscordWebhooksTab />
       <Tabs.RawWebhooksTab />
+      <Tabs.BlacklistedWordsTab />
     </CadSettingsLayout>
   );
 }
