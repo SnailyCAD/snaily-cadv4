@@ -49,7 +49,7 @@ import {
 } from "utils/leo/includes";
 import { getTranslator } from "~/utils/get-translator";
 import { APIEmbed } from "discord-api-types/v10";
-import { sendDiscordWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
 import { Citizen, EmsFdDeputy, LeoWhitelistStatus } from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils";
 
