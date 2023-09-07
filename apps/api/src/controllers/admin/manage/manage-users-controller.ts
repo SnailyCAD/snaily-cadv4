@@ -33,7 +33,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { isDiscordIdInUse } from "lib/discord/utils";
 import { getTranslator } from "~/utils/get-translator";
-import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { sendDiscordWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
 import { APIEmbed } from "discord-api-types/v10";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
@@ -648,5 +648,9 @@ export async function sendUserWhitelistStatusChangeWebhook(
     data: { embeds },
     type: DiscordWebhookType.USER_WHITELIST_STATUS,
     extraMessageData: { userDiscordId: user.discordId },
+  });
+  await sendRawWebhook({
+    type: DiscordWebhookType.USER_WHITELIST_STATUS,
+    data: user,
   });
 }

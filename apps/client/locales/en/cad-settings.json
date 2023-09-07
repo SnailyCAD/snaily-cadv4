@@ -86,7 +86,9 @@
     "bolosWebhookURL": "BOLOs Webhook URL",
     "impoundedVehicleWebhookURL": "Impounded Vehicle Webhook URL",
     "citizenRecordsWebhookURL": "Citizen Records Webhook URL",
-    "warrantsWebhookURL": "Warrants Webhook URL"
+    "warrantsWebhookURL": "Warrants Webhook URL",
+    "departmentWhitelistStatusChannelURL": "Department Whitelist Status Change Webhook URL",
+    "userWhitelistStatusChannelURL": "User Whitelist Status Change Webhook URL"
   },
   "LiveMapTab": {
     "liveMapSettings": "Live Map Settings",

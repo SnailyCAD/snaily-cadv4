@@ -20,5 +20,5 @@
     "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
     "allowUnreachableCode": false
   },
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules", ".dev-data", ".data"]
 }
