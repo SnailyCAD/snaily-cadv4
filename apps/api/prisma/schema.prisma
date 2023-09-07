@@ -1111,6 +1111,7 @@ model ImpoundedVehicle {
   valueId             String
   officer             Officer?          @relation(fields: [officerId], references: [id])
   officerId           String?
+  descriptionData     Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
