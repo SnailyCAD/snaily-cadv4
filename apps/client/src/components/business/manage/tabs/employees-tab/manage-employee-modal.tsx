@@ -33,7 +33,7 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee, isAdmin }: Pr
   const { businessRole } = useValues();
   const valueRoles = businessRole.values;
   const businessRoles = currentBusiness?.roles ?? [];
-  const rolesToSelect = [...businessRoles, ...valueRoles];
+  const rolesToSelect = businessRoles.length <= 0 ? valueRoles : businessRoles;
 
   if (!isAdmin && (!currentBusiness || !currentEmployee)) {
     return null;
