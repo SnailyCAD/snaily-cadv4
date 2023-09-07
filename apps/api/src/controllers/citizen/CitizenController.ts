@@ -343,6 +343,26 @@ export class CitizenController {
       throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" }, "dateLargerThanNow");
     }
 
+    const [isFirstNameBlacklisted, isLastNameBlacklisted] = await Promise.all([
+      prisma.blacklistedWord.findFirst({
+        where: {
+          word: { contains: data.name, mode: "insensitive" },
+        },
+      }),
+      prisma.blacklistedWord.findFirst({
+        where: {
+          word: { contains: data.surname, mode: "insensitive" },
+        },
+      }),
+    ]);
+
+    if (isFirstNameBlacklisted) {
+      throw new ExtendedBadRequest({ name: "blacklistedWordUsed" });
+    }
+    if (isLastNameBlacklisted) {
+      throw new ExtendedBadRequest({ surname: "blacklistedWordUsed" });
+    }
+
     const defaultLicenseValue = await prisma.value.findFirst({
       where: { isDefault: true, type: ValueType.LICENSE },
     });
@@ -411,6 +431,26 @@ export class CitizenController {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
       throw new NotFound("citizenNotFound");
+    }
+
+    const [isFirstNameBlacklisted, isLastNameBlacklisted] = await Promise.all([
+      prisma.blacklistedWord.findFirst({
+        where: {
+          word: { contains: data.name, mode: "insensitive" },
+        },
+      }),
+      prisma.blacklistedWord.findFirst({
+        where: {
+          word: { contains: data.surname, mode: "insensitive" },
+        },
+      }),
+    ]);
+
+    if (isFirstNameBlacklisted) {
+      throw new ExtendedBadRequest({ name: "blacklistedWordUsed" });
+    }
+    if (isLastNameBlacklisted) {
+      throw new ExtendedBadRequest({ surname: "blacklistedWordUsed" });
     }
 
     const date = data.dateOfBirth ? new Date(data.dateOfBirth).getTime() : undefined;

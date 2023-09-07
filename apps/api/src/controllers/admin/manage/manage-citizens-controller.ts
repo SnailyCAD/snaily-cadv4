@@ -19,6 +19,7 @@ import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties, unitProperties } from "utils/leo/includes";
 import { recordsInclude } from "~/controllers/leo/search/SearchController";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -143,6 +144,26 @@ export class AdminManageCitizensController {
 
     if (!citizen) {
       throw new NotFound("citizenNotFound");
+    }
+
+    const [isFirstNameBlacklisted, isLastNameBlacklisted] = await Promise.all([
+      prisma.blacklistedWord.findFirst({
+        where: {
+          word: { contains: data.name, mode: "insensitive" },
+        },
+      }),
+      prisma.blacklistedWord.findFirst({
+        where: {
+          word: { contains: data.surname, mode: "insensitive" },
+        },
+      }),
+    ]);
+
+    if (isFirstNameBlacklisted) {
+      throw new ExtendedBadRequest({ name: "blacklistedWordUsed" });
+    }
+    if (isLastNameBlacklisted) {
+      throw new ExtendedBadRequest({ surname: "blacklistedWordUsed" });
     }
 
     const isEditableSSNEnabled = isFeatureEnabled({

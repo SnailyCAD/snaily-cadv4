@@ -147,6 +147,15 @@ export class VehiclesController {
       throw new NotFound("NotFound");
     }
 
+    const isPlateBlacklisted = await prisma.blacklistedWord.findFirst({
+      where: {
+        word: { contains: data.plate, mode: "insensitive" },
+      },
+    });
+    if (isPlateBlacklisted) {
+      throw new ExtendedBadRequest({ plate: "blacklistedWordUsed" });
+    }
+
     const existing = await prisma.registeredVehicle.findUnique({
       where: {
         plate: data.plate.toUpperCase(),
@@ -310,6 +319,15 @@ export class VehiclesController {
 
     if (vehicle.impounded) {
       throw new BadRequest("vehicleIsImpounded");
+    }
+
+    const isPlateBlacklisted = await prisma.blacklistedWord.findFirst({
+      where: {
+        word: { contains: data.plate, mode: "insensitive" },
+      },
+    });
+    if (isPlateBlacklisted) {
+      throw new ExtendedBadRequest({ plate: "blacklistedWordUsed" });
     }
 
     const existing = await prisma.registeredVehicle.findFirst({

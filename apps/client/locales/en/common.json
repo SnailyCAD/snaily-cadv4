@@ -189,7 +189,8 @@
     "userDefinedCallsignAlreadyExists": "A combined unit with that callsign is already present. Please use a different callsign.",
     "ownerCannotDiscordAuth": "The first account (Owner) cannot be registered via Discord. Please use username/password registration. You can connect Discord later in the account settings.",
     "steamAuthIssue": "An error occurred trying to authenticate with Steam. Please try again later.",
-    "discordAuthIssue": "An error occurred trying to authenticate with Discord. Please try again later."
+    "discordAuthIssue": "An error occurred trying to authenticate with Discord. Please try again later.",
+    "blacklistedWordUsed": "This word is blacklisted and cannot be used."
   },
   "Statuses": {
     "ACCEPTED": "Accepted",
