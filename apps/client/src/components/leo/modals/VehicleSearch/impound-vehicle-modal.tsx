@@ -14,6 +14,8 @@ import { IMPOUND_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ValueType } from "@snailycad/types";
 import { hasSearchResults } from "../VehicleSearchModal";
+import { DEFAULT_EDITOR_DATA, Editor } from "components/editor/editor";
+import { FormField } from "components/form/FormField";
 
 export function ImpoundVehicleModal() {
   const common = useTranslations("Common");
@@ -61,6 +63,7 @@ export function ImpoundVehicleModal() {
   const validate = handleValidate(IMPOUND_VEHICLE_SCHEMA);
   const INITIAL_VALUES = {
     impoundLot: "",
+    descriptionData: DEFAULT_EDITOR_DATA,
   };
 
   return (
@@ -71,28 +74,37 @@ export function ImpoundVehicleModal() {
       className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        <Form>
-          <ValueSelectField
-            fieldName="impoundLot"
-            label={t("Leo.impoundLot")}
-            values={impoundLot.values}
-            valueType={ValueType.IMPOUND_LOT}
-          />
+        {({ values, errors, setFieldValue }) => (
+          <Form>
+            <ValueSelectField
+              fieldName="impoundLot"
+              label={t("Leo.impoundLot")}
+              values={impoundLot.values}
+              valueType={ValueType.IMPOUND_LOT}
+            />
 
-          <footer className="flex items-center justify-end gap-2 mt-5">
-            <Button
-              type="reset"
-              onPress={() => modalState.closeModal(ModalIds.ImpoundVehicle)}
-              variant="cancel"
-            >
-              {common("cancel")}
-            </Button>
-            <Button className="flex items-center" disabled={state === "loading"} type="submit">
-              {state === "loading" ? <Loader className="mr-2" /> : null}
-              {t("Leo.impoundVehicle")}
-            </Button>
-          </footer>
-        </Form>
+            <FormField errorMessage={errors.descriptionData} label={common("description")}>
+              <Editor
+                value={values.descriptionData}
+                onChange={(value) => setFieldValue("descriptionData", value)}
+              />
+            </FormField>
+
+            <footer className="flex items-center justify-end gap-2 mt-5">
+              <Button
+                type="reset"
+                onPress={() => modalState.closeModal(ModalIds.ImpoundVehicle)}
+                variant="cancel"
+              >
+                {common("cancel")}
+              </Button>
+              <Button className="flex items-center" disabled={state === "loading"} type="submit">
+                {state === "loading" ? <Loader className="mr-2" /> : null}
+                {t("Leo.impoundVehicle")}
+              </Button>
+            </footer>
+          </Form>
+        )}
       </Formik>
     </Modal>
   );

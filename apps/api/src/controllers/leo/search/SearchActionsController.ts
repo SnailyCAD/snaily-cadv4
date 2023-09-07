@@ -563,6 +563,7 @@ export class SearchActionsController {
         valueId: data.impoundLot,
         registeredVehicleId: vehicle.id,
         officerId: officer?.id ?? null,
+        descriptionData: data.descriptionData,
       },
     });
 

@@ -17,6 +17,9 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { AllowImpoundedVehicleCheckoutModal } from "components/leo/modals/AllowImpoundedVehicleCheckoutModal";
 import { SearchArea } from "components/shared/search/search-area";
+import { VehicleSearchModal } from "components/leo/modals/VehicleSearchModal";
+import { NameSearchModal } from "components/leo/modals/NameSearchModal/NameSearchModal";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props {
   vehicles: GetLeoImpoundedVehiclesData;
@@ -51,6 +54,10 @@ export default function ImpoundLot({ vehicles: data }: Props) {
     modalState.openModal(ModalIds.AlertCheckoutImpoundedVehicle);
   }
 
+  function handlePlatePress(item: ImpoundedVehicle) {
+    modalState.openModal(ModalIds.VehicleSearch, item.vehicle);
+  }
+
   return (
     <Layout
       permissions={{
@@ -73,7 +80,11 @@ export default function ImpoundLot({ vehicles: data }: Props) {
           tableState={tableState}
           data={asyncTable.items.map((item) => ({
             id: item.id,
-            plate: item.vehicle.plate,
+            plate: (
+              <Button size="xs" onPress={() => handlePlatePress(item)}>
+                {item.vehicle.plate}
+              </Button>
+            ),
             model: item.vehicle.model.value.value,
             owner: item.vehicle.citizen
               ? `${item.vehicle.citizen.name} ${item.vehicle.citizen.surname}`
@@ -83,6 +94,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
               ? `${generateCallsign(item.officer)} ${makeUnitName(item.officer)}`
               : "—",
             impoundedAt: <FullDate>{item.createdAt}</FullDate>,
+            description: <CallDescription data={item} />,
             actions: (
               <Button onPress={() => handleCheckoutClick(item)} className="ml-2" size="xs">
                 {t("allowCheckout")}
@@ -96,6 +108,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             { header: t("location"), accessorKey: "location" },
             { header: t("impoundedBy"), accessorKey: "impoundedBy" },
             { header: t("impoundedAt"), accessorKey: "impoundedAt" },
+            { header: common("description"), accessorKey: "description" },
             hasManagePermissions ? { header: common("actions"), accessorKey: "actions" } : null,
           ]}
         />
@@ -108,6 +121,8 @@ export default function ImpoundLot({ vehicles: data }: Props) {
         }}
         vehicle={tempVehicle}
       />
+      <VehicleSearchModal />
+      <NameSearchModal />
     </Layout>
   );
 }
@@ -121,7 +136,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: user,
       vehicles,
       messages: {
-        ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(
+          ["leo", "common", "citizen", "truck-logs"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

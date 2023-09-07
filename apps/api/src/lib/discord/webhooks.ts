@@ -67,6 +67,7 @@ export async function sendRawWebhook(options: SendRawWebhookOptions) {
       body: JSON.stringify(options.data),
       headers: {
         "Content-Type": "application/json",
+        SnailyCAD: "true",
       },
     });
   } catch (error) {

@@ -19,7 +19,7 @@ import { NotesTab } from "./NameSearchModal/tabs/notes-tab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { RegisterVehicleModal } from "components/citizen/vehicles/modals/register-vehicle-modal";
 import type { PostMarkStolenData } from "@snailycad/types/api";
-import { ImpoundVehicleModal } from "./VehicleSearch/ImpoundVehicleModal";
+import { ImpoundVehicleModal } from "./VehicleSearch/impound-vehicle-modal";
 import { AllowImpoundedVehicleCheckoutModal } from "./AllowImpoundedVehicleCheckoutModal";
 import { ImageWrapper } from "components/shared/image-wrapper";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -125,10 +125,6 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         });
       }
     }
-  }
-
-  async function handleImpoundVehicle() {
-    modalState.openModal(ModalIds.ImpoundVehicle);
   }
 
   const INITIAL_VALUES = {
@@ -275,7 +271,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                     {showImpoundVehicleButton ? (
                       <Button
                         type="button"
-                        onPress={() => handleImpoundVehicle()}
+                        onPress={() => modalState.openModal(ModalIds.ImpoundVehicle)}
                         variant="cancel"
                         className="px-1.5"
                       >
