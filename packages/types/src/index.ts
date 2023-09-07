@@ -388,6 +388,7 @@ type _Record = Prisma.Record & {
   courtEntry?: CourtEntry | null;
   vehicle?: (Prisma.RegisteredVehicle & { model: VehicleValue }) | null;
   release?: Partial<RecordRelease> | null;
+  call911?: Pick<Call911, "caseNumber"> | null;
 };
 export { _Record as Record };
 

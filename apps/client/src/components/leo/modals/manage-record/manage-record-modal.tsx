@@ -43,17 +43,17 @@ const VehicleTab = dynamic(
 
 const SeizedItemsTab = dynamic(
   async () => (await import("./tabs/seized-items-tab/seized-items-tab")).SeizedItemsTab,
-  { ssr: false, loading: () => <Loader /> },
+  { ssr: false },
 );
 
 const ViolationsTab = dynamic(
   async () => (await import("./tabs/violations-tab/violations-tab")).ViolationsTab,
-  { loading: () => <Loader /> },
+  { ssr: false },
 );
 
 const ConnectionsTab = dynamic(
   async () => (await import("./tabs/connections-tab/connections-tab")).ConnectionsTab,
-  { ssr: false, loading: () => <Loader /> },
+  { ssr: false },
 );
 
 interface Props {
@@ -130,6 +130,9 @@ export function createInitialRecordValues(options: CreateInitialRecordValuesOpti
     vehicleColor: options.record?.vehicle?.color ?? options.record?.vehicleColor ?? null,
 
     call911Id: options.record?.call911Id ?? null,
+    call911CaseNumber: options.record?.call911?.caseNumber
+      ? `#${options.record.call911.caseNumber}`
+      : null,
     incidentId: options.record?.incidentId ?? null,
   };
 }

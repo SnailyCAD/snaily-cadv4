@@ -26,6 +26,7 @@ interface AsyncListFieldFetchOptions {
   bodyKey?: string;
   url?: string;
   userApiToken?: string;
+  onResponse?(json: any): any[];
 }
 
 export interface AsyncListFieldProps<T extends object>
@@ -82,8 +83,9 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
             : {}),
         },
       });
+
       const json = await res.json();
-      const itemsArray = Array.isArray(json) ? json : [];
+      const itemsArray = Array.isArray(json) ? json : props.fetchOptions.onResponse?.(json) ?? [];
 
       return {
         items: itemsArray,

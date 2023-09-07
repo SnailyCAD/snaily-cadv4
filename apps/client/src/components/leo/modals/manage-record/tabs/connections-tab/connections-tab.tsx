@@ -1,4 +1,4 @@
-import { Button, TabsContent } from "@snailycad/ui";
+import { AsyncListSearchField, Button, Item, TabsContent } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
@@ -9,7 +9,8 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 
 import dynamic from "next/dynamic";
-import type { Record } from "@snailycad/types";
+import type { Call911, Record } from "@snailycad/types";
+import { Get911CallsData } from "@snailycad/types/api";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,
@@ -24,6 +25,8 @@ const Manage911CallModal = dynamic(
 interface _FormikContext {
   call911Id: string | null;
   incidentId: string | null;
+
+  call911CaseNumber: string;
 }
 
 export function ConnectionsTab({
@@ -34,7 +37,7 @@ export function ConnectionsTab({
   isReadOnly?: boolean;
 }) {
   const t = useTranslations("Leo");
-  const { handleChange, errors, values } = useFormikContext<_FormikContext>();
+  const { handleChange, setValues, errors, values } = useFormikContext<_FormikContext>();
 
   const { calls, setCurrentlySelectedCall } = useCall911State((state) => ({
     calls: state.calls,
@@ -56,8 +59,6 @@ export function ConnectionsTab({
     (values.call911Id && (record as any)?.call911) ??
     calls.find((call) => call.id === values.call911Id) ??
     null;
-
-  const _calls = call ? [call, ...calls.filter((v) => v.id !== call.id)] : calls;
 
   return (
     <TabsContent value="connections-tab">
@@ -96,37 +97,59 @@ export function ConnectionsTab({
         </div>
       </FormField>
 
-      <FormField optional errorMessage={errors.call911Id as string} label={t("call")}>
-        <div className="flex gap-2">
-          <Select
-            className="w-full"
-            disabled={isReadOnly}
-            values={_calls.map((call) => ({
-              value: call.id,
-              label: `#${call.caseNumber}`,
-            }))}
-            value={call?.id || values.call911Id}
-            onChange={handleChange}
-            name="call911Id"
-            isClearable
-          />
-          {values.call911Id ? (
-            <>
-              <Button
-                onClick={() => {
-                  setCurrentlySelectedCall(call);
-                  modalState.openModal(ModalIds.Manage911Call);
-                }}
-                className="min-w-fit"
-              >
-                {t("viewCall")}
-              </Button>
+      <div className="flex gap-2 items-center">
+        <AsyncListSearchField<Call911>
+          label={t("call")}
+          isClearable
+          allowsCustomValue
+          isOptional
+          errorMessage={errors.call911Id}
+          localValue={values.call911CaseNumber}
+          selectedKey={values.call911Id}
+          className="w-full"
+          setValues={({ localValue, node }) => {
+            const caseNumber =
+              typeof localValue !== "undefined" ? { call911CaseNumber: localValue } : {};
 
-              {call ? <Manage911CallModal call={call} forceDisabled /> : null}
-            </>
-          ) : null}
-        </div>
-      </FormField>
+            console.log({ node });
+
+            const call911Id = node ? { call911Id: node.key as string } : {};
+
+            setValues({
+              ...values,
+              ...caseNumber,
+              ...call911Id,
+            });
+          }}
+          fetchOptions={{
+            apiPath: (query) => `/911-calls?query=${query}&includeEnded=true`,
+            onResponse(json: Get911CallsData) {
+              return json.calls;
+            },
+          }}
+        >
+          {(item) => (
+            <Item textValue={`#${item.caseNumber}`} key={item.id}>
+              #{item.caseNumber}
+            </Item>
+          )}
+        </AsyncListSearchField>
+        {values.call911Id ? (
+          <>
+            <Button
+              onClick={() => {
+                setCurrentlySelectedCall(call);
+                modalState.openModal(ModalIds.Manage911Call);
+              }}
+              className="min-w-fit mt-3.5 h-[39px]"
+            >
+              {t("viewCall")}
+            </Button>
+
+            {call ? <Manage911CallModal call={call} forceDisabled /> : null}
+          </>
+        ) : null}
+      </div>
     </TabsContent>
   );
 }
