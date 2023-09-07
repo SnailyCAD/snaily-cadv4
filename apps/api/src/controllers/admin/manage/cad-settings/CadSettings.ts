@@ -12,7 +12,7 @@ import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { CAD_SELECT, IsAuth, setCADFeatures } from "middlewares/auth/is-auth";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { Req, Res, UseBefore } from "@tsed/common";
+import { MultipartFile, PlatformMulterFile, Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/data/validate-schema";
@@ -29,7 +29,7 @@ import {
 import type { MiscCadSettings } from "@snailycad/types";
 import { createFeaturesObject } from "middlewares/is-enabled";
 import { hasPermission } from "@snailycad/permissions";
-import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
+import { parseImportFile } from "~/utils/file";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -476,27 +476,22 @@ export class CADSettingsController {
     permissions: [Permissions.ManageCADSettings],
   })
   async addBlacklistedWord(
-    @BodyParams() body: unknown,
+    @MultipartFile("file") file: PlatformMulterFile,
   ): Promise<APITypes.PostBlacklistedWordsData> {
-    const data = validateSchema(BLACKLISTED_WORD_SCHEMA, body);
+    const toValidateBody = parseImportFile(file);
+    const validatedWords = validateSchema(BLACKLISTED_WORD_SCHEMA, toValidateBody);
 
-    const existingWord = await prisma.blacklistedWord.findFirst({
-      where: {
-        word: { equals: data.word, mode: "insensitive" },
-      },
-    });
+    const words = await prisma.$transaction(
+      validatedWords.map((word) =>
+        prisma.blacklistedWord.create({
+          data: {
+            word: word.word.toLowerCase(),
+          },
+        }),
+      ),
+    );
 
-    if (existingWord) {
-      throw new ExtendedBadRequest({ word: "wordAlreadyExists" });
-    }
-
-    const word = await prisma.blacklistedWord.create({
-      data: {
-        word: data.word.toLowerCase(),
-      },
-    });
-
-    return word;
+    return words;
   }
 
   @Delete("/blacklisted-words/:wordId")

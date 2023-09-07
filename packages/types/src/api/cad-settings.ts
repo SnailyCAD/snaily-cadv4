@@ -96,7 +96,7 @@ export interface GetBlacklistedWordsData {
  * @method POST
  * @route /admin/manage/cad-settings/blacklisted-words
  */
-export type PostBlacklistedWordsData = Prisma.BlacklistedWord;
+export type PostBlacklistedWordsData = Prisma.BlacklistedWord[];
 
 /**
  * @method DELETE

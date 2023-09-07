@@ -32,6 +32,7 @@ export const enum ModalIds {
   PruneUsers = "PruneUsersModal",
   ViewAuditLogData = "ViewAuditLogDataModal",
   PruneUnits = "PruneUnitsModal",
+  ImportBlacklistedWords = "ImportBlacklistedWordsModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
