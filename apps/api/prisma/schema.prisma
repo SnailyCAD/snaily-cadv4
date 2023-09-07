@@ -229,7 +229,7 @@ model DiscordRole {
 
 model BlacklistedWord {
   id        String   @id @unique @default(cuid())
-  word      String   @unique
+  word      String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }

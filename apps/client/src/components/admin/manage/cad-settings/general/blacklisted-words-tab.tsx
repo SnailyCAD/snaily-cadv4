@@ -18,7 +18,6 @@ export function BlacklistedWordsTab() {
   const t = useTranslations("BlacklistedWords");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const tableState = useTableState();
   const modalState = useModal();
 
   const [search, setSearch] = React.useState("");
@@ -33,6 +32,7 @@ export function BlacklistedWordsTab() {
     },
   });
   const [tempWord, wordState] = useTemporaryItem(asyncTable.items);
+  const tableState = useTableState(asyncTable);
 
   function onRemoveWordClick(word: BlacklistedWord) {
     wordState.setTempId(word.id);

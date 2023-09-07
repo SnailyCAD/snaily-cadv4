@@ -10,6 +10,3 @@ CREATE TABLE "BlacklistedWord" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "BlacklistedWord_id_key" ON "BlacklistedWord"("id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BlacklistedWord_word_key" ON "BlacklistedWord"("word");
