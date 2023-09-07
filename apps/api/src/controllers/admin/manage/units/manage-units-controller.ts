@@ -49,7 +49,7 @@ import {
 } from "utils/leo/includes";
 import { getTranslator } from "~/utils/get-translator";
 import { APIEmbed } from "discord-api-types/v10";
-import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
 import { Citizen, EmsFdDeputy, LeoWhitelistStatus } from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils";
 
@@ -1002,5 +1002,9 @@ export async function sendUnitWhitelistStatusChangeWebhook(
   await sendDiscordWebhook({
     data: { embeds },
     type: DiscordWebhookType.DEPARTMENT_WHITELIST_STATUS,
+  });
+  await sendRawWebhook({
+    type: DiscordWebhookType.DEPARTMENT_WHITELIST_STATUS,
+    data: unit,
   });
 }

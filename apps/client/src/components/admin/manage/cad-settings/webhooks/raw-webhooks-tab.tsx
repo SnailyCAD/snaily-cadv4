@@ -47,6 +47,11 @@ export function RawWebhooksTab() {
     vehicleImpoundedWebhook: makeInitialValue(data, DiscordWebhookType.VEHICLE_IMPOUNDED),
     citizenRecordsWebhook: makeInitialValue(data, DiscordWebhookType.CITIZEN_RECORD),
     warrantsWebhook: makeInitialValue(data, DiscordWebhookType.WARRANTS),
+    userWhitelistStatusChannel: makeInitialValue(data, DiscordWebhookType.USER_WHITELIST_STATUS),
+    departmentWhitelistStatusChannel: makeInitialValue(
+      data,
+      DiscordWebhookType.DEPARTMENT_WHITELIST_STATUS,
+    ),
   };
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -125,6 +130,18 @@ export function RawWebhooksTab() {
               fieldName="warrantsWebhook"
               isRawWebhook
               label={t("warrantsWebhookURL")}
+            />
+
+            <WebhookSettingsField
+              fieldName="departmentWhitelistStatusChannel"
+              isRawWebhook
+              label={t("departmentWhitelistStatusChannelURL")}
+            />
+
+            <WebhookSettingsField
+              fieldName="userWhitelistStatusChannel"
+              isRawWebhook
+              label={t("userWhitelistStatusChannelURL")}
             />
 
             <Button
