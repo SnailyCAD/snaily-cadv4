@@ -453,12 +453,16 @@ export class CADSettingsController {
     permissions: [Permissions.ManageCADSettings],
   })
   async getBlacklistedWords(
+    @QueryParams("query", String) query?: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
   ): Promise<APITypes.GetBlacklistedWordsData> {
     const [totalCount, blacklistedWords] = await prisma.$transaction([
-      prisma.blacklistedWord.count(),
+      prisma.blacklistedWord.count({
+        where: query ? { word: { contains: query, mode: "insensitive" } } : undefined,
+      }),
       prisma.blacklistedWord.findMany({
+        where: query ? { word: { contains: query, mode: "insensitive" } } : undefined,
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
       }),
