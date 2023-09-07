@@ -4,14 +4,15 @@ import {
   DISABLED_FEATURES_SCHEMA,
   UPDATE_DEFAULT_PERMISSIONS_SCHEMA,
   API_TOKEN_SCHEMA,
+  BLACKLISTED_WORD_SCHEMA,
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
-import { BodyParams, Context, QueryParams } from "@tsed/platform-params";
-import { ContentType, Delete, Description, Get, Put } from "@tsed/schema";
+import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
+import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { CAD_SELECT, IsAuth, setCADFeatures } from "middlewares/auth/is-auth";
-import { BadRequest } from "@tsed/exceptions";
-import { Req, Res, UseBefore } from "@tsed/common";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+import { MultipartFile, PlatformMulterFile, Req, Res, UseBefore } from "@tsed/common";
 import { Socket } from "services/socket-service";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/data/validate-schema";
@@ -28,6 +29,7 @@ import {
 import type { MiscCadSettings } from "@snailycad/types";
 import { createFeaturesObject } from "middlewares/is-enabled";
 import { hasPermission } from "@snailycad/permissions";
+import { parseImportFile } from "~/utils/file";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -443,5 +445,83 @@ export class CADSettingsController {
     });
 
     return updated;
+  }
+
+  @Get("/blacklisted-words")
+  @UseBefore(IsAuth)
+  @UsePermissions({
+    permissions: [Permissions.ManageCADSettings],
+  })
+  async getBlacklistedWords(
+    @QueryParams("query", String) query?: string,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetBlacklistedWordsData> {
+    const [totalCount, blacklistedWords] = await prisma.$transaction([
+      prisma.blacklistedWord.count({
+        where: query ? { word: { contains: query, mode: "insensitive" } } : undefined,
+      }),
+      prisma.blacklistedWord.findMany({
+        where: query ? { word: { contains: query, mode: "insensitive" } } : undefined,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return {
+      blacklistedWords,
+      totalCount,
+    };
+  }
+
+  @Post("/blacklisted-words")
+  @UseBefore(IsAuth)
+  @UsePermissions({
+    permissions: [Permissions.ManageCADSettings],
+  })
+  async addBlacklistedWord(
+    @MultipartFile("file") file: PlatformMulterFile,
+  ): Promise<APITypes.PostBlacklistedWordsData> {
+    const toValidateBody = parseImportFile(file);
+    const validatedWords = validateSchema(BLACKLISTED_WORD_SCHEMA, toValidateBody);
+
+    const words = await prisma.$transaction(
+      validatedWords.map((word) =>
+        prisma.blacklistedWord.create({
+          data: {
+            word: word.word.toLowerCase(),
+          },
+        }),
+      ),
+    );
+
+    return words;
+  }
+
+  @Delete("/blacklisted-words/:wordId")
+  @UseBefore(IsAuth)
+  @UsePermissions({
+    permissions: [Permissions.ManageCADSettings],
+  })
+  async deleteBlacklistedWord(
+    @PathParams("wordId") wordId: string,
+  ): Promise<APITypes.DeleteBlacklistedWordsData> {
+    const existingWord = await prisma.blacklistedWord.findFirst({
+      where: {
+        id: wordId,
+      },
+    });
+
+    if (!existingWord) {
+      throw new NotFound("wordNotFound");
+    }
+
+    const word = await prisma.blacklistedWord.delete({
+      where: {
+        id: wordId,
+      },
+    });
+
+    return Boolean(word);
   }
 }

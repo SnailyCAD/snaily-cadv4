@@ -70,6 +70,12 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   signal100RepeatIntervalMs: z.number().finite().nullable(),
 });
 
+export const BLACKLISTED_WORD_SCHEMA = z.array(
+  z.object({
+    word: z.string().min(1),
+  }),
+);
+
 export const DISCORD_SETTINGS_SCHEMA = z.object({
   adminRoles: z.array(z.any()).nullish(),
   leoRoles: z.array(z.any()).nullish(),

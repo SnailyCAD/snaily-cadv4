@@ -16,6 +16,7 @@ export enum SettingsTabs {
   GeneralSettings = "GENERAL_SETTINGS",
   WhitelistSettings = "WHITELIST_SETTINGS",
   Features = "FEATURES",
+  BlacklistedWords = "BLACKLISTED_WORDS",
 
   /** misc */
   InactivityTimeouts = "INACTIVITY_TIMEOUTS",
@@ -88,7 +89,12 @@ function CadSettingsSidebar() {
   const SIDEBAR_ITEMS = [
     {
       name: t("general"),
-      items: [SettingsTabs.GeneralSettings, SettingsTabs.WhitelistSettings, SettingsTabs.Features],
+      items: [
+        SettingsTabs.GeneralSettings,
+        SettingsTabs.WhitelistSettings,
+        SettingsTabs.Features,
+        SettingsTabs.BlacklistedWords,
+      ],
     },
     {
       name: t("miscellaneous"),

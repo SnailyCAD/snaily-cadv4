@@ -227,6 +227,13 @@ model DiscordRole {
   adminRolesArr         DiscordRoles[] @relation("adminRoles")
 }
 
+model BlacklistedWord {
+  id        String   @id @unique @default(cuid())
+  word      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
 // audit logs
 model AuditLog {
   id             String   @id @default(uuid())

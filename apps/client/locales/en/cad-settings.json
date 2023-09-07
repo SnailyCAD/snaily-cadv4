@@ -198,6 +198,17 @@
     "signal100RepeatIntervalMs": "Signal 100 Repeat Interval (ms)",
     "limits": "Limits"
   },
+  "BlacklistedWords": {
+    "blacklistedWords": "Blacklisted Words",
+    "blacklistedWordsDescription": "SnailyCAD will verify if a citizen's name or vehicle's plate contains any of the blacklisted words.",
+    "noBlacklistedWords": "No blacklisted words have been added yet.",
+    "importBlacklistedWords": "Import Blacklisted Words",
+    "file": "File",
+    "word": "Word",
+    "remove": "Remove",
+    "removeBlacklistedWord": "Remove Blacklisted Word",
+    "removeBlacklistedWordDescription": "Are you sure you want to remove this blacklisted word?"
+  },
   "Features": {
     "enableOrDisableFeatures": "Enable or Disable Features",
     "searchFeatures": "Search Features...",
