@@ -1,4 +1,4 @@
-import { WhitelistStatus } from "@prisma/client";
+import { Feature, WhitelistStatus } from "@prisma/client";
 import { Permissions, defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { User } from "@snailycad/types";
 import { Context, UseBeforeEach } from "@tsed/common";
@@ -16,7 +16,10 @@ export class NavController {
   @UsePermissions({
     permissions: defaultPermissions.defaultLeoPermissions,
   })
-  async getOfficerNotifications(@Context("user") user: User) {
+  async getOfficerNotifications(
+    @Context("user") user: User,
+    @Context("cad") cad: { features: Record<Feature, boolean> },
+  ) {
     const hasManageBureauOfFirearms = hasPermission({
       permissionsToCheck: [Permissions.ManageBureauOfFirearms],
       userToCheck: user,
@@ -25,15 +28,23 @@ export class NavController {
       permissionsToCheck: [Permissions.ManageDMV],
       userToCheck: user,
     });
+    const hasManageArrestReportPermission = hasPermission({
+      permissionsToCheck: [Permissions.DeleteCitizenRecords],
+      userToCheck: user,
+    });
+    const showArrestReportNotifications =
+      cad.features.CITIZEN_RECORD_APPROVAL && hasManageArrestReportPermission;
 
-    const [pendingWeapons, pendingVehicles] = await prisma.$transaction([
+    const [pendingWeapons, pendingVehicles, pendingCitizenRecords] = await prisma.$transaction([
       prisma.weapon.count({ where: { bofStatus: WhitelistStatus.PENDING } }),
       prisma.registeredVehicle.count({ where: { dmvStatus: WhitelistStatus.PENDING } }),
+      prisma.recordLog.count({ where: { records: { status: WhitelistStatus.PENDING } } }),
     ]);
 
     return {
       pendingWeapons: hasManageBureauOfFirearms ? pendingWeapons : 0,
       pendingVehicles: hasManageDMV ? pendingVehicles : 0,
+      pendingCitizenRecords: showArrestReportNotifications ? pendingCitizenRecords : 0,
     };
   }
 

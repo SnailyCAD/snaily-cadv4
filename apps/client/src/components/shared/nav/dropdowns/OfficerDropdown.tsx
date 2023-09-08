@@ -26,12 +26,18 @@ export function OfficerDropdown() {
     queryKey: ["officer", "notifications"],
     queryFn: async () => {
       const { json } = await execute({ path: "/notifications/officer", noToast: true });
-      return json as { pendingVehicles: number; pendingWeapons: number };
+      return json as {
+        pendingVehicles: number;
+        pendingWeapons: number;
+        pendingCitizenRecords: number;
+      };
     },
   });
 
   const totalNotificationsCount =
-    isLoading || !data ? 0 : data.pendingVehicles + data.pendingWeapons;
+    isLoading || !data
+      ? 0
+      : data.pendingVehicles + data.pendingWeapons + data.pendingCitizenRecords;
 
   const items = [
     {
@@ -142,6 +148,7 @@ export function OfficerDropdown() {
           const notifications = {
             "/officer/dmv": data?.pendingVehicles,
             "/officer/bureau-of-firearms": data?.pendingWeapons,
+            "/officer/supervisor/citizen-logs": data?.pendingCitizenRecords,
           } as Record<string, number | undefined>;
           const notificationCount = notifications[path];
 
