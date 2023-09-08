@@ -80,6 +80,9 @@ export const DEPARTMENT_SCHEMA = BASE_VALUE_SCHEMA.extend({
   isConfidential: z.boolean().nullish(),
   extraFields: z.any().nullish(),
   customTemplate: z.string().nullish(),
+  departmentLinks: z
+    .array(z.object({ title: z.string().max(255), url: z.string().url() }))
+    .nullish(),
 });
 
 export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);

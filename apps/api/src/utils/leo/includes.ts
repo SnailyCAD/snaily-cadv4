@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { userProperties } from "lib/auth/getSessionUser";
 
 export const unitProperties = Prisma.validator<Prisma.EmsFdDeputySelect>()({
-  department: { include: { value: true } },
+  department: { include: { value: true, links: true } },
   division: { include: { value: true, department: true } },
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
@@ -14,7 +14,7 @@ export const unitProperties = Prisma.validator<Prisma.EmsFdDeputySelect>()({
 });
 
 export const _leoProperties = Prisma.validator<Prisma.OfficerSelect>()({
-  department: { include: { value: true } },
+  department: { include: { value: true, links: true } },
   divisions: { include: { value: true, department: true } },
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },

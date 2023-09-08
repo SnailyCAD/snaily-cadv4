@@ -49,6 +49,10 @@ const buttons: MButton[] = [
     nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
   },
+  {
+    nameKey: ["Leo", "departmentInformation"],
+    modalId: ModalIds.DepartmentInfo,
+  },
 ];
 
 export function ModalButtons({

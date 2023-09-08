@@ -92,6 +92,11 @@ export const createWarrantBtn: ModalButton = ({ user }) => ({
   isEnabled: hasPermission({ userToCheck: user, permissionsToCheck: [Permissions.ManageWarrants] }),
 });
 
+export const departmentInformationBtn: ModalButton = () => ({
+  modalId: ModalIds.DepartmentInfo,
+  nameKey: ["Leo", "departmentInformation"],
+});
+
 export const notepadBtn: ModalButton = () => ({
   modalId: ModalIds.Notepad,
   nameKey: ["Leo", "notepad"],

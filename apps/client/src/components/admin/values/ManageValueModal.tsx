@@ -238,6 +238,8 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
       value && (isDivisionValue(value) || isDepartmentValue(value))
         ? JSON.stringify(value.extraFields)
         : "null",
+
+    departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
   };
 
   function validate(values: typeof INITIAL_VALUES) {
