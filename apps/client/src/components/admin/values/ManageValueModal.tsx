@@ -242,10 +242,6 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
     departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
   };
 
-  console.log({
-    value,
-  });
-
   function validate(values: typeof INITIAL_VALUES) {
     if (type === ValueType.LICENSE) {
       // temporary fix, it seems to not update the schema :thinking:

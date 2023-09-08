@@ -43,6 +43,7 @@ const buttons: modalButtons.ModalButton[] = [
   modalButtons.createWarrantBtn,
   modalButtons.createBoloBtn,
   modalButtons.notepadBtn,
+  modalButtons.departmentInformationBtn,
 ];
 
 export function ModalButtons({ initialActiveOfficer }: { initialActiveOfficer: ActiveOfficer }) {

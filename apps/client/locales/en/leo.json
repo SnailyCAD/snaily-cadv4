@@ -330,7 +330,10 @@
     "hideSmartSigns": "Hide Smart Signs",
     "showSmartSigns": "Show Smart Signs",
     "smartSignUpdated": "SmartSign Updated",
-    "smartSignUpdatedMessage": "We sent a request to the FXServer to update the SmartSign."
+    "smartSignUpdatedMessage": "We sent a request to the FXServer to update the SmartSign.",
+    "departmentInformation": "Department Info",
+    "departmentInformationDesc": "Here you can view further external links and information for your department.",
+    "noDepartmentLinks": "This department doesn't have any extra information yet."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

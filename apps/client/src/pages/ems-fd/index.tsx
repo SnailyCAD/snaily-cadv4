@@ -69,6 +69,10 @@ const SearchMedicalRecordModal = dynamic(
   { ssr: false },
 );
 
+const DepartmentInfoModal = dynamic(async () => {
+  return (await import("components/leo/modals/department-info-modal")).DepartmentInformationModal;
+});
+
 export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: Props) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -134,6 +138,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
       {isAdmin || state.activeDeputy ? (
         <>
           <NotepadModal />
+          <DepartmentInfoModal />
 
           <SearchMedicalRecordModal />
           {modalState.isOpen(ModalIds.SearchMedicalRecord) ? null : (

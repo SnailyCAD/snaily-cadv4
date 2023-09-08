@@ -101,6 +101,9 @@ const Modals = {
     return (await import("components/leo/modals/SwitchDivisionCallsignModal"))
       .SwitchDivisionCallsignModal;
   }),
+  DepartmentInfoModal: dynamic(async () => {
+    return (await import("components/leo/modals/department-info-modal")).DepartmentInformationModal;
+  }),
 };
 
 interface Props {
@@ -207,6 +210,7 @@ export default function OfficerDashboard({
         <>
           <Modals.SwitchDivisionCallsignModal />
           <Modals.NotepadModal />
+          <Modals.DepartmentInfoModal />
 
           {/* name search have their own vehicle/weapon search modal */}
           {modalState.isOpen(ModalIds.NameSearch) ? null : (
