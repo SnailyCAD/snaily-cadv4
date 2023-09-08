@@ -238,7 +238,13 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
       value && (isDivisionValue(value) || isDepartmentValue(value))
         ? JSON.stringify(value.extraFields)
         : "null",
+
+    departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
   };
+
+  console.log({
+    value,
+  });
 
   function validate(values: typeof INITIAL_VALUES) {
     if (type === ValueType.LICENSE) {

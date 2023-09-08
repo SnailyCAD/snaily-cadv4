@@ -217,9 +217,17 @@ export const typeHandlers = {
   DEPARTMENT: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
-    return prisma.$transaction(
-      data.map((item) => {
-        return prisma.departmentValue.upsert({
+    return Promise.all(
+      data.map(async (item) => {
+        if (id) {
+          await prisma.departmentValueLink.deleteMany({
+            where: {
+              departmentId: id,
+            },
+          });
+        }
+
+        const departmentValue = await prisma.departmentValue.upsert({
           where: { id: String(id) },
           ...makePrismaData(ValueType.DEPARTMENT, {
             type: item.type as DepartmentType,
@@ -237,6 +245,20 @@ export const typeHandlers = {
           }),
           include: { value: true, defaultOfficerRank: true },
         });
+
+        const links = await prisma.$transaction(
+          (item.departmentLinks ?? []).map((link) =>
+            prisma.departmentValueLink.create({
+              data: {
+                title: link.title,
+                url: link.url,
+                department: { connect: { id: departmentValue.id } },
+              },
+            }),
+          ),
+        );
+
+        return { ...departmentValue, departmentLinks: links };
       }),
     );
   },

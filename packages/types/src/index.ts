@@ -230,7 +230,12 @@ export type DivisionValue = Prisma.DivisionValue & { value: Value };
 
 export type CallTypeValue = Prisma.CallTypeValue & { value: Value };
 
-export type DepartmentValue = Prisma.DepartmentValue & { value: Value };
+export type DepartmentValueLink = Prisma.DepartmentValueLink;
+
+export type DepartmentValue = Prisma.DepartmentValue & {
+  value: Value;
+  links?: DepartmentValueLink[];
+};
 
 export type DriversLicenseCategoryValue = Prisma.DriversLicenseCategoryValue & {
   value: Value;

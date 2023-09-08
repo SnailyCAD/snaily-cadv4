@@ -751,6 +751,15 @@ model DepartmentValue {
   EmergencyVehicleValue EmergencyVehicleValue[]
   mCombinedEmsFdUnit    CombinedEmsFdUnit[]
   ActiveDispatchers     ActiveDispatchers[]
+  links                 DepartmentValueLink[]
+}
+
+model DepartmentValueLink {
+  id           String          @id @default(cuid())
+  title        String
+  url          String
+  department   DepartmentValue @relation(fields: [departmentId], references: [id])
+  departmentId String
 }
 
 model EmergencyVehicleValue {
