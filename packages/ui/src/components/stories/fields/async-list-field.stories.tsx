@@ -28,8 +28,6 @@ function DefaultRenderer() {
         filterTextRequired: true,
       }}
       setValues={({ localValue, node }) => {
-        console.log({ localValue, node });
-
         if (typeof localValue !== "undefined") {
           setLocalSearchValue(localValue);
         }

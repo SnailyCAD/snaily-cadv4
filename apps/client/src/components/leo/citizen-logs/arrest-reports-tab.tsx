@@ -6,7 +6,6 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Loader,
   Status,
   TabsContent,
 } from "@snailycad/ui";
@@ -23,6 +22,7 @@ import type {
   GetManagePendingArrestReports,
   PostCitizenRecordLogsData,
 } from "@snailycad/types/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
   arrestReports: GetManagePendingArrestReports;
@@ -36,6 +36,18 @@ const TYPE_LABELS = {
 
 export function ArrestReportsTab({ arrestReports }: Props) {
   const [tempRecord, setTempRecord] = React.useState<Record | null>(null);
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["officer", "notifications"],
+    queryFn: async () => {
+      const { json } = await execute({ path: "/notifications/officer", noToast: true });
+      return json as {
+        pendingVehicles: number;
+        pendingWeapons: number;
+        pendingCitizenRecords: number;
+      };
+    },
+  });
 
   const asyncTable = useAsyncTable({
     getKey: (item) => item.recordId ?? item.warrantId ?? item.id,
@@ -77,17 +89,20 @@ export function ArrestReportsTab({ arrestReports }: Props) {
     if (json) {
       setTempRecord(null);
       asyncTable.remove(item.id);
+      await refetch();
     }
   }
 
   return (
-    <TabsContent value="arrest-reports-tab">
-      {asyncTable.isLoading && asyncTable.items.length <= 0 ? (
-        <Loader />
-      ) : asyncTable.noItemsAvailable ? (
+    <TabsContent
+      tabName={`${t("arrestReportLogs")} ${isLoading ? null : `(${data?.pendingCitizenRecords})`}`}
+      value="arrest-reports-tab"
+    >
+      {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noCitizenLogs")}</p>
       ) : (
         <Table
+          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
           data={asyncTable.items.map((item) => {
             const record = item.records!;

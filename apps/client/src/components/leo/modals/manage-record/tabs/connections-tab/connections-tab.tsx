@@ -111,8 +111,6 @@ export function ConnectionsTab({
             const caseNumber =
               typeof localValue !== "undefined" ? { call911CaseNumber: localValue } : {};
 
-            console.log({ node });
-
             const call911Id = node ? { call911Id: node.key as string } : {};
 
             setValues({

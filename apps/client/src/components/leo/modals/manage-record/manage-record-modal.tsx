@@ -29,6 +29,7 @@ import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsFie
 import dynamic from "next/dynamic";
 import type { BusinessSearchResult } from "state/search/business-search-state";
 import { Editor, dataToSlate } from "components/editor/editor";
+import { useInvalidateQuery } from "hooks/use-invalidate-query";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -146,6 +147,7 @@ export function ManageRecordModal(props: Props) {
   const t = useTranslations("Leo");
   const tCourt = useTranslations("Courthouse");
   const { LEO_BAIL } = useFeatureEnabled();
+  const { invalidateQuery } = useInvalidateQuery(["officer", "notifications"]);
 
   React.useEffect(() => {
     setIsBusinessRecord(Boolean(props.record?.businessId && !props.record.citizenId));
@@ -244,6 +246,7 @@ export function ManageRecordModal(props: Props) {
 
         props.onCreate?.(json);
         handleClose();
+        await invalidateQuery();
       }
     }
   }
