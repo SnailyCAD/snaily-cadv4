@@ -136,7 +136,7 @@ export function OfficerDropdown() {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start" alignOffset={10}>
+      <DropdownMenuContent className="min-w-[200px]" align="start" alignOffset={10}>
         {items.map((item) => {
           const show = item.show ?? true;
           const path = item.href;

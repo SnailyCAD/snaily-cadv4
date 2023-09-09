@@ -63,6 +63,7 @@ function CitizenResults({ results }: any) {
 
   return (
     <Table
+      features={{ isWithinCardOrModal: true }}
       tableState={tableState}
       data={citizens.map((result) => ({
         id: result.id,

@@ -44,7 +44,7 @@ export function EmsFdDropdown() {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start" alignOffset={10}>
+      <DropdownMenuContent className="min-w-[200px]" align="start" alignOffset={10}>
         <DropdownMenuLinkItem href="/ems-fd">{t("dashboard")}</DropdownMenuLinkItem>
         <DropdownMenuLinkItem href="/ems-fd/my-deputies">{t("myDeputies")}</DropdownMenuLinkItem>
         <DropdownMenuLinkItem href="/ems-fd/my-deputy-logs">
