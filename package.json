@@ -20,7 +20,7 @@
     "@casperiv/eslint-config": "8.0.0",
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
-    "eslint": "8.48.0",
+    "eslint": "8.49.0",
     "lerna": "^7.2.0",
     "lint-staged": "^14.0.1"
   },
