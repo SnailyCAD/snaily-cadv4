@@ -121,7 +121,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
           <Button
             variant="cancel"
             className={classNames(
-              "px-2 py-2  dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
+              "px-2 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
               showEmsFilters && "dark:!bg-secondary !bg-gray-500",
             )}
             onPress={() => setShowFilters("ems-fd", !showEmsFilters)}
@@ -140,9 +140,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
       <ActiveUnitsSearch isLoading={asyncTable.isLoading} type="ems-fd" />
 
       {activeDeputies.length <= 0 ? (
-        <p className="px-4 py-2  text-neutral-700 dark:text-gray-300">
-          {t("Ems.noActiveDeputies")}
-        </p>
+        <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("Ems.noActiveDeputies")}</p>
       ) : (
         <Table
           tableState={tableState}

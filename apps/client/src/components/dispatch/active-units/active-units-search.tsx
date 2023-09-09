@@ -31,9 +31,9 @@ export function ActiveUnitsSearch({ isLoading, type }: Props) {
       <Tooltip.Provider delayDuration={0}>
         <Tooltip.Root>
           <Tooltip.Trigger>
-            <p className="text-neutral-700 dark:text-gray-400 my-3 flex items-center gap-2">
-              {t("showingOnlyLatest12Units")}
+            <p className="text-neutral-700 dark:text-gray-400 flex items-center gap-2 mt-1">
               <InfoCircleFill />
+              {t("showingOnlyLatest12Units")}
             </p>
           </Tooltip.Trigger>
 
@@ -51,7 +51,7 @@ export function ActiveUnitsSearch({ isLoading, type }: Props) {
       {(showFilters as boolean) ? (
         <TextField
           label={common("search")}
-          className="w-full relative"
+          className="w-full relative mt-3 mb-1"
           name="search"
           value={search as string}
           onChange={(value) => setSearch(setSearchType, value)}
