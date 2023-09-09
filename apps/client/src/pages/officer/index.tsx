@@ -143,24 +143,7 @@ export default function OfficerDashboard({
   const signal100 = useSignal100();
   const tones = useTones(ActiveToneType.LEO);
   const panic = usePanicButton();
-  const modalState = useModal();
-  const { LEO_TICKETS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
-  const { hasPermissions } = usePermission();
-  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
-
-  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
-    currentResult: state.currentResult,
-    setCurrentResult: state.setCurrentResult,
-  }));
-
-  function handleRecordCreate(data: Record) {
-    if (!currentResult || currentResult.isConfidential) return;
-
-    setCurrentResult({
-      ...currentResult,
-      Record: [data, ...currentResult.Record],
-    });
-  }
+  const { ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
 
   React.useEffect(() => {
     leoState.setActiveOfficer(activeOfficer);
@@ -205,39 +188,63 @@ export default function OfficerDashboard({
       </div>
 
       <Modals.SelectOfficerModal />
-
-      {isAdmin || leoState.activeOfficer ? (
-        <>
-          <Modals.SwitchDivisionCallsignModal />
-          <Modals.NotepadModal />
-          <Modals.DepartmentInfoModal />
-
-          {/* name search have their own vehicle/weapon search modal */}
-          {modalState.isOpen(ModalIds.NameSearch) ? null : (
-            <>
-              <Modals.WeaponSearchModal />
-              <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
-              <Modals.BusinessSearchModal />
-
-              {LEO_TICKETS ? (
-                <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
-              ) : null}
-              <Modals.ManageRecordModal
-                onCreate={handleRecordCreate}
-                type={RecordType.ARREST_REPORT}
-              />
-              <Modals.ManageRecordModal
-                onCreate={handleRecordCreate}
-                type={RecordType.WRITTEN_WARNING}
-              />
-            </>
-          )}
-          <Modals.NameSearchModal />
-          {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
-          <Modals.CustomFieldSearch />
-        </>
-      ) : null}
+      <OfficerModals />
     </Layout>
+  );
+}
+
+function OfficerModals() {
+  const leoState = useLeoState();
+  const modalState = useModal();
+  const { LEO_TICKETS, ACTIVE_WARRANTS } = useFeatureEnabled();
+  const { hasPermissions } = usePermission();
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
+
+  const { currentResult, setCurrentResult } = useNameSearch((state) => ({
+    currentResult: state.currentResult,
+    setCurrentResult: state.setCurrentResult,
+  }));
+
+  function handleRecordCreate(data: Record) {
+    if (!currentResult || currentResult.isConfidential) return;
+
+    setCurrentResult({
+      ...currentResult,
+      Record: [data, ...currentResult.Record],
+    });
+  }
+
+  if (!isAdmin || !leoState.activeOfficer) {
+    return null;
+  }
+
+  return (
+    <>
+      <Modals.SwitchDivisionCallsignModal />
+      <Modals.NotepadModal />
+      <Modals.DepartmentInfoModal />
+
+      {/* name search have their own vehicle/weapon search modal */}
+      {modalState.isOpen(ModalIds.NameSearch) ? null : (
+        <>
+          <Modals.WeaponSearchModal />
+          <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+          <Modals.BusinessSearchModal />
+
+          {LEO_TICKETS ? (
+            <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+          ) : null}
+          <Modals.ManageRecordModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
+          <Modals.ManageRecordModal
+            onCreate={handleRecordCreate}
+            type={RecordType.WRITTEN_WARNING}
+          />
+        </>
+      )}
+      <Modals.NameSearchModal />
+      {!ACTIVE_WARRANTS ? <CreateWarrantModal warrant={null} /> : null}
+      <Modals.CustomFieldSearch />
+    </>
   );
 }
 

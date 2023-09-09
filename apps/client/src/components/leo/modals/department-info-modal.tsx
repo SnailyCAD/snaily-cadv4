@@ -22,11 +22,6 @@ export function DepartmentInformationModal() {
   const links = activeUnit?.department?.links ?? [];
   const tableState = useTableState();
 
-  console.log({
-    activeUnit,
-    links,
-  });
-
   return (
     <Modal
       title={t("departmentInformation")}

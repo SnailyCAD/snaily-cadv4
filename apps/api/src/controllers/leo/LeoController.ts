@@ -48,9 +48,9 @@ export class LeoController {
   async getActiveOfficers(
     @Context("user") user: User,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
-    @QueryParams("includeAll", Boolean) includeAll = true,
+    @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("skip", Number) skip = 0,
-    @QueryParams("search", String) search?: string,
+    @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetActiveOfficersData> {
     const unitsInactivityFilter = getInactivityFilter(
       cad,
@@ -63,25 +63,7 @@ export class LeoController {
       select: { departmentId: true },
     });
 
-    // todo: async-table for active officers/deputies.
-    // i have yet to find a good way to do this, but i will find a way.
-    const officerWhere: Prisma.OfficerWhereInput | undefined = search
-      ? {
-          callsign: { contains: search, mode: "insensitive" },
-          callsign2: { contains: search, mode: "insensitive" },
-          divisions: { some: { value: { value: { contains: search, mode: "insensitive" } } } },
-          department: { value: { value: { contains: search, mode: "insensitive" } } },
-          badgeNumberString: { contains: search, mode: "insensitive" },
-          rank: { value: { contains: search, mode: "insensitive" } },
-          activeVehicle: { value: { value: { contains: search, mode: "insensitive" } } },
-          radioChannelId: { contains: search, mode: "insensitive" },
-          AND: [
-            { status: { value: { value: { contains: search, mode: "insensitive" } } } },
-            { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
-          ],
-        }
-      : undefined;
-
+    const officerWhere = query ? activeOfficersWhereInput(query) : undefined;
     const [officers, combinedUnits] = await prisma.$transaction([
       prisma.officer.findMany({
         take: includeAll ? undefined : 12,
@@ -345,4 +327,43 @@ export class LeoController {
 
     return updated;
   }
+}
+
+function activeOfficersWhereInput(query: string) {
+  const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+  return {
+    OR: [
+      { callsign: { contains: query, mode: "insensitive" } },
+      { callsign2: { contains: query, mode: "insensitive" } },
+      { divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } } },
+      { department: { value: { value: { contains: query, mode: "insensitive" } } } },
+      { badgeNumberString: { contains: query, mode: "insensitive" } },
+      { rank: { value: { contains: query, mode: "insensitive" } } },
+      { activeVehicle: { value: { value: { contains: query, mode: "insensitive" } } } },
+      { radioChannelId: { contains: query, mode: "insensitive" } },
+      {
+        status: {
+          AND: [
+            { value: { value: { contains: query, mode: "insensitive" } } },
+            { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ],
+        },
+      },
+      {
+        citizen: {
+          OR: [
+            {
+              name: { contains: name, mode: "insensitive" },
+              surname: { contains: surname, mode: "insensitive" },
+            },
+            {
+              name: { contains: surname, mode: "insensitive" },
+              surname: { contains: name, mode: "insensitive" },
+            },
+          ],
+        },
+      },
+    ],
+  } satisfies Prisma.OfficerWhereInput;
 }

@@ -13,10 +13,6 @@ export function DepartmentLinksSection() {
   const { values, setFieldValue } = useFormikContext<{ departmentLinks: DepartmentValueLink[] }>();
   const common = useTranslations("Common");
 
-  console.log({
-    links: values.departmentLinks,
-  });
-
   return (
     <section className="mt-6">
       <header className="flex items-center justify-between">
