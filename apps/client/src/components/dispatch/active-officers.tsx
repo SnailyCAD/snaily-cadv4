@@ -10,13 +10,11 @@ import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
-import { Filter } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTableState, Table, useAsyncTable } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { ActiveUnitsSearch } from "./active-units/active-units-search";
-import { classNames } from "lib/classNames";
 import { useActiveUnitsState } from "state/active-unit-state";
 import { OfficerColumn } from "./active-units/officers/officer-column";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
@@ -30,6 +28,7 @@ import { Permissions } from "@snailycad/permissions";
 import { usePermission } from "hooks/usePermission";
 import { PrivateMessagesModal } from "./active-units/private-messages/private-messages-modal";
 import { GetActiveOfficersData } from "@snailycad/types/api";
+import { ActiveOfficersHeader } from "./active-units/officers/active-officers-header";
 
 const CreateTemporaryUnitModal = dynamic(
   async () =>
@@ -54,12 +53,7 @@ interface Props {
 function ActiveOfficers({ initialOfficers }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
-
-  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState((state) => ({
-    leoSearch: state.leoSearch,
-    showLeoFilters: state.showLeoFilters,
-    setShowFilters: state.setShowFilters,
-  }));
+  const leoSearch = useActiveUnitsState((state) => state.leoSearch);
 
   const asyncTable = useAsyncTable({
     search: leoSearch,
@@ -119,41 +113,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
 
   return (
     <div className="rounded-md card">
-      <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t("activeOfficers")}</h1>
-
-        <div className="flex items-center gap-2">
-          {showCreateTemporaryUnitButton ? (
-            <Button
-              variant="cancel"
-              className={classNames(
-                "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
-              )}
-              onPress={() => modalState.openModal(ModalIds.CreateTemporaryUnit, "officer")}
-            >
-              {t("createTemporaryUnit")}
-            </Button>
-          ) : null}
-
-          <Button
-            variant="cancel"
-            className={classNames(
-              "px-2 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
-              showLeoFilters && "dark:!bg-secondary !bg-gray-500",
-            )}
-            onPress={() => setShowFilters("leo", !showLeoFilters)}
-            title={common("filters")}
-            disabled={activeOfficers.length <= 0}
-          >
-            <Filter
-              className={classNames("group-hover:fill-white", showLeoFilters && "text-white")}
-              aria-label={common("filters")}
-              size={18}
-            />
-          </Button>
-        </div>
-      </header>
-
+      <ActiveOfficersHeader />
       <ActiveUnitsSearch isLoading={asyncTable.isLoading} type="leo" />
 
       {activeOfficers.length <= 0 ? (

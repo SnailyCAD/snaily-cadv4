@@ -17,8 +17,6 @@ import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { useActiveUnitsState } from "state/active-unit-state";
-import { classNames } from "lib/classNames";
-import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/active-units-search";
 import { ActiveCallColumn } from "./active-units/officers/active-call-column";
 import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
@@ -26,10 +24,10 @@ import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casperiv/useful";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
-import { Permissions, usePermission } from "hooks/usePermission";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 import { MergeUnitModal } from "./active-units/merge-unit-modal";
 import { GetEmsFdActiveDeputies } from "@snailycad/types/api";
+import { ActiveDeputiesHeader } from "./active-units/deputies/active-deputies-header";
 
 interface Props {
   initialDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];
@@ -38,12 +36,7 @@ interface Props {
 function ActiveDeputies({ initialDeputies }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
-
-  const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState((state) => ({
-    emsSearch: state.emsSearch,
-    showEmsFilters: state.showEmsFilters,
-    setShowFilters: state.setShowFilters,
-  }));
+  const emsSearch = useActiveUnitsState((state) => state.emsSearch);
 
   const asyncTable = useAsyncTable({
     search: emsSearch,
@@ -68,7 +61,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
   });
 
   const { activeDeputies: _activeDeputies, setActiveDeputies } = useActiveDeputies();
-  const { hasPermissions } = usePermission();
   const modalState = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
@@ -81,9 +73,6 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
   const activeDeputies = isMounted ? _activeDeputies : initialDeputies;
   const isDispatch = router.pathname === "/dispatch";
-
-  const hasDispatchPerms = hasPermissions([Permissions.Dispatch]);
-  const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
 
   const { activeDeputy, setActiveDeputy } = useEmsFdState((state) => ({
     activeDeputy: state.activeDeputy,
@@ -103,40 +92,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
 
   return (
     <div className="mt-3 rounded-md card">
-      <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h1>
-
-        <div className="flex items-center gap-2">
-          {showCreateTemporaryUnitButton ? (
-            <Button
-              variant="cancel"
-              className={classNames(
-                "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
-              )}
-              onPress={() => modalState.openModal(ModalIds.CreateTemporaryUnit, "ems-fd")}
-            >
-              {t("Leo.createTemporaryUnit")}
-            </Button>
-          ) : null}
-          <Button
-            variant="cancel"
-            className={classNames(
-              "px-2 py-2 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",
-              showEmsFilters && "dark:!bg-secondary !bg-gray-500",
-            )}
-            onPress={() => setShowFilters("ems-fd", !showEmsFilters)}
-            title={common("filters")}
-            disabled={activeDeputies.length <= 0}
-          >
-            <Filter
-              className={classNames("group-hover:fill-white", showEmsFilters && "text-white")}
-              aria-label={common("filters")}
-              size={18}
-            />
-          </Button>
-        </div>
-      </header>
-
+      <ActiveDeputiesHeader />
       <ActiveUnitsSearch isLoading={asyncTable.isLoading} type="ems-fd" />
 
       {activeDeputies.length <= 0 ? (
