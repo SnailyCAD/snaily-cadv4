@@ -17,6 +17,7 @@ import {
   ShouldDoType,
   type User,
   Feature,
+  Prisma,
 } from "@prisma/client";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
@@ -193,6 +194,9 @@ export class EmsFdController {
   async getActiveDeputies(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetEmsFdActiveDeputies> {
     const unitsInactivityFilter = getInactivityFilter(
       cad,
@@ -205,13 +209,17 @@ export class EmsFdController {
       select: { departmentId: true },
     });
 
+    const emsFdWhere = query ? activeEmsFdDeputiesWhereInput(query) : undefined;
     const [deputies, combinedEmsFdDeputies] = await prisma.$transaction([
       prisma.emsFdDeputy.findMany({
         orderBy: { updatedAt: "desc" },
+        take: includeAll ? undefined : 12,
+        skip: includeAll ? undefined : skip,
         where: {
           status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
           departmentId: activeDispatcher?.departmentId || undefined,
           ...(unitsInactivityFilter?.filter ?? {}),
+          ...(emsFdWhere ?? {}),
         },
         include: unitProperties,
       }),
@@ -590,4 +598,43 @@ export class EmsFdController {
       throw new BadRequest("errorUploadingImage");
     }
   }
+}
+
+function activeEmsFdDeputiesWhereInput(query: string) {
+  const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+  return {
+    OR: [
+      { callsign: { contains: query, mode: "insensitive" } },
+      { callsign2: { contains: query, mode: "insensitive" } },
+      { division: { value: { value: { contains: query, mode: "insensitive" } } } },
+      { department: { value: { value: { contains: query, mode: "insensitive" } } } },
+      { badgeNumberString: { contains: query, mode: "insensitive" } },
+      { rank: { value: { contains: query, mode: "insensitive" } } },
+      { activeVehicle: { value: { value: { contains: query, mode: "insensitive" } } } },
+      { radioChannelId: { contains: query, mode: "insensitive" } },
+      {
+        status: {
+          AND: [
+            { value: { value: { contains: query, mode: "insensitive" } } },
+            { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ],
+        },
+      },
+      {
+        citizen: {
+          OR: [
+            {
+              name: { contains: name, mode: "insensitive" },
+              surname: { contains: surname, mode: "insensitive" },
+            },
+            {
+              name: { contains: surname, mode: "insensitive" },
+              surname: { contains: name, mode: "insensitive" },
+            },
+          ],
+        },
+      },
+    ],
+  } satisfies Prisma.EmsFdDeputyWhereInput;
 }

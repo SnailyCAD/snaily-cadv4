@@ -333,7 +333,9 @@
     "smartSignUpdatedMessage": "We sent a request to the FXServer to update the SmartSign.",
     "departmentInformation": "Department Info",
     "departmentInformationDesc": "Here you can view further external links and information for your department.",
-    "noDepartmentLinks": "This department doesn't have any extra information yet."
+    "noDepartmentLinks": "This department doesn't have any extra information yet.",
+    "showingOnlyLatest12Units": "Showing only 12 latest units.",
+    "showingOnlyLatest12UnitsDescription": "Showing only the 12 latest units in this list. The latest units are located at the top of the list. This is to avoid page slowdowns. Use the filters the refine your search."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

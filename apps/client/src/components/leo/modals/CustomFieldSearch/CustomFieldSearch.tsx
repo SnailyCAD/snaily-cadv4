@@ -22,6 +22,7 @@ export function CustomFieldSearch() {
   const [results, setResults] = React.useState<CustomFieldResults | null>(null);
 
   const { data: customFieldsData, isLoading } = useQuery({
+    refetchOnWindowFocus: false,
     initialData: { customFields: [], totalCount: 0 },
     queryKey: ["custom-fields"],
     queryFn: async () => {
