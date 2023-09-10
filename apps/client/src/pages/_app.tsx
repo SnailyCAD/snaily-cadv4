@@ -36,6 +36,8 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   const url = `${protocol}//${host}`;
   const user = pageProps.session as User | null;
   const locale = user?.locale ?? router.locale ?? "en";
+  const cad = pageProps.cad ?? pageProps.session?.cad ?? null;
+  const timeZone = cad?.timeZone ?? undefined;
 
   React.useEffect(() => {
     const handleRouteStart = async () => {
@@ -82,6 +84,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
             defaultTranslationValues={{
               span: (children) => <span className="font-semibold">{children}</span>,
             }}
+            timeZone={timeZone}
             onError={console.warn}
             locale={locale}
             messages={pageProps.messages}

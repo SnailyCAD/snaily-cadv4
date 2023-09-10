@@ -149,6 +149,7 @@ export class CADSettingsController {
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
         logoId: data.image,
+        timeZone: data.timeZone || null,
         miscCadSettings: { update: { roleplayEnabled: data.roleplayEnabled } },
       },
       include: { features: true, miscCadSettings: true, apiToken: true },

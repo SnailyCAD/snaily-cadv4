@@ -23,7 +23,9 @@
     "taxiWhitelist": "Taxi Whitelist",
     "taxiWhitelistDescription": "The taxi system will be whitelisted. The Taxi permission must be given to the user before they can use the taxi system.",
     "businessWhitelist": "Business Whitelist",
-    "businessWhitelistDescription": "The business system will be whitelisted. Any new business must first be reviewed, then they can be approved or denied before it can be used."
+    "businessWhitelistDescription": "The business system will be whitelisted. Any new business must first be reviewed, then they can be approved or denied before it can be used.",
+    "timeZone": "Time Zone",
+    "timeZoneDescription": "The time zone that will be used in the SnailyCAD instance. This will apply to all users."
   },
   "DiscordRolesTab": {
     "discordRoles": "Discord Roles",

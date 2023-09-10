@@ -128,6 +128,7 @@ export function CAD_SELECT(options: CadSelectOptions) {
     businessWhitelisted: true,
     features: true,
     autoSetUserProperties: true,
+    timeZone: true,
     registrationCode: options.selectCADsettings,
     steamApiKey: options.selectCADsettings,
     apiTokenId: options.selectCADsettings,
