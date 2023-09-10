@@ -40,6 +40,7 @@ model cad {
   autoSetUserPropertiesId String?
   discordRoles            DiscordRoles?          @relation(fields: [discordRolesId], references: [id])
   discordRolesId          String?
+  timeZone                String?
 }
 
 model CadFeature {

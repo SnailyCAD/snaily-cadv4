@@ -11,6 +11,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   registrationCode: z.string().max(255).optional(),
   businessWhitelisted: z.boolean().optional(),
   image: z.any().nullish(),
+  timeZone: z.string().nullish(),
 });
 
 export const LIVE_MAP_SETTINGS = z.object({

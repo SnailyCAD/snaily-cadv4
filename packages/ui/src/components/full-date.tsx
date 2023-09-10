@@ -1,5 +1,5 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/hover-card";
-import { useFormatter } from "use-intl";
+import { useFormatter, useTimeZone } from "use-intl";
 
 interface FullDateProps {
   children: Date | string | number;
@@ -10,6 +10,7 @@ interface FullDateProps {
 
 export function FullDate({ children, onlyDate, relative, isDateOfBirth }: FullDateProps) {
   const { dateTime, relativeTime } = useFormatter();
+  const timezone = useTimeZone();
 
   const isCorrectDate = isValidDate(children);
   if (!isCorrectDate) {
@@ -23,6 +24,7 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth }: FullDa
 
   const relativeFormattedTime = relativeTime(date, new Date());
   const formattedTime = dateTime(date, {
+    timeZone: timezone,
     dateStyle: "medium",
     timeStyle: onlyDate ? undefined : "medium",
   });
@@ -38,7 +40,8 @@ export function FullDate({ children, onlyDate, relative, isDateOfBirth }: FullDa
 
       <HoverCardContent pointerEvents>
         <span suppressHydrationWarning className="font-semibold">
-          {dateTime(date, { dateStyle: "full", timeStyle: onlyDate ? undefined : "medium" })}
+          {dateTime(date, { dateStyle: "full", timeStyle: onlyDate ? undefined : "medium" })}{" "}
+          {timezone ? `(${timezone})` : ""}
         </span>
       </HoverCardContent>
     </HoverCard>

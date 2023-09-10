@@ -82,6 +82,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
             defaultTranslationValues={{
               span: (children) => <span className="font-semibold">{children}</span>,
             }}
+            timeZone={pageProps.cad?.timeZone ?? undefined}
             onError={console.warn}
             locale={locale}
             messages={pageProps.messages}

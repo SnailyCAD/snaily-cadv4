@@ -26,7 +26,8 @@ type CADPick =
   | "discordRoles"
   | "discordRolesId"
   | "version"
-  | "autoSetUserPropertiesId";
+  | "autoSetUserPropertiesId"
+  | "timeZone";
 
 export type cad = Pick<
   Omit<Prisma.cad, "registrationCode"> & {

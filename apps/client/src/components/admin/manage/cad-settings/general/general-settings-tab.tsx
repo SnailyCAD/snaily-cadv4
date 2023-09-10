@@ -2,7 +2,15 @@ import * as React from "react";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
-import { Button, Input, Loader, SwitchField, TextField, Textarea } from "@snailycad/ui";
+import {
+  Button,
+  Input,
+  Loader,
+  SelectField,
+  SwitchField,
+  TextField,
+  Textarea,
+} from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
@@ -13,6 +21,8 @@ import { toastMessage } from "lib/toastMessage";
 import type { PutCADSettingsData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { SettingsTabs } from "components/admin/cad-settings/layout";
+
+import timeZones from "./timezones.json";
 
 export function GeneralSettingsTab() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
@@ -111,6 +121,7 @@ export function GeneralSettingsTab() {
     registrationCode: cad.registrationCode ?? "",
     roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
     cadOGDescription: cad.miscCadSettings?.cadOGDescription ?? "",
+    timeZone: cad?.timeZone ?? null,
   };
 
   return (
@@ -143,6 +154,24 @@ export function GeneralSettingsTab() {
                 name="cadOGDescription"
                 value={values.cadOGDescription}
                 onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label={t("timeZone")}
+              description={t("timeZoneDescription")}
+              errorMessage={errors.timeZone}
+              optional
+            >
+              <SelectField
+                name="timeZone"
+                label={t("timeZone")}
+                options={timeZones.map((tz) => ({
+                  label: tz,
+                  value: tz,
+                }))}
+                selectedKey={values.timeZone}
+                onSelectionChange={(value) => setFieldValue("timeZone", value)}
               />
             </SettingsFormField>
 
