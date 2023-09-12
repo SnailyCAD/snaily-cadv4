@@ -408,9 +408,7 @@ model Citizen {
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
   NameChangeRequest    NameChangeRequest[]
-  DLExam               DLExam[]
   notes                Note[]
-  WeaponExam           WeaponExam[]                  @relation("weaponExams")
   suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
   licensePoints        CitizenLicensePoints?         @relation(fields: [licensePointsId], references: [id])
   licensePointsId      String?
@@ -622,11 +620,9 @@ model Value {
   insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
   waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
   citizenFlags                    Citizen[]                     @relation("citizenFlags")
-  DLExam                          DLExam[]                      @relation("dlExamToLicense")
   DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
   QualificationValue              QualificationValue[]
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
-  WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
   LicenseExam                     LicenseExam[]                 @relation("examToLicense")
   AddressValue                    AddressValue[]                @relation("addressValueToValue")
   EmergencyVehicleValue           EmergencyVehicleValue[]       @relation("emergencyVehicleToValue")
@@ -777,16 +773,13 @@ model EmergencyVehicleValue {
 }
 
 model DriversLicenseCategoryValue {
-  id            String                     @id @default(cuid())
-  valueId       String
-  value         Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  type          DriversLicenseCategoryType
-  description   String?
-  citizens      Citizen[]                  @relation("dlCategoryToDLCategory")
-  DLExam        DLExam[]
-  WeaponExam    WeaponExam[]
-  LicenseExam   LicenseExam?               @relation(fields: [licenseExamId], references: [id])
-  licenseExamId String?
+  id          String                     @id @default(cuid())
+  valueId     String
+  value       Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type        DriversLicenseCategoryType
+  description String?
+  citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
+  LicenseExam LicenseExam[]              @relation("dlCategoryToLicenseExam")
 }
 
 model VehicleValue {
@@ -1640,35 +1633,7 @@ model LicenseExam {
   citizenId    String
   license      Value                         @relation("examToLicense", fields: [licenseId], references: [id])
   licenseId    String
-  categories   DriversLicenseCategoryValue[]
-}
-
-model DLExam {
-  id           String                        @id @default(uuid())
-  citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId    String
-  theoryExam   DLExamPassType?
-  practiceExam DLExamPassType?
-  license      Value                         @relation("dlExamToLicense", fields: [licenseId], references: [id])
-  licenseId    String
-  categories   DriversLicenseCategoryValue[]
-  status       DLExamStatus                  @default(IN_PROGRESS)
-  createdAt    DateTime                      @default(now())
-  updatedAt    DateTime                      @default(now()) @updatedAt
-}
-
-model WeaponExam {
-  id           String                        @id @default(uuid())
-  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId    String
-  theoryExam   DLExamPassType?
-  practiceExam DLExamPassType?
-  license      Value                         @relation("weaponExamToLicense", fields: [licenseId], references: [id])
-  licenseId    String
-  categories   DriversLicenseCategoryValue[]
-  status       DLExamStatus                  @default(IN_PROGRESS)
-  createdAt    DateTime                      @default(now())
-  updatedAt    DateTime                      @default(now()) @updatedAt
+  categories   DriversLicenseCategoryValue[] @relation("dlCategoryToLicenseExam")
 }
 
 /// custom fields
