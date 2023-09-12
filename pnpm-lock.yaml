@@ -289,8 +289,8 @@ importers:
   apps/client:
     dependencies:
       "@casperiv/use-socket.io":
-        specifier: 6.0.0
-        version: 6.0.0(@types/react@18.2.21)(postcss@8.4.29)(react@18.2.0)(socket.io-client@4.7.2)(socket.io@4.7.2)(typescript@5.2.2)
+        specifier: 6.0.1
+        version: 6.0.1(@types/react@18.2.21)(postcss@8.4.29)(react@18.2.0)(socket.io-client@4.7.2)(socket.io@4.7.2)(typescript@5.2.2)
       "@casperiv/useful":
         specifier: ^3.0.0
         version: 3.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -2660,10 +2660,10 @@ packages:
       - typescript
     dev: true
 
-  /@casperiv/use-socket.io@6.0.0(@types/react@18.2.21)(postcss@8.4.29)(react@18.2.0)(socket.io-client@4.7.2)(socket.io@4.7.2)(typescript@5.2.2):
+  /@casperiv/use-socket.io@6.0.1(@types/react@18.2.21)(postcss@8.4.29)(react@18.2.0)(socket.io-client@4.7.2)(socket.io@4.7.2)(typescript@5.2.2):
     resolution:
       {
-        integrity: sha512-U3maRIR4Z4uRxTUs4MYsyRQm0ABMD269NAKEkIYsIRilTX8Fd0AcsohWkH1mBsnu9iDZbtaAM0Tir3zoz5B64Q==,
+        integrity: sha512-2MEuOYjHR+BOSmxtqzNQcQTeJLRke7nkeJBPVJjmPahbydeX1jyp2sPd6a0Cn/SD1D7fuJRy9XccvRibcRmakQ==,
       }
     engines: { node: ">=16.0.0" }
     peerDependencies:
