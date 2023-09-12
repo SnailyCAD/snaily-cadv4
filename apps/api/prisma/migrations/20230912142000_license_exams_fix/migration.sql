@@ -1,13 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `licenseExamId` on the `DriversLicenseCategoryValue` table. All the data in the column will be lost.
-  - You are about to drop the `DLExam` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `WeaponExam` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `_DLExamToDriversLicenseCategoryValue` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `_DriversLicenseCategoryValueToWeaponExam` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- DropForeignKey
 ALTER TABLE "DLExam" DROP CONSTRAINT "DLExam_citizenId_fkey";
 

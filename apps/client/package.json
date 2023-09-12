@@ -18,7 +18,7 @@
     "create-images-domain": "node ../../scripts/create-images-domain.mjs"
   },
   "dependencies": {
-    "@casperiv/use-socket.io": "6.0.0",
+    "@casperiv/use-socket.io": "6.0.1",
     "@casperiv/useful": "^3.0.0",
     "@headlessui/react": "^1.7.17",
     "@radix-ui/react-popover": "^1.0.6",
