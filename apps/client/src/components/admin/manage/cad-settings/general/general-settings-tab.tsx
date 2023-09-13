@@ -73,6 +73,19 @@ export function GeneralSettingsTab() {
     });
 
     if (json?.id) {
+      if (authImgCount > 0) {
+        await Promise.allSettled([
+          execute({
+            path: "/admin/manage/cad-settings/image/auth",
+            method: "POST",
+            data: fd,
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          }),
+        ]);
+      }
+
       if (validatedLogo && typeof validatedLogo === "object") {
         const {
           json: { logoId },
@@ -87,17 +100,6 @@ export function GeneralSettingsTab() {
         });
 
         json.logoId = logoId;
-
-        if (authImgCount > 0) {
-          await execute({
-            path: "/admin/manage/cad-settings/image/auth",
-            method: "POST",
-            data: fd,
-            headers: {
-              "content-type": "multipart/form-data",
-            },
-          });
-        }
       }
 
       toastMessage({
