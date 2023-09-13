@@ -40,7 +40,6 @@ export const userProperties = Prisma.validator<Prisma.UserSelect>()({
   soundSettingsId: true,
   soundSettings: true,
   permissions: true,
-  apiToken: true,
   apiTokenId: true,
   roles: true,
   locale: true,
@@ -115,7 +114,7 @@ export async function getSessionUser(
   if (accessTokenPayload) {
     const user = await prisma.user.findUnique({
       where: { id: accessTokenPayload.userId },
-      select: { ...userProperties, password: true },
+      select: { ...userProperties, apiToken: true, password: true },
     });
 
     validateUserData(user, options.req, options.returnNullOnError as false | undefined);
@@ -131,7 +130,7 @@ export async function getSessionUser(
   const refreshTokenPayload = verifyJWT(refreshToken);
   if (refreshTokenPayload) {
     const user = await prisma.user.findFirst({
-      select: { ...userProperties, password: true },
+      select: { ...userProperties, apiToken: true, password: true },
       where: {
         sessions: {
           some: {

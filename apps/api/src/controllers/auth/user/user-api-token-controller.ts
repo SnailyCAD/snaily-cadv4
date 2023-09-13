@@ -1,4 +1,4 @@
-import { User } from "@snailycad/types";
+import { ApiToken, User } from "@snailycad/types";
 import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
@@ -19,7 +19,7 @@ export class AccountController {
   @Description("Enable or disable the authenticated user's API Token.")
   @UseBefore(IsAuth)
   async enableDisableUserAPIToken(
-    @Context("user") user: User,
+    @Context("user") user: User & { apiToken?: ApiToken | null },
     @BodyParams() body: any,
   ): Promise<APITypes.PutUserEnableDisableApiTokenData> {
     if (body.enabled === false) {

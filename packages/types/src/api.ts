@@ -117,6 +117,7 @@ export type DeleteDisable2FAData = boolean;
  */
 // todo: add cad properties
 export type GetUserData = Types.User & {
+  apiToken?: Prisma.ApiToken | null;
   cad: Prisma.cad;
   unit?: GetActiveOfficerData | GetEmsFdActiveDeputy | null;
 };
@@ -143,13 +144,17 @@ export type PostUserPasswordData = boolean;
  * @method Put
  * @route /user/api-token
  */
-export type PutUserEnableDisableApiTokenData = Types.User;
+export type PutUserEnableDisableApiTokenData = Types.User & {
+  apiToken?: Prisma.ApiToken | null;
+};
 
 /**
  * @method Delete
  * @route /user/api-token
  */
-export type DeleteUserRegenerateApiTokenData = Types.User;
+export type DeleteUserRegenerateApiTokenData = Types.User & {
+  apiToken?: Prisma.ApiToken | null;
+};
 
 /** truck logs */
 /**

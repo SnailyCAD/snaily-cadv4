@@ -110,7 +110,6 @@ type UserPicks =
   | "soundSettingsId"
   | "soundSettings"
   | "permissions"
-  | "apiToken"
   | "apiTokenId"
   | "locale"
   | "twoFactorEnabled"
@@ -122,7 +121,6 @@ type UserPicks =
 
 export type User = Pick<
   Prisma.User & {
-    apiToken: Prisma.ApiToken | null;
     soundSettings: Prisma.UserSoundSettings | null;
     twoFactorEnabled?: boolean;
     hasTempPassword?: boolean;
