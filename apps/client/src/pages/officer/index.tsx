@@ -214,7 +214,8 @@ function OfficerModals() {
     });
   }
 
-  if (!isAdmin || !leoState.activeOfficer) {
+  const showModals = isAdmin ? true : leoState.activeOfficer;
+  if (!showModals) {
     return null;
   }
 
