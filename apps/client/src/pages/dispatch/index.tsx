@@ -7,10 +7,8 @@ import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { ActiveBolos } from "components/active-bolos/active-bolos";
-import { DispatchModalButtons } from "components/dispatch/ModalButtons";
+import { DispatchModalButtons } from "components/dispatch/utility-configuration";
 import { useTranslations } from "use-intl";
-import { ActiveOfficers } from "components/dispatch/active-officers";
-import { ActiveDeputies } from "components/dispatch/active-deputies";
 import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
@@ -32,9 +30,11 @@ import { UtilityPanel } from "components/shared/UtilityPanel";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 import { Infofield } from "@snailycad/ui";
+import { ActiveOfficers } from "components/dispatch/active-units/officers/active-officers";
+import { ActiveDeputies } from "components/dispatch/active-units/deputies/active-deputies";
 
 const ActiveIncidents = dynamic(async () => {
-  return (await import("components/dispatch/active-incidents")).ActiveIncidents;
+  return (await import("components/dispatch/active-incidents/active-incidents")).ActiveIncidents;
 });
 
 const Modals = {
@@ -55,7 +55,7 @@ const Modals = {
     return (await import("components/shared/NotepadModal")).NotepadModal;
   }),
   AddressSearchModal: dynamic(async () => {
-    return (await import("components/dispatch/modals/AddressSearchModal")).AddressSearchModal;
+    return (await import("components/dispatch/modals/address-search-modal")).AddressSearchModal;
   }),
 };
 

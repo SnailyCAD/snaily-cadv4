@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 
 const ManageAOPModal = dynamic(
-  async () => (await import("./modals/ManageAOPModal")).ManageAOPModal,
+  async () => (await import("./modals/manage-area-of-play-modal")).ManageAreaOfPlayModal,
   { ssr: false },
 );
 

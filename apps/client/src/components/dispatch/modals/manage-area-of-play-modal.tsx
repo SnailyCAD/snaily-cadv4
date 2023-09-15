@@ -8,7 +8,7 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import type { PostDispatchAopData } from "@snailycad/types/api";
 
-export function ManageAOPModal() {
+export function ManageAreaOfPlayModal() {
   const { state, execute } = useFetch();
   const modalState = useModal();
   const { cad, setCad } = useAuth();

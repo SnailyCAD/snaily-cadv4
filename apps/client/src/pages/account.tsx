@@ -17,7 +17,7 @@ import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds.server
 import { AccountInfoTab } from "components/account/account-info-tab";
 
 const AccountSettingsTab = dynamic(
-  async () => (await import("components/account/account-settings-tab")).AccountSettingsTab,
+  async () => (await import("components/account/settings/account-settings-tab")).AccountSettingsTab,
   { ssr: false },
 );
 
