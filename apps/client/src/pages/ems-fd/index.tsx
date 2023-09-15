@@ -23,6 +23,7 @@ import { useTones } from "hooks/global/use-tones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import type {
   Get911CallsData,
+  GetActiveOfficersData,
   GetEmsFdActiveDeputies,
   GetEmsFdActiveDeputy,
 } from "@snailycad/types/api";
@@ -35,6 +36,7 @@ import { ModalIds } from "types/modal-ids";
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
   activeDeputies: GetEmsFdActiveDeputies;
+  activeOfficers: GetActiveOfficersData;
   calls: Get911CallsData;
 }
 
@@ -73,7 +75,12 @@ const DepartmentInfoModal = dynamic(async () => {
   return (await import("components/leo/modals/department-info-modal")).DepartmentInformationModal;
 });
 
-export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: Props) {
+export default function EmsFDDashboard({
+  activeDeputy,
+  calls,
+  activeOfficers,
+  activeDeputies,
+}: Props) {
   useLoadValuesClientSide({
     valueTypes: [
       ValueType.BLOOD_GROUP,
@@ -99,6 +106,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
     state.setActiveDeputy(activeDeputy);
     set911Calls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
+    dispatchState.setActiveOfficers(activeOfficers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);
 
@@ -130,7 +138,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
         <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
       </div>
       <div className="mt-3">
-        <ActiveOfficers initialOfficers={[]} />
+        <ActiveOfficers initialOfficers={activeOfficers} />
         <ActiveDeputies initialDeputies={activeDeputies} />
       </div>
 
@@ -155,11 +163,12 @@ export default function EmsFDDashboard({ activeDeputy, calls, activeDeputies }: 
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [values, calls, activeDeputies, activeDeputy] = await requestAll(req, [
+  const [values, calls, activeDeputies, activeDeputy, activeOfficers] = await requestAll(req, [
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],
+    ["/leo/active-officers", []],
   ]);
 
   return {
@@ -167,6 +176,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       session: user,
       activeDeputy,
       activeDeputies,
+      activeOfficers,
       calls,
       values,
       messages: {
