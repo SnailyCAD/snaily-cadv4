@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { X } from "react-bootstrap-icons";
+import { Fullscreen, FullscreenExit, X } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { classNames } from "lib/classNames";
 
@@ -26,6 +26,7 @@ export function Modal({
   onClose,
 }: ModalProps) {
   const modalState = useModal();
+  const [isFullscreen, setIsFullscreen] = React.useState(false);
 
   const handleClose = React.useCallback(() => {
     if (!modalState.canBeClosed) return;
@@ -44,7 +45,7 @@ export function Modal({
         )}
         onClose={handleClose}
       >
-        <div className="min-h-screen px-4 text-center">
+        <div className={classNames("min-h-screen text-center", !isFullscreen && "px-4")}>
           <Transition.Child
             as={React.Fragment}
             enter="ease-out duration-100"
@@ -58,9 +59,11 @@ export function Modal({
           </Transition.Child>
 
           {/* this element is to trick the browser into centering the modal contents. */}
-          <span className="inline-block h-screen align-middle" aria-hidden="true">
-            &#8203;
-          </span>
+          {isFullscreen ? null : (
+            <span className="inline-block h-screen align-middle" aria-hidden="true">
+              &#8203;
+            </span>
+          )}
 
           <Transition.Child
             as={React.Fragment}
@@ -72,9 +75,21 @@ export function Modal({
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel
-              style={modalStyles}
+              style={
+                isFullscreen
+                  ? {
+                      position: "fixed",
+                      inset: 0,
+                      margin: 0,
+                      minWidth: "100vw",
+                      borderRadius: 0,
+                      width: "100vw",
+                    }
+                  : modalStyles
+              }
               className={classNames(
-                "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white border border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
+                isFullscreen ? "p-2" : "align-middle p-4 px-6 my-8",
+                "inline-block text-left transition-all transform bg-white border border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
                 isAlert ? "z-[998]" : "z-30",
                 className,
               )}
@@ -85,14 +100,29 @@ export function Modal({
               >
                 {title}
 
-                <button
-                  type="button"
-                  aria-label="Close Modal"
-                  onClick={onClose}
-                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
-                >
-                  <X width={25} height={25} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label="Full Screen"
+                    onClick={() => setIsFullscreen((v) => !v)}
+                    className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
+                  >
+                    {isFullscreen ? (
+                      <FullscreenExit width={17} height={17} />
+                    ) : (
+                      <Fullscreen width={17} height={17} />
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    aria-label="Close Modal"
+                    onClick={onClose}
+                    className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
+                  >
+                    <X width={25} height={25} />
+                  </button>
+                </div>
               </Dialog.Title>
 
               {children}

@@ -93,7 +93,11 @@ function ActiveDeputies({ initialDeputies }: Props) {
   return (
     <div className="mt-3 rounded-md card">
       <ActiveDeputiesHeader />
-      <ActiveUnitsSearch isLoading={asyncTable.isLoading} type="ems-fd" />
+      <ActiveUnitsSearch
+        totalCount={initialDeputies.length}
+        isLoading={asyncTable.isLoading}
+        type="ems-fd"
+      />
 
       {activeDeputies.length <= 0 ? (
         <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("Ems.noActiveDeputies")}</p>

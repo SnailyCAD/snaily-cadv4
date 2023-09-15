@@ -7,9 +7,10 @@ import { useActiveUnitsState } from "state/active-unit-state";
 interface Props {
   type: "leo" | "ems-fd";
   isLoading: boolean;
+  totalCount: number;
 }
 
-export function ActiveUnitsSearch({ isLoading, type }: Props) {
+export function ActiveUnitsSearch({ totalCount, isLoading, type }: Props) {
   const t = useTranslations("Leo");
   const setSearchType = type === "leo" ? "leoSearch" : "emsSearch";
   const showFiltersType: "showLeoFilters" | "showEmsFilters" =
@@ -28,25 +29,27 @@ export function ActiveUnitsSearch({ isLoading, type }: Props) {
 
   return (
     <div className="px-4 mt-2">
-      <Tooltip.Provider delayDuration={0}>
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <p className="text-neutral-700 dark:text-gray-400 flex items-center gap-2 mt-1">
-              <InfoCircleFill />
-              {t("showingOnlyLatest12Units")}
-            </p>
-          </Tooltip.Trigger>
+      {totalCount > 0 ? (
+        <Tooltip.Provider delayDuration={0}>
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <p className="text-neutral-700 dark:text-gray-400 flex items-center gap-2 mt-1">
+                <InfoCircleFill />
+                {t("showingOnlyLatest12Units")}
+              </p>
+            </Tooltip.Trigger>
 
-          <Tooltip.Content
-            align="start"
-            className="bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card animate-enter z-50"
-          >
-            <p className="text-neutral-800 dark:text-gray-300 mb-0 font-medium">
-              {t("showingOnlyLatest12UnitsDescription")}
-            </p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+            <Tooltip.Content
+              align="start"
+              className="bg-gray-200 dark:border dark:border-secondary dark:bg-tertiary shadow-lg w-full max-w-lg p-3 rounded-md dark:text-white hover-card animate-enter z-50"
+            >
+              <p className="text-neutral-800 dark:text-gray-300 mb-0 font-medium">
+                {t("showingOnlyLatest12UnitsDescription")}
+              </p>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+      ) : null}
 
       {(showFilters as boolean) ? (
         <TextField

@@ -1,4 +1,5 @@
 import { Button } from "@snailycad/ui";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
@@ -26,6 +27,7 @@ export function ActiveOfficersHeader() {
   const { hasPermissions } = usePermission();
   const hasDispatchPerms = hasPermissions([Permissions.Dispatch]);
   const showCreateTemporaryUnitButton = isDispatch && hasDispatchPerms;
+  const { userActiveDispatcher } = useActiveDispatchers();
 
   return (
     <header className="p-2 px-4 bg-gray-200 dark:bg-secondary flex items-center justify-between">
@@ -34,6 +36,7 @@ export function ActiveOfficersHeader() {
       <div className="flex items-center gap-2">
         {showCreateTemporaryUnitButton ? (
           <Button
+            isDisabled={!userActiveDispatcher}
             variant="cancel"
             className={classNames(
               "px-1.5 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 group",

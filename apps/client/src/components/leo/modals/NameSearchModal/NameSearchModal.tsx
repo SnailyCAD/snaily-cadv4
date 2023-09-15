@@ -345,7 +345,7 @@ export function NameSearchModal() {
                     </SpeechAlert>
                   ) : null}
 
-                  <div className="flex flex-col md:flex-row">
+                  <div className="flex flex-col md:flex-row mt-3">
                     <div className="mr-2 min-w-[100px]">
                       {currentResult.imageId ? (
                         <button
