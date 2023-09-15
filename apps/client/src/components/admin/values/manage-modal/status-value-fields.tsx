@@ -1,21 +1,14 @@
 import { FormField } from "components/form/FormField";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
-import {
-  EmergencyVehicleValue,
-  QualificationValue,
-  ShouldDoType,
-  StatusValue,
-  StatusValueType,
-  Value,
-  WhatPages,
-} from "@snailycad/types";
+import { AnyValue, ShouldDoType, StatusValueType, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
 import { Input, Button, SelectField, RadioGroupField, Radio } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
 import { isOfficerRankValue } from "@snailycad/utils";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -52,27 +45,21 @@ export function useDefaultDepartments() {
   const DEFAULT_DEPARTMENTS_VALUES = department.values.map((value) => value.id);
   const DEFAULT_DEPARTMENTS_LABELS = department.values.map((value) => value.value.value);
 
-  function makeDefaultDepartmentsValues(
-    value: StatusValue | QualificationValue | EmergencyVehicleValue | Value | null,
-  ) {
+  function makeDefaultDepartmentsValues(value: AnyValue | null) {
     const departments = makeDefaultDepartments(value);
     return departments.length <= 0
       ? DEFAULT_DEPARTMENTS_VALUES
       : departments.map((value) => value.id);
   }
 
-  function makeDefaultDepartmentsLabels(
-    value: StatusValue | QualificationValue | EmergencyVehicleValue | Value | null,
-  ) {
+  function makeDefaultDepartmentsLabels(value: AnyValue | null) {
     const departments = makeDefaultDepartments(value);
     return departments.length <= 0
       ? DEFAULT_DEPARTMENTS_LABELS
       : departments.map((value) => value.value.value);
   }
 
-  function makeDefaultDepartments(
-    value: StatusValue | QualificationValue | EmergencyVehicleValue | Value | null,
-  ) {
+  function makeDefaultDepartments(value: AnyValue | null) {
     if (!value) return [];
     const departments =
       (isOfficerRankValue(value)
@@ -88,7 +75,7 @@ export function useDefaultDepartments() {
 }
 
 export function StatusValueFields() {
-  const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
+  const { values, errors, setFieldValue, handleChange } = useFormikContext<ManageValueFormValues>();
   const { department } = useValues();
   const t = useTranslations("Values");
 
@@ -110,7 +97,7 @@ export function StatusValueFields() {
         label={t("whatPages")}
         options={WHAT_PAGES_VALUES}
         name="whatPages"
-        selectedKeys={values.whatPages}
+        selectedKeys={values.whatPages ?? []}
         onSelectionChange={(keys) => setFieldValue("whatPages", keys)}
       />
 
@@ -154,7 +141,7 @@ export function StatusValueFields() {
       </FormField>
 
       <RadioGroupField
-        value={values.type}
+        value={values.type!}
         onChange={(value) => setFieldValue("type", value)}
         label={t("codeType")}
       >

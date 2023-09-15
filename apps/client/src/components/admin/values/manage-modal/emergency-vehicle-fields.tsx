@@ -1,17 +1,18 @@
-import type { EmergencyVehicleValue } from "@snailycad/types";
+import type { AnyValue } from "@snailycad/types";
 import { SelectField } from "@snailycad/ui";
+import { isEmergencyVehicleValue } from "@snailycad/utils";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 export function useDefaultDivisions() {
   const { division } = useValues();
-
   const DEFAULT_DIVISIONS = division.values.map((value) => value.id);
 
-  function makeDefaultDivisions(value: EmergencyVehicleValue | null) {
-    if (!value) return [];
+  function makeDefaultDivisions(value: AnyValue | null) {
+    if (!value || !isEmergencyVehicleValue(value)) return [];
 
     const divisions = value.divisions ?? [];
     return divisions.length <= 0 ? DEFAULT_DIVISIONS : divisions.map((value) => value.id);
@@ -21,7 +22,7 @@ export function useDefaultDivisions() {
 }
 
 export function EmergencyVehicleFields() {
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const { division, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
   const t = useTranslations("Values");

@@ -4,9 +4,10 @@ import { useValues } from "context/ValuesContext";
 import { SelectField, TextField } from "@snailycad/ui";
 import { QualificationValueType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 export function QualificationFields({ image, setImage }: any) {
-  const { values, errors, setFieldValue } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const { department } = useValues();
   const t = useTranslations("Values");
   const common = useTranslations("Common");

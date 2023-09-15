@@ -2,6 +2,7 @@ import { ValueLicenseType } from "@snailycad/types";
 import { SelectField, SwitchField } from "@snailycad/ui";
 import { useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 export function useLicenseLabels() {
   const t = useTranslations("Values");
@@ -24,7 +25,7 @@ export function useLicenseLabels() {
 }
 
 export function LicenseFields() {
-  const { values, errors, setFieldValue } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const t = useTranslations("Values");
   const common = useTranslations("Common");
   const { LICENSE_TYPES } = useLicenseLabels();

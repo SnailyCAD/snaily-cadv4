@@ -19,6 +19,7 @@ import {
   AnyValue,
   DriversLicenseCategoryType,
   EmployeeAsEnum,
+  Feature,
   QualificationValueType,
   ValueType,
 } from "@snailycad/types";
@@ -78,6 +79,83 @@ const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> 
   CALL_TYPE: CALL_TYPE_SCHEMA,
 };
 
+interface CreateInitialValuesOptions {
+  value: AnyValue | null;
+  type: ValueType;
+  features: Record<Feature, boolean>;
+  makeDefaultDepartmentsValues(value: AnyValue): string[];
+  defaultDivisions(value: AnyValue): string[];
+}
+
+export type ManageValueFormValues = ReturnType<typeof createInitialValues>;
+function createInitialValues(options: CreateInitialValuesOptions) {
+  const { value } = options;
+
+  return {
+    isDisabled: value ? getDisabledFromValue(value) : false,
+    value: value ? getValueStrFromValue(value) : "",
+
+    description:
+      value && (isUnitQualification(value) || isDLCategoryValue(value))
+        ? value.description ?? ""
+        : "",
+    qualificationType:
+      value && isUnitQualification(value)
+        ? value.qualificationType
+        : QualificationValueType.QUALIFICATION,
+
+    shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
+    color: value && isStatusValue(value) ? value.color ?? "" : "",
+    type: getTypeForValue(options.type, value),
+    departments:
+      value &&
+      (isStatusValue(value) || isUnitQualification(value) || isEmergencyVehicleValue(value))
+        ? options.makeDefaultDepartmentsValues(value)
+        : undefined,
+    whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
+
+    pairedUnitTemplate: value && isDivisionValue(value) ? value.pairedUnitTemplate ?? "" : "",
+    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
+    isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
+    whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
+    defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
+    isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
+    callsign:
+      value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
+    customTemplate: value && isDepartmentValue(value) ? value.customTemplate ?? "" : "",
+
+    as: value && isEmployeeValue(value) ? value.as : "",
+    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
+    trimLevels: value && isVehicleValue(value) ? value.trimLevels?.map((v) => v.id) ?? [] : [],
+
+    licenseType: value && isBaseValue(value) ? value.licenseType : null,
+    isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+    priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
+
+    officerRankImageId: "",
+    officerRankDepartments:
+      value && isOfficerRankValue(value) ? options.makeDefaultDepartmentsValues(value) : undefined,
+
+    postal: value && isAddressValue(value) ? value.postal ?? "" : "",
+    county: value && isAddressValue(value) ? value.county ?? "" : "",
+
+    divisions:
+      value && isEmergencyVehicleValue(value) && options.features.DIVISIONS
+        ? options.defaultDivisions(value)
+        : undefined,
+
+    showPicker: false,
+    image: "",
+
+    extraFields:
+      value && (isDivisionValue(value) || isDepartmentValue(value))
+        ? JSON.stringify(value.extraFields)
+        : "null",
+
+    departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
+  };
+}
+
 export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
 
@@ -92,7 +170,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
   const { department } = useValues();
-  const { DIVISIONS } = useFeatureEnabled();
+  const features = useFeatureEnabled();
 
   const BUSINESS_VALUES = [
     {
@@ -179,68 +257,13 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
     }
   }
 
-  // todo: make this a function
-  const INITIAL_VALUES = {
-    isDisabled: value ? getDisabledFromValue(value) : false,
-    value: value ? getValueStrFromValue(value) : "",
-
-    description:
-      value && (isUnitQualification(value) || isDLCategoryValue(value))
-        ? value.description ?? ""
-        : "",
-    qualificationType:
-      value && isUnitQualification(value)
-        ? value.qualificationType
-        : QualificationValueType.QUALIFICATION,
-
-    shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
-    color: value && isStatusValue(value) ? value.color ?? "" : "",
-    type: getTypeForValue(type, value),
-    departments:
-      value &&
-      (isStatusValue(value) || isUnitQualification(value) || isEmergencyVehicleValue(value))
-        ? makeDefaultDepartmentsValues(value)
-        : undefined,
-    whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
-
-    pairedUnitTemplate: value && isDivisionValue(value) ? value.pairedUnitTemplate ?? "" : "",
-    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
-    isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
-    whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
-    defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
-    isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
-    callsign:
-      value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
-    customTemplate: value && isDepartmentValue(value) ? value.customTemplate ?? "" : "",
-
-    as: value && isEmployeeValue(value) ? value.as : "",
-    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
-    trimLevels: value && isVehicleValue(value) ? value.trimLevels?.map((v) => v.id) ?? [] : [],
-
-    licenseType: value && isBaseValue(value) ? value.licenseType : null,
-    isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
-    priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
-
-    officerRankImageId: "",
-    officerRankDepartments:
-      value && isOfficerRankValue(value) ? makeDefaultDepartmentsValues(value) : undefined,
-
-    postal: value && isAddressValue(value) ? value.postal ?? "" : "",
-    county: value && isAddressValue(value) ? value.county ?? "" : "",
-
-    divisions:
-      value && isEmergencyVehicleValue(value) && DIVISIONS ? defaultDivisions(value) : undefined,
-
-    showPicker: false,
-    image: "",
-
-    extraFields:
-      value && (isDivisionValue(value) || isDepartmentValue(value))
-        ? JSON.stringify(value.extraFields)
-        : "null",
-
-    departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
-  };
+  const INITIAL_VALUES = createInitialValues({
+    value,
+    type,
+    makeDefaultDepartmentsValues,
+    defaultDivisions,
+    features,
+  });
 
   function validate(values: typeof INITIAL_VALUES) {
     if (type === ValueType.LICENSE) {

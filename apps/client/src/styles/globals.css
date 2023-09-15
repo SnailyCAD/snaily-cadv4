@@ -9,10 +9,10 @@ html {
 @layer components {
   .card {
     @apply rounded-md bg-gray-200/60 dark:border-quinary dark:bg-tertiary;
+  }
 
-    > header:first-of-type {
-      @apply rounded-t-md;
-    }
+  .card > header:first-of-type {
+    @apply rounded-t-md;
   }
 
   .truncate-custom {
