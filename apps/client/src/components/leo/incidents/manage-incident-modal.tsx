@@ -107,9 +107,9 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     }
 
     if (id && values.openModalAfterCreation && isDispatch) {
-      modalState.closeModal(ModalIds.ManageIncident);
+      modalState.openModal(ModalIds.ManageIncident);
     } else if (id) {
-      modalState.closeModal(ModalIds.ManageIncident);
+      handleClose();
     }
   }
 

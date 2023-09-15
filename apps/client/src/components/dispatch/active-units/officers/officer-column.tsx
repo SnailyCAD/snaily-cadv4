@@ -137,7 +137,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                 <span
                   className={classNames("capitalize", canDrag ? "cursor-grab" : "cursor-default")}
                   // * 9 to fix overlapping issues with next table column
-                  style={{ minWidth: nameAndCallsign.length * 9 }} // todo: still necessary?
+                  style={{ minWidth: nameAndCallsign.length * 9 }}
                 >
                   {isUnitOfficer(officer) && officer.imageId ? (
                     <ImageWrapper
@@ -151,6 +151,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                       alt={nameAndCallsign}
                     />
                   ) : null}
+
                   {isUnitCombined(officer) ? (
                     <div className="flex items-center">
                       <span
@@ -163,14 +164,14 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                         {generateCallsign(officer, "pairedUnitTemplate")}
                       </span>
 
-                      <span className="mx-4">
-                        <ArrowRight />
-                      </span>
-                      {officer.officers.map((officer) => (
-                        <React.Fragment key={officer.id}>
-                          {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                        </React.Fragment>
-                      ))}
+                      <ArrowRight className="inline-block mx-4" />
+                      <p>
+                        {officer.officers.map((officer) => (
+                          <React.Fragment key={officer.id}>
+                            {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                          </React.Fragment>
+                        ))}
+                      </p>
                     </div>
                   ) : (
                     <span

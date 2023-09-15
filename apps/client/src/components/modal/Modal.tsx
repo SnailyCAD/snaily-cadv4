@@ -101,18 +101,20 @@ export function Modal({
                 {title}
 
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    aria-label="Full Screen"
-                    onClick={() => setIsFullscreen((v) => !v)}
-                    className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
-                  >
-                    {isFullscreen ? (
-                      <FullscreenExit width={17} height={17} />
-                    ) : (
-                      <Fullscreen width={17} height={17} />
-                    )}
-                  </button>
+                  {isAlert ? null : (
+                    <button
+                      type="button"
+                      aria-label="Full Screen"
+                      onClick={() => setIsFullscreen((v) => !v)}
+                      className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-secondary"
+                    >
+                      {isFullscreen ? (
+                        <FullscreenExit width={17} height={17} />
+                      ) : (
+                        <Fullscreen width={17} height={17} />
+                      )}
+                    </button>
+                  )}
 
                   <button
                     type="button"
