@@ -58,19 +58,17 @@ strong {
   padding: 0 5px;
 }
 
-.bleet-reset {
-  h1 {
-    @apply font-semibold text-3xl mb-2;
-  }
-  h2 {
-    @apply font-semibold text-2xl mb-2;
-  }
-  h3 {
-    @apply font-semibold text-xl mb-1;
-  }
-  h4 {
-    @apply text-lg;
-  }
+.bleet-reset h1 {
+  @apply font-semibold text-3xl mb-2;
+}
+.bleet-reset h2 {
+  @apply font-semibold text-2xl mb-2;
+}
+.bleet-reset h4 {
+  @apply font-semibold text-xl mb-1;
+}
+.bleet-reset h4 {
+  @apply text-lg;
 }
 
 .modal-buttons-grid {
