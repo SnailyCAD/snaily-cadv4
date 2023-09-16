@@ -64,7 +64,7 @@ strong {
 .bleet-reset h2 {
   @apply font-semibold text-2xl mb-2;
 }
-.bleet-reset h4 {
+.bleet-reset h3 {
   @apply font-semibold text-xl mb-1;
 }
 .bleet-reset h4 {
