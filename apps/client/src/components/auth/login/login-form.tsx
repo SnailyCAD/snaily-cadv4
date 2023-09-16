@@ -2,7 +2,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { Discord, Steam } from "react-bootstrap-icons";
 import { Alert, Button, Loader, TextField } from "@snailycad/ui";
-import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
+import { TwoFactorAuthScreen } from "components/auth/two-factor-auth-screen";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useRouter } from "next/router";
 import useFetch from "lib/useFetch";

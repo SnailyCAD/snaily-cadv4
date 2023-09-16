@@ -4,9 +4,9 @@ import { CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Loader, Button, TextField, TabsContent } from "@snailycad/ui";
-import { ChangePasswordArea } from "components/account/change-password-area";
-import { Manage2FAModal } from "./2fa/manage-2fa-modal";
-import { TwoFactorAuthArea } from "./2fa/two-factor-auth-area";
+import { ChangePasswordArea } from "./change-password-area";
+import { Manage2FAModal } from "../2fa/manage-2fa-modal";
+import { TwoFactorAuthArea } from "../2fa/two-factor-auth-area";
 import { handleValidate } from "lib/handleValidate";
 import type { PatchUserData } from "@snailycad/types/api";
 
@@ -31,7 +31,7 @@ export function AccountSettingsTab() {
     const { json } = await execute<PatchUserData, typeof INITIAL_VALUES>({
       path: "/user",
       method: "PATCH",
-      data: { ...(user ?? {}), ...data },
+      data: { ...user, ...data },
       helpers,
     });
 

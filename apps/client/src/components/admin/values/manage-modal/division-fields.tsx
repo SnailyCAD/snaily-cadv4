@@ -4,9 +4,10 @@ import { useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ValueType } from "@snailycad/types";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 export function DivisionFields() {
-  const { values, errors, setFieldValue } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const { department } = useValues();
   const t = useTranslations("Values");
 

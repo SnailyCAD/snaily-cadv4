@@ -6,11 +6,12 @@ import { useFormikContext } from "formik";
 import { DepartmentValueLink } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { v4 } from "uuid";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 export function DepartmentLinksSection() {
   const [openPopover, setOpenPopover] = React.useState<"new" | null>(null);
   const tableState = useTableState();
-  const { values, setFieldValue } = useFormikContext<{ departmentLinks: DepartmentValueLink[] }>();
+  const { values, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const common = useTranslations("Common");
 
   return (

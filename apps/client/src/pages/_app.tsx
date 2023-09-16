@@ -1,12 +1,13 @@
+import "styles/globals.css";
+import "styles/fonts.css";
+import "styles/nprogress.css";
+
 import * as React from "react";
 import type { AppProps } from "next/app";
 import { NextIntlProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
-import "styles/globals.scss";
-import "styles/fonts.scss";
-import "styles/nprogress.scss";
 import { SocketProvider } from "@casperiv/use-socket.io";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import type { User } from "@snailycad/types";
@@ -20,7 +21,7 @@ import type { SetSentryTagsOptions } from "lib/set-sentry-tags";
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
-    (await import("components/auth/login/ReauthorizeSessionModal")).ReauthorizeSessionModal,
+    (await import("components/auth/login/reauthorize-session-modal")).ReauthorizeSessionModal,
   { ssr: false },
 );
 

@@ -13,36 +13,37 @@ import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTableState, Table, useAsyncTable } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
-import { ActiveUnitsSearch } from "./active-units/active-units-search";
+import { UnitRadioChannelModal } from "../modals/unit-radio-channel-modal";
+import { ActiveUnitsSearch } from "../active-units-search";
 import { useActiveUnitsState } from "state/active-unit-state";
-import { OfficerColumn } from "./active-units/officers/officer-column";
+import { OfficerColumn } from "./columns/officer-column";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
-import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
-import { ActiveCallColumn } from "./active-units/officers/active-call-column";
+import { ActiveIncidentColumn } from "./columns/active-incident-column";
+import { ActiveCallColumn } from "./columns/active-call-column";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casperiv/useful";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import dynamic from "next/dynamic";
 import { Permissions } from "@snailycad/permissions";
 import { usePermission } from "hooks/usePermission";
-import { PrivateMessagesModal } from "./active-units/private-messages/private-messages-modal";
+import { PrivateMessagesModal } from "../private-messages/private-messages-modal";
 import { GetActiveOfficersData } from "@snailycad/types/api";
-import { ActiveOfficersHeader } from "./active-units/officers/active-officers-header";
+import { ActiveOfficersHeader } from "./active-officers-header";
 
 const CreateTemporaryUnitModal = dynamic(
   async () =>
-    (await import("./modals/temporary-units/create-temporary-unit-modal")).CreateTemporaryUnitModal,
+    (await import("../../modals/temporary-units/create-temporary-unit-modal"))
+      .CreateTemporaryUnitModal,
   { ssr: false },
 );
 
 const ManageUnitModal = dynamic(
-  async () => (await import("./modals/manage-unit-modal")).ManageUnitModal,
+  async () => (await import("../modals/manage-unit-modal")).ManageUnitModal,
   { ssr: false },
 );
 
 const MergeUnitModal = dynamic(
-  async () => (await import("./active-units/merge-unit-modal")).MergeUnitModal,
+  async () => (await import("../modals/merge-unit-modal")).MergeUnitModal,
   { ssr: false },
 );
 

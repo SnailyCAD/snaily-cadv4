@@ -5,7 +5,7 @@ import { useSignal100 } from "hooks/shared/useSignal100";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import * as modalButtons from "components/modal-buttons/buttons";
-import { ModalButton } from "components/modal-buttons/ModalButton";
+import { ModalButton } from "components/modal-buttons/modal-button";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import type {
@@ -19,7 +19,7 @@ import { ActiveToneType } from "@snailycad/types";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 
 const EnableSignal100Modal = dynamic(
-  async () => (await import("./modals/EnableSignal100Modal")).EnableSignal100Modal,
+  async () => (await import("./modals/enable-signal-100-modal")).EnableSignal100Modal,
   { ssr: false },
 );
 

@@ -17,8 +17,8 @@ import { useValues } from "context/ValuesContext";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 
 import dynamic from "next/dynamic";
-import { ActiveCallColumn } from "components/dispatch/active-units/officers/active-call-column";
-import { ActiveIncidentColumn } from "components/dispatch/active-units/officers/active-incident-column";
+import { ActiveCallColumn } from "components/dispatch/active-units/officers/columns/active-call-column";
+import { ActiveIncidentColumn } from "components/dispatch/active-units/officers/columns/active-incident-column";
 import { PrivateMessagesButton } from "components/leo/private-messages/private-messages-button";
 import { PrivateMessagesModal } from "components/dispatch/active-units/private-messages/private-messages-modal";
 

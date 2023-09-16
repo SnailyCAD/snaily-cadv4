@@ -2,7 +2,7 @@ import { Modal } from "components/modal/Modal";
 import { toastMessage } from "lib/toastMessage";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "./login-form";
 
 export function ReauthorizeSessionModal() {
   const modalState = useModal();

@@ -3,9 +3,10 @@ import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { useValues } from "context/ValuesContext";
 import { SelectField } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
+import { ManageValueFormValues } from "../ManageValueModal";
 
 export function VehicleFields({ image, setImage }: any) {
-  const { values, errors, setFieldValue } = useFormikContext<{ trimLevels: string }>();
+  const { values, errors, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const { vehicleTrimLevel } = useValues();
   const t = useTranslations("Values");
 

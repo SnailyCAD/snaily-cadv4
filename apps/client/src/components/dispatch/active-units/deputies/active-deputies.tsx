@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@snailycad/ui";
-import { ManageUnitModal } from "./modals/manage-unit-modal";
+import { ManageUnitModal } from "../modals/manage-unit-modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
@@ -15,19 +15,19 @@ import { useAuth } from "context/AuthContext";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
+import { UnitRadioChannelModal } from "../modals/unit-radio-channel-modal";
 import { useActiveUnitsState } from "state/active-unit-state";
-import { ActiveUnitsSearch } from "./active-units/active-units-search";
-import { ActiveCallColumn } from "./active-units/officers/active-call-column";
-import { ActiveIncidentColumn } from "./active-units/officers/active-incident-column";
-import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
+import { ActiveUnitsSearch } from "../active-units-search";
+import { ActiveCallColumn } from "../officers/columns/active-call-column";
+import { ActiveIncidentColumn } from "../officers/columns/active-incident-column";
+import { DeputyColumn } from "./deputy-column";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casperiv/useful";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
-import { MergeUnitModal } from "./active-units/merge-unit-modal";
+import { MergeUnitModal } from "../modals/merge-unit-modal";
 import { GetEmsFdActiveDeputies } from "@snailycad/types/api";
-import { ActiveDeputiesHeader } from "./active-units/deputies/active-deputies-header";
+import { ActiveDeputiesHeader } from "./active-deputies-header";
 
 interface Props {
   initialDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];

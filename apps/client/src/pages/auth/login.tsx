@@ -1,14 +1,14 @@
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Title } from "components/shared/Title";
-import { AuthScreenImages } from "components/auth/AuthScreenImages";
+import { AuthScreenImages } from "components/auth/auth-screen-images";
 import { LocalhostDetector } from "components/auth/localhost-detector";
 import { DemoDetector } from "components/auth/demo-detector";
 import { parseCookies } from "nookies";
 import { VersionDisplay } from "components/shared/VersionDisplay";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "next-intl";
-import { LoginForm } from "components/auth/login/LoginForm";
+import { LoginForm } from "components/auth/login/login-form";
 import { useRouter } from "next/router";
 import { requestAll } from "lib/utils";
 import { ApiVerification } from "components/auth/api-verification";
