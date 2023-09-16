@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { Call911 } from "@snailycad/types";
-import { Manage911CallModal } from "components/dispatch/modals/manage-911-call/manage-911-call-modal";
+import { Manage911CallModal } from "components/dispatch/active-calls/modals/manage-911-call-modal";
 import { useListener } from "@casperiv/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { usePortal } from "@casperiv/useful";

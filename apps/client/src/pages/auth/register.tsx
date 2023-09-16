@@ -13,7 +13,7 @@ import { Button, Loader, TextField } from "@snailycad/ui";
 import { cad, WhitelistStatus } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
-import { AuthScreenImages } from "components/auth/AuthScreenImages";
+import { AuthScreenImages } from "components/auth/auth-screen-images";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { LocalhostDetector } from "components/auth/localhost-detector";
 import { parseCookies } from "nookies";

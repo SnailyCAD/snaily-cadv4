@@ -21,7 +21,7 @@ import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
-  async () => (await import("components/business/ManagePostModal")).ManageBusinessPostModal,
+  async () => (await import("components/business/manage-post-modal")).ManageBusinessPostModal,
 );
 
 interface Props {

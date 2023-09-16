@@ -19,7 +19,7 @@ import { UnitRadioChannelModal } from "../modals/unit-radio-channel-modal";
 import { useActiveUnitsState } from "state/active-unit-state";
 import { ActiveUnitsSearch } from "../active-units-search";
 import { ActiveCallColumn } from "../officers/columns/active-call-column";
-import { ActiveIncidentColumn } from "../officers/active-incident-column";
+import { ActiveIncidentColumn } from "../officers/columns/active-incident-column";
 import { DeputyColumn } from "./deputy-column";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
 import { useMounted } from "@casperiv/useful";

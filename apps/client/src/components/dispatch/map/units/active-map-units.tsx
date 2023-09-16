@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import { usePortal } from "@casperiv/useful";
 import { useTranslations } from "next-intl";
 import { UnitItem } from "./unit-item";
-import { ManageUnitModal } from "components/dispatch/modals/manage-unit-modal";
+import { ManageUnitModal } from "components/dispatch/active-units/modals/manage-unit-modal";
 import { useMapPlayersStore } from "hooks/realtime/use-map-players";
 import { createMapUnitsFromActiveUnits } from "lib/map/create-map-units-from-active-units.ts";
 import { Accordion } from "@snailycad/ui";

@@ -21,7 +21,7 @@ import type { SetSentryTagsOptions } from "lib/set-sentry-tags";
 
 const ReauthorizeSessionModal = dynamic(
   async () =>
-    (await import("components/auth/login/ReauthorizeSessionModal")).ReauthorizeSessionModal,
+    (await import("components/auth/login/reauthorize-session-modal")).ReauthorizeSessionModal,
   { ssr: false },
 );
 

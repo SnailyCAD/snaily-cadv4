@@ -11,7 +11,7 @@ const ManageAOPModal = dynamic(
   { ssr: false },
 );
 
-export function DispatchAOP() {
+export function DispatchAreaOfPlay() {
   const { areaOfPlay } = useAreaOfPlay();
   const modalState = useModal();
   const t = useTranslations("Leo");

@@ -14,7 +14,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { UnitRadioChannelModal } from "components/dispatch/active-units/UnitRadioChannelModal";
+import { UnitRadioChannelModal } from "components/dispatch/active-units/modals/unit-radio-channel-modal";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
 
 interface CallItemProps {

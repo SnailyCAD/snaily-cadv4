@@ -8,7 +8,7 @@ import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { BusinessCard } from "components/business/BusinessCard";
+import { BusinessCard } from "components/business/business-card";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -16,11 +16,11 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetBusinessesData } from "@snailycad/types/api";
 
 const CreateBusinessModal = dynamic(
-  async () => (await import("components/business/CreateBusinessModal")).CreateBusinessModal,
+  async () => (await import("components/business/create-business-modal")).CreateBusinessModal,
 );
 
 const JoinBusinessModal = dynamic(
-  async () => (await import("components/business/JoinBusinessModal")).JoinBusinessModal,
+  async () => (await import("components/business/join-business-modal")).JoinBusinessModal,
 );
 
 export default function BusinessPage(props: GetBusinessesData) {
