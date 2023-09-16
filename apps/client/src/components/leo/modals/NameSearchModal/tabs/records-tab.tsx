@@ -267,25 +267,29 @@ export function RecordsTable({
               createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: isCitizen ? null : (
                 <>
-                  <Button
-                    type="button"
-                    onPress={() => handleExportClick(record)}
-                    size="xs"
-                    className="inline-flex mr-2 items-center gap-2"
-                    disabled={exportState === "loading"}
-                  >
-                    {exportState === "loading" ? <Loader className="w-3 h-3" /> : null}
-                    {common("export")}
-                  </Button>
+                  {isCitizenCreation ? null : (
+                    <>
+                      <Button
+                        type="button"
+                        onPress={() => handleExportClick(record)}
+                        size="xs"
+                        className="inline-flex mr-2 items-center gap-2"
+                        disabled={exportState === "loading"}
+                      >
+                        {exportState === "loading" ? <Loader className="w-3 h-3" /> : null}
+                        {common("export")}
+                      </Button>
 
-                  <Button
-                    type="button"
-                    onPress={() => handleEditClick(record)}
-                    size="xs"
-                    variant="success"
-                  >
-                    {common("edit")}
-                  </Button>
+                      <Button
+                        type="button"
+                        onPress={() => handleEditClick(record)}
+                        size="xs"
+                        variant="success"
+                      >
+                        {common("edit")}
+                      </Button>
+                    </>
+                  )}
 
                   {_hasDeletePermissions ? (
                     <Button

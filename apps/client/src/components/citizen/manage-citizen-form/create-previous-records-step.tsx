@@ -83,6 +83,8 @@ export function CreatePreviousRecordsStep() {
     return true;
   }
 
+  console.log({ selectedRecord });
+
   return (
     <div className="mb-5">
       <p>{t("Citizen.createPreviousRecordsStepDescription")}</p>
