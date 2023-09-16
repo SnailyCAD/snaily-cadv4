@@ -28,6 +28,9 @@ import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { InvolvedUnitsTable } from "./involved-units/involved-units-table";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { useAuth } from "context/AuthContext";
+import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
+import { ActiveOfficer, useLeoState } from "state/leo-state";
+import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 
 interface Props<T extends LeoIncident | EmsFdIncident> {
   incident?: T | null;
@@ -35,6 +38,36 @@ interface Props<T extends LeoIncident | EmsFdIncident> {
   onCreate?(incident: T & { openModalAfterCreation?: boolean }): void;
   onUpdate?(oldIncident: T, incident: T): void;
   type: "ems-fd" | "leo";
+}
+
+interface AreFormFieldsDisabledOptions {
+  isActiveIncidentsList: boolean;
+  isDispatch: boolean;
+  incident: LeoIncident | EmsFdIncident | null;
+
+  hasActiveDispatchers: boolean;
+  activeUnit: ActiveOfficer | ActiveDeputy | null;
+}
+
+function areFormFieldsDisabled(options: AreFormFieldsDisabledOptions) {
+  /** non-active incidents are always editable */
+  if (!options.isActiveIncidentsList) return false;
+  /** dispatch can always edit the fields */
+  if (options.isDispatch) return false;
+  /** a new incident is being created, always editable */
+  if (!options.incident) return false;
+
+  /** if there are no active dispatchers, but the unit is assigned to the incident, it's editable */
+  if (!options.hasActiveDispatchers) {
+    const isAssignedToIncident = options.incident.unitsInvolved.some(
+      (u) => u.unit?.id === options.activeUnit?.id,
+    );
+    return !isAssignedToIncident;
+  }
+
+  // todo: make this an optional feature
+  /** otherwise fields are not editable, even when the unit is assigned to the incident */
+  return true;
 }
 
 export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
@@ -51,20 +84,33 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
   const incident = payloadIncident ?? foundIncident ?? tempIncident ?? null;
 
-  const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { codes10 } = useValues();
+  const common = useTranslations("Common");
   const router = useRouter();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
+  const activeDeputy = useEmsFdState((state) => state.activeDeputy);
+
+  const { codes10 } = useValues();
   const { state, execute } = useFetch();
   const { user } = useAuth();
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const isDispatch = router.pathname.includes("/dispatch");
   const isLeoIncidents = type === "leo";
-  const areIncidentsNonDispatch =
-    router.pathname === "/ems-fd/incidents" || router.pathname === "/officer/incidents";
 
-  const areEventsReadonly = isDispatch ? false : areIncidentsNonDispatch;
-  const areFieldsDisabled = isDispatch ? false : areIncidentsNonDispatch;
+  const isEmsFdIncidents = router.pathname.includes("/ems-fd");
+  const isOfficerIncidents = router.pathname.includes("/officer");
+
+  const activeUnit = isOfficerIncidents ? activeOfficer : isEmsFdIncidents ? activeDeputy : null;
+  const isActiveIncidentsList = isOfficerIncidents || isEmsFdIncidents;
+
+  const areFieldsDisabled = areFormFieldsDisabled({
+    isActiveIncidentsList,
+    isDispatch,
+    hasActiveDispatchers,
+    incident,
+    activeUnit,
+  });
 
   function handleAddUpdateCallEvent(incident: LeoIncident) {
     setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
@@ -209,7 +255,11 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
                   />
 
-                  <AddressPostalSelect postalOnly addressLabel="location" />
+                  <AddressPostalSelect
+                    isDisabled={areFieldsDisabled}
+                    postalOnly
+                    addressLabel="location"
+                  />
                 </FormRow>
 
                 {incident ? (
@@ -251,7 +301,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
         {incident ? (
           <IncidentEventsArea
             handleStateUpdate={handleAddUpdateCallEvent}
-            disabled={areEventsReadonly}
+            disabled={areFieldsDisabled}
             incident={incident}
           />
         ) : null}

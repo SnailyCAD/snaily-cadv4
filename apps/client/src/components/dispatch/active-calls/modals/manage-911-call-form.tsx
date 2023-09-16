@@ -21,6 +21,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { classNames } from "lib/classNames";
 
 interface Props {
   call: Full911Call | null;
@@ -242,15 +243,21 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
             </>
           )}
 
-          <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
-            {call ? (
-              <Button onPress={handleEndClick} type="button" variant="danger" disabled={isDisabled}>
+          <footer
+            className={classNames(
+              "mt-5 flex",
+              isDisabled && "justify-end",
+              !isDisabled && call && "justify-between",
+            )}
+          >
+            {call && !isDisabled ? (
+              <Button onPress={handleEndClick} type="button" variant="danger">
                 {t("endCall")}
               </Button>
             ) : null}
 
             <div className="flex items-center">
-              {call ? (
+              {isDisabled ? null : call ? (
                 <CheckboxField
                   className="mb-0"
                   isSelected={values.notifyAssignedUnits}

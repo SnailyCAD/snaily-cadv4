@@ -20,7 +20,7 @@ export function SwitchField(props: SwitchFieldProps) {
     <label
       className={cn(
         "flex items-center mb-3 gap-1.5 font-medium",
-        props.isDisabled || (props.isReadOnly && "opacity-50 cursor-not-allowed"),
+        (props.isDisabled || props.isReadOnly) && "opacity-70 cursor-not-allowed",
         props.className,
       )}
     >
@@ -30,7 +30,7 @@ export function SwitchField(props: SwitchFieldProps) {
       <svg
         className={cn(
           "relative h-6 transition-all rounded-full shadow-sm min-w-[44px] w-11",
-          (!props.isDisabled || !props.isReadOnly) && "cursor-pointer",
+          props.isDisabled || props.isReadOnly ? "cursor-default" : "cursor-pointer",
         )}
         width={44}
         height={24}

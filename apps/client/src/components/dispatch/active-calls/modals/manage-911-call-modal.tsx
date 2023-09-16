@@ -11,8 +11,8 @@ import { CallEventsArea } from "../../events/EventsArea";
 
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
-import { useLeoState } from "state/leo-state";
-import { useEmsFdState } from "state/ems-fd-state";
+import { ActiveOfficer, useLeoState } from "state/leo-state";
+import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { Manage911CallForm } from "./manage-911-call-form";
@@ -30,6 +30,35 @@ interface Props {
   forceDisabled?: boolean;
   setCall?(call: Full911Call | null): void;
   onClose?(): void;
+}
+
+interface AreFormFieldsDisabledOptions {
+  isDispatch: boolean;
+  forceDisabled?: boolean;
+  call: Full911Call | null;
+  hasActiveDispatchers: boolean;
+  activeUnit: ActiveOfficer | ActiveDeputy | null;
+}
+
+function areFormFieldsEnabled(options: AreFormFieldsDisabledOptions) {
+  /** force disable the fields */
+  if (options.forceDisabled) return false;
+  /** dispatch can always edit the fields */
+  if (options.isDispatch) return true;
+  /** a new call is being created, always editable */
+  if (!options.call) return true;
+
+  /** if there are no active dispatchers, but the unit is assigned to the call, it's editable */
+  if (!options.hasActiveDispatchers) {
+    const isAssignedToCall = options.call?.assignedUnits.some(
+      (u) => u.unit?.id === options.activeUnit?.id,
+    );
+    return isAssignedToCall;
+  }
+
+  // todo: make this an optional feature
+  /** otherwise fields are not editable, even when the unit is assigned to the call */
+  return false;
 }
 
 export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, onClose }: Props) {
@@ -58,13 +87,13 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;
 
-  const isDisabled = forceDisabled
-    ? true
-    : isDispatch
-    ? false
-    : call
-    ? !call?.assignedUnits.some((u) => u.unit?.id === activeUnit?.id) && hasActiveDispatchers
-    : false;
+  const areFieldsDisabled = !areFormFieldsEnabled({
+    isDispatch,
+    forceDisabled,
+    call,
+    hasActiveDispatchers,
+    activeUnit,
+  });
 
   const handleCallStateUpdate = React.useCallback(
     (call: Full911Call) => {
@@ -83,7 +112,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
   }
 
   async function handleDelete() {
-    if (!call || isDisabled) return;
+    if (!call || areFieldsDisabled) return;
 
     const { json } = await execute<Delete911CallByIdData>({
       path: `/911-calls/${call.id}`,
@@ -132,14 +161,14 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
         <Manage911CallForm
           setShowAlert={setShowAlert}
           handleClose={handleClose}
-          isDisabled={isDisabled}
+          isDisabled={areFieldsDisabled}
           call={call}
         />
 
         {call ? (
           <CallEventsArea
             handleStateUpdate={handleCallStateUpdate}
-            disabled={isDisabled}
+            disabled={areFieldsDisabled}
             call={call}
           />
         ) : null}

@@ -48,7 +48,7 @@ export function AsyncListSearchFieldActions<T>(props: AsyncListSearchFieldAction
         size="xs"
         className={cn(
           "rounded-l-none border-gray-200 dark:border-quinary",
-          props.showClearableButton ? "-ml-[1px]" : "-ml-[1.5px]",
+          props.showClearableButton ? "-ml-[1px]" : "-ml-[1px]",
           enabledHoverClassName,
           focusedClassName,
           errorMessageClassName,
