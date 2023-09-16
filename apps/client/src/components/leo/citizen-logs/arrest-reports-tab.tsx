@@ -34,7 +34,7 @@ const TYPE_LABELS = {
   [RecordType.WRITTEN_WARNING]: "Written Warning",
 };
 
-export function ArrestReportsTab({ arrestReports }: Props) {
+export function PendingCitizenRecordsTab({ arrestReports }: Props) {
   const [tempRecord, setTempRecord] = React.useState<Record | null>(null);
 
   const { data, isLoading, refetch } = useQuery({
@@ -95,8 +95,10 @@ export function ArrestReportsTab({ arrestReports }: Props) {
 
   return (
     <TabsContent
-      tabName={`${t("arrestReportLogs")} ${isLoading ? null : `(${data?.pendingCitizenRecords})`}`}
-      value="arrest-reports-tab"
+      tabName={`${t("pendingCitizenRecords")} ${
+        isLoading ? null : `(${data?.pendingCitizenRecords})`
+      }`}
+      value="pending-citizen-records-tab"
     >
       {asyncTable.noItemsAvailable ? (
         <p className="mt-5">{t("noCitizenLogs")}</p>

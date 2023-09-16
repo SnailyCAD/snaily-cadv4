@@ -9,14 +9,14 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { TabList } from "@snailycad/ui";
 import { CitizenLogsTab } from "components/leo/citizen-logs/citizen-logs-tab";
-import { ArrestReportsTab } from "components/leo/citizen-logs/arrest-reports-tab";
+import { PendingCitizenRecordsTab } from "components/leo/citizen-logs/arrest-reports-tab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { GetManagePendingArrestReports, GetManageRecordLogsData } from "@snailycad/types/api";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
   citizens: GetManageRecordLogsData;
-  arrestReports: GetManagePendingArrestReports;
+  pendingCitizenRecords: GetManagePendingArrestReports;
 }
 
 export default function CitizenLogs(props: Props) {
@@ -27,7 +27,7 @@ export default function CitizenLogs(props: Props) {
   const TABS = [{ value: "citizen-logs-tab", name: t("citizenLogs") }];
 
   if (CITIZEN_RECORD_APPROVAL) {
-    TABS[1] = { value: "arrest-reports-tab", name: t("arrestReportLogs") };
+    TABS[1] = { value: "pending-citizen-records-tab", name: t("pendingCitizenRecords") };
   }
 
   return (
@@ -46,7 +46,9 @@ export default function CitizenLogs(props: Props) {
 
       <TabList tabs={TABS}>
         <CitizenLogsTab citizens={props.citizens} />
-        {CITIZEN_RECORD_APPROVAL ? <ArrestReportsTab arrestReports={props.arrestReports} /> : null}
+        {CITIZEN_RECORD_APPROVAL ? (
+          <PendingCitizenRecordsTab arrestReports={props.pendingCitizenRecords} />
+        ) : null}
       </TabList>
     </Layout>
   );
@@ -54,15 +56,15 @@ export default function CitizenLogs(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [citizens, arrestReports] = await requestAll(req, [
+  const [citizens, pendingCitizenRecords] = await requestAll(req, [
     ["/admin/manage/records-logs", { citizens: [], totalCount: 0 }],
-    ["/admin/manage/pending-arrest-reports", { arrestReports: [], totalCount: 0 }],
+    ["/admin/manage/pending-arrest-reports", { pendingCitizenRecords: [], totalCount: 0 }],
   ]);
 
   return {
     props: {
       session: user,
-      arrestReports,
+      pendingCitizenRecords,
       citizens,
       messages: {
         ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
