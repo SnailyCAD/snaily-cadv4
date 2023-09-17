@@ -54,7 +54,8 @@
     "unavailableSounds": "Unavailable Sounds",
     "unavailableSoundsMessage": "These sounds are unavailable. They must be added by an admin.",
     "userApiTokenDescription": "This token can be used to communicate with SnailyCAD's API.",
-    "developerMode": "Developer Mode"
+    "developerMode": "Developer Mode",
+    "statusViewDescription": "How the color of a status code (10-code) is displayed in the active units table."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

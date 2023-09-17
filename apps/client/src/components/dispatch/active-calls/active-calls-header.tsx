@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
+import { useRouter } from "next/router";
 
 const CallsFilters = dynamic(async () => (await import("./call-filters")).CallsFilters);
 
@@ -22,6 +23,9 @@ export function ActiveCallsHeader({ calls, asyncTable }: Props) {
     setShowFilters: state.setShowFilters,
     showFilters: state.showFilters,
   }));
+
+  const router = useRouter();
+  const isDispatchRoute = router.pathname === "/dispatch";
   const { hasActiveDispatchers } = useActiveDispatchers();
   const modalState = useModal();
   const t = useTranslations("Calls");
@@ -39,7 +43,7 @@ export function ActiveCallsHeader({ calls, asyncTable }: Props) {
             variant={null}
             className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
             onPress={handleCreateIncident}
-            disabled={!hasActiveDispatchers}
+            isDisabled={isDispatchRoute ? !hasActiveDispatchers : false}
           >
             {t("create911Call")}
           </Button>

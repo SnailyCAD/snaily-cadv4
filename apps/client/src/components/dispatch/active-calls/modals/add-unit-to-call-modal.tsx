@@ -235,6 +235,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
                     type="button"
                     onPress={() => handleAddAllUnits(values, setValues)}
                     className="max-h-9 max-w-fit mr-2"
+                    variant="cancel"
                   >
                     {t("addAllUnits")}
                   </Button>

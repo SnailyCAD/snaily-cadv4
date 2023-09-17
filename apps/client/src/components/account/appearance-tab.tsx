@@ -21,6 +21,11 @@ import { soundCamelCaseToKebabCase } from "lib/utils";
 import { useRouter } from "next/router";
 import type { PatchUserData } from "@snailycad/types/api";
 import { useAudio } from "react-use";
+import Image from "next/image";
+
+import FullRowColorPreview from "../../../public/images/full-row-color.png";
+import RowDotColorPreview from "../../../public/images/row-dot-color.png";
+import { classNames } from "lib/classNames";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -39,11 +44,6 @@ export function AppearanceTab({ availableSounds }: Props) {
     src: currentSrc,
     autoPlay: false,
   });
-
-  const STATUS_VIEW_MODE_LABELS = {
-    [StatusViewMode.DOT_COLOR]: t("dotColor"),
-    [StatusViewMode.FULL_ROW_COLOR]: t("fullRowColor"),
-  };
 
   const TABLE_ALIGNMENT_LABELS = {
     [TableActionsAlignment.NONE]: common("none"),
@@ -129,18 +129,6 @@ export function AppearanceTab({ availableSounds }: Props) {
               />
 
               <SelectField
-                errorMessage={errors.statusViewMode}
-                label={t("statusView")}
-                options={Object.values(StatusViewMode).map((v) => ({
-                  value: v,
-                  label: STATUS_VIEW_MODE_LABELS[v],
-                }))}
-                selectedKey={values.statusViewMode}
-                onSelectionChange={(value) => setFieldValue("statusViewMode", value)}
-                name="statusViewMode"
-              />
-
-              <SelectField
                 errorMessage={errors.tableActionsAlignment}
                 label={t("tableAlignment")}
                 options={Object.values(TableActionsAlignment).map((v) => ({
@@ -152,7 +140,40 @@ export function AppearanceTab({ availableSounds }: Props) {
                 name="tableActionsAlignment"
               />
 
-              <div className="mb-5">
+              <section className="mb-5">
+                <header className="mb-3">
+                  <h2 className="text-2xl font-semibold">{t("statusView")}</h2>
+                  <p className="text-neutral-700 dark:text-gray-400">
+                    {t("statusViewDescription")}
+                  </p>
+                </header>
+
+                <ul className="flex flex-col gap-y-2">
+                  <li
+                    onClick={() => setFieldValue("statusViewMode", StatusViewMode.FULL_ROW_COLOR)}
+                    className={classNames(
+                      "card border-2 rounded-md p-4 hover:!border-blue-500/80 cursor-pointer transition",
+                      values.statusViewMode === StatusViewMode.FULL_ROW_COLOR && "!border-blue-500",
+                    )}
+                  >
+                    <h3 className="text-lg font-semibold mb-1">{t("fullRowColor")}</h3>
+                    <Image placeholder="blur" src={FullRowColorPreview} alt={t("fullRowColor")} />
+                  </li>
+
+                  <li
+                    onClick={() => setFieldValue("statusViewMode", StatusViewMode.DOT_COLOR)}
+                    className={classNames(
+                      "card border-2 rounded-md p-4 hover:!border-blue-500/80 cursor-pointer transition",
+                      values.statusViewMode === StatusViewMode.DOT_COLOR && "!border-blue-500",
+                    )}
+                  >
+                    <h3 className="text-lg font-semibold mb-1">{t("dotColor")}</h3>
+                    <Image placeholder="blur" src={RowDotColorPreview} alt={t("dotColor")} />
+                  </li>
+                </ul>
+              </section>
+
+              <section className="mb-5">
                 <h2 className="text-2xl font-semibold mb-3">{t("sounds")}</h2>
 
                 {voices ? (
@@ -249,7 +270,7 @@ export function AppearanceTab({ availableSounds }: Props) {
                     </Accordion>
                   )}
                 </section>
-              </div>
+              </section>
 
               <Button
                 className="flex items-center gap-2"

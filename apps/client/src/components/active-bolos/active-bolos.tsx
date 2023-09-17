@@ -127,7 +127,7 @@ export function ActiveBolos({ initialBolos }: Props) {
             variant={null}
             className="bg-gray-500 hover:bg-gray-600 dark:border dark:border-quinary dark:bg-tertiary dark:hover:brightness-125 text-white"
             onPress={handleCreateBolo}
-            disabled={!hasActiveDispatchers}
+            isDisabled={isDispatchRoute ? !hasActiveDispatchers : false}
           >
             {t("Bolos.createBolo")}
           </Button>
@@ -139,7 +139,7 @@ export function ActiveBolos({ initialBolos }: Props) {
             )}
             onPress={() => setShowFilters(!showFilters)}
             title={t("Bolos.filters")}
-            disabled={asyncTable.noItemsAvailable}
+            isDisabled={asyncTable.noItemsAvailable}
           >
             <Filter
               className={classNames("group-hover:fill-white", showFilters && "text-white")}

@@ -47,10 +47,10 @@ export function AccountSettingsTab() {
         {({ setFieldValue, values, errors }) => (
           <Form className="mt-2">
             <TextField
+              autoComplete="username"
               label={t("Auth.username")}
               errorMessage={errors.username}
               defaultValue={values.username}
-              name="username"
               onChange={(value) => setFieldValue("username", value)}
             />
 

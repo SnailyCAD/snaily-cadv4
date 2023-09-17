@@ -1,6 +1,7 @@
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import type { PostUserPasswordData } from "@snailycad/types/api";
 import { Button, TextField } from "@snailycad/ui";
+import { useAuth } from "context/AuthContext";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
@@ -11,6 +12,7 @@ export function ChangePasswordArea() {
   const t = useTranslations("Account");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
+  const { user } = useAuth();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -46,9 +48,18 @@ export function ChangePasswordArea() {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, values, errors }) => (
           <Form className="mt-2">
+            <input
+              type="text"
+              autoComplete="username"
+              name="username"
+              defaultValue={user?.username}
+              className="sr-only"
+            />
+
             <TextField
               type="password"
-              name="currentPassword"
+              name="current-password"
+              autoComplete="current-password"
               value={values.currentPassword}
               onChange={(value) => setFieldValue("currentPassword", value)}
               errorMessage={errors.currentPassword}
@@ -57,7 +68,8 @@ export function ChangePasswordArea() {
 
             <TextField
               type="password"
-              name="newPassword"
+              name="new-password"
+              autoComplete="new-password"
               value={values.newPassword}
               onChange={(value) => setFieldValue("newPassword", value)}
               errorMessage={errors.newPassword}
@@ -66,7 +78,8 @@ export function ChangePasswordArea() {
 
             <TextField
               type="password"
-              name="confirmPassword"
+              name="confirm-password"
+              autoComplete="new-password"
               value={values.confirmPassword}
               onChange={(value) => setFieldValue("confirmPassword", value)}
               errorMessage={errors.confirmPassword}
