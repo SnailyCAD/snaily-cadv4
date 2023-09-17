@@ -118,7 +118,7 @@ export function ActiveBolos({ initialBolos }: Props) {
   }
 
   return (
-    <div className="mt-3 card">
+    <div className="mb-3 card">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h3 className="text-xl font-semibold">{t("Bolos.activeBolos")}</h3>
 

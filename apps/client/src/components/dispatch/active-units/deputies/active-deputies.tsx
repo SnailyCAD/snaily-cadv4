@@ -91,7 +91,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
   }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="mt-3 rounded-md card">
+    <div className="mb-3 rounded-md card">
       <ActiveDeputiesHeader />
       <ActiveUnitsSearch
         totalCount={initialDeputies.length}

@@ -24,7 +24,7 @@ export function UtilityPanel({ children, isDispatch }: Props) {
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
   return (
-    <div className="w-full mb-3 card">
+    <div className="w-full mb-3 card overflow-y-hidden">
       <header className="flex items-center justify-between px-4 py-2 mb-2 bg-gray-200 dark:bg-secondary">
         <h1 className="text-xl font-semibold">
           {t("utilityPanel")}

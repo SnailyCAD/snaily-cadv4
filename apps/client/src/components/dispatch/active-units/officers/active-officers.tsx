@@ -113,7 +113,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
   }, [asyncTable.items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="rounded-md card">
+    <div className="rounded-md card mb-3">
       <ActiveOfficersHeader />
       <ActiveUnitsSearch
         totalCount={initialOfficers.length}

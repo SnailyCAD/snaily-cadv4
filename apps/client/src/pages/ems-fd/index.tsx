@@ -92,18 +92,16 @@ export default function EmsFDDashboard({
   });
 
   const { CALLS_911 } = useFeatureEnabled();
-  const signal100 = useSignal100();
-  const tones = useTones(ActiveToneType.EMS_FD);
-  const panic = usePanicButton();
-  const state = useEmsFdState();
-  const dispatchState = useDispatchState();
+  const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
+  const dispatchState = useDispatchState((state) => ({
+    setBolos: state.setBolos,
+    setActiveOfficers: state.setActiveOfficers,
+    setActiveDeputies: state.setActiveDeputies,
+  }));
   const set911Calls = useCall911State((state) => state.setCalls);
-  const { hasPermissions } = usePermission();
-  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
-  const modalState = useModal();
 
   React.useEffect(() => {
-    state.setActiveDeputy(activeDeputy);
+    setActiveDeputy(activeDeputy);
     set911Calls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
     dispatchState.setActiveOfficers(activeOfficers);
@@ -116,13 +114,38 @@ export default function EmsFDDashboard({
     <Layout permissions={{ permissions: [Permissions.EmsFd] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
+      <EmsFdHeader activeDeputy={activeDeputy} />
+
+      {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
+      <ActiveOfficers initialOfficers={activeOfficers} />
+      <ActiveDeputies initialDeputies={activeDeputies} />
+
+      <SelectDeputyModal />
+      <EmsFdModals />
+    </Layout>
+  );
+}
+
+function EmsFdHeader(props: Pick<Props, "activeDeputy">) {
+  const signal100 = useSignal100();
+  const tones = useTones(ActiveToneType.EMS_FD);
+  const panic = usePanicButton();
+  const state = useEmsFdState();
+
+  const dispatchState = useDispatchState((state) => ({
+    activeDeputies: state.activeDeputies,
+    setActiveDeputies: state.setActiveDeputies,
+  }));
+
+  return (
+    <>
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       <panic.Component audio={panic.audio} unit={panic.unit} />
       <tones.Component audio={tones.audio} description={tones.description} user={tones.user} />
 
       <UtilityPanel>
         <div className="px-4">
-          <ModalButtons initialActiveDeputy={activeDeputy} />
+          <ModalButtons initialActiveDeputy={props.activeDeputy} />
         </div>
 
         <StatusesArea
@@ -130,34 +153,37 @@ export default function EmsFDDashboard({
           units={dispatchState.activeDeputies}
           setActiveUnit={state.setActiveDeputy}
           activeUnit={state.activeDeputy}
-          initialData={activeDeputy}
+          initialData={props.activeDeputy}
         />
       </UtilityPanel>
+    </>
+  );
+}
 
-      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-        <div className="w-full">{CALLS_911 ? <ActiveCalls initialData={calls} /> : null}</div>
-      </div>
-      <div className="mt-3">
-        <ActiveOfficers initialOfficers={activeOfficers} />
-        <ActiveDeputies initialDeputies={activeDeputies} />
-      </div>
+function EmsFdModals() {
+  const emsFdDeputyState = useEmsFdState();
+  const modalState = useModal();
+  const { hasPermissions } = usePermission();
+  const isAdmin = hasPermissions(defaultPermissions.allDefaultAdminPermissions);
 
-      <SelectDeputyModal />
-      {isAdmin || state.activeDeputy ? (
+  const showModals = isAdmin ? true : emsFdDeputyState.activeDeputy;
+  if (!showModals) {
+    return null;
+  }
+
+  return (
+    <>
+      <NotepadModal />
+      <DepartmentInfoModal />
+
+      <SearchMedicalRecordModal />
+      {modalState.isOpen(ModalIds.SearchMedicalRecord) ? null : (
         <>
-          <NotepadModal />
-          <DepartmentInfoModal />
-
-          <SearchMedicalRecordModal />
-          {modalState.isOpen(ModalIds.SearchMedicalRecord) ? null : (
-            <>
-              <CreateMedicalRecordModal />
-              <CreateDoctorVisitModal />
-            </>
-          )}
+          <CreateMedicalRecordModal />
+          <CreateDoctorVisitModal />
         </>
-      ) : null}
-    </Layout>
+      )}
+    </>
   );
 }
 

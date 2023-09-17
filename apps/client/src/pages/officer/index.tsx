@@ -182,7 +182,10 @@ function OfficerHeader(props: Pick<Props, "activeOfficer">) {
   const panic = usePanicButton();
 
   const leoState = useLeoState();
-  const dispatchState = useDispatchState();
+  const dispatchState = useDispatchState((state) => ({
+    activeOfficers: state.activeOfficers,
+    setActiveOfficers: state.setActiveOfficers,
+  }));
 
   return (
     <>

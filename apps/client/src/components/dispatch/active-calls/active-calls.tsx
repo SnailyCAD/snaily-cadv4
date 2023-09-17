@@ -132,7 +132,7 @@ function Active911Calls({ initialData }: Props) {
   }
 
   return (
-    <div className="rounded-md card">
+    <div className="rounded-md card mb-3">
       {audio.addedToCallAudio}
       {audio.incomingCallAudio}
       <ActiveCallsHeader asyncTable={asyncTable} calls={calls} />

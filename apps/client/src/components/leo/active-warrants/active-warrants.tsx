@@ -50,7 +50,7 @@ export function ActiveWarrants() {
   }
 
   return (
-    <div className="rounded-md card mt-3">
+    <div className="rounded-md card mb-3">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-secondary">
         <h1 className="text-xl font-semibold">{t("activeWarrants")}</h1>
 
