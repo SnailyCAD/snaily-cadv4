@@ -2,7 +2,6 @@ import { Feature, CourtDate, CourtEntry, SeizedItem, Violation } from "@prisma/c
 import type { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/schemas";
 import { PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
 import { NotFound } from "@tsed/exceptions";
-import { userProperties } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties } from "utils/leo/includes";
 
@@ -12,6 +11,7 @@ import { ExtendedNotFound } from "src/exceptions/extended-not-found";
 import type { z } from "zod";
 import { validateRecordData } from "./validate-record-data";
 import { captureException } from "@sentry/node";
+import { userProperties } from "~/lib/auth/getSessionUser";
 
 interface UpsertRecordOptions {
   data: z.infer<typeof CREATE_TICKET_SCHEMA | typeof CREATE_TICKET_SCHEMA_BUSINESS>;

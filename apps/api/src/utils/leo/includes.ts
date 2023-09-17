@@ -1,12 +1,19 @@
 import { Prisma } from "@prisma/client";
-import { userProperties } from "lib/auth/getSessionUser";
+import { LimitedUserPicks } from "@snailycad/types";
+
+export const limitedUserSelect: Record<LimitedUserPicks, boolean> = {
+  id: true,
+  username: true,
+  discordId: true,
+  steamId: true,
+};
 
 export const unitProperties = Prisma.validator<Prisma.EmsFdDeputySelect>()({
   department: { include: { value: true, links: true } },
   division: { include: { value: true, department: true } },
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
-  user: { select: userProperties },
+  user: { select: limitedUserSelect },
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
   whitelistStatus: { include: { department: { include: { value: true } } } },
   rank: true,
@@ -19,7 +26,7 @@ export const _leoProperties = Prisma.validator<Prisma.OfficerSelect>()({
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
   whitelistStatus: { include: { department: { include: { value: true } } } },
-  user: { select: userProperties },
+  user: { select: limitedUserSelect },
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
   rank: true,
   callsigns: true,

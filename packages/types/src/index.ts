@@ -130,6 +130,9 @@ export type User = Pick<
   UserPicks
 >;
 
+export type LimitedUserPicks = "id" | "discordId" | "steamId" | "username";
+export type LimitedUser = Pick<Prisma.User, LimitedUserPicks>;
+
 export type User2FA = Prisma.User2FA;
 export type UserSoundSettings = Prisma.UserSoundSettings;
 
@@ -279,7 +282,7 @@ export type Officer = Prisma.Officer & {
   status: StatusValue | null;
   citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
   whitelistStatus?: (Prisma.LeoWhitelistStatus & { department: Officer["department"] }) | null;
-  user?: User | null;
+  user?: LimitedUser | null;
   rank: Prisma.Value | null;
   activeIncident?: Prisma.LeoIncident | null;
   callsigns?: IndividualDivisionCallsign[];
@@ -427,7 +430,7 @@ export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   rank: Officer["rank"];
   status: Officer["status"];
   citizen: Officer["citizen"];
-  user?: Officer["user"] | null;
+  user?: LimitedUser | null;
   whitelistStatus?: Officer["whitelistStatus"];
   activeVehicle: EmergencyVehicleValue | null;
 };
