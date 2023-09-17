@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
-import { StatusesArea } from "components/shared/StatusesArea";
+import { StatusesArea } from "components/shared/utility-panel/statuses-area";
 import { useEmsFdState } from "state/ems-fd-state";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { requestAll } from "lib/utils";
@@ -15,8 +15,8 @@ import { ActiveOfficers } from "components/dispatch/active-units/officers/active
 import { ActiveDeputies } from "components/dispatch/active-units/deputies/active-deputies";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
-import { UtilityPanel } from "components/shared/UtilityPanel";
-import { ActiveToneType, ValueType } from "@snailycad/types";
+import { UtilityPanel } from "components/shared/utility-panel/utility-panel";
+import { ActiveToneType, DashboardLayoutCardType, ValueType } from "@snailycad/types";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { useTones } from "hooks/global/use-tones";
@@ -26,18 +26,21 @@ import type {
   GetActiveOfficersData,
   GetEmsFdActiveDeputies,
   GetEmsFdActiveDeputy,
+  GetUserData,
 } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
+import { useAuth } from "context/AuthContext";
 
 interface Props {
   activeDeputy: GetEmsFdActiveDeputy | null;
   activeDeputies: GetEmsFdActiveDeputies;
   activeOfficers: GetActiveOfficersData;
   calls: Get911CallsData;
+  session: GetUserData | null;
 }
 
 const NotepadModal = dynamic(
@@ -80,6 +83,7 @@ export default function EmsFDDashboard({
   calls,
   activeOfficers,
   activeDeputies,
+  session: _session,
 }: Props) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -99,6 +103,9 @@ export default function EmsFDDashboard({
     setActiveDeputies: state.setActiveDeputies,
   }));
   const set911Calls = useCall911State((state) => state.setCalls);
+  const t = useTranslations();
+  const { user } = useAuth();
+  const session = user ?? _session;
 
   React.useEffect(() => {
     setActiveDeputy(activeDeputy);
@@ -108,7 +115,28 @@ export default function EmsFDDashboard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);
 
-  const t = useTranslations();
+  const cards = [
+    {
+      type: DashboardLayoutCardType.ACTIVE_CALLS,
+      isEnabled: CALLS_911,
+      children: <ActiveCalls initialData={calls} />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_DEPUTIES,
+      isEnabled: true,
+      children: <ActiveDeputies initialDeputies={activeDeputies} />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_OFFICERS,
+      isEnabled: true,
+      children: <ActiveOfficers initialOfficers={activeOfficers} />,
+    },
+  ];
+
+  const layoutOrder = session?.emsFdLayoutOrder ?? [];
+  const sortedCards = cards.sort((a, b) => {
+    return layoutOrder.indexOf(a.type) - layoutOrder.indexOf(b.type);
+  });
 
   return (
     <Layout permissions={{ permissions: [Permissions.EmsFd] }} className="dark:text-white">
@@ -116,9 +144,9 @@ export default function EmsFDDashboard({
 
       <EmsFdHeader activeDeputy={activeDeputy} />
 
-      {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
-      <ActiveOfficers initialOfficers={activeOfficers} />
-      <ActiveDeputies initialDeputies={activeDeputies} />
+      {sortedCards.map((card) =>
+        card.isEnabled ? <React.Fragment key={card.type}>{card.children}</React.Fragment> : null,
+      )}
 
       <SelectDeputyModal />
       <EmsFdModals />

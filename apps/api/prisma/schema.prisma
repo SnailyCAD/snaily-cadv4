@@ -274,6 +274,9 @@ model User {
   toAddDefaultPermissions  ToAddDefaultPermissions[]
   lastSeen                 DateTime                  @default(now())
   developerMode            Boolean                   @default(false)
+  dispatchLayoutOrder      DashboardLayoutCardType[]
+  emsFdLayoutOrder         DashboardLayoutCardType[]
+  officerLayoutOrder       DashboardLayoutCardType[]
 
   // relational data
   citizens             Citizen[]
@@ -1953,4 +1956,13 @@ enum Feature {
   REQUIRED_CITIZEN_IMAGE // see #1681
   LEO_EDITABLE_CITIZEN_PROFILE // see #1698
   ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER // see #1722
+}
+
+enum DashboardLayoutCardType {
+  ACTIVE_CALLS
+  ACTIVE_BOLOS
+  ACTIVE_WARRANTS
+  ACTIVE_OFFICERS
+  ACTIVE_DEPUTIES
+  ACTIVE_INCIDENTS
 }

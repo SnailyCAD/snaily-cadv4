@@ -47,6 +47,9 @@ export const userProperties = Prisma.validator<Prisma.UserSelect>()({
   updatedAt: true,
   lastSeen: true,
   developerMode: true,
+  dispatchLayoutOrder: true,
+  emsFdLayoutOrder: true,
+  officerLayoutOrder: true,
 });
 
 interface GetSessionUserOptions<ReturnNullOnError extends boolean> {

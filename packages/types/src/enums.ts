@@ -326,3 +326,15 @@ export const CourthouseType = {
 } as const;
 
 export type CourthouseType = (typeof CourthouseType)[keyof typeof CourthouseType];
+
+export const DashboardLayoutCardType = {
+  ACTIVE_CALLS: "ACTIVE_CALLS",
+  ACTIVE_BOLOS: "ACTIVE_BOLOS",
+  ACTIVE_WARRANTS: "ACTIVE_WARRANTS",
+  ACTIVE_OFFICERS: "ACTIVE_OFFICERS",
+  ACTIVE_DEPUTIES: "ACTIVE_DEPUTIES",
+  ACTIVE_INCIDENTS: "ACTIVE_INCIDENTS",
+} as const;
+
+export type DashboardLayoutCardType =
+  (typeof DashboardLayoutCardType)[keyof typeof DashboardLayoutCardType];

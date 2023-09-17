@@ -1,14 +1,18 @@
 import { Context, Res, BodyParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { ContentType, Delete, Description, Patch, Post } from "@tsed/schema";
+import { ContentType, Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { setCookie } from "utils/set-cookie";
 import { cad, Rank, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
-import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
+import {
+  CHANGE_PASSWORD_SCHEMA,
+  CHANGE_USER_SCHEMA,
+  DASHBOARD_LAYOUT_SCHEMA,
+} from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/data/validate-schema";
@@ -279,5 +283,20 @@ export class UserController {
     });
 
     return true;
+  }
+
+  @Put("/dashboard-layout")
+  async editDashboardLayout(@BodyParams() body: unknown, @Context("user") user: User) {
+    const data = validateSchema(DASHBOARD_LAYOUT_SCHEMA, body);
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        [data.type]: data.layout,
+      },
+      select: userProperties,
+    });
+
+    return updatedUser;
   }
 }

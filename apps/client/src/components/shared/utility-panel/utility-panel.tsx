@@ -4,8 +4,12 @@ import { useTime } from "hooks/shared/useTime";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
-import { Wifi } from "react-bootstrap-icons";
+import { Grid1x2Fill, Wifi } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
+import { Button } from "@snailycad/ui";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/modal-ids";
+import { EditDashboardLayoutModal } from "./edit-dashboard-layout-modal";
 
 const DispatchAreaOfPlay = dynamic(async () => {
   return (await import("components/dispatch/dispatch-area-of-play")).DispatchAreaOfPlay;
@@ -22,6 +26,7 @@ export function UtilityPanel({ children, isDispatch }: Props) {
   const t = useTranslations("Leo");
   const { activeDispatchersCount, hasActiveDispatchers } = useActiveDispatchers();
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
+  const modalState = useModal();
 
   return (
     <div className="w-full mb-3 card overflow-y-hidden">
@@ -53,6 +58,19 @@ export function UtilityPanel({ children, isDispatch }: Props) {
       </header>
 
       {children}
+
+      <footer className="border-t-[1.5px] border-neutral-800 dark:border-secondary status-buttons-grid mt-2 px-4 py-2">
+        <Button
+          className="flex items-center gap-2"
+          size="xs"
+          onClick={() => modalState.openModal(ModalIds.EditDashboardLayout)}
+        >
+          <Grid1x2Fill />
+          Edit Dashboard Layout
+        </Button>
+
+        <EditDashboardLayoutModal />
+      </footer>
     </div>
   );
 }
