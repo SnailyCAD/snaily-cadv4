@@ -117,7 +117,10 @@ type UserPicks =
   | "roles"
   | "lastSeen"
   | "hasPassword"
-  | "developerMode";
+  | "developerMode"
+  | "dispatchLayoutOrder"
+  | "emsFdLayoutOrder"
+  | "officerLayoutOrder";
 
 export type User = Pick<
   Prisma.User & {

@@ -13,7 +13,7 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import { ValueType } from "@snailycad/types";
+import { DashboardLayoutCardType, ValueType } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
@@ -25,13 +25,15 @@ import type {
   GetBolosData,
   GetDispatchData,
   GetEmsFdActiveDeputies,
+  GetUserData,
 } from "@snailycad/types/api";
-import { UtilityPanel } from "components/shared/UtilityPanel";
+import { UtilityPanel } from "components/shared/utility-panel/utility-panel";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { useActiveDispatcherState } from "state/dispatch/active-dispatcher-state";
 import { Infofield } from "@snailycad/ui";
 import { ActiveOfficers } from "components/dispatch/active-units/officers/active-officers";
 import { ActiveDeputies } from "components/dispatch/active-units/deputies/active-deputies";
+import { useAuth } from "context/AuthContext";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/active-incidents/active-incidents")).ActiveIncidents;
@@ -64,6 +66,7 @@ export interface DispatchPageProps extends GetDispatchData {
   activeOfficers: GetActiveOfficersData;
   calls: Get911CallsData;
   bolos: GetBolosData;
+  session: GetUserData | null;
 }
 
 export default function DispatchDashboard(props: DispatchPageProps) {
@@ -90,6 +93,8 @@ export default function DispatchDashboard(props: DispatchPageProps) {
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
   const { CALLS_911, ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { user } = useAuth();
+  const session = user ?? props.session;
 
   React.useEffect(() => {
     set911Calls(props.calls.calls);
@@ -105,27 +110,37 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
   const cards = [
     {
+      type: DashboardLayoutCardType.ACTIVE_OFFICERS,
       isEnabled: true,
       children: <ActiveOfficers initialOfficers={props.activeOfficers} />,
     },
     {
+      type: DashboardLayoutCardType.ACTIVE_DEPUTIES,
       isEnabled: true,
       children: <ActiveDeputies initialDeputies={props.activeDeputies} />,
     },
     {
+      type: DashboardLayoutCardType.ACTIVE_CALLS,
       isEnabled: CALLS_911,
       children: <ActiveCalls initialData={props.calls} />,
     },
 
     {
+      type: DashboardLayoutCardType.ACTIVE_INCIDENTS,
       isEnabled: ACTIVE_INCIDENTS,
       children: <ActiveIncidents />,
     },
     {
+      type: DashboardLayoutCardType.ACTIVE_BOLOS,
       isEnabled: true,
       children: <ActiveBolos initialBolos={props.bolos} />,
     },
   ];
+
+  const layoutOrder = session?.dispatchLayoutOrder ?? [];
+  const sortedCards = cards.sort((a, b) => {
+    return layoutOrder.indexOf(a.type) - layoutOrder.indexOf(b.type);
+  });
 
   return (
     <Layout permissions={{ permissions: [Permissions.Dispatch] }} className="dark:text-white">
@@ -133,7 +148,9 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
       <DispatchHeader userActiveDispatcher={props.userActiveDispatcher} />
 
-      {cards.map((card) => (card.isEnabled ? card.children : null))}
+      {sortedCards.map((card) =>
+        card.isEnabled ? <React.Fragment key={card.type}>{card.children}</React.Fragment> : null,
+      )}
 
       <DispatchModals />
     </Layout>

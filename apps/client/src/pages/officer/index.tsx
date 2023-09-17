@@ -2,12 +2,18 @@ import * as React from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
-import { StatusesArea } from "components/shared/StatusesArea";
+import { StatusesArea } from "components/shared/utility-panel/statuses-area";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useLeoState } from "state/leo-state";
-import { ActiveToneType, Record, RecordType, ValueType } from "@snailycad/types";
+import {
+  ActiveToneType,
+  DashboardLayoutCardType,
+  Record,
+  RecordType,
+  ValueType,
+} from "@snailycad/types";
 import { ActiveCalls } from "components/dispatch/active-calls/active-calls";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -19,7 +25,7 @@ import { ActiveWarrants } from "components/leo/active-warrants/active-warrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import { UtilityPanel } from "components/shared/UtilityPanel";
+import { UtilityPanel } from "components/shared/utility-panel/utility-panel";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
@@ -33,10 +39,12 @@ import type {
   GetActiveOfficersData,
   GetBolosData,
   GetEmsFdActiveDeputies,
+  GetUserData,
 } from "@snailycad/types/api";
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { usePermission } from "hooks/usePermission";
+import { useAuth } from "context/AuthContext";
 
 const Modals = {
   CreateWarrantModal: dynamic(
@@ -112,6 +120,7 @@ interface Props {
   calls: Get911CallsData;
   bolos: GetBolosData;
   activeDeputies: GetEmsFdActiveDeputies;
+  session: GetUserData | null;
 }
 
 export default function OfficerDashboard({
@@ -120,6 +129,7 @@ export default function OfficerDashboard({
   activeOfficer,
   activeOfficers,
   activeDeputies,
+  session: _session,
 }: Props) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -145,6 +155,8 @@ export default function OfficerDashboard({
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
   const { ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
+  const { user } = useAuth();
+  const session = user ?? _session;
 
   React.useEffect(() => {
     setActiveOfficer(activeOfficer);
@@ -158,17 +170,48 @@ export default function OfficerDashboard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
 
+  const cards = [
+    {
+      type: DashboardLayoutCardType.ACTIVE_OFFICERS,
+      isEnabled: true,
+      children: <ActiveOfficers initialOfficers={activeOfficers} />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_DEPUTIES,
+      isEnabled: true,
+      children: <ActiveDeputies initialDeputies={activeDeputies} />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_CALLS,
+      isEnabled: CALLS_911,
+      children: <ActiveCalls initialData={calls} />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_WARRANTS,
+      isEnabled: ACTIVE_WARRANTS,
+      children: <ActiveWarrants />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_BOLOS,
+      isEnabled: true,
+      children: <ActiveBolos initialBolos={bolos} />,
+    },
+  ];
+
+  const layoutOrder = session?.officerLayoutOrder ?? [];
+  const sortedCards = cards.sort((a, b) => {
+    return layoutOrder.indexOf(a.type) - layoutOrder.indexOf(b.type);
+  });
+
   return (
     <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
       <OfficerHeader activeOfficer={activeOfficer} />
 
-      {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
-      <ActiveBolos initialBolos={bolos} />
-      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
-      <ActiveOfficers initialOfficers={activeOfficers} />
-      <ActiveDeputies initialDeputies={activeDeputies} />
+      {sortedCards.map((card) =>
+        card.isEnabled ? <React.Fragment key={card.type}>{card.children}</React.Fragment> : null,
+      )}
 
       <Modals.SelectOfficerModal />
       <OfficerModals />

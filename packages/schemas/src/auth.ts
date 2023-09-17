@@ -36,3 +36,8 @@ export const TEMP_PASSWORD_SCHEMA = z.object({
   newPassword: z.string().min(8).max(255),
   confirmPassword: z.string().min(8).max(255),
 });
+
+export const DASHBOARD_LAYOUT_SCHEMA = z.object({
+  type: z.string(),
+  layout: z.array(z.string()),
+});
