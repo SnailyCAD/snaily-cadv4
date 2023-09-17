@@ -101,7 +101,6 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     state.setBolos(props.bolos.bolos);
 
     setUserActiveDispatcher(props.userActiveDispatcher, props.activeDispatchersCount);
-    state.setActiveIncidents(props.activeIncidents);
 
     state.setActiveDeputies(props.activeDeputies);
     state.setActiveOfficers(props.activeOfficers);
@@ -163,7 +162,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       ["/admin/values/codes_10", []],
       ["/911-calls", { calls: [], totalCount: 0 }],
       ["/bolos", { bolos: [], totalCount: 0 }],
-      ["/dispatch", { activeDispatchersCount: 0, userActiveDispatcher: null, activeIncidents: [] }],
+      ["/dispatch", { activeDispatchersCount: 0, userActiveDispatcher: null }],
       ["/leo/active-officers", []],
       ["/ems-fd/active-deputies", []],
     ]);
@@ -177,7 +176,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       activeOfficers,
       activeDeputies,
 
-      activeIncidents: activeDispatcherData.activeIncidents ?? [],
       userActiveDispatcher: activeDispatcherData.userActiveDispatcher ?? null,
       activeDispatchersCount: activeDispatcherData.activeDispatchersCount ?? 0,
 

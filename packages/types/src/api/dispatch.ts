@@ -96,7 +96,6 @@ export interface GetDispatchData {
         user: Pick<Types.User, "id" | "username">;
       })
     | null;
-  activeIncidents: Types.LeoIncident[];
 }
 
 /**

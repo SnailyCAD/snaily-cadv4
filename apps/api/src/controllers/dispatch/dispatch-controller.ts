@@ -11,9 +11,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { getActiveOfficer } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/extended-not-found";
-import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
@@ -54,34 +52,22 @@ export class DispatchController {
       "activeDispatchersInactivityTimeout",
       "updatedAt",
     );
-    const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
 
-    const [activeDispatchersCount, userActiveDispatcher, activeIncidents] =
-      await prisma.$transaction([
-        prisma.activeDispatchers.count({
-          where: dispatcherInactivityTimeout?.filter,
-        }),
-        prisma.activeDispatchers.findFirst({
-          where: {
-            userId: sessionUserId,
-            ...(dispatcherInactivityTimeout?.filter ?? {}),
-          },
-          include: {
-            department: { include: { value: true } },
-            user: { select: { username: true, id: true } },
-          },
-        }),
-        prisma.leoIncident.findMany({
-          where: { isActive: true, ...(incidentInactivityFilter?.filter ?? {}) },
-          include: incidentInclude,
-        }),
-      ]);
-
-    const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
+    const [activeDispatchersCount, userActiveDispatcher] = await prisma.$transaction([
+      prisma.activeDispatchers.count({
+        where: dispatcherInactivityTimeout?.filter,
+      }),
+      prisma.activeDispatchers.findFirst({
+        where: { userId: sessionUserId, ...(dispatcherInactivityTimeout?.filter ?? {}) },
+        include: {
+          department: { include: { value: true } },
+          user: { select: { username: true, id: true } },
+        },
+      }),
+    ]);
 
     return {
       areaOfPlay: cad.areaOfPlay || null,
-      activeIncidents: correctedIncidents,
       activeDispatchersCount,
       userActiveDispatcher,
     };

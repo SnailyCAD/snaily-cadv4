@@ -11,11 +11,11 @@ import { ModalIds } from "types/modal-ids";
 import { useLeoState } from "state/leo-state";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
-import type { GetActiveOfficerData, GetDispatchData, GetIncidentsData } from "@snailycad/types/api";
+import type { GetActiveOfficerData, GetIncidentsData } from "@snailycad/types/api";
 import { IncidentsTable } from "components/leo/incidents/incidents-table";
 import Link from "next/link";
 
-interface Props extends GetDispatchData {
+interface Props {
   incidents: GetIncidentsData<"leo">;
   activeOfficer: GetActiveOfficerData | null;
 }

@@ -10,12 +10,12 @@ import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
-import type { GetDispatchData, GetEmsFdActiveDeputy, GetIncidentsData } from "@snailycad/types/api";
+import type { GetEmsFdActiveDeputy, GetIncidentsData } from "@snailycad/types/api";
 
 import { useEmsFdState } from "state/ems-fd-state";
 import { IncidentsTable } from "components/leo/incidents/incidents-table";
 
-interface Props extends GetDispatchData {
+interface Props {
   incidents: GetIncidentsData<"ems-fd">;
   activeDeputy: GetEmsFdActiveDeputy | null;
 }

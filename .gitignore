@@ -28,6 +28,7 @@ tsconfig.tsbuildinfo
 apps/**/coverage
 packages/**/coverage
 import-officers.mjs
+sample-data.json
 .data
 .dev-data
 # Sentry

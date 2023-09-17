@@ -22,7 +22,6 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import type {
   DeletePurge911CallsData,
   Get911CallsData,
-  GetDispatchData,
   GetIncidentsData,
 } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
@@ -30,7 +29,7 @@ import { getSelectedTableRows } from "hooks/shared/table/use-table-state";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { useCall911State } from "state/dispatch/call-911-state";
 
-interface Props extends GetDispatchData {
+interface Props {
   data: Get911CallsData;
   incidents: GetIncidentsData<"leo">["incidents"];
 }
