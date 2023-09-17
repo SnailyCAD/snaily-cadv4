@@ -48,11 +48,11 @@ export class CADSettingsController {
     const version = await getCADVersion();
 
     const hasManageCadSettingsPermissions = user
-      ? false
-      : hasPermission({
+      ? hasPermission({
           permissionsToCheck: [Permissions.ManageCADSettings],
           userToCheck: user,
-        });
+        })
+      : false;
 
     const cad = await prisma.cad.findFirst({
       select: {
