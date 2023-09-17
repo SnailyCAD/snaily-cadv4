@@ -48,7 +48,7 @@ export class AccountController {
       data: {
         apiTokenId: apiToken.id,
       },
-      select: userProperties,
+      select: { ...userProperties, apiToken: true },
     });
 
     return updatedUser;
@@ -100,7 +100,7 @@ export class AccountController {
       data: {
         apiToken: { update: { token: `snp_${nanoid(56)}` } },
       },
-      select: userProperties,
+      select: { ...userProperties, apiToken: true },
     });
 
     return updated;
