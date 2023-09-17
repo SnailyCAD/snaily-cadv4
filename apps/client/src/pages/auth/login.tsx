@@ -69,7 +69,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   const isLocalhost =
     (CORS_ORIGIN_URL?.includes("localhost") || NEXT_PUBLIC_CLIENT_URL?.includes("localhost")) ??
     false;
-  const doURLsMatch = isWildcard ? true : CORS_ORIGIN_URL === NEXT_PUBLIC_CLIENT_URL;
+
+  const isDefaultENvValue = CORS_ORIGIN_URL === "http://192.168.x.x:3000";
+  const doURLsMatch = isWildcard
+    ? true
+    : CORS_ORIGIN_URL === NEXT_PUBLIC_CLIENT_URL && !isDefaultENvValue;
 
   return {
     props: {
