@@ -136,17 +136,18 @@ export default function OfficerDashboard({
     ],
   });
 
-  const leoState = useLeoState();
-  const dispatchState = useDispatchState();
+  const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
+  const dispatchState = useDispatchState((state) => ({
+    setBolos: state.setBolos,
+    setActiveOfficers: state.setActiveOfficers,
+    setActiveDeputies: state.setActiveDeputies,
+  }));
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
-  const signal100 = useSignal100();
-  const tones = useTones(ActiveToneType.LEO);
-  const panic = usePanicButton();
   const { ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
 
   React.useEffect(() => {
-    leoState.setActiveOfficer(activeOfficer);
+    setActiveOfficer(activeOfficer);
 
     set911Calls(calls.calls);
     dispatchState.setBolos(bolos.bolos);
@@ -161,13 +162,37 @@ export default function OfficerDashboard({
     <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
+      <OfficerHeader activeOfficer={activeOfficer} />
+
+      {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
+      <ActiveBolos initialBolos={bolos} />
+      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
+      <ActiveOfficers initialOfficers={activeOfficers} />
+      <ActiveDeputies initialDeputies={activeDeputies} />
+
+      <Modals.SelectOfficerModal />
+      <OfficerModals />
+    </Layout>
+  );
+}
+
+function OfficerHeader(props: Pick<Props, "activeOfficer">) {
+  const signal100 = useSignal100();
+  const tones = useTones(ActiveToneType.LEO);
+  const panic = usePanicButton();
+
+  const leoState = useLeoState();
+  const dispatchState = useDispatchState();
+
+  return (
+    <>
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       <panic.Component audio={panic.audio} unit={panic.unit} />
       <tones.Component audio={tones.audio} description={tones.description} user={tones.user} />
 
       <UtilityPanel>
         <div className="px-4">
-          <ModalButtons initialActiveOfficer={activeOfficer} />
+          <ModalButtons initialActiveOfficer={props.activeOfficer} />
         </div>
 
         <StatusesArea
@@ -175,21 +200,10 @@ export default function OfficerDashboard({
           units={dispatchState.activeOfficers}
           activeUnit={leoState.activeOfficer}
           setActiveUnit={leoState.setActiveOfficer}
-          initialData={activeOfficer}
+          initialData={props.activeOfficer}
         />
       </UtilityPanel>
-
-      {CALLS_911 ? <ActiveCalls initialData={calls} /> : null}
-      <ActiveBolos initialBolos={bolos} />
-      {ACTIVE_WARRANTS ? <ActiveWarrants /> : null}
-      <div className="mt-3">
-        <ActiveOfficers initialOfficers={activeOfficers} />
-        <ActiveDeputies initialDeputies={activeDeputies} />
-      </div>
-
-      <Modals.SelectOfficerModal />
-      <OfficerModals />
-    </Layout>
+    </>
   );
 }
 

@@ -83,18 +83,13 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     ],
   });
 
-  const { userActiveDispatcher, setUserActiveDispatcher } = useActiveDispatcherState((state) => ({
-    setUserActiveDispatcher: state.setUserActiveDispatcher,
-    userActiveDispatcher: state.userActiveDispatcher,
-  }));
+  const setUserActiveDispatcher = useActiveDispatcherState(
+    (state) => state.setUserActiveDispatcher,
+  );
   const state = useDispatchState();
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
-  const signal100 = useSignal100();
-  const panic = usePanicButton();
-
   const { CALLS_911, ACTIVE_INCIDENTS } = useFeatureEnabled();
-  const modalState = useModal();
 
   React.useEffect(() => {
     set911Calls(props.calls.calls);
@@ -108,13 +103,53 @@ export default function DispatchDashboard(props: DispatchPageProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
-  const activeDepartment =
-    userActiveDispatcher?.department ?? props.userActiveDispatcher?.department;
+  const cards = [
+    {
+      isEnabled: true,
+      children: <ActiveOfficers initialOfficers={props.activeOfficers} />,
+    },
+    {
+      isEnabled: true,
+      children: <ActiveDeputies initialDeputies={props.activeDeputies} />,
+    },
+    {
+      isEnabled: CALLS_911,
+      children: <ActiveCalls initialData={props.calls} />,
+    },
+
+    {
+      isEnabled: ACTIVE_INCIDENTS,
+      children: <ActiveIncidents />,
+    },
+    {
+      isEnabled: true,
+      children: <ActiveBolos initialBolos={props.bolos} />,
+    },
+  ];
 
   return (
     <Layout permissions={{ permissions: [Permissions.Dispatch] }} className="dark:text-white">
       <Title renderLayoutTitle={false}>{t("dispatch")}</Title>
 
+      <DispatchHeader userActiveDispatcher={props.userActiveDispatcher} />
+
+      {cards.map((card) => (card.isEnabled ? card.children : null))}
+
+      <DispatchModals />
+    </Layout>
+  );
+}
+
+function DispatchHeader(props: Pick<DispatchPageProps, "userActiveDispatcher">) {
+  const t = useTranslations("Leo");
+  const userActiveDispatcher = useActiveDispatcherState((state) => state.userActiveDispatcher);
+  const signal100 = useSignal100();
+  const panic = usePanicButton();
+  const activeDepartment =
+    userActiveDispatcher?.department ?? props.userActiveDispatcher?.department;
+
+  return (
+    <>
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       <panic.Component audio={panic.audio} unit={panic.unit} />
 
@@ -127,19 +162,15 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 
         <DispatchModalButtons />
       </UtilityPanel>
+    </>
+  );
+}
 
-      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
-        <div className="w-full">
-          <ActiveOfficers initialOfficers={props.activeOfficers} />
-          <ActiveDeputies initialDeputies={props.activeDeputies} />
-        </div>
-      </div>
-      <div className="mt-3">
-        {CALLS_911 ? <ActiveCalls initialData={props.calls} /> : null}
-        {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
-        <ActiveBolos initialBolos={props.bolos} />
-      </div>
+function DispatchModals() {
+  const modalState = useModal();
 
+  return (
+    <>
       <Modals.NotepadModal />
       {/* name search have their own vehicle/weapon search modal */}
       {modalState.isOpen(ModalIds.NameSearch) ? null : (
@@ -151,7 +182,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       <Modals.AddressSearchModal />
       <Modals.NameSearchModal />
       <Modals.CustomFieldSearch />
-    </Layout>
+    </>
   );
 }
 
