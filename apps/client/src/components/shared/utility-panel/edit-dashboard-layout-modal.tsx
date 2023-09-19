@@ -36,6 +36,7 @@ const cardTypes: Record<"ems-fd" | "officer" | "dispatch", DashboardLayoutCardTy
 
 export function EditDashboardLayoutModal() {
   const common = useTranslations("Common");
+  const t = useTranslations("Leo");
 
   const { setUser, user } = useAuth();
   const [sortedList, setSortedList] = React.useState<DashboardLayoutCardType[]>([]);
@@ -69,8 +70,8 @@ export function EditDashboardLayoutModal() {
       setUser({ ...user, [columnName]: sortedList });
       toastMessage({
         icon: "success",
-        title: "Layout Saved",
-        message: "The layout has been saved",
+        title: t("layoutSavedTitle"),
+        message: t("layoutSavedMessage"),
       });
     }
   }
@@ -87,7 +88,7 @@ export function EditDashboardLayoutModal() {
 
   return (
     <Modal
-      title="Edit Dashboard Layout"
+      title={t("editDashboardLayout")}
       isOpen={modalState.isOpen(ModalIds.EditDashboardLayout)}
       onClose={() => modalState.closeModal(ModalIds.EditDashboardLayout)}
       className="w-[650px]"
@@ -104,7 +105,7 @@ export function EditDashboardLayoutModal() {
             className="card border-2 rounded-md p-4 cursor-pointer flex items-center justify-between"
             key={type}
           >
-            {type}
+            {t(type)}
 
             <ArrowsMove />
           </li>

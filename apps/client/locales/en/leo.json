@@ -335,7 +335,16 @@
     "departmentInformationDesc": "Here you can view further external links and information for your department.",
     "noDepartmentLinks": "This department doesn't have any extra information yet.",
     "showingOnlyLatest12Units": "Showing only 12 latest units.",
-    "showingOnlyLatest12UnitsDescription": "Showing only the 12 latest units in this list. The latest units are located at the top of the list. This is to avoid page slowdowns. Use the filters the refine your search."
+    "showingOnlyLatest12UnitsDescription": "Showing only the 12 latest units in this list. The latest units are located at the top of the list. This is to avoid page slowdowns. Use the filters the refine your search.",
+    "ACTIVE_CALLS": "Active Calls",
+    "ACTIVE_BOLOS": "Active BOLOs",
+    "ACTIVE_WARRANTS": "Active Warrants",
+    "ACTIVE_OFFICERS": "Active Officers",
+    "ACTIVE_DEPUTIES": "Active Deputies",
+    "ACTIVE_INCIDENTS": "Active Incidents",
+    "layoutSavedTitle": "Layout Saved",
+    "layoutSavedMessage": "Your layout has been saved.",
+    "editDashboardLayout": "Edit Dashboard Layout"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",
