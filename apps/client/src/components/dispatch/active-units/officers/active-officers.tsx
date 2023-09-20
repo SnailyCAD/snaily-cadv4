@@ -129,7 +129,11 @@ function ActiveOfficers({ initialOfficers }: Props) {
           containerProps={{ className: "mb-3 px-4" }}
           tableState={tableState}
           data={activeOfficers.map((officer) => {
-            const color = officer.status?.color;
+            const backgroundColor = officer.status?.color;
+            const textColor = officer.status?.textColor;
+            const color = backgroundColor
+              ? textColor || generateContrastColor(backgroundColor)
+              : textColor;
 
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
@@ -138,8 +142,8 @@ function ActiveOfficers({ initialOfficers }: Props) {
               id: officer.id,
               rowProps: {
                 style: {
-                  background: !useDot && color ? color : undefined,
-                  color: !useDot && color ? generateContrastColor(color) : undefined,
+                  backgroundColor: !useDot && backgroundColor ? backgroundColor : undefined,
+                  color,
                 },
               },
               name: nameAndCallsign,
@@ -171,9 +175,9 @@ function ActiveOfficers({ initialOfficers }: Props) {
               rank: (isUnitOfficer(officer) && officer.rank?.value) ?? common("none"),
               status: (
                 <span className="flex items-center">
-                  {useDot && color ? (
+                  {useDot && backgroundColor ? (
                     <span
-                      style={{ background: color }}
+                      style={{ background: backgroundColor }}
                       className="block w-3 h-3 mr-2 rounded-full"
                     />
                   ) : null}

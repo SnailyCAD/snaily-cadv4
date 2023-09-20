@@ -107,17 +107,21 @@ function ActiveDeputies({ initialDeputies }: Props) {
           features={{ isWithinCardOrModal: true }}
           containerProps={{ className: "mb-3 px-4" }}
           data={activeDeputies.map((deputy) => {
-            const color = deputy.status?.color;
-            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+            const backgroundColor = deputy.status?.color;
+            const textColor = deputy.status?.textColor;
+            const color = backgroundColor
+              ? textColor || generateContrastColor(backgroundColor)
+              : textColor;
 
+            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
 
             return {
               id: deputy.id,
               rowProps: {
                 style: {
-                  background: !useDot && color ? color : undefined,
-                  color: !useDot && color ? generateContrastColor(color) : undefined,
+                  backgroundColor: !useDot && backgroundColor ? backgroundColor : undefined,
+                  color,
                 },
               },
               name: nameAndCallsign,

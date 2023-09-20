@@ -9,6 +9,7 @@ import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
 import { isOfficerRankValue } from "@snailycad/utils";
 import { ManageValueFormValues } from "../ManageValueModal";
+import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -140,6 +141,31 @@ export function StatusValueFields() {
         </div>
       </FormField>
 
+      <FormField errorMessage={errors.textColor as string} label={t("textColor")}>
+        <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
+          {values.showPicker ? (
+            <HexColorPicker
+              color={values.textColor}
+              onChange={(textColor) => setFieldValue("textColor", textColor)}
+              style={{ width: "100%", height: "150px" }}
+            />
+          ) : (
+            <Input name="textColor" onChange={handleChange} value={values.textColor} />
+          )}
+
+          <Button
+            variant="cancel"
+            className="p-0 px-1 ml-2"
+            type="button"
+            onPress={() => setFieldValue("showPicker", !values.showPicker)}
+            aria-label="Color Picker"
+            title="Color Picker"
+          >
+            <Eyedropper />
+          </Button>
+        </div>
+      </FormField>
+
       <RadioGroupField
         value={values.type!}
         onChange={(value) => setFieldValue("type", value)}
@@ -148,6 +174,22 @@ export function StatusValueFields() {
         <Radio value={StatusValueType.STATUS_CODE}>Status Code</Radio>
         <Radio value={StatusValueType.SITUATION_CODE}>Situation Code</Radio>
       </RadioGroupField>
+
+      <section className="mt-3">
+        <h3 className="text-lg font-medium mb-1">Color Preview</h3>
+
+        <div
+          style={{
+            backgroundColor: values.color,
+            color: values.color
+              ? values.textColor || generateContrastColor(values.color)
+              : values.textColor,
+          }}
+          className="w-full p-3 text-center rounded font-medium"
+        >
+          Lorem ipsum dolor sit.
+        </div>
+      </section>
     </>
   );
 }
