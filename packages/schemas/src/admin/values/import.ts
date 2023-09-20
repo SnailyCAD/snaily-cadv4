@@ -36,6 +36,7 @@ const TYPE_REGEX = /STATUS_CODE|SITUATION_CODE/;
 export const CODES_10_SCHEMA = BASE_VALUE_SCHEMA.extend({
   shouldDo: z.string().regex(SHOULD_DO_REGEX),
   color: z.string().max(255).nullish(),
+  textColor: z.string().max(255).nullish(),
   type: z.string().regex(TYPE_REGEX).max(255),
   whatPages: z.array(z.any()).max(3).nullish(),
   departments: z.array(z.any()).nullish(),

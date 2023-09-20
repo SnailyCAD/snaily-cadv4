@@ -294,6 +294,7 @@ export const typeHandlers = {
         ...makePrismaData(ValueType.CODES_10, {
           type: item.type as StatusValueType,
           color: item.color,
+          textColor: item.textColor,
           shouldDo: item.shouldDo as ShouldDoType,
           whatPages: whatPages as WhatPages[],
           value: item.value,

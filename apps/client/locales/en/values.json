@@ -4,6 +4,7 @@
     "values": "Values",
     "shouldDo": "Should Do",
     "color": "Color",
+    "textColor": "Text Color",
     "callsign": "Callsign",
     "department": "Department",
     "gameHash": "Game Hash",

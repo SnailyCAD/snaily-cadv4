@@ -106,6 +106,7 @@ function createInitialValues(options: CreateInitialValuesOptions) {
 
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",
+    textColor: value && isStatusValue(value) ? value.textColor ?? "" : "",
     type: getTypeForValue(options.type, value),
     departments:
       value &&
@@ -278,6 +279,13 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
       return {
         ...errors,
         color: tValues("mustBeValidHexColor"),
+      };
+    }
+
+    if (values.textColor && !hexColor().test(values.textColor)) {
+      return {
+        ...errors,
+        textColor: tValues("mustBeValidHexColor"),
       };
     }
 

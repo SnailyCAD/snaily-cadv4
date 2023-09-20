@@ -1091,6 +1091,7 @@ model StatusValue {
   shouldDo    ShouldDoType      @default(SET_STATUS)
   whatPages   WhatPages[]
   color       String?
+  textColor   String?
   type        StatusValueType   @default(STATUS_CODE)
   departments DepartmentValue[]
 
