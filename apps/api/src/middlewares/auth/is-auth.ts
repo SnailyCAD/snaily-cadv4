@@ -15,6 +15,10 @@ import { CadFeatureOptions } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
+  private lastVersionCheck: number | null = null;
+  private currentVersion: Awaited<ReturnType<typeof getCADVersion>> | null = null;
+  private VERSION_CHECK_INTERVAL = 1000 * 60 * 60;
+
   async use(@Req() req: Req, @Res() res: Res, @Context() ctx: Context) {
     const globalCADApiToken = req.headers[API_TOKEN_HEADER];
 
@@ -61,7 +65,14 @@ export class IsAuth implements MiddlewareMethods {
         });
       }
 
-      ctx.set("cad", { ...setCADFeatures(cad), version: await getCADVersion() });
+      const now = Date.now();
+
+      if (this.lastVersionCheck && now - this.lastVersionCheck > this.VERSION_CHECK_INTERVAL) {
+        this.lastVersionCheck = now;
+        this.currentVersion = await getCADVersion();
+      }
+
+      ctx.set("cad", { ...setCADFeatures(cad), version: this.currentVersion });
     }
 
     // localized error messages
