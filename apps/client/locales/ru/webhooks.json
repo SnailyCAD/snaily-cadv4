@@ -80,5 +80,14 @@
     "createdAt": "Создан",
     "officer": "Офицер",
     "socialSecurityNumber": "Номер социального страхования"
+  },
+  "WhitelistStatusChange": {
+    "accepted": "принят",
+    "declined": "отклонен",
+    "pending": "ожидает",
+    "userChangeDescription": "Пользователь: статус вайтлиста для {user} изменен на {status}.",
+    "userChangeTitle": "Изменение статуса вайтлиста для пользвателя",
+    "departmentChangeDescription": "Юнит: статус вайтлиста для {unit} изменен на {status}.",
+    "departmentChangeTitle": "Изменение статуса вайтлиста для юнита"
   }
 }

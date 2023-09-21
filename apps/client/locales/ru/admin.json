@@ -153,7 +153,19 @@
     "alert_deleteUnit": "Вы уверены, что хотите удалить <span>{unit}</span>? Это действие необратимо!",
     "alert_deleteCustomField": "Вы уверены, что хотите удалить это пользовательско поле? Это действие необратимо. Все записи, созданные с этим полем будут удалены.",
     "info_pendingBusinesses": "Компании, ожидающие подтверждения. Примите или отклоните их.",
-    "alert_deleteBusiness": "Вы уверены, что хотите удалить <span>{name}</span>? Все данные будут потеряны. Это действие необратимо."
+    "alert_deleteBusiness": "Вы уверены, что хотите удалить <span>{name}</span>? Все данные будут потеряны. Это действие необратимо.",
+    "webhooks": "Вебхуки",
+    "general": "Основное",
+    "miscellaneous": "Прочее",
+    "WHITELIST_SETTINGS": "Настройки вайтлиста",
+    "INACTIVITY_TIMEOUTS": "Таймауты неактивности",
+    "CITIZEN_LICENSE_POINTS": "Баллы лицензий",
+    "MAX_LICENSE_POINTS": "Максимум баллов лицензий",
+    "TEMPLATES": "Шаблоны",
+    "OTHER": "Другое",
+    "integrations": "Интеграции",
+    "LIMITS": "Лимиты",
+    "BLACKLISTED_WORDS": "Запрещенные слова"
   },
   "AuditLogs": {
     "userBanned": "Пользователь: <span>{value}</span> был забанен.",

@@ -37,7 +37,7 @@
     "incomingCall": "Входящий звонок",
     "dotColor": "Точка",
     "fullRowColor": "Строка",
-    "userApiToken": "Пользовательский Api токен",
+    "userApiToken": "Пользовательский API токен",
     "reGenerateToken": "Сгенерировать токен заново",
     "token": "Токен",
     "discord": "Discord",
@@ -54,7 +54,8 @@
     "unavailableSounds": "Недоступные звуки",
     "unavailableSoundsMessage": "Этот звук недоступен. Он может быть добавлен администратором",
     "userApiTokenDescription": "Этот токен может быть использован для подключения к SnailyCAD API",
-    "developerMode": "Режим Разработчика"
+    "developerMode": "Режим разработчика",
+    "statusViewDescription": "Как цвет кода статуса (тэнкода) представлен в таблице активных юнитов."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> был удалён. Причина: {reason}"
