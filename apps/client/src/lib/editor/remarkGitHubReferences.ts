@@ -27,8 +27,8 @@ function replaceMatchLinks(_url: string, _type: string, number: string) {
 
 export function remarkGitHubReferences() {
   return function (tree: any) {
-    findAndReplace(tree, linkRegex, replaceMatch, { ignore: "link" });
-    findAndReplace(tree, linkRegex, replaceMatchLinks, { ignore: "text" });
-    findAndReplace(tree, /What's Changed/);
+    findAndReplace(tree, [linkRegex, replaceMatch], { ignore: "link" });
+    findAndReplace(tree, [linkRegex, replaceMatchLinks], { ignore: "text" });
+    findAndReplace(tree, [/What's Changed/]);
   };
 }

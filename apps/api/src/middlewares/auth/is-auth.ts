@@ -66,8 +66,7 @@ export class IsAuth implements MiddlewareMethods {
       }
 
       const now = Date.now();
-
-      if (this.lastVersionCheck && now - this.lastVersionCheck > this.VERSION_CHECK_INTERVAL) {
+      if (!this.lastVersionCheck || now - this.lastVersionCheck > this.VERSION_CHECK_INTERVAL) {
         this.lastVersionCheck = now;
         this.currentVersion = await getCADVersion();
       }
