@@ -2,8 +2,6 @@ services:
   postgres:
     container_name: "snaily-cad-postgres"
     image: postgres
-    env_file:
-      - .env
     environment:
       POSTGRES_PORT: ${DB_PORT}
       POSTGRES_USER: ${POSTGRES_USER}

@@ -7,8 +7,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    env_file:
-      - .env
     ports:
       - "${DB_PORT}:5432"
     networks:
@@ -19,8 +17,6 @@ services:
 
   api:
     container_name: "snaily-cad-api"
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -39,8 +35,6 @@ services:
 
   client:
     container_name: "snaily-cad-client"
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: ./Dockerfile
