@@ -73,19 +73,24 @@ export class AdminNameChangeController {
       include: { citizen: true },
     });
 
-    const auditLogType =
+    const action =
       type === WhitelistStatus.ACCEPTED
-        ? AuditLogActionType.NameChangeRequestAccepted
-        : AuditLogActionType.NameChangeRequestDeclined;
+        ? ({
+            type: AuditLogActionType.NameChangeRequestAccepted,
+            new: { ...updated, id: updated.citizenId },
+          } as const)
+        : ({
+            type: AuditLogActionType.NameChangeRequestDeclined,
+            new: { ...updated, id: updated.citizenId },
+          } as const);
+
     const translationKey =
       type === WhitelistStatus.ACCEPTED ? "nameChangeRequestAccepted" : "nameChangeRequestDeclined";
 
     await createAuditLogEntry({
       translationKey,
-      action: {
-        type: auditLogType,
-        new: { ...updated, id: updated.citizenId },
-      },
+      // @ts-expect-error this is correct.
+      action,
       prisma,
       executorId: sessionUserId,
     });
