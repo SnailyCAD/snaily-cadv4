@@ -20,7 +20,7 @@
     "@casperiv/eslint-config": "8.0.0",
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
-    "eslint": "8.49.0",
+    "eslint": "8.50.0",
     "lerna": "^7.3.0",
     "lint-staged": "^14.0.1"
   },
@@ -31,7 +31,7 @@
     "node": ">=18.16.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^8.1.0",
     "colorette": "2.0.20",
     "concurrently": "^8.2.1",
     "copy": "^0.3.2",
@@ -39,6 +39,6 @@
     "husky": "^8.0.3",
     "prettier": "3.0.3",
     "tsup": "6.6.2",
-    "turbo": "1.10.13"
+    "turbo": "1.10.14"
   }
 }

@@ -47,7 +47,6 @@
       "esm"
     ]
   },
-  "sideEffects": false,
   "dependencies": {
     "@snailycad/types": "workspace:*",
     "rimraf": "^5.0.1",
