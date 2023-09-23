@@ -1,8 +1,7 @@
 node_modules
 .next
 dist
-.env
-
+apps/*/.env
 
 # uploaded images
 apps/api/public/**/*.png
