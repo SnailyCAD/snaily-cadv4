@@ -28,6 +28,7 @@ export async function createAuditLogEntry<Action extends AuditLogActions>(
     const auditLog = await options.prisma.auditLog.create({
       data: {
         translationKey: options.translationKey,
+        // @ts-expect-error ignore
         action: superjson.serialize(options.action).json ?? null,
         executorId: options.executorId,
       },
