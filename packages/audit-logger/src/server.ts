@@ -1,7 +1,8 @@
 import superjson from "superjson";
-import type { AuditLog, PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import type { AuditLogActions } from "./index";
 import { captureException } from "@sentry/node";
+import { AuditLog } from "@snailycad/types";
 
 export * from "./types/action-types";
 export * from "./types/actions";
@@ -24,7 +25,6 @@ export async function createAuditLogEntry<Action extends AuditLogActions>(
     const auditLog = await options.prisma.auditLog.create({
       data: {
         translationKey: options.translationKey,
-        // @ts-expect-error ignore
         action: superjson.serialize(options.action).json ?? null,
         executorId: options.executorId,
       },
