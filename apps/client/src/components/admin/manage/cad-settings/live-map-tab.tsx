@@ -92,6 +92,7 @@ export function LiveMapTab() {
         method: "PUT",
         data: formData,
         headers: { "content-type": "multipart/form-data" },
+        helpers,
       });
     }
 
@@ -99,6 +100,7 @@ export function LiveMapTab() {
       path: "/admin/manage/cad-settings/live-map",
       method: "PUT",
       data: { ...values, liveMapURLs },
+      helpers,
     });
 
     if (json?.id) {
