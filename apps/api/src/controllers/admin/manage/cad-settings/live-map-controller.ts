@@ -15,6 +15,7 @@ import sharp from "sharp";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { allowedFileExtensions } from "@snailycad/config";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
+import { captureException } from "@sentry/node";
 
 @Controller("/admin/manage/cad-settings/live-map")
 @ContentType("application/json")
@@ -98,7 +99,16 @@ export class CADSettingsLiveMapController {
       const pathToClientPublicDir = `${process.cwd()}/../client/public/tiles/${
         file.originalname
       }.webp`;
-      await sharpImage.toFile(pathToClientPublicDir);
+
+      try {
+        await sharpImage.toFile(pathToClientPublicDir);
+      } catch (err) {
+        captureException(err);
+        throw new ExtendedBadRequest({
+          tiles:
+            "Unable to write to the file destination. Please make sure SnailyCAD has the correct write permissions to these files/folder",
+        });
+      }
     }
 
     return true;
