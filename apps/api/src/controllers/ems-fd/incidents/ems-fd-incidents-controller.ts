@@ -4,7 +4,7 @@ import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
-import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
+import { EMS_FD_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
@@ -117,7 +117,7 @@ export class IncidentController {
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
     @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PostIncidentsData<"ems-fd">> {
-    const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
+    const data = validateSchema(EMS_FD_INCIDENT_SCHEMA, body);
     const officer = getUserOfficerFromActiveOfficer({
       userId: sessionUserId,
       allowDispatch: true,
@@ -136,6 +136,8 @@ export class IncidentController {
         isActive: data.isActive ?? false,
         situationCodeId: data.situationCodeId ?? null,
         postal: data.postal ?? null,
+        address: data.address ?? null,
+        fireType: data.fireType ?? null,
       },
       include: {
         unitsInvolved: true,
@@ -282,7 +284,7 @@ export class IncidentController {
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @PathParams("id") incidentId: string,
   ): Promise<APITypes.PutIncidentByIdData<"ems-fd">> {
-    const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
+    const data = validateSchema(EMS_FD_INCIDENT_SCHEMA, body);
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
     const incident = await prisma.emsFdIncident.findUnique({
@@ -305,6 +307,8 @@ export class IncidentController {
         isActive: data.isActive ?? false,
         postal: data.postal ?? null,
         situationCodeId: data.situationCodeId ?? null,
+        address: data.address ?? null,
+        fireType: data.fireType ?? null,
       },
     });
 

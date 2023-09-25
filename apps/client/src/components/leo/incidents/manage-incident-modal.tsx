@@ -1,4 +1,4 @@
-import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
+import { EMS_FD_INCIDENT_SCHEMA, LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import {
   Loader,
   Button,
@@ -160,12 +160,13 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     }
   }
 
-  const validate = handleValidate(LEO_INCIDENT_SCHEMA);
+  const validate = handleValidate(type === "ems-fd" ? EMS_FD_INCIDENT_SCHEMA : LEO_INCIDENT_SCHEMA);
   const isEmsFdIncident = incident && "fireType" in incident;
 
   const INITIAL_VALUES = {
     description: incident?.description ?? "",
     postal: incident?.postal ?? "",
+    address: isEmsFdIncident ? incident.address : "",
     descriptionData: dataToSlate(incident),
     vehicleInvolved: isEmsFdIncident ? incident.vehicleInvolved : false,
     firearmsInvolved: incident?.firearmsInvolved ?? false,
@@ -292,7 +293,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     addressOptional
                     isDisabled={areFieldsDisabled}
                     postalOnly={type === "leo"}
-                    addressLabel="location"
+                    addressLabel="address"
                   />
                 </FormRow>
 
