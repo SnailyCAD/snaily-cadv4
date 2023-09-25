@@ -243,14 +243,16 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                     {t("arrestsMade")}
                   </SwitchField>
 
-                  <SwitchField
-                    isDisabled={areFieldsDisabled}
-                    isSelected={values.vehicleInvolved}
-                    onChange={(isSelected) => setFieldValue("vehicleInvolved", isSelected)}
-                    className="w-full"
-                  >
-                    {t("vehicleInvolved")}
-                  </SwitchField>
+                  {type === "ems-fd" ? (
+                    <SwitchField
+                      isDisabled={areFieldsDisabled}
+                      isSelected={values.vehicleInvolved}
+                      onChange={(isSelected) => setFieldValue("vehicleInvolved", isSelected)}
+                      className="w-full"
+                    >
+                      {t("vehicleInvolved")}
+                    </SwitchField>
+                  ) : null}
                 </div>
 
                 <FormField errorMessage={errors.description} label={common("description")}>
@@ -275,13 +277,15 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                       filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
                     />
 
-                    <TextField
-                      isOptional
-                      value={values.fireType}
-                      className="w-full"
-                      onChange={(value) => setFieldValue("fireType", value)}
-                      label={t("fireType")}
-                    />
+                    {type === "ems-fd" ? (
+                      <TextField
+                        isOptional
+                        value={values.fireType}
+                        className="w-full"
+                        onChange={(value) => setFieldValue("fireType", value)}
+                        label={t("fireType")}
+                      />
+                    ) : null}
                   </FormRow>
 
                   <AddressPostalSelect
