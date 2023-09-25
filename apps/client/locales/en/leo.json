@@ -344,7 +344,9 @@
     "ACTIVE_INCIDENTS": "Active Incidents",
     "layoutSavedTitle": "Layout Saved",
     "layoutSavedMessage": "Your layout has been saved.",
-    "editDashboardLayout": "Edit Dashboard Layout"
+    "editDashboardLayout": "Edit Dashboard Layout",
+    "vehicleInvolved": "Vehicle Involved",
+    "fireType": "Fire Type"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

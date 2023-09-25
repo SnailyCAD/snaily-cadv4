@@ -1588,7 +1588,9 @@ model EmsFdIncident {
   caseNumber           Int                    @default(autoincrement())
   description          String?                @db.Text
   descriptionData      Json?
+  address              String?
   postal               String?
+  fireType             String?
   // when null, it is the dispatcher
   creator              EmsFdDeputy?           @relation("emsFdIncidentCreator", fields: [creatorId], references: [id])
   creatorId            String?
@@ -1596,6 +1598,7 @@ model EmsFdIncident {
   firearmsInvolved     Boolean                @default(false)
   injuriesOrFatalities Boolean                @default(false)
   arrestsMade          Boolean                @default(false)
+  vehicleInvolved      Boolean                @default(false)
   isActive             Boolean                @default(false)
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @default(now()) @updatedAt
