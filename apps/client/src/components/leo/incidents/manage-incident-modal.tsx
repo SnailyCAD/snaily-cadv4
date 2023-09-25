@@ -51,6 +51,10 @@ interface AreFormFieldsDisabledOptions {
 }
 
 function areFormFieldsDisabled(options: AreFormFieldsDisabledOptions) {
+  console.log({
+    options,
+  });
+
   /** non-active incidents are always editable */
   if (!options.isActiveIncidentsList) return false;
   /** dispatch can always edit the fields */
@@ -103,10 +107,10 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const isOfficerIncidents = router.pathname.includes("/officer");
 
   const activeUnit = isOfficerIncidents ? activeOfficer : isEmsFdIncidents ? activeDeputy : null;
-  const isActiveIncidentsList = isOfficerIncidents || isEmsFdIncidents;
+  const isReadOnly = isOfficerIncidents || isEmsFdIncidents;
 
   const areFieldsDisabled = areFormFieldsDisabled({
-    isActiveIncidentsList,
+    isActiveIncidentsList: !isReadOnly,
     isDispatch,
     hasActiveDispatchers,
     incident,
@@ -298,11 +302,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                 </FormRow>
 
                 {incident ? (
-                  <InvolvedUnitsTable
-                    type={type}
-                    isDisabled={areFieldsDisabled}
-                    incident={incident}
-                  />
+                  <InvolvedUnitsTable type={type} isDisabled={isReadOnly} incident={incident} />
                 ) : null}
               </div>
 
@@ -336,7 +336,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
         {incident ? (
           <IncidentEventsArea
             handleStateUpdate={handleAddUpdateCallEvent}
-            disabled={areFieldsDisabled}
+            disabled={isReadOnly}
             incident={incident}
           />
         ) : null}
