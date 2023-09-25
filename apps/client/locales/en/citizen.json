@@ -146,5 +146,14 @@
     "deletePet": "Delete Pet",
     "alert_deletePet": "Are you sure you want to delete this pet? This action cannot be undone.",
     "alert_deleteNote": "Are you sure you want to delete this note? This action cannot be undone."
+  },
+  "LawBook": {
+    "lawBook": "Law Book",
+    "warningApplicable": "Warning Applicable",
+    "warningNotApplicable": "Warning Not Applicable",
+    "fines": "Fines",
+    "bail": "Bail",
+    "jailTime": "Jail Time",
+    "isPrimary": "Is Primary"
   }
 }

@@ -126,18 +126,12 @@ export class AdminController {
         { headers: { "user-agent": "SnailyCAD", accept: "application/vnd.github+json" } },
       );
 
-      console.log({ response });
-
       res.setHeader(
         "Cache-Control",
         `private, max-age=${ONE_DAY} stale-while-revalidate=${ONE_DAY / 2}`,
       );
 
       const body = (await response.body.json()) as { body: string };
-
-      console.log({
-        body,
-      });
 
       this.changelogBody = body.body;
       const json = body.body;

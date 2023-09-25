@@ -112,7 +112,8 @@
     "bureauOfFirearms": "Bureau of Firearms",
     "emsFdIncidents": "EMS/FD Incidents",
     "hospitalServices": "Hospital Services",
-    "pets": "Pets"
+    "pets": "Pets",
+    "lawBook": "Law Book"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
