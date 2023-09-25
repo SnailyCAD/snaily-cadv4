@@ -1,4 +1,4 @@
-import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
+import { EMS_FD_INCIDENT_SCHEMA, LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import {
   Loader,
   Button,
@@ -7,6 +7,7 @@ import {
   FormRow,
   Infofield,
   FullDate,
+  TextField,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
@@ -102,10 +103,10 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const isOfficerIncidents = router.pathname.includes("/officer");
 
   const activeUnit = isOfficerIncidents ? activeOfficer : isEmsFdIncidents ? activeDeputy : null;
-  const isActiveIncidentsList = isOfficerIncidents || isEmsFdIncidents;
+  const isReadOnly = isOfficerIncidents || isEmsFdIncidents;
 
   const areFieldsDisabled = areFormFieldsDisabled({
-    isActiveIncidentsList,
+    isActiveIncidentsList: !isReadOnly,
     isDispatch,
     hasActiveDispatchers,
     incident,
@@ -159,17 +160,22 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     }
   }
 
-  const validate = handleValidate(LEO_INCIDENT_SCHEMA);
+  const validate = handleValidate(type === "ems-fd" ? EMS_FD_INCIDENT_SCHEMA : LEO_INCIDENT_SCHEMA);
+  const isEmsFdIncident = incident && "fireType" in incident;
+
   const INITIAL_VALUES = {
     description: incident?.description ?? "",
     postal: incident?.postal ?? "",
+    address: isEmsFdIncident ? incident.address : "",
     descriptionData: dataToSlate(incident),
+    vehicleInvolved: isEmsFdIncident ? incident.vehicleInvolved : false,
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
     isActive: isDispatch ? true : incident?.isActive ?? false,
     situationCodeId: incident?.situationCodeId ?? null,
     openModalAfterCreation: true,
+    fireType: isEmsFdIncident ? incident.fireType ?? "" : "",
   };
 
   return (
@@ -205,7 +211,12 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
               ) : null}
 
               <div>
-                <FormRow className="mb-3" useFlex>
+                <div
+                  className={classNames(
+                    "grid mb-3",
+                    type === "ems-fd" ? "grid-cols-2" : "grid-cols-3",
+                  )}
+                >
                   <SwitchField
                     isDisabled={areFieldsDisabled}
                     isSelected={values.firearmsInvolved}
@@ -232,7 +243,18 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                   >
                     {t("arrestsMade")}
                   </SwitchField>
-                </FormRow>
+
+                  {type === "ems-fd" ? (
+                    <SwitchField
+                      isDisabled={areFieldsDisabled}
+                      isSelected={values.vehicleInvolved}
+                      onChange={(isSelected) => setFieldValue("vehicleInvolved", isSelected)}
+                      className="w-full"
+                    >
+                      {t("vehicleInvolved")}
+                    </SwitchField>
+                  ) : null}
+                </div>
 
                 <FormField errorMessage={errors.description} label={common("description")}>
                   <Editor
@@ -242,32 +264,41 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                   />
                 </FormField>
 
-                <FormRow useFlex>
-                  <ValueSelectField
-                    className="w-full"
-                    isOptional
-                    isDisabled={areFieldsDisabled}
-                    isClearable
-                    label={t("situationCode")}
-                    fieldName="situationCodeId"
-                    values={codes10.values}
-                    valueType={ValueType.CODES_10}
-                    filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
-                  />
+                <FormRow useFlex className={classNames(type === "ems-fd" && "!flex-col")}>
+                  <FormRow useFlex className={classNames(type === "leo" && "!flex-col")}>
+                    <ValueSelectField
+                      className="w-full"
+                      isOptional
+                      isDisabled={areFieldsDisabled}
+                      isClearable
+                      label={t("situationCode")}
+                      fieldName="situationCodeId"
+                      values={codes10.values}
+                      valueType={ValueType.CODES_10}
+                      filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
+                    />
+
+                    {type === "ems-fd" ? (
+                      <TextField
+                        isOptional
+                        value={values.fireType}
+                        className="w-full"
+                        onChange={(value) => setFieldValue("fireType", value)}
+                        label={t("fireType")}
+                      />
+                    ) : null}
+                  </FormRow>
 
                   <AddressPostalSelect
+                    addressOptional
                     isDisabled={areFieldsDisabled}
-                    postalOnly
-                    addressLabel="location"
+                    postalOnly={type === "leo"}
+                    addressLabel="address"
                   />
                 </FormRow>
 
                 {incident ? (
-                  <InvolvedUnitsTable
-                    type={type}
-                    isDisabled={areFieldsDisabled}
-                    incident={incident}
-                  />
+                  <InvolvedUnitsTable type={type} isDisabled={isReadOnly} incident={incident} />
                 ) : null}
               </div>
 
@@ -301,7 +332,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
         {incident ? (
           <IncidentEventsArea
             handleStateUpdate={handleAddUpdateCallEvent}
-            disabled={areFieldsDisabled}
+            disabled={isReadOnly}
             incident={incident}
           />
         ) : null}
