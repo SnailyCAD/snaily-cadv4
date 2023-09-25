@@ -51,10 +51,6 @@ interface AreFormFieldsDisabledOptions {
 }
 
 function areFormFieldsDisabled(options: AreFormFieldsDisabledOptions) {
-  console.log({
-    options,
-  });
-
   /** non-active incidents are always editable */
   if (!options.isActiveIncidentsList) return false;
   /** dispatch can always edit the fields */
