@@ -15,12 +15,16 @@ interface Props {
   unit: ActiveOfficer | ActiveDeputy | null;
   isUnitAssigned: boolean;
   setTempIncident(incident: LeoIncident): void;
-
-  // handleAssignUnassignToCall(call: Full911Call, type: "assign" | "unassign"): void;
+  handleAssignUnassignToIncident(
+    incident: LeoIncident,
+    unitId: string,
+    type: "assign" | "unassign",
+  ): void;
 }
 
 export function ActiveIncidentsActionsColumn({
   setTempIncident,
+  handleAssignUnassignToIncident,
   isUnitAssigned,
   unit,
   incident,
@@ -30,7 +34,7 @@ export function ActiveIncidentsActionsColumn({
   const { hasPermissions } = usePermission();
   const router = useRouter();
 
-  const t = useTranslations("Calls");
+  const t = useTranslations("Leo");
   const common = useTranslations("Common");
 
   const hasDispatchPermissions = hasPermissions(defaultPermissions.defaultDispatchPermissions);
@@ -69,17 +73,23 @@ export function ActiveIncidentsActionsColumn({
         >
           {t("end")}
         </Button>
-      ) : // <Button
-      //   className="ml-2"
-      //   disabled={!isUnitActive}
-      //   size="xs"
-      //   onPress={() =>
-      //     handleAssignUnassignToCall(incident, isUnitAssigned ? "unassign" : "assign")
-      //   }
-      // >
-      //   {isUnitAssigned ? t("unassignFromIncident") : t("assignToIncident")}
-      // </Button>
-      null}
+      ) : (
+        <Button
+          className="ml-2"
+          disabled={!isUnitActive}
+          size="xs"
+          onPress={() =>
+            unit &&
+            handleAssignUnassignToIncident(
+              incident,
+              unit.id,
+              isUnitAssigned ? "unassign" : "assign",
+            )
+          }
+        >
+          {isUnitAssigned ? t("unassignFromIncident") : t("assignToIncident")}
+        </Button>
+      )}
     </>
   );
 }

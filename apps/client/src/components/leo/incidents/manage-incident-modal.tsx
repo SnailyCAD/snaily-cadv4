@@ -117,13 +117,6 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     activeUnit,
   });
 
-  console.log({
-    hasActiveDispatchers,
-    isDispatch,
-    isReadOnly,
-    areFieldsDisabled,
-  });
-
   function handleAddUpdateCallEvent(incident: LeoIncident) {
     setActiveIncidents(activeIncidents.map((inc) => (inc.id === incident.id ? incident : inc)));
   }

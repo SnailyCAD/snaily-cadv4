@@ -353,7 +353,9 @@
     "OTHER": "Other",
     "RADAR": "Radar",
     "LASER": "Laser",
-    "PACE": "Pace"
+    "PACE": "Pace",
+    "unassignFromIncident": "Unassign from incident",
+    "assignToIncident": "Assign to incident"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

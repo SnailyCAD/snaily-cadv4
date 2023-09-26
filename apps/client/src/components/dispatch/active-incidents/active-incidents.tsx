@@ -164,6 +164,7 @@ export function ActiveIncidents() {
                 description: <CallDescription data={incident} />,
                 actions: (
                   <ActiveIncidentsActionsColumn
+                    handleAssignUnassignToIncident={handleAssignUnassignToIncident}
                     setTempIncident={setTempIncident}
                     unit={activeUnitForRoute}
                     isUnitAssigned={isUnitAssigned}

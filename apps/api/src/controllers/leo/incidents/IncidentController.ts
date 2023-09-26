@@ -168,6 +168,7 @@ export class IncidentController {
   }
 
   @Post("/:type/:incidentId")
+  @Description("Assign or unassign a unit from an Active Incident")
   @UsePermissions({
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
