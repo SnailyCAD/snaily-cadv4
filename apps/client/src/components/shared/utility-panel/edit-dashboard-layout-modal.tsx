@@ -24,6 +24,7 @@ const cardTypes: Record<"ems-fd" | "officer" | "dispatch", DashboardLayoutCardTy
     DashboardLayoutCardType.ACTIVE_WARRANTS,
     DashboardLayoutCardType.ACTIVE_OFFICERS,
     DashboardLayoutCardType.ACTIVE_DEPUTIES,
+    DashboardLayoutCardType.ACTIVE_INCIDENTS,
   ],
   dispatch: [
     DashboardLayoutCardType.ACTIVE_OFFICERS,
