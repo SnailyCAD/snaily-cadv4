@@ -55,7 +55,7 @@ export function ActiveIncidentsActionsColumn({
   return (
     <>
       <Button
-        disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
+        isDisabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
         size="xs"
         variant="success"
         onPress={() => onEditClick(incident)}
@@ -66,7 +66,7 @@ export function ActiveIncidentsActionsColumn({
       {isDispatch ? (
         <Button
           onPress={() => onEndClick(incident)}
-          disabled={!hasActiveDispatchers}
+          isDisabled={!hasActiveDispatchers}
           size="xs"
           variant="danger"
           className="ml-2"
@@ -76,7 +76,7 @@ export function ActiveIncidentsActionsColumn({
       ) : (
         <Button
           className="ml-2"
-          disabled={!isUnitActive}
+          isDisabled={!isUnitActive}
           size="xs"
           onPress={() =>
             unit &&

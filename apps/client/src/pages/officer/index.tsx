@@ -155,7 +155,7 @@ export default function OfficerDashboard({
   }));
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
-  const { ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
+  const { ACTIVE_INCIDENTS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
   const { user } = useAuth();
   const session = user ?? _session;
 
@@ -199,7 +199,7 @@ export default function OfficerDashboard({
     },
     {
       type: DashboardLayoutCardType.ACTIVE_INCIDENTS,
-      isEnabled: true,
+      isEnabled: ACTIVE_INCIDENTS,
       children: <ActiveIncidents />,
     },
   ];
