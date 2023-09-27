@@ -339,3 +339,12 @@ export const DashboardLayoutCardType = {
 
 export type DashboardLayoutCardType =
   (typeof DashboardLayoutCardType)[keyof typeof DashboardLayoutCardType];
+
+export const VehiclePaceType = {
+  PACE: "PACE",
+  RADAR: "RADAR",
+  LASER: "LASER",
+  OTHER: "OTHER",
+} as const;
+
+export type VehiclePaceType = (typeof VehiclePaceType)[keyof typeof VehiclePaceType];

@@ -346,7 +346,14 @@
     "layoutSavedMessage": "Your layout has been saved.",
     "editDashboardLayout": "Edit Dashboard Layout",
     "vehicleInvolved": "Vehicle Involved",
-    "fireType": "Fire Type"
+    "fireType": "Fire Type",
+    "speedLimit": "Speed Limit",
+    "vehiclePaceType": "Pace Type",
+    "vehicleSpeed": "Vehicle Speed",
+    "OTHER": "Other",
+    "RADAR": "Radar",
+    "LASER": "Laser",
+    "PACE": "Pace"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

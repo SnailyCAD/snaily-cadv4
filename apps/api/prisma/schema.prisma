@@ -1435,6 +1435,9 @@ model Record {
   vehiclePlate         String?
   vehicleModel         String?
   vehicleColor         String?
+  vehicleSpeed         String?
+  speedLimit           String?
+  vehiclePaceType      VehiclePaceType?
   call911              Call911?            @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id            String?
   incident             LeoIncident?        @relation(fields: [incidentId], references: [id], onDelete: Cascade)
@@ -1970,4 +1973,11 @@ enum DashboardLayoutCardType {
   ACTIVE_OFFICERS
   ACTIVE_DEPUTIES
   ACTIVE_INCIDENTS
+}
+
+enum VehiclePaceType {
+  PACE
+  RADAR
+  LASER
+  OTHER
 }
