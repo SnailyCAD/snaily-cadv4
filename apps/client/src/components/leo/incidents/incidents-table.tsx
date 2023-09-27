@@ -173,7 +173,7 @@ export function IncidentsTable<T extends EmsFdIncident | LeoIncident>(
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
                 arrestsMade: common(yesOrNoText(incident.arrestsMade)),
                 situationCode: incident.situationCode?.value.value ?? common("none"),
-                description: <CallDescription data={incident} />,
+                description: <CallDescription nonCard data={incident} />,
                 createdAt: <FullDate>{incident.createdAt}</FullDate>,
                 actions: (
                   <>

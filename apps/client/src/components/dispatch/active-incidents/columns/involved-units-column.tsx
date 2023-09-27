@@ -17,6 +17,7 @@ import { DndActions } from "types/dnd-actions";
 
 interface Props {
   incident: LeoIncident;
+  isDispatch: boolean;
   handleAssignUnassignToIncident(
     incident: LeoIncident,
     unitId: string,
@@ -24,14 +25,18 @@ interface Props {
   ): Promise<void>;
 }
 
-export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }: Props) {
+export function InvolvedUnitsColumn({
+  isDispatch,
+  handleAssignUnassignToIncident,
+  incident,
+}: Props) {
   const common = useTranslations("Common");
   const setDraggingUnit = useDispatchState((state) => state.setDraggingUnit);
 
   const { generateCallsign } = useGenerateCallsign();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
-  const canDrag = hasActiveDispatchers;
+  const canDrag = isDispatch && hasActiveDispatchers;
 
   function makeAssignedUnit(unit: IncidentInvolvedUnit) {
     if (!unit.unit) return "UNKNOWN";
@@ -54,6 +59,7 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
               <Draggable
                 canDrag={canDrag}
                 onDrag={(isDragging) => {
+                  if (!canDrag) return;
                   setDraggingUnit(isDragging ? "incident" : null);
                 }}
                 key={unit.id}

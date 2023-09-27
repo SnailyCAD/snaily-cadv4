@@ -45,6 +45,7 @@ import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { usePermission } from "hooks/usePermission";
 import { useAuth } from "context/AuthContext";
+import { ActiveIncidents } from "components/dispatch/active-incidents/active-incidents";
 
 const Modals = {
   CreateWarrantModal: dynamic(
@@ -154,7 +155,7 @@ export default function OfficerDashboard({
   }));
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
-  const { ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
+  const { ACTIVE_INCIDENTS, ACTIVE_WARRANTS, CALLS_911 } = useFeatureEnabled();
   const { user } = useAuth();
   const session = user ?? _session;
 
@@ -195,6 +196,11 @@ export default function OfficerDashboard({
       type: DashboardLayoutCardType.ACTIVE_BOLOS,
       isEnabled: true,
       children: <ActiveBolos initialBolos={bolos} />,
+    },
+    {
+      type: DashboardLayoutCardType.ACTIVE_INCIDENTS,
+      isEnabled: ACTIVE_INCIDENTS,
+      children: <ActiveIncidents />,
     },
   ];
 

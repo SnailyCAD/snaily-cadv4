@@ -63,7 +63,7 @@ function areFormFieldsDisabled(options: AreFormFieldsDisabledOptions) {
     const isAssignedToIncident = options.incident.unitsInvolved.some(
       (u) => u.unit?.id === options.activeUnit?.id,
     );
-    return !isAssignedToIncident;
+    return isAssignedToIncident;
   }
 
   // todo: make this an optional feature
@@ -99,11 +99,15 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const isDispatch = router.pathname.includes("/dispatch");
   const isLeoIncidents = type === "leo";
 
-  const isEmsFdIncidents = router.pathname.includes("/ems-fd");
-  const isOfficerIncidents = router.pathname.includes("/officer");
+  const isEmsFdIncidentsPage = router.pathname === "/ems-fd/incidents";
+  const isOfficerIncidentsPage = router.pathname === "/officer/incidents";
 
-  const activeUnit = isOfficerIncidents ? activeOfficer : isEmsFdIncidents ? activeDeputy : null;
-  const isReadOnly = isOfficerIncidents || isEmsFdIncidents;
+  const activeUnit = isOfficerIncidentsPage
+    ? activeOfficer
+    : isEmsFdIncidentsPage
+    ? activeDeputy
+    : null;
+  const isReadOnly = isOfficerIncidentsPage || isEmsFdIncidentsPage;
 
   const areFieldsDisabled = areFormFieldsDisabled({
     isActiveIncidentsList: !isReadOnly,
@@ -298,7 +302,11 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
                 </FormRow>
 
                 {incident ? (
-                  <InvolvedUnitsTable type={type} isDisabled={isReadOnly} incident={incident} />
+                  <InvolvedUnitsTable
+                    type={type}
+                    isDisabled={isReadOnly || areFieldsDisabled}
+                    incident={incident}
+                  />
                 ) : null}
               </div>
 
@@ -332,7 +340,7 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
         {incident ? (
           <IncidentEventsArea
             handleStateUpdate={handleAddUpdateCallEvent}
-            disabled={isReadOnly}
+            disabled={isReadOnly || areFieldsDisabled}
             incident={incident}
           />
         ) : null}
