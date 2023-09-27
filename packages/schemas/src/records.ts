@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { COURT_ENTRY_SCHEMA } from "./court";
+import { VehiclePaceType } from "@snailycad/types";
 
 const VIOLATION = z.object({
   fine: z.coerce.number().nullish(),
@@ -38,6 +39,9 @@ export const CREATE_TICKET_SCHEMA = z.object({
   vehicleId: z.string().nullish(),
   vehicleModel: z.string().nullish(),
   vehicleColor: z.string().nullish(),
+  speedLimit: z.string().nullish(),
+  vehicleSpeed: z.string().nullish(),
+  vehiclePaceType: z.nativeEnum(VehiclePaceType).nullish(),
   call911Id: z.string().nullish(),
   incidentId: z.string().nullish(),
   officerId: z.string().nullish(),
