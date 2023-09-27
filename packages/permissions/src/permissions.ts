@@ -14,7 +14,6 @@ export enum Permissions {
   ViewLicenseExams = "ViewLicenseExams",
   ManageLicenseExams = "ManageLicenseExams",
   SetUserDefinedCallsignOnOfficer = "SetUserDefinedCallsignOnOfficer",
-  ManageActiveIncidents = "ManageActiveIncidents",
 
   ViewCustomFields = "ViewCustomFields",
   ManageCustomFields = "ManageCustomFields",
