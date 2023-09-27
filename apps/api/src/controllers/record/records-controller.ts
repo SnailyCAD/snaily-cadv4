@@ -50,6 +50,7 @@ import { citizenInclude } from "../citizen/CitizenController";
 import { generateCallsign } from "@snailycad/utils";
 import { Descendant, slateDataToString } from "@snailycad/utils/editor";
 import puppeteer from "puppeteer";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -387,13 +388,14 @@ export class RecordsController {
 
   @UseBefore(ActiveOfficer)
   @Delete("/:id")
-  @Description("Delete a ticket, written warning or arrest report by its id")
+  @Description("Delete a warrant, ticket, written warning or arrest report by its id")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
   async deleteRecord(
     @PathParams("id") id: string,
     @BodyParams("type") type: "WARRANT" | (string & {}),
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteRecordsByIdData> {
     if (type === "WARRANT") {
       const warrant = await prisma.warrant.findUnique({
@@ -418,6 +420,20 @@ export class RecordsController {
     // @ts-expect-error simple shortcut
     await prisma[name].delete({
       where: { id },
+    });
+
+    const auditLogType =
+      type === "WARRANT"
+        ? AuditLogActionType.CitizenWarrantRemove
+        : AuditLogActionType.CitizenRecordRemove;
+
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUserId,
+      action: {
+        type: auditLogType,
+        new: id,
+      },
     });
 
     return true;

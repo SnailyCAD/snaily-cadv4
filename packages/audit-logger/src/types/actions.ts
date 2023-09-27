@@ -60,7 +60,9 @@ export type AuditLogActions =
   | LeoIncidentsPurged
   | EmsIncidentsPurged
   | Signal100Toggled
-  | Call911Create;
+  | Call911Create
+  | CitizenRecordRemove
+  | CitizenWarrantRemove;
 
 type BaseAuditLogAction<ActionType extends AuditLogActionType, Previous, New> = {
   type: ActionType;
@@ -338,4 +340,14 @@ export type Call911Create = BaseAuditLogAction<
   AuditLogActionType.Call911Create,
   undefined,
   Types.Call911
+>;
+export type CitizenRecordRemove = BaseAuditLogAction<
+  AuditLogActionType.CitizenRecordRemove,
+  undefined,
+  string
+>;
+export type CitizenWarrantRemove = BaseAuditLogAction<
+  AuditLogActionType.CitizenWarrantRemove,
+  undefined,
+  string
 >;
