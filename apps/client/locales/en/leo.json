@@ -355,7 +355,10 @@
     "LASER": "Laser",
     "PACE": "Pace",
     "unassignFromIncident": "Unassign from incident",
-    "assignToIncident": "Assign to incident"
+    "assignToIncident": "Assign to incident",
+    "myRecordReports": "My Record Reports",
+    "myRecordReportsDescription": "Here you can view all the tickets, arrest reports, written warnings and warrants that officers associated to your account have created.",
+    "noReportsCreated": "You have not created any reports yet."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

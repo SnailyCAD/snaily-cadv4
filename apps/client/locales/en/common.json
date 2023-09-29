@@ -113,7 +113,8 @@
     "emsFdIncidents": "EMS/FD Incidents",
     "hospitalServices": "Hospital Services",
     "pets": "Pets",
-    "lawBook": "Law Book"
+    "lawBook": "Law Book",
+    "myRecordReports": "My Record Reports"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

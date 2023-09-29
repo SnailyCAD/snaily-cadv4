@@ -56,6 +56,11 @@ export function OfficerDropdown() {
       show: hasPermissions([Permissions.Leo]),
     },
     {
+      name: t("myRecordReports"),
+      href: "/officer/my-record-reports",
+      show: hasPermissions([Permissions.Leo]),
+    },
+    {
       name: t("penalCodes"),
       href: "/officer/penal-codes",
       show: hasPermissions([Permissions.Leo]),
