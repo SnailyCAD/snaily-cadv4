@@ -177,6 +177,8 @@ export const DriversLicenseCategoryType = {
   AVIATION: "AVIATION",
   WATER: "WATER",
   FIREARM: "FIREARM",
+  HUNTING: "HUNTING",
+  FISHING: "FISHING",
 } as const;
 
 export type DriversLicenseCategoryType =
@@ -286,6 +288,8 @@ export const LicenseExamType = {
   FIREARM: "FIREARM",
   WATER: "WATER",
   PILOT: "PILOT",
+  HUNTING: "HUNTING",
+  FISHING: "FISHING",
 } as const;
 
 export type LicenseExamType = (typeof LicenseExamType)[keyof typeof LicenseExamType];
