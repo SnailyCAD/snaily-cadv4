@@ -276,6 +276,12 @@ export class CADSettingsController {
         waterLicenseNumberLength: data.waterLicenseNumberLength,
         signal100RepeatAmount: data.signal100RepeatAmount,
         signal100RepeatIntervalMs: data.signal100RepeatIntervalMs,
+        huntingLicenseTemplate: data.huntingLicenseTemplate,
+        huntingLicenseMaxPoints: data.huntingLicenseMaxPoints,
+        huntingLicenseNumberLength: data.huntingLicenseNumberLength,
+        fishingLicenseTemplate: data.fishingLicenseTemplate,
+        fishingLicenseMaxPoints: data.fishingLicenseMaxPoints,
+        fishingLicenseNumberLength: data.fishingLicenseNumberLength,
       },
       include: { webhooks: true },
     });

@@ -63,6 +63,16 @@ export async function citizenObjectFromData(options: Options) {
       template: miscCadSettings?.waterLicenseTemplate,
       length: miscCadSettings?.waterLicenseNumberLength ?? 8,
     }),
+
+    huntingLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.huntingLicenseTemplate,
+      length: miscCadSettings?.huntingLicenseNumberLength ?? 8,
+    }),
+
+    fishingLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.fishingLicenseTemplate,
+      length: miscCadSettings?.fishingLicenseNumberLength ?? 8,
+    }),
   };
 
   if (typeof options.defaultLicenseValueId !== "undefined") {
