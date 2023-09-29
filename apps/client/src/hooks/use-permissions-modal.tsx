@@ -38,7 +38,7 @@ export function usePermissionsModal(options: UsePermissionsModalOptions) {
     },
     {
       name: t("dispatch"),
-      permissions: defaultPermissions.defaultDispatchPermissions,
+      permissions: [...defaultPermissions.defaultDispatchPermissions, Permissions.ManageSmartSigns],
     },
     {
       name: t("emsFd"),
