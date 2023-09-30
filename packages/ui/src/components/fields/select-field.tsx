@@ -47,10 +47,6 @@ export type SelectFieldProps<T extends SelectValue> = Omit<
 export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const selectionMode = props.selectionMode ?? "single";
 
-  console.log({
-    options: props.options,
-  });
-
   const children = React.useMemo(() => {
     return props.options.map((option) => (
       <Item textValue={option.textValue || undefined} key={option.value}>
