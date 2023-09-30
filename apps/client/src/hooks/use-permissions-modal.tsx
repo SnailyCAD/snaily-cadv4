@@ -38,7 +38,11 @@ export function usePermissionsModal(options: UsePermissionsModalOptions) {
     },
     {
       name: t("dispatch"),
-      permissions: [...defaultPermissions.defaultDispatchPermissions, Permissions.ManageSmartSigns],
+      permissions: [
+        ...defaultPermissions.defaultDispatchPermissions,
+        Permissions.ManageSmartSigns,
+        Permissions.ManageSmartMotorwaySigns,
+      ],
     },
     {
       name: t("emsFd"),

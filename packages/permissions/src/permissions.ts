@@ -30,6 +30,7 @@ export enum Permissions {
 
   Dispatch = "Dispatch",
   ManageSmartSigns = "ManageSmartSigns",
+  ManageSmartMotorwaySigns = "ManageSmartMotorwaySigns",
 
   // ems-fd
   EmsFd = "EmsFd",

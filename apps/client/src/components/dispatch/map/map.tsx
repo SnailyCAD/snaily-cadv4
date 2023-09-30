@@ -8,6 +8,7 @@ import { MapActions } from "./map-actions";
 import { RenderMapPlayers } from "./units/render-map-players";
 import { SelectMapServerModal } from "./modals/select-map-server-modal";
 import { RenderMapSmartSigns } from "./smart-signs/render-map-smart-signs";
+import { RenderMapSmartMotorwaySigns } from "./smart-motorway-signs/render-map-smart-motorway-signs";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.webp" as const;
 
@@ -50,6 +51,7 @@ export function Map() {
       <RenderActiveCalls />
       <MapActions />
       <RenderMapSmartSigns />
+      <RenderMapSmartMotorwaySigns />
 
       <SelectMapServerModal />
     </MapContainer>
