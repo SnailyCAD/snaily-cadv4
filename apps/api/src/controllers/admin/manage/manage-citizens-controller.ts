@@ -198,6 +198,8 @@ export class AdminManageCitizensController {
         driversLicenseId: data.driversLicense,
         weaponLicenseId: data.weaponLicense,
         pilotLicenseId: data.pilotLicense,
+        fishingLicenseId: data.fishingLicense,
+        huntingLicenseId: data.huntingLicense,
         phoneNumber: data.phoneNumber,
         socialSecurityNumber:
           data.socialSecurityNumber && isEditableSSNEnabled

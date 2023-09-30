@@ -238,6 +238,8 @@
     "suspendPilotLicense": "Suspended Pilot license",
     "suspendWaterLicense": "Suspended Water license",
     "suspendFirearmsLicense": "Suspended Firearms license",
+    "suspendedHuntingLicense": "Suspended Hunting license",
+    "suspendedFishingLicense": "Suspended Fishing license",
     "endDate": "End Date",
     "patrolVehicle": "Patrol Vehicle",
     "callUpdated": "Your call #{caseNumber} has been updated",

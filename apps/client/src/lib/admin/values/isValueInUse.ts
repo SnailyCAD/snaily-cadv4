@@ -19,6 +19,8 @@ const USED_COUNT_NAMES_PER_TYPE: Partial<Record<ValueType, string[]>> = {
     "driversLicenseToValue",
     "weaponExamToLicense",
     "dlExamToLicense",
+    "huntingLicenseToValue",
+    "fishingLicenseToValue",
   ],
   OFFICER_RANK: ["officerRankDepartments"],
   QUALIFICATION: ["UnitQualification"],

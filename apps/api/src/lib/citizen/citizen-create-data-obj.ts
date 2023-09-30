@@ -63,6 +63,16 @@ export async function citizenObjectFromData(options: Options) {
       template: miscCadSettings?.waterLicenseTemplate,
       length: miscCadSettings?.waterLicenseNumberLength ?? 8,
     }),
+
+    huntingLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.huntingLicenseTemplate,
+      length: miscCadSettings?.huntingLicenseNumberLength ?? 8,
+    }),
+
+    fishingLicenseNumber: generateLicenseNumber({
+      template: miscCadSettings?.fishingLicenseTemplate,
+      length: miscCadSettings?.fishingLicenseNumberLength ?? 8,
+    }),
   };
 
   if (typeof options.defaultLicenseValueId !== "undefined") {
@@ -72,6 +82,8 @@ export async function citizenObjectFromData(options: Options) {
       weaponLicenseId: options.data.weaponLicense || options.defaultLicenseValueId,
       pilotLicenseId: options.data.pilotLicense || options.defaultLicenseValueId,
       waterLicenseId: options.data.waterLicense || options.defaultLicenseValueId,
+      huntingLicenseId: options.data.huntingLicense || options.defaultLicenseValueId,
+      fishingLicenseId: options.data.fishingLicense || options.defaultLicenseValueId,
     };
   }
 

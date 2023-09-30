@@ -9,6 +9,8 @@ const licensePoints = [
   ["pilotLicensePoints", "pilotLicenseMaxPoints"],
   ["firearmsLicensePoints", "weaponLicenseMaxPoints"],
   ["waterLicensePoints", "waterLicenseMaxPoints"],
+  ["huntingLicensePoints", "huntingLicenseMaxPoints"],
+  ["fishingLicensePoints", "fishingLicenseMaxPoints"],
 ] as const;
 
 export function LicensePointsSection() {

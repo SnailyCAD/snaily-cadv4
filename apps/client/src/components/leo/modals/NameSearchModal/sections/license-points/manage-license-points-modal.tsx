@@ -31,6 +31,8 @@ export function ManageLicensePointsModal() {
     pilotLicensePoints: currentResult.licensePoints?.pilotLicensePoints ?? 0,
     waterLicensePoints: currentResult.licensePoints?.waterLicensePoints ?? 0,
     firearmsLicensePoints: currentResult.licensePoints?.firearmsLicensePoints ?? 0,
+    huntingLicensePoints: currentResult.licensePoints?.huntingLicensePoints ?? 0,
+    fishingLicensePoints: currentResult.licensePoints?.fishingLicensePoints ?? 0,
   };
 
   async function onSubmit(values: typeof INITIAL_VALUES) {

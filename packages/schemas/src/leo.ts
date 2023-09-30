@@ -153,4 +153,6 @@ export const LICENSE_POINTS_SCHEMA = z.object({
   pilotLicensePoints: z.number().finite().min(0),
   waterLicensePoints: z.number().finite().min(0),
   firearmsLicensePoints: z.number().finite().min(0),
+  huntingLicensePoints: z.number().finite().min(0),
+  fishingLicensePoints: z.number().finite().min(0),
 });

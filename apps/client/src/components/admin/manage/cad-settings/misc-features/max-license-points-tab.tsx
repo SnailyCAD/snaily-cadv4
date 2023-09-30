@@ -42,6 +42,8 @@ export function MaxLicensePointsSection() {
     pilotLicenseMaxPoints: miscSettings.pilotLicenseMaxPoints ?? 12,
     weaponLicenseMaxPoints: miscSettings.weaponLicenseMaxPoints ?? 12,
     waterLicenseMaxPoints: miscSettings.waterLicenseMaxPoints ?? 12,
+    fishingLicenseMaxPoints: miscSettings.fishingLicenseMaxPoints ?? 12,
+    huntingLicenseMaxPoints: miscSettings.huntingLicenseMaxPoints ?? 12,
   };
 
   return (
@@ -106,6 +108,62 @@ export function MaxLicensePointsSection() {
                 type="number"
                 name="waterLicenseMaxPoints"
                 value={values.waterLicenseMaxPoints}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.weaponLicenseMaxPoints}
+              label={t("maxWeaponLicensePoints")}
+              description={t("maxWeaponLicensePointsDescription")}
+              action="short-input"
+            >
+              <Input
+                type="number"
+                name="weaponLicenseMaxPoints"
+                value={values.weaponLicenseMaxPoints}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.waterLicenseMaxPoints}
+              label={t("maxWaterLicensePoints")}
+              description={t("maxWaterLicensePointsDescription")}
+              action="short-input"
+            >
+              <Input
+                type="number"
+                name="waterLicenseMaxPoints"
+                value={values.waterLicenseMaxPoints}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.fishingLicenseMaxPoints}
+              label={t("maxFishingLicensePoints")}
+              description={t("maxFishingLicensePointsDescription")}
+              action="short-input"
+            >
+              <Input
+                type="number"
+                name="fishingLicenseMaxPoints"
+                value={values.fishingLicenseMaxPoints}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.huntingLicenseMaxPoints}
+              label={t("maxHuntingLicensePoints")}
+              description={t("maxHuntingLicensePointsDescription")}
+              action="short-input"
+            >
+              <Input
+                type="number"
+                name="huntingLicenseMaxPoints"
+                value={values.huntingLicenseMaxPoints}
                 onChange={handleChange}
               />
             </SettingsFormField>
