@@ -66,6 +66,8 @@ export class LicensesController {
         pilotLicenseId: suspendedLicenses?.pilotLicense ? undefined : data.pilotLicense,
         weaponLicenseId: suspendedLicenses?.firearmsLicense ? undefined : data.weaponLicense,
         waterLicenseId: suspendedLicenses?.waterLicense ? undefined : data.waterLicense,
+        fishingLicenseId: suspendedLicenses?.fishingLicense ? undefined : data.fishingLicense,
+        huntingLicenseId: suspendedLicenses?.huntingLicense ? undefined : data.huntingLicense,
       },
       include: citizenInclude,
     });

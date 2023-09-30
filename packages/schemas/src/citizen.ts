@@ -20,12 +20,16 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   postal: z.string().max(255).nullish(),
   driversLicense: z.string().max(255).nullish(),
   weaponLicense: z.string().max(255).nullish(),
+  huntingLicense: z.string().max(255).nullish(),
+  fishingLicense: z.string().max(255).nullish(),
   pilotLicense: z.string().max(255).nullish(),
   waterLicense: z.string().max(255).nullish(),
   phoneNumber: z.string().max(255).nullish(),
   occupation: z.string().nullish(),
   additionalInfo: z.string().nullish(),
   driversLicenseCategory: z.array(z.any()).nullish(),
+  fishingLicenseCategory: z.array(z.any()).nullish(),
+  huntingLicenseCategory: z.array(z.any()).nullish(),
   pilotLicenseCategory: z.array(z.any()).nullish(),
   waterLicenseCategory: z.array(z.any()).nullish(),
   firearmLicenseCategory: z.array(z.any()).nullish(),
@@ -92,6 +96,10 @@ const SUSPENDED_SCHEMA = z.object({
   waterLicenseTimeEnd: END_TIME,
   firearmsLicense: z.boolean(),
   firearmsLicenseTimeEnd: END_TIME,
+  huntingLicense: z.boolean(),
+  huntingLicenseTimeEnd: END_TIME,
+  fishingLicense: z.boolean(),
+  fishingLicenseTimeEnd: END_TIME,
 });
 
 export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
@@ -103,6 +111,10 @@ export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   firearmLicenseCategory: true,
   waterLicense: true,
   waterLicenseCategory: true,
+  fishingLicense: true,
+  fishingLicenseCategory: true,
+  huntingLicense: true,
+  huntingLicenseCategory: true,
 }).extend({
   suspended: SUSPENDED_SCHEMA.nullish(),
 });

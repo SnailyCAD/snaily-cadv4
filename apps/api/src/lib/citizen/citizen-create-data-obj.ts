@@ -82,6 +82,8 @@ export async function citizenObjectFromData(options: Options) {
       weaponLicenseId: options.data.weaponLicense || options.defaultLicenseValueId,
       pilotLicenseId: options.data.pilotLicense || options.defaultLicenseValueId,
       waterLicenseId: options.data.waterLicense || options.defaultLicenseValueId,
+      huntingLicenseId: options.data.huntingLicense || options.defaultLicenseValueId,
+      fishingLicenseId: options.data.fishingLicense || options.defaultLicenseValueId,
     };
   }
 

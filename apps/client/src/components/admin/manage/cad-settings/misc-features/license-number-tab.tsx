@@ -42,6 +42,8 @@ export function LicenseNumbersTab() {
     weaponLicenseNumberLength: miscSettings.weaponLicenseNumberLength ?? 8,
     pilotLicenseNumberLength: miscSettings.pilotLicenseNumberLength ?? 6,
     waterLicenseNumberLength: miscSettings.waterLicenseNumberLength ?? 8,
+    fishingLicenseNumberLength: miscSettings.fishingLicenseNumberLength ?? 8,
+    huntingLicenseNumberLength: miscSettings.huntingLicenseNumberLength ?? 8,
   };
 
   return (
@@ -108,6 +110,34 @@ export function LicenseNumbersTab() {
                 type="number"
                 name="waterLicenseNumberLength"
                 value={values.waterLicenseNumberLength}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.fishingLicenseNumberLength}
+              description={t("fishingLicenseNumberLengthDescription")}
+              label={t("fishingLicenseNumberLength")}
+              action="short-input"
+            >
+              <Input
+                type="number"
+                name="fishingLicenseNumberLength"
+                value={values.fishingLicenseNumberLength}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              errorMessage={errors.huntingLicenseNumberLength}
+              description={t("huntingLicenseNumberLengthDescription")}
+              label={t("huntingLicenseNumberLength")}
+              action="short-input"
+            >
+              <Input
+                type="number"
+                name="huntingLicenseNumberLength"
+                value={values.huntingLicenseNumberLength}
                 onChange={handleChange}
               />
             </SettingsFormField>
