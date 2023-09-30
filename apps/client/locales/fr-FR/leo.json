@@ -1,6 +1,6 @@
 {
   "Leo": {
-    "dispatch": "Expédition",
+    "dispatch": "Répartiteur",
     "myOfficers": "Mes Officiers",
     "myOfficerLogs": "Mes journaux d'officier",
     "createOfficer": "Créer un agent",
@@ -125,7 +125,7 @@
     "pendingAccessDepartmentNoDefault": "Vous êtes toujours en attente d'accès pour ce département. ",
     "editTicket": "Modifier le billet",
     "editArrestReport": "Modifier le rapport d'arrestation",
-    "editWrittenWarning": "Modifier l'avertissement écrit",
+    "editWrittenWarning": "Modifier l'avertissement écrit", 
     "quantity": "Quantité",
     "illegal": "Illégal",
     "add": "Ajouter",
@@ -283,7 +283,9 @@
     "alert_deleteOfficer": "Etes-vous sûr que vous voulez supprimer <span>{officer}</span>? ",
     "alert_allowCheckout": "Voulez-vous vraiment retirer ce véhicule de la fourrière ?",
     "alert_deleteIncident": "Voulez-vous vraiment supprimer cet incident ? ",
-    "alert_revokeWarrant": "Êtes-vous sûr de vouloir révoquer ce mandat ? "
+    "alert_revokeWarrant": "Êtes-vous sûr de vouloir révoquer ce mandat ? ",
+    "departmentInformation": "Informations sur le département",
+    "departmentInformationDesc": "Ici, vous pouvez consulter d'autres liens externes et des informations sur votre département."
   },
   "Bolos": {
     "activeBolos": "Bolos actifs",

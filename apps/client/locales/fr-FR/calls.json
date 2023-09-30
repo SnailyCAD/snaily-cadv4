@@ -65,7 +65,8 @@
     "alert_purgeSelectedCalls": "Voulez-vous vraiment supprimer {length} élément(s) ? ",
     "alert_deleteCallEvent": "Voulez-vous vraiment supprimer cet événement ? ",
     "alert_end911Call": "Voulez-vous vraiment mettre fin à cet appel ?",
-    "alert_endTowCall": "Voulez-vous vraiment mettre fin à cet appel ?"
+    "alert_endTowCall": "Voulez-vous vraiment mettre fin à cet appel ?",
+    "openCallModalAfterCreation" : "Ouvrir le formulaire 'Gérer les appels 911' après la création de l'appel ?"
   },
   "Events": {
     "unitAssignedToCall": "<span>{unit}</span> a été affecté à cet appel.",

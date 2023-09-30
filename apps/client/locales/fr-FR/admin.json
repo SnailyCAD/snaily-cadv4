@@ -116,7 +116,19 @@
     "alert_deleteUnit": "Etes-vous sûr que vous voulez supprimer <span>{unit}</span>? ",
     "alert_deleteCustomField": "Voulez-vous vraiment supprimer ce champ personnalisé ? ",
     "info_pendingBusinesses": "Ce sont des entreprises créées qui sont en attente d'approbation pour être utilisées. ",
-    "alert_deleteBusiness": "Êtes-vous sûr de vouloir supprimer ce <span>{name}</span>? "
+    "alert_deleteBusiness": "Êtes-vous sûr de vouloir supprimer ce <span>{name}</span>? ",
+    "webhooks": "Webhooks",
+    "general": "Général",
+    "miscellaneous": "Divers",
+    "WHITELIST_SETTINGS": "Paramètres de la liste blanche",
+    "INACTIVITY_TIMEOUTS": "Délais d'inactivité",
+    "CITIZEN_LICENSE_POINTS": "Points de licence citoyen",
+    "MAX_LICENSE_POINTS": "Points de licence maximum",
+    "TEMPLATES": "Modèles",
+    "OTHER": "Autre",
+    "integrations": "Intégrations",
+    "LIMITS": "Limites",
+    "BLACKLISTED_WORDS": "Mots sur liste noire"
   },
   "AuditLogs": {
     "userBanned": "Utilisateur: <span>{value}</span> a été banni.",
