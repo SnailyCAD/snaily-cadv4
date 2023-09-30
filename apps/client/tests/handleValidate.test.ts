@@ -51,6 +51,8 @@ it("Should correctly validate an INVALID nested object, schema: LICENSE_SCHEMA",
       "pilotLicense": "Expected string, received boolean",
       "suspended": {
         "driverLicenseTimeEnd": Any<String>,
+        "fishingLicense": "Required",
+        "huntingLicense": "Required",
       },
     }
   `,
