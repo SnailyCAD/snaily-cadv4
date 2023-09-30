@@ -111,7 +111,7 @@
   "ApiTokenTab": {
     "apiToken": "Jeton API",
     "publicAPIAccess": "Accès public à l'API",
-    "jeton": "Jeton",
+    "token": "Jeton",
     "tokenDescription": "Il s'agit du jeton utilisé pour communiquer avec l'API. Ce jeton est unique et ne doit être partagé avec personne. <a>Lire la suite</a>",
     "discordBotCommand": "Commande d'intégration du bot Discord",
     "discordBotCommandDescription": "Cette commande peut être utilisée avec l'<a>intégration du robot Discord</a>.",
@@ -275,7 +275,7 @@
     "CREATE_USER_CITIZEN_LEO-description": "Lorsque activé, cela permettra aux agents de créer des citoyens et des véhicules qui n'existent pas encore lors de leur recherche. Ce citoyen/véhicule ne sera connecté à aucun utilisateur.",
     "LEO_TICKETS": "Billets LEO",
     "LEO_TICKETS-description": "Lorsque activé, cela permettra aux agents de créer des tickets.",
-    "LEO_BAIL": "LEO Bails",
+    "LEO_BAIL": "Cautions LEO",
     "LEO_BAIL-description": "Lorsque activé, cela permettra aux agents d'ajouter des cautions aux rapports d'arrestation.",
     "COURTHOUSE_POSTS": "Messages du palais de justice",
     "COURTHOUSE_POSTS-description": "Une fois activé, cela permettra aux utilisateurs disposant des autorisations appropriées de créer des messages dans le palais de justice. Ces messages seront visibles par tout le monde.",
