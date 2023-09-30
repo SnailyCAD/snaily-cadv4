@@ -129,14 +129,15 @@ function ActiveOfficers({ initialOfficers }: Props) {
           containerProps={{ className: "mb-3 px-4" }}
           tableState={tableState}
           data={activeOfficers.map((officer) => {
-            const backgroundColor = officer.status?.color;
-            const textColor = officer.status?.textColor;
-            const color = backgroundColor
-              ? textColor || generateContrastColor(backgroundColor)
-              : textColor;
-
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+
+            const backgroundColor = officer.status?.color;
+            const textColor = officer.status?.textColor;
+            const color =
+              backgroundColor && !useDot
+                ? textColor || generateContrastColor(backgroundColor)
+                : textColor;
 
             return {
               id: officer.id,
