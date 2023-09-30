@@ -36,7 +36,7 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
   );
   const markerIcon = React.useMemo(() => {
     // eslint-disable-next-line prefer-destructuring
-    const icon = markerTypes[780];
+    const icon = markerTypes[781];
 
     if (icon) {
       return leafletIcon(icon);
