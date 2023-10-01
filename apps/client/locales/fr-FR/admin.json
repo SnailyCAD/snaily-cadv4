@@ -33,6 +33,7 @@
     "AUTO_SET_PROPERTIES": "Définir automatiquement les propriétés utilisateur",
     "API_TOKEN": "Jeton d'API",
     "DISCORD_ROLES": "Rôles Discord",
+    "discordRole": "Rôles Discord",
     "DISCORD_WEBHOOKS": "Webhook Discord",
     "deleteBusiness": "Supprimer l'entreprise",
     "giveTempPassword": "Donner un mot de passe temporaire",
