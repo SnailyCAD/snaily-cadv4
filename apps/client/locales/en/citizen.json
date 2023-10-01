@@ -156,6 +156,7 @@
   "LawBook": {
     "lawBook": "Law Book",
     "warningApplicable": "Warning Applicable",
+    "noPenalCodes": "No penal code has been registered", 
     "warningNotApplicable": "Warning Not Applicable",
     "fines": "Fines",
     "bail": "Bail",
@@ -163,3 +164,4 @@
     "isPrimary": "Is Primary"
   }
 }
+ 
