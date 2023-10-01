@@ -459,6 +459,7 @@
     "SetUserDefinedCallsignOnOfficer": "Set User Defined Callsign On Officer",
     "SetUserDefinedCallsignOnEmsFd": "Set User Defined Callsign On EMS/FD Deputy",
     "LeoManageCitizenProfile": "Manage Citizen Profile (non-admin)",
-    "ManageSmartSigns": "Manage Smart Signs"
+    "ManageSmartSigns": "Manage Smart Signs",
+    "ManageSmartMotorwaySigns": "Manage Smart Motorway Signs"
   }
 }

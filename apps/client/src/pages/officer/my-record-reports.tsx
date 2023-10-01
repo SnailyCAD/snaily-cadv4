@@ -117,8 +117,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
     ["/leo/my-record-reports", { reports: [], totalCount: 0 }],
   ]);
 
-  console.log(reports);
-
   return {
     props: {
       session: user,
