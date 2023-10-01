@@ -9,6 +9,7 @@ import { generateMarkerTypes } from "../render-map-blips";
 import { Button, SelectField } from "@snailycad/ui";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { toastMessage } from "lib/toastMessage";
+import Image from "next/image";
 
 interface Props {
   marker: SmartMotorwaySignMarker & { id: number };
@@ -98,13 +99,19 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
                     return newConfig;
                   })
                 }
+                isClearable
                 key={idx}
                 label="Lane Speed"
                 options={SPEED_INDICATORS.map((key) => ({
                   textValue: t(`motorway_sign_${key}`),
                   label: (
                     <p className="flex items-center gap-2">
-                      <img src={`/map/smart-motorways/${key}.png`} width={30} height={30} />
+                      <Image
+                        alt={t(`motorway_sign_${key}`)}
+                        src={`/map/smart-motorways/${key}.png`}
+                        width={30}
+                        height={30}
+                      />
                       {t(`motorway_sign_${key}`)}
                     </p>
                   ),
