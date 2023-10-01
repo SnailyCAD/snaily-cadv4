@@ -14,10 +14,10 @@
     "noDeputies": "Vous n'avez pas d'agent EMS/FD",
     "noActiveDeputies": "Il n'y a pas d'agent EMS/FD actifs",
     "citizenNoMedicalRecords": "Ce citoyen n'a pas de dossier médical.",
-    "activeDeputy": "Adjoint actif",
+    "activeDeputy": "EMS/Pompier actif",
     "declareDead": "Déclarer mort",
     "declareAlive": "Déclarer vivant",
-    "myDeputyLogs": "Mon adjoint se connecte",
+    "myDeputyLogs": "Historique de service",
     "emergencyVehicle": "Véhicule d'urgence",
     "alert_deleteDeputy": "Etes-vous sûr que vous voulez supprimer <span>{deputy}</span>? ",
     "assignedToCall#": "{activeVehicle}, répondez à {location}",
@@ -41,5 +41,3 @@
     "citizenDeclaredAliveMessage": "Ce citoyen a été déclaré vivant avec succès."
   }
 }
-
-

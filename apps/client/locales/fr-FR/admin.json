@@ -141,7 +141,33 @@
     "whitelistStatus": "Statut de la liste blanche",
     "noUsersPending": "Aucun utilisateur n'est en attente d'accès.",
     "DEFAULT_PERMISSIONS" : "Permissions par défaut",
-    "impounded": "Mis en fourrière"
+    "impounded": "Mis en fourrière",
+    "owners": "Propriétaires",
+    "addCitizenEntry": "Ajouter une entrée citoyen",
+    "submit": "Soumettre",
+    "30Days": "30 Jours",
+    "3Months": "3 Mois",
+    "6Months": "6 Mois",
+    "clickToExpand": "Cliquez pour agrandir",
+    "keep": "Garder",
+    "usersPruned": "Utilisateurs élagués",
+    "usersPrunedMessage": "{count} utilisateurs ont été élagués avec succès",
+    "acceptUser": "Accepter l'utilisateur",
+    "filter": "Filtre",
+    "total": "Total",
+    "seconds": "Secondes",
+    "minutes": "Minutes",
+    "hours": "Heures",
+    "admin": "Administrateur",
+    "courthouseAdmin": "Palais de justice (Admin)",
+    "dispatch": "Répartiteur",
+    "citizenRelated": "Lié aux citoyens",
+    "other": "Autre",
+    "category": "Catégorie",
+    "unableToLoadStatisticsMessage": "Impossible de charger les statistiques, veuillez réessayer plus tard.",
+    "unableToLoadStatisticsTitle": "Impossible de charger les statistiques",
+    "userNotFoundError": "L'utilisateur que vous avez essayé de gérer est introuvable.",
+    "userNotFoundTitle": "Utilisateur introuvable"
   },
   "AuditLogs": {
     "userBanned": "Utilisateur: <span>{value}</span> a été banni.",
@@ -163,6 +189,8 @@
     "nameChangeRequestDeclined": "une demande de changement de nom a été refusée avec l'identifiant citoyen <span>{value}</span>.",
     "activeWarrantAccepted": "une demande de mandat active a été acceptée avec l'identifiant <span>{value}</span>.",
     "activeWarrantDeclined": "une demande de mandat active a été refusée avec l'identifiant <span>{value}</span>.",
-    "bulkRemoveValues": "Les valeurs sélectionnées ont été supprimées : <span>{value}</span>"
+    "bulkRemoveValues": "Les valeurs sélectionnées ont été supprimées : <span>{value}</span>",
+   "leoIncidentsPurged": "Les incidents LEO sélectionnés ont été purgés. Ces incidents ne peuvent pas être récupérés et ont été supprimés définitivement : <span>{value}</span>. ",
+    "emsFdIncidentsPurged": "Les incidents EMS/FD sélectionnés ont été purgés. Ces incidents ne peuvent pas être récupérés et ont été supprimés définitivement : <span>{value}</span>. "
   }
-}
+} 

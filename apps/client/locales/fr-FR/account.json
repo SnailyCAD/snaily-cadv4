@@ -47,14 +47,15 @@
     "disconnectSteam": "Déconnecter le compte Steam",
     "disconnectSteamText": "Cela supprimera la possibilité de se connecter via Steam.",
     "connectSteamText": "Cela ajoutera la possibilité de se connecter via Steam.",
-    "locale": "Lieu",
+    "locale": "Langue de traduction",
     "viewMyPermissions": "Afficher mes autorisations",
     "speech": "Discours",
     "speechVoice": "Discours Voix",
     "otherSounds": "Autres sons",
     "unavailableSounds": "Sons indisponibles",
     "unavailableSoundsMessage": "Ces sons ne sont pas disponibles. ",
-    "userApiTokenDescription": "Ce jeton peut être utilisé pour communiquer avec l'API de SnailyCAD."
+    "userApiTokenDescription": "Ce jeton peut être utilisé pour communiquer avec l'API de SnailyCAD.",
+    "developerMode": "Mode développeur"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> a été supprimée. Raison : {reason}"
