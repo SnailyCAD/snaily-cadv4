@@ -29,7 +29,9 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
   const markerTypes = React.useMemo(generateMarkerTypes, []);
 
   const { hasPermissions } = usePermission();
-  const hasManageSmartSignsPermissions = hasPermissions([Permissions.ManageSmartSigns]);
+  const hasManageSmartMotorwaysSignsPermissions = hasPermissions([
+    Permissions.ManageSmartMotorwaySigns,
+  ]);
 
   const pos = React.useMemo(
     () => convertToMap(marker.position.x, marker.position.y, map),
@@ -155,11 +157,15 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
               className="w-full"
               type="button"
               onClick={() => setMarkerConfiguration([])}
-              disabled={!hasManageSmartSignsPermissions}
+              disabled={!hasManageSmartMotorwaysSignsPermissions}
             >
               Reset
             </Button>
-            <Button className="w-full" type="submit" disabled={!hasManageSmartSignsPermissions}>
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={!hasManageSmartMotorwaysSignsPermissions}
+            >
               Save
             </Button>
           </div>
