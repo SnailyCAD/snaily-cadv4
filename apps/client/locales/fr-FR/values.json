@@ -28,7 +28,9 @@
     "failedDeleteValue": "Échec de la suppression <span>{value}</span>.",
     "cacheTip": " Les valeurs sont mises en cache pendant 24 heures. ",
     "alert_deleteValue": "Etes-vous sûr que vous voulez supprimer <span>{value}</span>? ",
-    "alert_deleteSelectedValues": "Voulez-vous vraiment supprimer {length} éléments ? "
+    "alert_deleteSelectedValues": "Voulez-vous vraiment supprimer {length} éléments ? ",
+    "noValuesForThisType": "Aucune valeur n'a encore été créée pour ce type.",
+    "value": "Valeur"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Gérer les groupes de code pénal",

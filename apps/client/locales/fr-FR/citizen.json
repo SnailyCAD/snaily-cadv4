@@ -13,7 +13,7 @@
     "registerVehicle": "Enregistrer le véhicule",
     "registerWeapon": "Enregistrer l'arme",
     "createTowCall": "Créer un appel de remorquage",
-    "weight": "Lester",
+    "weight": "Poids",
     "height": "Hauteur",
     "name": "Nom",
     "surname": "Nom de famille",
@@ -26,6 +26,10 @@
     "age": "Âge",
     "driversLicense": "Le permis de conduire",
     "driversLicenseCategory": "Catégories de permis de conduire",
+    "fishingLicense": "Le permis de pêche",
+    "fishingLicenseCategory": "Catégories de permis de pêche",
+    "huntingLicense": "Le permis de chasse",
+    "huntingLicenseCategory": "Catégories de chasse de conduire",
     "weaponLicense": "Permis d'armes à feu",
     "phoneNumber": "Numéro de téléphone",
     "pilotLicense": "Licence de pilote",
@@ -115,5 +119,14 @@
     "diseases": "Maladies",
     "info_bloodgroup": "Remarque : la mise à jour de votre groupe sanguin mettra à jour le groupe sanguin de tous les autres dossiers médicaux",
     "alert_deleteMedicalRecord": "Êtes-vous sûr de vouloir supprimer ce dossier médical ? "
+  },
+  "LawBook": {
+    "lawBook": "Code pénal",
+    "warningApplicable": "Avertissement Applicable",
+    "warningNotApplicable": "Avertissement non applicable",
+    "fines": "Amendes",
+    "bail": "Caution",
+    "jailTime": "Temps de prison",
+    "isPrimary": "Est primaire"
   }
 }
