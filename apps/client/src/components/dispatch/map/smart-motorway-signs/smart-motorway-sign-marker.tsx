@@ -99,9 +99,8 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
                     return newConfig;
                   })
                 }
-                isClearable
                 key={idx}
-                label="Lane Speed"
+                label={`Lane ${idx + 1}`}
                 options={SPEED_INDICATORS.map((key) => ({
                   textValue: t(`motorway_sign_${key}`),
                   label: (
@@ -121,9 +120,49 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
             );
           })}
 
-          <Button className="mt-2" type="submit" disabled={!hasManageSmartSignsPermissions}>
-            Save
-          </Button>
+          <section>
+            <h3 className="text-lg font-semibold mb-1.5">Preview</h3>
+
+            {markerConfiguration.length <= 0 ? (
+              <p className="!m-0">Configure the lanes to see a preview</p>
+            ) : (
+              <div className="flex items-center justify-between bg-black p-2 rounded-md">
+                {new Array(marker.lanes).fill(null).map((_, idx) => {
+                  const speed = markerConfiguration[idx];
+
+                  if (!speed) {
+                    return <div key={idx} />;
+                  }
+
+                  return (
+                    <Image
+                      className="border-2 border-secondary p-1 rounded"
+                      key={idx}
+                      alt={t(`motorway_sign_${speed}`)}
+                      src={`/map/smart-motorways/${speed}.png`}
+                      width={40}
+                      height={40}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          <div className="flex mt-2 gap-2">
+            <Button
+              variant="danger"
+              className="w-full"
+              type="button"
+              onClick={() => setMarkerConfiguration([])}
+              disabled={!hasManageSmartSignsPermissions}
+            >
+              Reset
+            </Button>
+            <Button className="w-full" type="submit" disabled={!hasManageSmartSignsPermissions}>
+              Save
+            </Button>
+          </div>
         </form>
       </Popup>
     </Marker>
