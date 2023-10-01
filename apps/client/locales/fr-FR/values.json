@@ -6,7 +6,7 @@
     "color": "Couleur",
     "callsign": "Signe d'appel",
     "department": "Département",
-    "gameHash": "Hachage du jeu",
+    "gameHash": "Nom du modèle",
     "file": "déposer",
     "importValues": "Importation via fichier",
     "exportValues": "Valeurs d'exportation",
