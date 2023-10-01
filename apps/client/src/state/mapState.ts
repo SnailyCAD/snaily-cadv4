@@ -1,6 +1,6 @@
 import { ConnectionStatus } from "@snailycad/ui";
 import { Socket } from "socket.io-client";
-import { SmartSignMarker } from "types/map";
+import { SmartMotorwaySignMarker, SmartSignMarker } from "types/map";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
@@ -10,11 +10,15 @@ export enum MapItem {
   UNITS_ONLY,
   BLIPS,
   SMART_SIGNS,
+  SMART_MOTORWAY_SIGNS,
 }
 
 interface DispatchMapState {
   smartSigns: SmartSignMarker[];
   setSmartSigns(signs: SmartSignMarker[]): void;
+
+  smartMotorwaySigns: SmartMotorwaySignMarker[];
+  setSmartMotorwaySigns(signs: SmartMotorwaySignMarker[]): void;
 
   hiddenItems: Partial<Record<MapItem, boolean>>;
   setItem(item: MapItem): void;
@@ -37,6 +41,11 @@ export const useDispatchMapState = createWithEqualityFn<DispatchMapState>()(
       smartSigns: [],
       setSmartSigns(signs) {
         set({ smartSigns: signs });
+      },
+
+      smartMotorwaySigns: [],
+      setSmartMotorwaySigns(signs) {
+        set({ smartMotorwaySigns: signs });
       },
 
       currentMapServerURL: null,

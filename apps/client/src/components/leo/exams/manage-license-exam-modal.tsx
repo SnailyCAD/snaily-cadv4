@@ -97,6 +97,8 @@ export function ManageExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
     [LicenseExamType.FIREARM]: DriversLicenseCategoryType.FIREARM,
     [LicenseExamType.WATER]: DriversLicenseCategoryType.WATER,
     [LicenseExamType.PILOT]: DriversLicenseCategoryType.AVIATION,
+    [LicenseExamType.HUNTING]: DriversLicenseCategoryType.HUNTING,
+    [LicenseExamType.FISHING]: DriversLicenseCategoryType.FISHING,
   } as const;
 
   return (

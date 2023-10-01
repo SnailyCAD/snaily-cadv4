@@ -27,6 +27,9 @@ export function MapActions() {
   const { hasPermissions } = usePermission();
   const hasManageUsersPermissions = hasPermissions([Permissions.ManageUsers]);
   const hasManageSmartSignsPermissions = hasPermissions([Permissions.ManageSmartSigns]);
+  const hasManageSmartMotorwaySignsPermissions = hasPermissions([
+    Permissions.ManageSmartMotorwaySigns,
+  ]);
 
   return (
     portalRef &&
@@ -47,6 +50,13 @@ export function MapActions() {
                   {mapState.hiddenItems[MapItem.SMART_SIGNS]
                     ? t("Leo.showSmartSigns")
                     : t("Leo.hideSmartSigns")}
+                </DropdownMenuItem>
+              ) : null}
+              {hasManageSmartMotorwaySignsPermissions ? (
+                <DropdownMenuItem onClick={() => mapState.setItem(MapItem.SMART_MOTORWAY_SIGNS)}>
+                  {mapState.hiddenItems[MapItem.SMART_MOTORWAY_SIGNS]
+                    ? t("Leo.showSmartMotorwaySigns")
+                    : t("Leo.hideSmartMotorwaySigns")}
                 </DropdownMenuItem>
               ) : null}
               <DropdownMenuItem onClick={() => mapState.setItem(MapItem.BLIPS)}>

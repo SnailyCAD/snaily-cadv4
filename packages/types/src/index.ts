@@ -145,6 +145,8 @@ export type Citizen = Prisma.Citizen & {
   ethnicity?: Prisma.Value | null;
   driversLicense: Prisma.Value | null;
   weaponLicense: Prisma.Value | null;
+  fishingLicense: Prisma.Value | null;
+  huntingLicense: Prisma.Value | null;
   pilotLicense: Prisma.Value | null;
   waterLicense: Prisma.Value | null;
   dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Value })[];

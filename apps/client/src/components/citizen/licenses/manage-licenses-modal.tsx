@@ -22,12 +22,16 @@ export interface LicenseInitialValues {
   pilotLicense: string | null;
   weaponLicense: string | null;
   waterLicense: string | null;
+  huntingLicense: string | null;
+  fishingLicense: string | null;
   suspended: Omit<SuspendedCitizenLicenses, "id">;
 
   driversLicenseCategory: string[];
   pilotLicenseCategory: string[];
   waterLicenseCategory: string[];
   firearmLicenseCategory: string[];
+  huntingLicenseCategory: string[];
+  fishingLicenseCategory: string[];
 }
 
 export function ManageLicensesModal({

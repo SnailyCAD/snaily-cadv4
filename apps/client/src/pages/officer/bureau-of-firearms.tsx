@@ -37,13 +37,13 @@ export default function BureauOfFirearms({ data }: Props) {
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
   async function handleAcceptOrDecline(id: string, type: "ACCEPT" | "DECLINE") {
-    const { json } = await execute<PostBOFData>({
+    const { json } = await execute<PostBOFData | null>({
       path: `/leo/bureau-of-firearms/${id}`,
       method: "POST",
       data: { type },
     });
 
-    if (json) {
+    if (json?.id) {
       await invalidateQuery();
       asyncTable.update(id, json);
     }

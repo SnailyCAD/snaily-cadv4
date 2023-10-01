@@ -84,3 +84,34 @@ export interface SmartSignMarker {
   id: 5;
   defaultText: Record<"firstLine" | "secondLine" | "thirdLine", string>;
 }
+
+export enum SmartMotorwaySignSpeedType {
+  ArrowLeft = 1,
+  ArrowRight = 2,
+  RedX = 3,
+  Speed20 = 20,
+  Speed30 = 30,
+  Speed40 = 40,
+  Speed50 = 50,
+  Speed60 = 60,
+  Speed70 = 70,
+  Speed80 = 80,
+  Speed90 = 90,
+  Speed100 = 100,
+  Speed110 = 110,
+  Speed120 = 120,
+  Speed130 = 130,
+  Speed140 = 140,
+  Speed150 = 150,
+}
+export interface SmartMotorwaySignMarker {
+  defaultSpeeds?: SmartMotorwaySignSpeedType[];
+  speeds?: SmartMotorwaySignSpeedType[];
+  position: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  lanes: number;
+  direction: string;
+}

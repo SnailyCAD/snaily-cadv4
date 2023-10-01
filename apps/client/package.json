@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/client",
-  "version": "1.72.0",
+  "version": "1.73.0",
   "sideEffects": false,
   "scripts": {
     "dev": " pnpm next dev",
@@ -31,12 +31,12 @@
     "@sentry/nextjs": "^7.70.0",
     "@sentry/tracing": "^7.70.0",
     "@snailycad/audit-logger": "workspace:*",
-    "@snailycad/config": "^1.72.0",
+    "@snailycad/config": "^1.73.0",
     "@snailycad/permissions": "workspace:*",
     "@snailycad/schemas": "workspace:*",
     "@snailycad/types": "workspace:*",
     "@snailycad/ui": "workspace:*",
-    "@snailycad/utils": "^1.72.0",
+    "@snailycad/utils": "^1.73.0",
     "@tailwindcss/typography": "^0.5.10",
     "@tanstack/react-query": "^4.35.3",
     "@tanstack/react-table": "8.10.1",

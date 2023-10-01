@@ -100,11 +100,17 @@ model MiscCadSettings {
   weaponLicenseTemplate      String? @db.Text
   waterLicenseNumberLength   Int?    @default(8)
   waterLicenseTemplate       String? @db.Text
+  huntingLicenseNumberLength Int?    @default(8)
+  huntingLicenseTemplate     String? @db.Text
+  fishingLicenseNumberLength  Int?    @default(8)
+  fishingLicenseTemplate      String? @db.Text
 
   driversLicenseMaxPoints Int? @default(12)
   pilotLicenseMaxPoints   Int? @default(12)
   weaponLicenseMaxPoints  Int? @default(12)
   waterLicenseMaxPoints   Int? @default(12)
+  fishingLicenseMaxPoints Int? @default(12)
+  huntingLicenseMaxPoints Int? @default(12)
 
   lastInactivitySyncTimestamp DateTime?
 
@@ -375,6 +381,12 @@ model Citizen {
   waterLicense         Value?                        @relation("waterLicenseToValue", fields: [waterLicenseId], references: [id])
   waterLicenseId       String?
   waterLicenseNumber   String?
+  huntingLicense       Value?                        @relation("huntingLicenseToValue", fields: [huntingLicenseId], references: [id])
+  huntingLicenseId     String?
+  huntingLicenseNumber String?
+  fishingLicense       Value?                        @relation("fishingLicenseToValue", fields: [fishingLicenseId], references: [id])
+  fishingLicenseId     String?
+  fishingLicenseNumber String?
   ccw                  Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
   ccwId                String?
   imageId              String?                       @db.Text
@@ -428,6 +440,8 @@ model CitizenLicensePoints {
   driverLicensePoints   Int       @default(0)
   pilotLicensePoints    Int       @default(0)
   waterLicensePoints    Int       @default(0)
+  huntingLicensePoints  Int       @default(0)
+  fishingLicensePoints  Int       @default(0)
   firearmsLicensePoints Int       @default(0)
   updatedAt             DateTime  @default(now()) @updatedAt
   citizens              Citizen[]
@@ -441,6 +455,10 @@ model SuspendedCitizenLicenses {
   pilotLicenseTimeEnd    DateTime?
   waterLicense           Boolean   @default(false)
   waterLicenseTimeEnd    DateTime?
+  fishingLicense         Boolean   @default(false)
+  fishingLicenseTimeEnd  DateTime?
+  huntingLicense         Boolean   @default(false)
+  huntingLicenseTimeEnd  DateTime?
   firearmsLicense        Boolean   @default(false)
   firearmsLicenseTimeEnd DateTime?
   citizens               Citizen[]
@@ -633,6 +651,8 @@ model Value {
   VehicleTrimLevels               VehicleValue[]                @relation("vehicleTrimLevels")
   RegisteredVehicle               RegisteredVehicle[]           @relation("registeredVehicleTrimLevels")
   Weapon                          Weapon[]                      @relation("weaponFlags")
+  fishingLicenseToValue           Citizen[]                     @relation("fishingLicenseToValue")
+  huntingLicenseToValue           Citizen[]                     @relation("huntingLicenseToValue")
 
   @@index([type])
 }
@@ -1709,6 +1729,8 @@ enum LicenseExamType {
   FIREARM
   WATER
   PILOT
+  HUNTING
+  FISHING
 }
 
 enum QualificationValueType {
@@ -1798,6 +1820,8 @@ enum DriversLicenseCategoryType {
   AVIATION
   WATER
   FIREARM
+  HUNTING
+  FISHING
 }
 
 enum EmployeeAsEnum {

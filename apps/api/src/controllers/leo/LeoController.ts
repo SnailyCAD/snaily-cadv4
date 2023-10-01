@@ -18,6 +18,8 @@ import type * as APITypes from "@snailycad/types/api";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 import { HandleInactivity } from "middlewares/handle-inactivity";
+import { userProperties } from "~/lib/auth/getSessionUser";
+import { recordsLogsInclude } from "../admin/manage/citizens/records-logs-controller";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -326,6 +328,41 @@ export class LeoController {
     await this.socket.emitUpdateOfficerStatus();
 
     return updated;
+  }
+
+  @Get("/my-record-reports")
+  async getMyRecordReports(
+    @Context("sessionUserId") sessionUserId: string,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ): Promise<APITypes.GetMyRecordReports> {
+    const where = {
+      OR: [
+        { records: { officer: { userId: sessionUserId } } },
+        { warrant: { officer: { userId: sessionUserId } } },
+      ],
+    } satisfies Prisma.RecordLogWhereInput;
+
+    const [totalCount, reports] = await prisma.$transaction([
+      prisma.recordLog.count({
+        where,
+      }),
+      prisma.recordLog.findMany({
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        where,
+        orderBy: { createdAt: "desc" },
+        include: {
+          warrant: { include: { officer: { include: leoProperties } } },
+          records: { include: recordsLogsInclude },
+          citizen: {
+            include: { user: { select: userProperties }, gender: true, ethnicity: true },
+          },
+        },
+      }),
+    ]);
+
+    return { reports, totalCount };
   }
 }
 

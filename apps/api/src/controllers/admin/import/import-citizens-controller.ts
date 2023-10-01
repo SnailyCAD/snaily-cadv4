@@ -175,6 +175,8 @@ export class ImportCitizensController {
           gender: true,
           ethnicity: true,
           weaponLicense: true,
+          huntingLicense: true,
+          fishingLicense: true,
           driversLicense: true,
           pilotLicense: true,
           waterLicense: true,
