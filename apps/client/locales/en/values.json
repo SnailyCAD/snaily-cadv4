@@ -4,7 +4,7 @@
     "values": "Values",
     "shouldDo": "Should Do",
     "color": "Color",
-    "textColor": "Text Color",
+    "textColor": "Text Color (#HEX)",
     "callsign": "Callsign",
     "department": "Department",
     "gameHash": "Game Hash",
