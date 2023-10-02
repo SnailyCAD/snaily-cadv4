@@ -30,9 +30,6 @@
     "alert_deleteValue": "Etes-vous sûr que vous voulez supprimer <span>{value}</span>? ",
     "alert_deleteSelectedValues": "Voulez-vous vraiment supprimer {length} éléments ? ",
     "noValuesForThisType": "Aucune valeur n'a encore été créée pour ce type.",
-<<<<<<< HEAD
-    "value": "Valeur"
-=======
     "value": "Valeur",
     "textColor": "Couleur du texte",
     "selectAll": "Sélectionner tout {count} ?",
@@ -70,7 +67,6 @@
     "customCallsignTemplate": "Modèle d'indicatif personnalisé",
     "customCallsignTemplateDescription": "Une fois défini, il utilisera ce modèle plutôt que le modèle d'indicatif global. Vous pouvez utiliser les variables suivantes : {variables}",
     "category": "Catégorie"
->>>>>>> 2c21056fbb6a988cc0510b52f56b744a1391c691
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Gérer les groupes de code pénal",

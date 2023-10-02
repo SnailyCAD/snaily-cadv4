@@ -25,11 +25,7 @@
     "businessWhitelist": "Liste blanche des entreprises",
     "businessWhitelistDescription": "Le système commercial sera mis sur liste blanche. Toute nouvelle entreprise doit d'abord être examinée, puis elle pourra être approuvée ou refusée avant de pouvoir être utilisée.",
     "timeZone": "Fuseau horaire",
-<<<<<<< HEAD
     "timeZoneDescription": "Le fuseau horaire qui sera utilisé dans l'instance SnailyCAD. Cela s'appliquera à tous les utilisateurs."
-=======
-    "timeZoneDescription": "Le fuseau horaire qui sera utilisé dans l'instance SnailyCAD. Cela s'appliquera à tous les utilisateurs." 
->>>>>>> 2c21056fbb6a988cc0510b52f56b744a1391c691
   },
   "DiscordRolesTab": {
     "discordRoles": "Rôles Discord",
@@ -210,15 +206,11 @@
     "fishingLicenseTemplate" : "Modèle de numéro du permis de pêche",
     "fishingLicenseTemplateInfo": "Ceci est le modèle pour les numéros de permis pêche. Vous pouvez utiliser les variables suivantes : {variables}. Remarque : cela ne s'appliquera qu'aux citoyens nouvellement créés.",
     "huntingLicenseTemplate": "Modèle de numéro du permis de chasse",
-<<<<<<< HEAD
-    "huntingLicenseTemplateInfo": "Ceci est le modèle pour les numéros de permis de chasse. Vous pouvez utiliser les variables suivantes : {variables}. Remarque : cela ne s'appliquera qu'aux citoyens nouvellement créés."
-=======
     "huntingLicenseTemplateInfo": "Ceci est le modèle pour les numéros de permis de chasse. Vous pouvez utiliser les variables suivantes : {variables}. Remarque : cela ne s'appliquera qu'aux citoyens nouvellement créés.",
     "fishingLicenseNumberLength": "Longueur du numéro de permis de pêche",
     "fishingLicenseNumberLengthDescription": "La longueur du numéro de permis de pêche (par défaut : 8)",
     "huntingLicenseNumberLength": "Longueur du numéro de permis de chasse",
     "huntingLicenseNumberLengthDescription": "La longueur du numéro de permis de chasse (par défaut : 8)"
->>>>>>> 2c21056fbb6a988cc0510b52f56b744a1391c691
   },
   "BlacklistedWords": {
     "blacklistedWords": "Mots sur liste noire",
