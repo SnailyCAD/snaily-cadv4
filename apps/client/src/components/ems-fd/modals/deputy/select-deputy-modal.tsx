@@ -11,7 +11,7 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/ems-fd-state";
 import { useValues } from "context/ValuesContext";
-import { EmsFdDeputy, ShouldDoType } from "@snailycad/types";
+import { EmsFdDeputy, ShouldDoType, WhatPages } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
@@ -31,7 +31,9 @@ export function SelectDeputyModal() {
   const { state, execute } = useFetch();
 
   const { codes10 } = useValues();
-  const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
+  const onDutyCode = codes10.values.find(
+    (v) => v.shouldDo === ShouldDoType.SET_ON_DUTY && v.whatPages.includes(WhatPages.EMS_FD),
+  );
 
   const { hasPermissions } = usePermission();
   const canSetUserDefinedCallsign = hasPermissions([Permissions.SetUserDefinedCallsignOnEmsFd]);
