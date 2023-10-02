@@ -260,7 +260,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
           <span>
             {getObjLength(tableState.rowSelection)} items selected.{" "}
             <Button
-              onClick={() => setAllSelected(true)}
+              onPress={() => setAllSelected(true)}
               variant="transparent"
               className="underline"
               size="xs"

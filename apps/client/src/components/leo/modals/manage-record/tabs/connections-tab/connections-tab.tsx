@@ -83,7 +83,7 @@ export function ConnectionsTab({
           {values.incidentId ? (
             <>
               <Button
-                onClick={() => {
+                onPress={() => {
                   modalState.openModal(ModalIds.ManageIncident);
                 }}
                 className="min-w-fit"
@@ -135,7 +135,7 @@ export function ConnectionsTab({
         {values.call911Id ? (
           <>
             <Button
-              onClick={() => {
+              onPress={() => {
                 setCurrentlySelectedCall(call);
                 modalState.openModal(ModalIds.Manage911Call);
               }}

@@ -1,5 +1,5 @@
 import { GetCADSettingsData } from "@snailycad/types/api";
-import { Alert, Button } from "@snailycad/ui";
+import { Alert } from "@snailycad/ui";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
@@ -35,10 +35,6 @@ export function ApiVerification(props: Props) {
       return json;
     },
   });
-
-  function handleCopyError(error: any) {
-    navigator.clipboard.writeText(error);
-  }
 
   if (error && props.isCORSError) {
     return (
@@ -145,10 +141,6 @@ NEXT_PUBLIC_PROD_ORIGIN="${process.env.NEXT_PUBLIC_PROD_ORIGIN}"`}
 
   return error ? (
     <Alert className="mb-5 max-w-md z-50" type="error" title={title} message={message}>
-      <Button className="mt-3" onPress={() => handleCopyError(error)}>
-        Copy error data
-      </Button>
-
       <p className="mt-3">
         <span className="font-medium">If you are the owner/developer for this community,</span>{" "}
         please visit our{" "}

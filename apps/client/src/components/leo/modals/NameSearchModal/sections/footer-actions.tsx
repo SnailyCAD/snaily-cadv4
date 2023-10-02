@@ -153,7 +153,7 @@ export function NameSearchFooterActions(props: Props) {
             <Button
               key={type}
               type="button"
-              onClick={() => handleOpenCreateRecord(type)}
+              onPress={() => handleOpenCreateRecord(type)}
               variant="cancel"
               className="px-1.5"
             >

@@ -111,7 +111,7 @@ export function ExpungementRequestsTab(props: Props) {
                 <Button
                   disabled={isDisabled}
                   size="xs"
-                  onClick={() => handleCancelClick(request)}
+                  onPress={() => handleCancelClick(request)}
                   variant="danger"
                 >
                   {t("cancelRequest")}

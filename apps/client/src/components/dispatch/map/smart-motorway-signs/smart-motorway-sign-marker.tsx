@@ -156,7 +156,7 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
               variant="danger"
               className="w-full"
               type="button"
-              onClick={() => setMarkerConfiguration([])}
+              onPress={() => setMarkerConfiguration([])}
               disabled={!hasManageSmartMotorwaysSignsPermissions}
             >
               Reset

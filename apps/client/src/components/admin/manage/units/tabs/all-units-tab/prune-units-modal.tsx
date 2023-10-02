@@ -173,7 +173,7 @@ export function PruneUnitsModal() {
 
       <footer>
         <Button
-          onClick={handleSubmit}
+          onPress={handleSubmit}
           type="button"
           className="mt-4"
           isDisabled={asyncTable.isLoading || state === "loading"}
