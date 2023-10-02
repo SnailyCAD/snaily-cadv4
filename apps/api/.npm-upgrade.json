@@ -5,8 +5,8 @@
       "reason": ""
     },
     "is-ip": {
-      "versions": "5.0.0",
-      "reason": ""
+      "versions": "5.0.1",
+      "reason": "esm"
     }
   }
 }
