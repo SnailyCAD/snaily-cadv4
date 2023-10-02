@@ -61,6 +61,7 @@ import {
 } from "./manage-modal/emergency-vehicle-fields";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { VehicleFields } from "./manage-modal/vehicle-fields";
+import type { z } from "zod";
 
 interface Props {
   type: ValueType;
@@ -69,7 +70,7 @@ interface Props {
   onUpdate(oldValue: AnyValue, newValue: AnyValue): void;
 }
 
-const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> = {
+const EXTRA_SCHEMAS: Partial<Record<ValueType, z.ZodType>> = {
   CODES_10: CODES_10_SCHEMA,
   DEPARTMENT: DEPARTMENT_SCHEMA,
   DIVISION: DIVISION_SCHEMA,

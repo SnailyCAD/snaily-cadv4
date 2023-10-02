@@ -10,6 +10,7 @@ import remarkGfm from "remark-gfm";
 import remarkEmoji from "remark-emoji";
 import { remarkGitHubReferences } from "lib/editor/remarkGitHubReferences";
 import useFetch from "lib/useFetch";
+import remarkExternalLinks from "remark-external-links";
 
 export function ChangelogModal() {
   const modalState = useModal();
@@ -46,14 +47,15 @@ export function ChangelogModal() {
         </div>
       ) : (
         <ReactMarkdown
-          linkTarget="_blank"
           remarkPlugins={[
             remarkGfm,
             [remarkGithub, { repository: "SnailyCAD/snaily-cadv4" }],
             remarkGitHubReferences,
             remarkEmoji,
+            // @ts-expect-error - remark-external-links doesn't have updated types
+            remarkExternalLinks,
           ]}
-          className="prose prose-2xl dark:prose-invert"
+          className="prose dark:prose-invert"
         >
           {body}
         </ReactMarkdown>

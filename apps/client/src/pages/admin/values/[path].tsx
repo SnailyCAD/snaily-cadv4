@@ -315,12 +315,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
                     </Tooltip.Trigger>
 
                     {isValueInUse(value) ? (
-                      <Tooltip.Portal className="z-[999]">
+                      <Tooltip.Portal>
                         <Tooltip.Content
                           align="center"
                           side="left"
                           sideOffset={5}
-                          className="rounded-md bg-white dark:bg-tertiary dark:text-white p-4 max-w-[350px]"
+                          className="rounded-md bg-white dark:bg-tertiary dark:text-white p-4 max-w-[350px] z-999"
                         >
                           {t("cannotDeleteTooltip")}
                         </Tooltip.Content>
