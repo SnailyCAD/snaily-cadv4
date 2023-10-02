@@ -42,7 +42,10 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
     const { json } = await execute<Put911CallByIdData>({
       path: `/temporary-units/${type}`,
       method: "POST",
-      data: { ...values, identifiers: values.identifier.split(",") },
+      data: {
+        ...values,
+        identifiers: values.identifier.length <= 0 ? [] : values.identifier.split(","),
+      },
     });
 
     if (json.id) {
@@ -64,7 +67,6 @@ export function CreateTemporaryUnitModal({ onClose }: Props) {
     callsign2: "",
     badgeNumberString: "",
     identifier: "",
-    citizenId: "test",
   };
 
   return (

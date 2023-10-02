@@ -236,6 +236,10 @@ function toIdString(array: (string | { value: string })[]) {
 async function upsertOfficerCitizen(
   options: Omit<CreateOfficerOptions, "body" | "schema"> & { data: any },
 ) {
+  if (options.citizen) {
+    return options.citizen;
+  }
+
   // means the officer that is being created is a temporary unit
   let citizen: { id: string; userId: string | null } | null = options.existingOfficer?.citizenId
     ? { id: options.existingOfficer.citizenId, userId: options.existingOfficer.userId }
@@ -243,6 +247,7 @@ async function upsertOfficerCitizen(
 
   if (!citizen) {
     if (!options.user) {
+      // temporary unit's citizen
       citizen = await prisma.citizen.create({
         data: {
           address: "",
@@ -261,15 +266,13 @@ async function upsertOfficerCitizen(
         cad: options.cad,
         user: options.user,
       });
-      citizen =
-        options.citizen ??
-        (await prisma.citizen.findFirst({
-          where: {
-            id: options.data.citizenId,
-            userId: checkCitizenUserId ? options.user.id : undefined,
-          },
-          select: { userId: true, id: true },
-        }));
+      citizen = await prisma.citizen.findFirst({
+        where: {
+          id: options.data.citizenId,
+          userId: checkCitizenUserId ? options.user.id : undefined,
+        },
+        select: { userId: true, id: true },
+      });
     }
   }
 
