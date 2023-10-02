@@ -429,15 +429,21 @@ export class ValuesController {
           await prisma[data.name].findMany({ select: { id: true } })
         : await prisma.value.findMany({ where: { type }, select: { id: true } });
 
-      arr = await Promise.all(values.map(async (item) => this.deleteById(type, item.id)));
+      arr = await Promise.allSettled(values.map((item) => this.deleteById(type, item.id)));
     } else {
-      arr = await Promise.all(data.map(async (id) => this.deleteById(type, id)));
+      arr = await Promise.allSettled(data.map((id) => this.deleteById(type, id)));
     }
 
-    const successfullyDeleted = arr.filter((v) => v !== false) as string[];
+    const successfullyDeleted = arr
+      .filter((v) => Boolean(v.status === "fulfilled" && v.value !== false))
+      // @ts-expect-error we know that all of these are fulfilled
+      .map((v) => v.value);
+
     const successfullyDeletedCount = successfullyDeleted.length;
 
-    const failedToDeleteCount = arr.filter((v) => v === false).length;
+    const failedToDeleteCount = arr.filter(
+      (v) => (v.status === "fulfilled" && v.value === false) || v.status === "rejected",
+    ).length;
 
     await createAuditLogEntry({
       translationKey: "bulkRemoveValues",
