@@ -198,6 +198,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   unitId={officer.id}
                   isDispatch={isDispatch}
                   callId={officer.activeCallId}
+                  size="sm"
                 />
               ),
               radioChannel: <UnitRadioChannelModal unit={officer} />,

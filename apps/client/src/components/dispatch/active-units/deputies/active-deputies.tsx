@@ -163,6 +163,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   unitId={deputy.id}
                   isDispatch={isDispatch}
                   callId={deputy.activeCallId}
+                  size="sm"
                 />
               ),
               radioChannel: <UnitRadioChannelModal unit={deputy} />,
