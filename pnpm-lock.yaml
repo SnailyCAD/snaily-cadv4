@@ -514,7 +514,7 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       zod:
-        specifier: ^3.22.2
+        specifier: 3.22.2
         version: 3.22.2
       zustand:
         specifier: ^4.4.1
@@ -609,7 +609,7 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       zod:
-        specifier: ^3.22.2
+        specifier: 3.22.2
         version: 3.22.2
     devDependencies:
       tsup:

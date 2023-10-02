@@ -93,7 +93,7 @@
     "storage-factory": "^0.2.1",
     "use-intl": "^2.20.2",
     "uuid": "^9.0.1",
-    "zod": "^3.22.2",
+    "zod": "3.22.2",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

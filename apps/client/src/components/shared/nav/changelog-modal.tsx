@@ -52,6 +52,7 @@ export function ChangelogModal() {
             [remarkGithub, { repository: "SnailyCAD/snaily-cadv4" }],
             remarkGitHubReferences,
             remarkEmoji,
+            // @ts-expect-error - remark-external-links doesn't have updated types
             remarkExternalLinks,
           ]}
           className="prose dark:prose-invert"
