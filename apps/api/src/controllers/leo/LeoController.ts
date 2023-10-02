@@ -8,7 +8,7 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveOfficer } from "middlewares/active-officer";
 import { Socket } from "services/socket-service";
 import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
-import { cad, Prisma, ShouldDoType, User } from "@prisma/client";
+import { cad, Prisma, ShouldDoType, User, WhatPages } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
@@ -139,6 +139,7 @@ export class LeoController {
         const onDutyCode = await prisma.statusValue.findFirst({
           where: {
             shouldDo: ShouldDoType.SET_ON_DUTY,
+            OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.LEO } }],
           },
         });
 

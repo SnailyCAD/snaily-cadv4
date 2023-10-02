@@ -9,6 +9,7 @@ import {
   Officer,
   ShouldDoType,
   User,
+  WhatPages,
 } from "@prisma/client";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import { prisma } from "lib/data/prisma";
@@ -140,7 +141,10 @@ export async function upsertOfficer({
   let statusId: string | undefined;
   if (!user) {
     const onDutyStatus = await prisma.statusValue.findFirst({
-      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+        OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.LEO } }],
+      },
     });
 
     statusId = onDutyStatus?.id;

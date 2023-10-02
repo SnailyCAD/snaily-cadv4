@@ -8,6 +8,7 @@ import {
   MiscCadSettings,
   ShouldDoType,
   User,
+  WhatPages,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { EMS_FD_DEPUTY_SCHEMA } from "@snailycad/schemas";
@@ -76,7 +77,7 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     });
   }
 
-  const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
+  const allowMultipleUnitsWithSameDeptPerUser = isFeatureEnabled({
     feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
     defaultReturn: false,
     features: options.cad.features,
@@ -87,7 +88,7 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
     callsign2: data.callsign2,
     type: "ems-fd",
     unitId: options.existingDeputy?.id,
-    userId: allowMultipleOfficersWithSameDeptPerUser ? options.user?.id : undefined,
+    userId: allowMultipleUnitsWithSameDeptPerUser ? options.user?.id : undefined,
   });
 
   const citizen = await upsertEmsFdCitizen({ ...options, data });
@@ -109,7 +110,10 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
   let statusId: string | undefined;
   if (!options.user) {
     const onDutyStatus = await prisma.statusValue.findFirst({
-      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+        OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.EMS_FD } }],
+      },
     });
 
     statusId = onDutyStatus?.id;

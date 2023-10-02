@@ -22,6 +22,7 @@ import {
   ShouldDoType,
   Prisma,
   WhitelistStatus,
+  WhatPages,
 } from "@prisma/client";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -542,9 +543,14 @@ export class Calls911Controller {
       "combined-ems-fd": "combinedEmsFdUnit",
     };
 
+    const pageType = ["leo", "combined-leo"].includes(type) ? WhatPages.LEO : WhatPages.EMS_FD;
     const assignedToStatus = await prisma.statusValue.findFirst({
       where: {
         shouldDo: callType === "assign" ? ShouldDoType.SET_ASSIGNED : ShouldDoType.SET_ON_DUTY,
+        OR:
+          callType === "assign"
+            ? undefined
+            : [{ whatPages: { isEmpty: true } }, { whatPages: { has: pageType } }],
       },
     });
 
