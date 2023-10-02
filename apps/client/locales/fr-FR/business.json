@@ -47,6 +47,7 @@
     "alert_fireEmployee": "Êtes-vous sûr de vouloir licencier <span>{employee}</span> ? Cette action ne peut être annulée.",
     "alert_deletePost": "Êtes-vous sûr de vouloir supprimer cette publication ? Cette action ne peut être annulée.",
     "alert_deleteBusiness": "Êtes-vous sûr de vouloir supprimer \"<span>{business}</span>\" ? Cette action ne peut être annulée.",
-    "alert_deleteBusinessRole": "Êtes-vous sûr de vouloir supprimer le rôle d'entreprise \"<span>{role}</span>\" ? Cette action ne peut être annulée."
+    "alert_deleteBusinessRole": "Êtes-vous sûr de vouloir supprimer le rôle d'entreprise \"<span>{role}</span>\" ? Cette action ne peut être annulée.",
+    "canManageVehicles": "Peut gérer des véhicules"
   }
 }

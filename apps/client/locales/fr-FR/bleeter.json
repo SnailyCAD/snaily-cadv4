@@ -9,6 +9,17 @@
     "headerImage": "Image d'en-tête",
     "bleetTitle": "Titre blet",
     "bleetBody": "Bleet Corps",
-    "alert_deleteBleet": "Voulez-vous vraiment supprimer \"<span>{title}</span>\"? Cette action ne peut pas être annulée."
+    "alert_deleteBleet": "Voulez-vous vraiment supprimer \"<span>{title}</span>\"? Cette action ne peut pas être annulée.",
+    "followers": "Abonné",
+    "following": "Mes abonnements",
+    "follow": "Suivre",
+    "unfollow": "Ne plus suivre",
+    "editProfile": "Editer le profil",
+    "posts": "Des postes",
+    "myProfile": "Mon profil",
+    "save": "Sauvegarder",
+    "getStarted": "Commencer",
+    "unVerifyProfile": "Annuler la vérification du profil",
+    "verifyProfile": "Vérifier le profil"  
   }
 }

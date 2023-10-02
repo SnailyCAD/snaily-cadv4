@@ -381,7 +381,8 @@
     "motorway_sign_120": "Speed 120",
     "motorway_sign_130": "Speed 130",
     "motorway_sign_140": "Speed 140",
-    "motorway_sign_150": "Speed 150"
+    "motorway_sign_150": "Speed 150",
+    "arrestReportLogs": "Arrest report logs" 
   },
   "Bolos": {
     "activeBolos": "Active Bolos",
@@ -414,3 +415,4 @@
     "noWeaponsPendingBof": "There are no weapons pending approval."
   }
 }
+ 
