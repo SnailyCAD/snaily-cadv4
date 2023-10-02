@@ -3,7 +3,13 @@ import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { ContentType, Description, Post } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { CombinedEmsFdUnit, CombinedLeoUnit, Feature, ShouldDoType } from "@prisma/client";
+import {
+  CombinedEmsFdUnit,
+  CombinedLeoUnit,
+  Feature,
+  ShouldDoType,
+  WhatPages,
+} from "@prisma/client";
 import { Socket } from "services/socket-service";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -72,7 +78,10 @@ export class CombinedUnitsController {
     }
 
     const status = await prisma.statusValue.findFirst({
-      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+        OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.LEO } }],
+      },
       select: { id: true },
     });
 
@@ -184,7 +193,10 @@ export class CombinedUnitsController {
     }
 
     const status = await prisma.statusValue.findFirst({
-      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+        OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.EMS_FD } }],
+      },
       select: { id: true },
     });
 
@@ -274,9 +286,11 @@ export class CombinedUnitsController {
       throw new NotFound("notFound");
     }
 
+    const pageType = "officers" in unit ? WhatPages.LEO : WhatPages.EMS_FD;
     const onDutyStatusCode = await prisma.statusValue.findFirst({
       where: {
         shouldDo: ShouldDoType.SET_ON_DUTY,
+        OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: pageType } }],
       },
     });
 
