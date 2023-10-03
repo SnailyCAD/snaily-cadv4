@@ -50,7 +50,7 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
 
   React.useEffect(() => {
     const speeds = marker.speeds ?? marker.defaultSpeeds;
-    if (speeds) {
+    if (Array.isArray(speeds)) {
       setMarkerConfiguration(speeds.map((speed) => String(speed)));
     }
   }, [marker.speeds, marker.defaultSpeeds]);
