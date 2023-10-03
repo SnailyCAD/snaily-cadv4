@@ -1,10 +1,10 @@
 {
   "Calls": {
-    "tow": "Tow",
-    "towLogs": "Tow Logs",
+    "tow": "Recovery",
+    "towLogs": "Recovery Logs",
     "taxi": "Taxi",
     "active911Calls": "Active 999 Calls",
-    "noTowCalls": "There are no tow calls yet.",
+    "noTowCalls": "There are no recovery calls yet.",
     "noTaxiCalls": "There are no taxi calls yet.",
     "no911Calls": "There are no 999 calls yet.",
     "assignToCall": "Assign to call",
@@ -12,15 +12,15 @@
     "unassignFromCall": "Unassign from call",
     "location": "Location",
     "caller": "Caller",
-    "createTowCall": "Create tow call",
+    "createTowCall": "Create recovery call",
     "createTaxiCall": "Create taxi call",
     "create911Call": "Create 999 call",
     "manage911Call": "Manage 999 call",
-    "editTowCall": "Edit tow call",
+    "editTowCall": "Edit recovery call",
     "editTaxiCall": "Edit taxi call",
     "assignedUnits": "Assigned Units",
-    "selectCitizen": "Select citizen",
-    "citizen": "Citizen",
+    "selectCitizen": "Select civilian",
+    "citizen": "Civilian",
     "endCall": "End Call",
     "end911Call": "End 999 Call",
     "addEvent": "Add Event",
@@ -28,10 +28,10 @@
     "viewEvents": "View Events",
     "callEvents": "Call Events",
     "deleteCallEvent": "Delete Event",
-    "postal": "Postal",
+    "postal": "Postcode",
     "noEvents": "This call does not have any events",
     "deliveryAddress": "Delivery Address",
-    "callTow": "Call Tow",
+    "callTow": "Call Recovery",
     "departments": "Forces",
     "divisions": "Divisions",
     "callFilters": "Call Filters",
@@ -42,7 +42,7 @@
     "removeMarker": "Remove marker",
     "setMarker": "Set marker",
     "situationCode": "Situation Code",
-    "towCallCreated": "Successfully created the tow call.",
+    "towCallCreated": "Successfully created the recovery call.",
     "taxiCallCreated": "Successfully created the taxi call.",
     "911CallCreated": "Successfully created the 999 call.",
     "callCountyService": "Call Local Service",
@@ -67,7 +67,9 @@
     "alert_end911Call": "Are you sure you want to end this call?",
     "alert_endTowCall": "Are you sure you want to end this call?",
     "id": "id",
-    "towLogsDescription": "Here you can view all archived recovery logs. This allows you to view all recovery logs that have been ended/archived."
+    "towLogsDescription": "Here you can view all archived recovery logs. This allows you to view all recovery logs that have been ended/archived.",
+    "addAllUnits": "Add all active units",
+    "openCallModalAfterCreation": "Open Manage 999 call modal after call creation?"
   },
   "Events": {
     "unitAssignedToCall": "<span>{unit}</span> has been assigned to this call.",
@@ -78,6 +80,6 @@
     "unitPressedPanicButton": "<span>{unit}</span> has pressed the panic button.",
     "unitEnRoute": "<span>{unit}</span> is en-route.",
     "unitOnScene": "<span>{unit}</span> is on scene.",
-    "unitSituationCodeChange": "<span>{unit}</span> has changed their response code to <span>{situationCode}</span>."
+    "unitSituationCodeChange": "<span>{unit}</span> has changed their situation code to <span>{situationCode}</span>."
   }
 }
