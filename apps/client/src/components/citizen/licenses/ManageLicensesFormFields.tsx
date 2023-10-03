@@ -330,7 +330,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
             isClearable={allowRemoval}
             onSelectionChange={(keys) => setFieldValue("fishingLicenseCategory", keys)}
             options={driverslicenseCategory.values
-              .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+              .filter((v) => v.type === DriversLicenseCategoryType.FISHING)
               .map((value) => ({
                 label: value.value.value,
                 value: value.id,
@@ -398,7 +398,7 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
             isClearable={allowRemoval}
             onSelectionChange={(keys) => setFieldValue("huntingLicenseCategory", keys)}
             options={driverslicenseCategory.values
-              .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+              .filter((v) => v.type === DriversLicenseCategoryType.HUNTING)
               .map((value) => ({
                 label: value.value.value,
                 value: value.id,
