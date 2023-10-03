@@ -4,7 +4,7 @@
   "version": "1.73.2",
   "scripts": {
     "start": "pnpm concurrently \"pnpm --filter \"@snailycad/client\" start\" \"pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/api\" start\"",
-    "full-start": "git pull && node scripts/copy-env.mjs --client --api && pnpm run build && pnpm run start",
+    "full-start": "git stash && git pull && node scripts/copy-env.mjs --client --api && pnpm run build && pnpm run start",
     "build": "pnpm turbo run build --filter=\"{packages/**/**}\" && pnpm turbo run build --filter=\"{apps/**/**}\"",
     "dev": "docker compose up -d && pnpm turbo run watch --parallel --concurrency 11",
     "format": "prettier --write \"./(packages|apps)/**/**/*.{js,jsx,ts,mjs,tsx,md,css,json}\" --ignore-path .gitignore",
