@@ -19,9 +19,10 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
   const modalState = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
+  const t = useTranslations("Values");
 
   const footerTitle = group ? common("save") : common("create");
-  const title = group ? "Manage Group" : "Add Group";
+  const title = group ? t("manageGroup") : t("addGroup");
 
   function handleClose() {
     modalState.closeModal(ModalIds.ManagePenalCodeGroup);
@@ -72,14 +73,14 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
               errorMessage={errors.name}
               autoFocus
               isRequired
-              label="Name"
+              label={common("name")}
               value={values.name}
               onChange={(value) => setFieldValue("name", value)}
             />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}
