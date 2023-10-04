@@ -237,7 +237,7 @@
     "assignedToCall#WithType": "Vous avez été désigné pour appeler",
     "myRecordReports": "Mes rapports",
     "myRecordReportsDescription": "Ici, vous pouvez consulter toutes les contraventions, rapports d'arrestation, avertissements écrits et mandats créés par les agents associés à votre compte.",
-    "noReportsCreated": "You have not created any reports yet.",
+    "noReportsCreated": "Vous n'avez pas encore créé de rapports.",
     "warrantCreatedButApprovalRequired": "Le mandat a été créé avec succès, mais ce CAD nécessite une approbation pour que les mandats soient actifs. ",
     "suspendDriversLicense": "Permis de conduire suspendu",
     "suspendPilotLicense": "Licence de pilote suspendue",
@@ -382,7 +382,10 @@
     "motorway_sign_120": "Vitesse 120",
     "motorway_sign_130": "Vitesse 130",
     "motorway_sign_140": "Vitesse 140",
-    "motorway_sign_150": "Vitesse 150"
+    "motorway_sign_150": "Vitesse 150",
+    "all": "Tous",
+    "ungrouped": "Non groupé",
+    "counts": "Nombre"
   },
   "Bolos": {
     "activeBolos": "Bolos actifs",
