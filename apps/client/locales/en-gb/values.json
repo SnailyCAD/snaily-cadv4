@@ -66,7 +66,15 @@
     "importWeapons": "Import Weapons",
     "customCallsignTemplate": "Custom Callsign Template",
     "customCallsignTemplateDescription": "When set, it will use this template over the global callsign template. You can use the following variables: {variables}",
-    "category": "Category"
+    "category": "Category",
+    "addGroup": "Add Group",
+    "manageGroup": "Manage Group",
+    "INFRACTION": "Civil Offense",
+    "MISDEMEANOR": "Summarry Offense",
+    "FELONY": "Criminal Offense",
+    "warningApplicable": "Caution Applicable",
+    "warningNotApplicable": "Caution Not Applicable",
+    "isPrimary": "Is Primary"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Manage Legislation Groups",
