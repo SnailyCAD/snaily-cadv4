@@ -544,9 +544,6 @@ importers:
 
   packages/audit-logger:
     dependencies:
-      "@prisma/client":
-        specifier: ">=5.3.1"
-        version: 5.3.1
       "@sentry/node":
         specifier: ">=7.72.0"
         version: 7.72.0
@@ -4787,22 +4784,6 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@prisma/client@5.3.1:
-    resolution:
-      {
-        integrity: sha512-ArOKjHwdFZIe1cGU56oIfy7wRuTn0FfZjGuU/AjgEBOQh+4rDkB6nF+AGHP8KaVpkBIiHGPQh3IpwQ3xDMdO0Q==,
-      }
-    engines: { node: ">=16.13" }
-    requiresBuild: true
-    peerDependencies:
-      prisma: "*"
-    peerDependenciesMeta:
-      prisma:
-        optional: true
-    dependencies:
-      "@prisma/engines-version": 5.3.1-2.61e140623197a131c2a6189271ffee05a7aa9a59
-    dev: false
-
   /@prisma/client@5.4.1(prisma@5.4.1):
     resolution:
       {
@@ -4831,13 +4812,6 @@ packages:
       strip-ansi: 6.0.1
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /@prisma/engines-version@5.3.1-2.61e140623197a131c2a6189271ffee05a7aa9a59:
-    resolution:
-      {
-        integrity: sha512-y5qbUi3ql2Xg7XraqcXEdMHh0MocBfnBzDn5GbV1xk23S3Mq8MGs+VjacTNiBh3dtEdUERCrUUG7Z3QaJ+h79w==,
-      }
     dev: false
 
   /@prisma/engines-version@5.4.1-1.2f302df92bd8945e20ad4595a73def5b96afa54f:

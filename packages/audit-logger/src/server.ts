@@ -1,5 +1,4 @@
 import superjson from "superjson";
-import type { PrismaClient } from "@prisma/client";
 import type { AuditLogActions } from "./index";
 import { captureException } from "@sentry/node";
 import { AuditLog as _AuditLog } from "@snailycad/types";
@@ -14,7 +13,7 @@ export type AuditLogMessages =
   keyof (typeof import("../../../apps/client/locales/en/admin.json"))["AuditLogs"];
 
 interface Options<Action extends AuditLogActions> {
-  prisma: PrismaClient;
+  prisma: any;
 
   translationKey?: AuditLogMessages | null;
   executorId: string;
