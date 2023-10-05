@@ -30,7 +30,7 @@
   "dependencies": {
     "@snailycad/types": "workspace:*",
     "tslib": "^2.6.2",
-    "zod": "3.22.2"
+    "zod": "3.22.3"
   },
   "tsup": {
     "entry": [
