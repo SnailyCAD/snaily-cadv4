@@ -63,7 +63,8 @@ export const VEHICLE_SCHEMA = z.object({
 });
 
 export const TRANSFER_VEHICLE_SCHEMA = z.object({
-  ownerId: z.string().min(2).max(255),
+  ownerId: z.string().max(255).nullish(),
+  businessId: z.string().max(255).nullish(),
 });
 
 export const DELETE_VEHICLE_SCHEMA = z.object({
