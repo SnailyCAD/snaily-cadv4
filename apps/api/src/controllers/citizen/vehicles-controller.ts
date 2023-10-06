@@ -39,6 +39,7 @@ import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { getImageWebPPath } from "~/lib/images/get-image-webp-path";
 import fs from "node:fs/promises";
+import { ExtendedNotFound } from "~/exceptions/extended-not-found";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
@@ -484,25 +485,51 @@ export class VehiclesController {
       throw new NotFound("vehicleNotFound");
     }
 
-    const newOwner = await prisma.citizen.findFirst({
-      where: {
-        AND: [{ id: data.ownerId }, { NOT: { id: String(vehicle.citizenId) } }],
-      },
-    });
+    if (data.businessId) {
+      const business = await prisma.business.findUnique({
+        where: { id: data.businessId },
+      });
 
-    if (!newOwner) {
-      throw new NotFound("newOwnerNotFound");
+      if (!business) {
+        throw new ExtendedNotFound({ business: "businessNotFound" });
+      }
+
+      const updatedVehicle = await prisma.registeredVehicle.update({
+        where: { id: vehicle.id },
+        data: {
+          Business: { connect: { id: data.businessId } },
+        },
+      });
+
+      return updatedVehicle;
     }
 
-    const updatedVehicle = await prisma.registeredVehicle.update({
-      where: { id: vehicle.id },
-      data: {
-        citizenId: newOwner.id,
-        userId: newOwner.userId,
-      },
-    });
+    if (data.ownerId) {
+      const newOwner = await prisma.citizen.findFirst({
+        where: {
+          AND: [{ id: data.ownerId }, { NOT: { id: String(vehicle.citizenId) } }],
+        },
+      });
 
-    return updatedVehicle;
+      if (!newOwner) {
+        throw new NotFound("newOwnerNotFound");
+      }
+
+      const updatedVehicle = await prisma.registeredVehicle.update({
+        where: { id: vehicle.id },
+        data: {
+          citizenId: newOwner.id,
+          userId: newOwner.userId,
+        },
+      });
+
+      return updatedVehicle;
+    }
+
+    throw new ExtendedBadRequest({
+      ownerId: "ownerIdOrBusinessIdRequired",
+      businessId: "ownerIdOrBusinessIdRequired",
+    });
   }
 
   @Delete("/:id")

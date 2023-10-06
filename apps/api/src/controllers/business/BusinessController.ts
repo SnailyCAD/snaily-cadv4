@@ -11,7 +11,14 @@ import {
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
-import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus, cad } from "@prisma/client";
+import {
+  type User,
+  EmployeeAsEnum,
+  MiscCadSettings,
+  WhitelistStatus,
+  cad,
+  Prisma,
+} from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type * as APITypes from "@snailycad/types/api";
@@ -70,6 +77,18 @@ export class BusinessController {
     ]);
 
     return { ownedBusinesses, joinedBusinesses, joinableBusinesses };
+  }
+
+  @Get("/search")
+  async searchBusinesses(@QueryParams("query") query: string) {
+    const where: Prisma.BusinessWhereInput = query
+      ? { name: { contains: query, mode: "insensitive" } }
+      : {};
+    const joinableBusinesses = await prisma.business.findMany({
+      where,
+    });
+
+    return joinableBusinesses;
   }
 
   @Get("/business/:id")
