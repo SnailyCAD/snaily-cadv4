@@ -1822,6 +1822,7 @@ enum DriversLicenseCategoryType {
   FIREARM
   HUNTING
   FISHING
+  OTHER
 }
 
 enum EmployeeAsEnum {

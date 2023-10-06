@@ -35,9 +35,16 @@ interface Props {
   nameAndCallsign: string;
   deputy: EmsFdDeputy | CombinedEmsFdUnit;
   setTempUnit: React.Dispatch<React.SetStateAction<ActiveDeputy["id"] | null>>;
+  textColor?: string | null;
 }
 
-export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit }: Props) {
+export function DeputyColumn({
+  deputy,
+  isDispatch,
+  nameAndCallsign,
+  textColor: statusTextColor,
+  setTempUnit,
+}: Props) {
   const router = useRouter();
   const isEmsFd = router.pathname.includes("/ems-fd");
   const isEligiblePage = isDispatch || isEmsFd;
@@ -78,7 +85,7 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign, setTempUnit 
 
   const canBeOpened = (isDispatch && hasActiveDispatchers) || !isCurrentDeputy || shouldShowSplit;
   const unitStatusColor = deputy.status?.color ?? undefined;
-  const textColor = unitStatusColor && generateContrastColor(unitStatusColor);
+  const textColor = statusTextColor ?? (unitStatusColor && generateContrastColor(unitStatusColor));
   const canDrag = hasActiveDispatchers && isDispatch;
 
   function handleMerge(deputy: ActiveDeputy) {

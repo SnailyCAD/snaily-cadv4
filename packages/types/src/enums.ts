@@ -179,6 +179,7 @@ export const DriversLicenseCategoryType = {
   FIREARM: "FIREARM",
   HUNTING: "HUNTING",
   FISHING: "FISHING",
+  OTHER: "OTHER",
 } as const;
 
 export type DriversLicenseCategoryType =

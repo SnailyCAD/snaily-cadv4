@@ -133,6 +133,10 @@ export function CitizenLicenses({ citizen }: Props) {
     ],
   };
 
+  const otherLicenseCategories = citizen.dlCategory.filter(
+    (v) => v.type === DriversLicenseCategoryType.OTHER,
+  );
+
   return (
     <>
       {types.map((type) => {
@@ -160,7 +164,6 @@ export function CitizenLicenses({ citizen }: Props) {
                 {t("Leo.suspended")}
                 {typeof suspendedTimeEnd === "string" ? (
                   <span>
-                    {" "}
                     ({t("Leo.endsOn")} <FullDate onlyDate>{new Date(suspendedTimeEnd)}</FullDate>)
                   </span>
                 ) : null}
@@ -187,6 +190,12 @@ export function CitizenLicenses({ citizen }: Props) {
           </div>
         );
       })}
+
+      {otherLicenseCategories.length > 0 ? (
+        <Infofield label={t("Citizen.otherLicenseCategory")}>
+          {otherLicenseCategories.map((v) => v?.value?.value).join(", ")}
+        </Infofield>
+      ) : null}
     </>
   );
 }
