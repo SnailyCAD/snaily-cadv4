@@ -131,8 +131,11 @@ export function CitizenLicenses({ citizen }: Props) {
       DriversLicenseCategoryType.HUNTING,
       ["huntingLicense", "huntingLicenseTimeEnd", "huntingLicenseNumber"],
     ],
-    // todo: other license categories
   };
+
+  const otherLicenseCategories = citizen.dlCategory.filter(
+    (v) => v.type === DriversLicenseCategoryType.OTHER,
+  );
 
   return (
     <>
@@ -187,6 +190,12 @@ export function CitizenLicenses({ citizen }: Props) {
           </div>
         );
       })}
+
+      {otherLicenseCategories.length > 0 ? (
+        <Infofield label={t("Citizen.otherLicenseCategory")}>
+          {otherLicenseCategories.map((v) => v?.value?.value).join(", ")}
+        </Infofield>
+      ) : null}
     </>
   );
 }
