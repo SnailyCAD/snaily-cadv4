@@ -131,6 +131,7 @@ export function CitizenLicenses({ citizen }: Props) {
       DriversLicenseCategoryType.HUNTING,
       ["huntingLicense", "huntingLicenseTimeEnd", "huntingLicenseNumber"],
     ],
+    // todo: other license categories
   };
 
   return (
@@ -160,7 +161,6 @@ export function CitizenLicenses({ citizen }: Props) {
                 {t("Leo.suspended")}
                 {typeof suspendedTimeEnd === "string" ? (
                   <span>
-                    {" "}
                     ({t("Leo.endsOn")} <FullDate onlyDate>{new Date(suspendedTimeEnd)}</FullDate>)
                   </span>
                 ) : null}

@@ -54,6 +54,10 @@ export function createDefaultLicensesValues(citizen: Citizen | null): LicenseIni
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.HUNTING)
         .map((v) => v.id) ?? [],
+    otherLicenseCategory:
+      citizen?.dlCategory
+        .filter((v) => v.type === DriversLicenseCategoryType.OTHER)
+        .map((v) => v.id) ?? [],
   };
 }
 
@@ -483,6 +487,27 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
           ) : null}
         </section>
       )}
+
+      <section className="w-full">
+        <FormRow>
+          <SelectField
+            label={t("Citizen.otherLicenseCategory")}
+            errorMessage={errors.otherLicenseCategory}
+            selectionMode="multiple"
+            selectedKeys={values.otherLicenseCategory}
+            isOptional
+            isClearable={allowRemoval}
+            onSelectionChange={(keys) => setFieldValue("otherLicenseCategory", keys)}
+            options={driverslicenseCategory.values
+              .filter((v) => v.type === DriversLicenseCategoryType.OTHER)
+              .map((value) => ({
+                label: value.value.value,
+                value: value.id,
+                description: value.description,
+              }))}
+          />
+        </FormRow>
+      </section>
     </>
   );
 }

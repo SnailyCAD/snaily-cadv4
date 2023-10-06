@@ -32,6 +32,7 @@ export interface LicenseInitialValues {
   firearmLicenseCategory: string[];
   huntingLicenseCategory: string[];
   fishingLicenseCategory: string[];
+  otherLicenseCategory: string[];
 }
 
 export function ManageLicensesModal({
