@@ -29,6 +29,7 @@ import { usePermission } from "hooks/usePermission";
 import { PrivateMessagesModal } from "../private-messages/private-messages-modal";
 import { GetActiveOfficersData } from "@snailycad/types/api";
 import { ActiveOfficersHeader } from "./active-officers-header";
+import { classNames } from "lib/classNames";
 
 const CreateTemporaryUnitModal = dynamic(
   async () =>
@@ -150,6 +151,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               name: nameAndCallsign,
               officer: (
                 <OfficerColumn
+                  textColor={textColor}
                   nameAndCallsign={nameAndCallsign}
                   setTempUnit={officerState.setTempId}
                   officer={officer}
@@ -163,7 +165,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               division: (
                 <HoverCard>
                   <HoverCardTrigger asChild>
-                    <p className="max-w-xs truncate">
+                    <p className={classNames("max-w-xs truncate", textColor)}>
                       {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                     </p>
                   </HoverCardTrigger>

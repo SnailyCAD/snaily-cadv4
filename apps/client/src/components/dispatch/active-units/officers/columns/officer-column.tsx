@@ -34,9 +34,15 @@ interface Props {
   officer: Officer | CombinedLeoUnit;
   nameAndCallsign: string;
   setTempUnit: React.Dispatch<React.SetStateAction<ActiveOfficer["id"] | null>>;
+  textColor?: string | null;
 }
 
-export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) {
+export function OfficerColumn({
+  officer,
+  nameAndCallsign,
+  textColor: statusTextColor,
+  setTempUnit,
+}: Props) {
   const { activeOfficers, setActiveOfficers } = useActiveOfficers();
 
   const modalState = useModal();
@@ -101,7 +107,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
   }
 
   const unitStatusColor = officer.status?.color ?? undefined;
-  const textColor = unitStatusColor && generateContrastColor(unitStatusColor);
+  const textColor = statusTextColor ?? (unitStatusColor && generateContrastColor(unitStatusColor));
   const contextMenuActions = [
     {
       name: shouldShowSplit ? t("unmerge") : t("merge"),
