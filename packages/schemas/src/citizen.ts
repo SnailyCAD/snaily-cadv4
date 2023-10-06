@@ -33,6 +33,7 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   pilotLicenseCategory: z.array(z.any()).nullish(),
   waterLicenseCategory: z.array(z.any()).nullish(),
   firearmLicenseCategory: z.array(z.any()).nullish(),
+  otherLicenseCategory: z.array(z.any()).nullish(),
   image: z.any().nullish(),
   socialSecurityNumber: z.string().max(30).nullish(),
   appearance: z.string().nullish(),
@@ -116,6 +117,7 @@ export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   fishingLicenseCategory: true,
   huntingLicense: true,
   huntingLicenseCategory: true,
+  otherLicenseCategory: true,
 }).extend({
   suspended: SUSPENDED_SCHEMA.nullish(),
 });

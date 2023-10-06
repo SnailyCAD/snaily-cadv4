@@ -58,7 +58,7 @@ export const BUSINESS_ROLE_ARR = z.array(BUSINESS_ROLE_SCHEMA).min(1);
 /**
  * driverslicense_category
  */
-const DLC_TYPE_REGEX = /AUTOMOTIVE|AVIATION|WATER|FIREARM|HUNTING|FISHING/;
+const DLC_TYPE_REGEX = /AUTOMOTIVE|AVIATION|WATER|FIREARM|HUNTING|FISHING|OTHER/;
 
 export const DLC_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DLC_TYPE_REGEX).max(255),
