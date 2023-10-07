@@ -349,7 +349,9 @@
     "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER": "Allow multiple units with the same callsign and department per user",
     "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER-description": "When enabled, officers and deputies can create multiple units with the same callsign and department.",
     "OPEN_LAW_BOOK": "Open Law Book",
-    "OPEN_LAW_BOOK-description": "When enabled, this will allow every user to view the CAD's penal codes (Law Book)"
+    "OPEN_LAW_BOOK-description": "When enabled, this will allow every user to view the CAD's penal codes (Law Book)",
+    "CITIZEN_RECORD_PAYMENTS": "Citizen Record Payments",
+    "CITIZEN_RECORD_PAYMENTS-description": "When enabled, this will allow citizens to mark their own records as paid."
   },
   "Permissions": {
     "defaultPermissions": "Default Permissions",
