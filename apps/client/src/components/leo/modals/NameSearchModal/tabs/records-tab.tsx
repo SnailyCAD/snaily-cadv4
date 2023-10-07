@@ -314,7 +314,7 @@ export function RecordsTable({
           { header: t("Leo.officer"), accessorKey: "officer" },
           { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           isCitizen ? { header: t("Leo.totalCost"), accessorKey: "totalCost" } : null,
-          isCitizenCreation ? null : { header: common("createdAt"), accessorKey: "createdAt" },
+          { header: common("createdAt"), accessorKey: "createdAt" },
           isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
         ]}
       />
