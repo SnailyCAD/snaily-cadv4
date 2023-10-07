@@ -67,7 +67,8 @@
     "waterLicensePoints": "Points de permis bateau",
     "id": "Id",
     "huntingLicensePoints": "Points de permis de chasse",
-    "fishingLicensePoints": "Points de permis de pêche"
+    "fishingLicensePoints": "Points de permis de pêche",
+    "otherLicenseCategory": "Autres catégories de permis"
   },
   "Vehicles": {
     "model": "Modèle",
