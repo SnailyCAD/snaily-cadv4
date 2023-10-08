@@ -123,13 +123,14 @@ export class AdminManageCitizensController {
         where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
       }),
       prisma.recordLog.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
-        where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
-        orderBy: { createdAt: "desc" },
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
           records: { include: recordsLogsInclude },
+          business: { include: { employees: { where: { role: { as: "OWNER" } } } } },
           citizen: {
             include: { user: { select: userProperties }, gender: true, ethnicity: true },
           },

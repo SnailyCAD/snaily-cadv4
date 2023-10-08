@@ -70,8 +70,8 @@ export default function CitizenLogs(props: Props) {
         tableState={tableState}
         data={asyncTable.items.map((item) => {
           const type = item.records !== null ? TYPE_LABELS[item.records.type] : t("warrant");
-          const createdAt = item.warrant?.createdAt ?? item.records?.createdAt;
-          const officer = item.warrant?.officer ?? item.records?.officer;
+          const createdAt = item.records?.createdAt ?? item.warrant?.createdAt;
+          const officer = item.records?.officer ?? item.warrant?.officer;
           const officerName = officer && makeUnitName(officer);
           const callsign = officer && generateCallsign(officer);
 
