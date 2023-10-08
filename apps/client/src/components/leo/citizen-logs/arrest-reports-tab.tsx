@@ -23,6 +23,7 @@ import type {
   PostCitizenRecordLogsData,
 } from "@snailycad/types/api";
 import { useQuery } from "@tanstack/react-query";
+import { RecordsCaseNumberColumn } from "../records-case-number-column";
 
 interface Props {
   arrestReports: GetManagePendingArrestReports;
@@ -116,7 +117,7 @@ export function PendingCitizenRecordsTab({ arrestReports }: Props) {
 
             return {
               id: item.id,
-              caseNumber: `#${record.caseNumber}`,
+              caseNumber: <RecordsCaseNumberColumn record={record} />,
               type,
               citizen: item.citizen ? `${item.citizen.name} ${item.citizen.surname}` : "—",
               business: item.business ? `${item.business.name}` : "—",
