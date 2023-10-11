@@ -1,4 +1,4 @@
-import { ComboBoxState } from "@react-stately/combobox";
+import { type ComboBoxState } from "@react-stately/combobox";
 import { Button } from "../../button/button";
 import { ChevronDown, X } from "react-bootstrap-icons";
 import { cn } from "mxcn";

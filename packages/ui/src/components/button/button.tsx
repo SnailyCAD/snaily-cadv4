@@ -1,7 +1,7 @@
 import * as React from "react";
-import { AriaButtonProps, useButton } from "@react-aria/button";
+import { type AriaButtonProps, useButton } from "@react-aria/button";
 import { mergeProps } from "@react-aria/utils";
-import { VariantProps, cva } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import { cn } from "mxcn";
 
 export const buttonVariants = cva(

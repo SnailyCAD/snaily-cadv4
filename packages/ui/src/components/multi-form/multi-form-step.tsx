@@ -1,4 +1,4 @@
-import { FormikProps, FormikValues, useFormikContext } from "formik";
+import { type FormikProps, type FormikValues, useFormikContext } from "formik";
 
 export interface MultiFormStepItem<FormValues extends FormikValues> {
   title: string;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCalendarState } from "@react-stately/calendar";
-import { CalendarProps, useCalendar } from "@react-aria/calendar";
+import { type CalendarProps, useCalendar } from "@react-aria/calendar";
 import { type DateValue, createCalendar } from "@internationalized/date";
 import { CalendarGrid } from "./calendar-grid";
 import { Button } from "../../../button/button";

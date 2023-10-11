@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AriaBreadcrumbsProps, useBreadcrumbs } from "@react-aria/breadcrumbs";
+import { type AriaBreadcrumbsProps, useBreadcrumbs } from "@react-aria/breadcrumbs";
 
 interface Props extends AriaBreadcrumbsProps {
   children: React.ReactNode;

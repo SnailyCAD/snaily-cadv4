@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
 import { cn } from "mxcn";
-import { ButtonVariantProps, buttonVariants } from "./button/button";
+import { type ButtonVariantProps, buttonVariants } from "./button/button";
 
 export const ContextMenu = ContextMenuPrimitive.Root;
 export const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
