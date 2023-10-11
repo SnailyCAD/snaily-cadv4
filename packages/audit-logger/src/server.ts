@@ -9,13 +9,10 @@ type AuditLog = Omit<_AuditLog, "action"> & {
   action: any;
 };
 
-export type AuditLogMessages =
-  keyof (typeof import("../../../apps/client/locales/en/admin.json"))["AuditLogs"];
-
 interface Options<Action extends AuditLogActions> {
   prisma: any;
 
-  translationKey?: AuditLogMessages | null;
+  translationKey?: string | null;
   executorId: string;
   action: Action;
 }
