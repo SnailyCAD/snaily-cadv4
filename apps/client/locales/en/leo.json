@@ -385,7 +385,8 @@
     "arrestReportLogs": "Arrest report logs",
     "all": "All",
     "ungrouped": "Ungrouped",
-    "counts": "Counts"
+    "counts": "Counts",
+    "stats": "Stats"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

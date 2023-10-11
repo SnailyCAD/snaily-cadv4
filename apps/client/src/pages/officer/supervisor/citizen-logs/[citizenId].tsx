@@ -16,6 +16,7 @@ import Link from "next/link";
 import { FullDate, Status, buttonVariants } from "@snailycad/ui";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
+import { RecordsStatsColumn } from "components/leo/records-stats-column";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
@@ -79,6 +80,7 @@ export default function CitizenLogs(props: Props) {
                 status: <Status fallback="—">{item.records.status}</Status>,
                 postal: item.records.postal || common("none"),
                 notes: item.records.notes || common("none"),
+                stats: <RecordsStatsColumn record={item.records} />,
                 violations: <ViolationsColumn violations={item.records.violations} />,
                 paymentStatus: <Status fallback="—">{item.records.paymentStatus}</Status>,
               }
@@ -107,6 +109,7 @@ export default function CitizenLogs(props: Props) {
           { header: t("postal"), accessorKey: "postal" },
           { header: t("status"), accessorKey: "status" },
           { header: t("paymentStatus"), accessorKey: "paymentStatus" },
+          { header: t("stats"), accessorKey: "stats" },
           { header: t("notes"), accessorKey: "notes" },
           { header: t("violations"), accessorKey: "violations" },
           { header: common("createdAt"), accessorKey: "createdAt" },
