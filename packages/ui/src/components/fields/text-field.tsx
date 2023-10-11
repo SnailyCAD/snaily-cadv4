@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AriaTextFieldOptions, TextFieldAria, useTextField } from "@react-aria/textfield";
+import { type AriaTextFieldOptions, type TextFieldAria, useTextField } from "@react-aria/textfield";
 import { cn } from "mxcn";
 import { Input } from "../inputs/input";
 import { Textarea } from "../inputs/textarea";

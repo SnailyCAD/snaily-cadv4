@@ -39,7 +39,7 @@
     "bundle": false,
     "platform": "node",
     "treeshake": true,
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "format": [
       "cjs",

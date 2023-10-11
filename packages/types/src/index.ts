@@ -1,7 +1,7 @@
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "./prisma/index";
 import type * as Enums from "./enums";
-import { CadFeatureOptions } from "./lib/cad-feature";
+import type { CadFeatureOptions } from "./lib/cad-feature";
 
 export * from "./enums";
 export * from "./lib/cad-feature";
@@ -402,7 +402,7 @@ type _Record = Prisma.Record & {
   release?: Partial<RecordRelease> | null;
   call911?: Pick<Call911, "caseNumber"> | null;
 };
-export { _Record as Record };
+export type { _Record as Record };
 
 export type RecordRelease = Prisma.RecordRelease & {
   releasedBy: Citizen | null;

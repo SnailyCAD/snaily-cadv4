@@ -1,5 +1,5 @@
 import type * as React from "react";
-import { ListState, useListState } from "@react-stately/list";
+import { type ListState, useListState } from "@react-stately/list";
 import type { CollectionBase, MultipleSelection, Node } from "@react-types/shared";
 
 export type MultiSelectListProps<T> = CollectionBase<T> & MultipleSelection;

@@ -1,5 +1,10 @@
 import * as React from "react";
-import { useRadioGroup, useRadio, AriaRadioProps, AriaRadioGroupProps } from "@react-aria/radio";
+import {
+  useRadioGroup,
+  useRadio,
+  type AriaRadioProps,
+  type AriaRadioGroupProps,
+} from "@react-aria/radio";
 import { useRadioGroupState } from "@react-stately/radio";
 import { RadioContext, useRadioFieldContext } from "../../context/radio-field-context";
 import { ErrorMessage } from "../error-message";

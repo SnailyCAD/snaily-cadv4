@@ -1,15 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "target": "ESNext",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "declaration": true,
-    "skipLibCheck": true,
-    "importHelpers": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx"
-  },
-  "exclude": ["dist", "node_modules"]
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+  }
 }

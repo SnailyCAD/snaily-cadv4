@@ -1,6 +1,6 @@
 import type * as React from "react";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
-import { VariantProps, cva } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 
 type AlertVariantsProps = VariantProps<typeof alertVariants>;
 

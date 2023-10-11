@@ -1,9 +1,16 @@
 import * as React from "react";
-import { FormikHelpers, Form, Formik, FormikConfig, FormikProps, FormikValues } from "formik";
+import {
+  type FormikHelpers,
+  Form,
+  Formik,
+  type FormikConfig,
+  type FormikProps,
+  type FormikValues,
+} from "formik";
 import { cn } from "mxcn";
 import { Button } from "../button/button";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
-import { MultiFormStep, MultiFormStepItem } from "./multi-form-step";
+import { MultiFormStep, type MultiFormStepItem } from "./multi-form-step";
 
 interface Props<FormValues extends FormikValues>
   extends Omit<FormikConfig<FormValues>, "children"> {

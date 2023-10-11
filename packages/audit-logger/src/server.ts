@@ -1,7 +1,7 @@
 import superjson from "superjson";
 import type { AuditLogActions } from "./index";
 import { captureException } from "@sentry/node";
-import { AuditLog as _AuditLog } from "@snailycad/types";
+import type { AuditLog as _AuditLog } from "@snailycad/types";
 
 export * from "./types/action-types";
 export * from "./types/actions";
