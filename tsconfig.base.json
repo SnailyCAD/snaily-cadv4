@@ -28,6 +28,10 @@
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
     "allowUnreachableCode": false,
-    "lib": ["es2022"]
+    "lib": ["es2022"],
+
+    /* Monorepo Options */
+    "composite": true,
+    "declarationMap": true
   }
 }
