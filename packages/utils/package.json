@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.73.2",
+  "version": "1.74.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -102,7 +102,7 @@
     "tslib": "^2.6.2",
     "slate-history": "^0.93.0",
     "slate-react": "^0.99.0",
-    "@snailycad/types": "^1.73.2",
+    "@snailycad/types": "^1.74.0",
     "date-fns": "^2.30.0",
     "undici": "5.25.3",
     "slate": "0.94.1"
