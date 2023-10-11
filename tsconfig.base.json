@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "es2022",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "allowJs": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
@@ -28,10 +28,6 @@
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
     "allowUnreachableCode": false,
-    "lib": ["es2022"],
-
-    /* Monorepo Options */
-    "composite": true,
-    "declarationMap": true
+    "lib": ["es2022"]
   }
 }
