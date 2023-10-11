@@ -143,7 +143,7 @@ export function Table<TData extends _RowData>({
         <Alert
           type="error"
           title="An unexpected error occurred"
-          message={tableState.pagination.error?.message || "Unable to fetch this route"}
+          message={tableState.pagination.error.message || "Unable to fetch this route"}
         />
       ) : (
         <table className="w-full whitespace-nowrap max-h-64">

@@ -33,7 +33,7 @@ export function createMapUnitsFromActiveUnits({
 
       const existing = activeUnits.some((player) => findPlayerFromCombinedUnit(player, activeUnit));
 
-      if (player && !existing) {
+      if (!existing) {
         activeUnits.push({ ...player, unit: activeUnit });
       }
 
@@ -46,7 +46,7 @@ export function createMapUnitsFromActiveUnits({
     if (!player || !("steamId" in player) || !("discordId" in player)) continue;
 
     const existing = activeUnits.some((player) => findPlayerFromSingleUnit(player, activeUnit));
-    if (player && !existing) {
+    if (!existing) {
       activeUnits.push({ ...player, unit: activeUnit });
     }
   }

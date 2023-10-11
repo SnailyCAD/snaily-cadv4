@@ -14,7 +14,7 @@ import { useFormikContext } from "formik";
 export function AdvancedSettings() {
   const { values, handleChange, setFieldValue } = useFormikContext<{
     callsigns: Record<string, IndividualDivisionCallsign>;
-    divisions: SelectValue<string>[];
+    divisions: SelectValue[];
   }>();
 
   function _handleChange(e: React.ChangeEvent<HTMLInputElement>, divisionId: string) {

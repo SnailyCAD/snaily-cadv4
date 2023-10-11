@@ -41,6 +41,7 @@ export function Select({ name, onChange, ...rest }: Props) {
 
   const useDarkTheme =
     user?.isDarkTheme &&
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     typeof window !== "undefined" &&
     window.document.body.classList.contains("dark");
 

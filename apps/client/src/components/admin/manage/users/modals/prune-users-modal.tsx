@@ -52,7 +52,7 @@ export function PruneUsersModal() {
       },
     });
 
-    if (json) {
+    if (typeof json.count === "number") {
       toastMessage({
         icon: "success",
         title: t("usersPruned"),

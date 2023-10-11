@@ -69,7 +69,6 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
     }
 
     const isForceAccountPassword =
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       (cad?.features?.FORCE_ACCOUNT_PASSWORD ?? false) && !user?.hasPassword;
     if (user && !NO_LOADING_ROUTES.includes(router.pathname) && isForceAccountPassword) {
       const from = router.asPath;

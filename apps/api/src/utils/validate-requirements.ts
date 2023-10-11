@@ -42,6 +42,7 @@ export async function areRequiredCommandsInstalled() {
 async function doesCommandExist(command: string) {
   return new Promise((resolve, reject) => {
     commandExists(command, (err, exists) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (err) {
         return reject(err);
       }

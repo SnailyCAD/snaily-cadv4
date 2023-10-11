@@ -99,7 +99,7 @@ export function CreateWarrantModal({ warrant, readOnly, onClose, onCreate, onUpd
     citizenName: warrant?.citizen ? `${warrant.citizen.name} ${warrant.citizen.surname}` : "",
     status: warrant?.status ?? "",
     description: warrant?.description ?? "",
-    assignedOfficers: warrant?.assignedOfficers?.map((v) => v.unit.id),
+    assignedOfficers: warrant?.assignedOfficers.map((v) => v.unit.id),
   };
 
   return (

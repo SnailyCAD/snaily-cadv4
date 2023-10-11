@@ -25,7 +25,7 @@ export function ChangelogModal() {
       path: "/admin/changelog",
     });
 
-    if (json) {
+    if (json.body) {
       setBody(typeof json === "string" ? json : json.body);
     }
   }, [cad?.version?.currentVersion, body]); // eslint-disable-line react-hooks/exhaustive-deps
