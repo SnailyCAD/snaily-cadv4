@@ -249,7 +249,8 @@ export class RecordsController {
     });
 
     try {
-      const browser = await puppeteer.launch({ headless: "new" });
+      const args = process.env.IS_USING_ROOT_USER === "true" ? ["--no-sandbox"] : [];
+      const browser = await puppeteer.launch({ args, headless: "new" });
       const page = await browser.newPage();
 
       page.setContent(template, { waitUntil: "domcontentloaded" });
