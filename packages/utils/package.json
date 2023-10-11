@@ -99,12 +99,12 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "tslib": "^2.6.2",
-    "slate-history": "^0.93.0",
-    "slate-react": "^0.99.0",
     "@snailycad/types": "^1.74.0",
     "date-fns": "^2.30.0",
-    "undici": "5.25.3",
-    "slate": "0.94.1"
+    "slate": "0.94.1",
+    "slate-history": "^0.93.0",
+    "slate-react": "^0.99.0",
+    "tslib": "^2.6.2",
+    "undici": "5.25.3"
   }
 }

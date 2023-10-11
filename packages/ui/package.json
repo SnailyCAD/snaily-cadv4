@@ -96,7 +96,10 @@
     "@react-types/select": "^3.8.3",
     "@react-types/shared": "^3.20.0",
     "@snailycad/config": "^1.74.0",
+    "@snailycad/types": "workspace:*",
     "@snailycad/utils": "^1.74.0",
+    "@types/react": "^18.2.24",
+    "@types/react-dom": "^18.2.8",
     "class-variance-authority": "^0.7.0",
     "formik": "^2.4.5",
     "mxcn": "^2.0.0",
@@ -104,20 +107,17 @@
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
     "react-use": "^17.4.0",
-    "tailwind-merge": "^1.14.0",
-    "@snailycad/types": "workspace:*",
-    "@types/react": "^18.2.24",
-    "@types/react-dom": "^18.2.8",
     "rimraf": "^5.0.5",
+    "tailwind-merge": "^1.14.0",
     "tslib": "^2.6.2"
   },
   "peerDependencies": {
     "date-fns": ">=2.30.0",
     "next": "*",
     "next-intl": ">=2.20.2",
-    "use-intl": ">=2.20.2",
     "react": ">=18.2.0",
-    "react-dom": ">=18.2.0"
+    "react-dom": ">=18.2.0",
+    "use-intl": ">=2.20.2"
   },
   "sideEffects": false
 }
