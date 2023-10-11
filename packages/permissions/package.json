@@ -6,10 +6,12 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
     "./permissions": {
+      "types": "./dist/permissions.d.ts",
       "require": "./dist/permissions.js",
       "import": "./dist/permissions.mjs"
     },
@@ -42,7 +44,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
-    "target": "node16",
+    "target": "node18",
     "treeshake": true,
     "silent": true,
     "format": [

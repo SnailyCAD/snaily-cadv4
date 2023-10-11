@@ -89,7 +89,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "treeshake": true,
     "format": [

@@ -6,10 +6,12 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
     "./server": {
+      "types": "./dist/server.d.ts",
       "require": "./dist/server.js",
       "import": "./dist/server.mjs"
     },
@@ -39,7 +41,7 @@
     "bundle": false,
     "platform": "node",
     "treeshake": true,
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "format": [
       "cjs",

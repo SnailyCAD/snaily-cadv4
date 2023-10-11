@@ -1,7 +1,7 @@
 import type * as Prisma from "./prisma/index";
 import type * as Types from "./index.js";
-import { GetEmsFdActiveDeputy } from "./api.js";
-import { GetActiveOfficerData } from "./api.js";
+import type { GetEmsFdActiveDeputy } from "./api.js";
+import type { GetActiveOfficerData } from "./api.js";
 
 export * from "./api/admin.js";
 export * from "./api/dispatch.js";

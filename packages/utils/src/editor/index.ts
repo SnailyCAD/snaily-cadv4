@@ -14,4 +14,4 @@ declare module "slate" {
 
 export * from "./types";
 export { slateDataToString } from "./slate-data-to-string";
-export { Descendant };
+export type { Descendant };
