@@ -72,8 +72,6 @@ export default function CitizenLogs(props: Props) {
           const type = item.records !== null ? TYPE_LABELS[item.records.type] : t("warrant");
           const createdAt = item.records?.createdAt ?? item.warrant?.createdAt;
           const officer = item.records?.officer ?? item.warrant?.officer;
-          const officerName = officer && makeUnitName(officer);
-          const callsign = officer && generateCallsign(officer);
 
           const extra = item.records
             ? {
@@ -96,7 +94,7 @@ export default function CitizenLogs(props: Props) {
             id: item.id,
             type,
             citizen: `${item.citizen?.name} ${item.citizen?.surname}`,
-            officer: callsign && officerName ? `${callsign} ${officerName}` : "—",
+            officer: officer ? `${makeUnitName(officer)} ${generateCallsign(officer)}` : "—",
             ...extra,
             createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
           };

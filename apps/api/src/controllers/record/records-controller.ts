@@ -51,6 +51,7 @@ import { generateCallsign } from "@snailycad/utils";
 import { Descendant, slateDataToString } from "@snailycad/utils/editor";
 import puppeteer from "puppeteer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { captureException } from "@sentry/node";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -265,7 +266,8 @@ export class RecordsController {
       return pdf;
     } catch (err) {
       console.log(err);
-      throw err;
+      captureException(err);
+      return null;
     }
   }
 
