@@ -66,7 +66,7 @@
     "alert_deleteCallEvent": "Voulez-vous vraiment supprimer cet événement ? ",
     "alert_end911Call": "Voulez-vous vraiment mettre fin à cet appel ?",
     "alert_endTowCall": "Voulez-vous vraiment mettre fin à cet appel ?",
-    "openCallModalAfterCreation" : "Ouvrir le formulaire 'Gérer les appels 911' après la création de l'appel ?",
+    "openCallModalAfterCreation": "Ouvrir le formulaire 'Gérer les appels 911' après la création de l'appel ?",
     "id": "id",
     "towLogsDescription": "Ici, vous pouvez consulter tous les historiques de remorquage archivés. Cela vous permet de visualiser tous les historiques de remorquage terminés/archivés.",
     "addAllUnits": "Ajouter toutes les unités actives"
@@ -82,4 +82,4 @@
     "unitOnScene": "<span>{unit}</span> est sur scène.",
     "unitSituationCodeChange": "<span>{unit}</span> a changé son code de situation en <span>{situationCode}</span>."
   }
-} 
+}

@@ -20,7 +20,7 @@
     "statusChangeDescription": "L'unité {unit} a changé son statut en {status}."
   },
   "PanicButton": {
-   "panicButton": "Bouton panique",
+    "panicButton": "Bouton panique",
     "panicButtonDescription": "L'unité {unit} a appuyé sur le bouton panique."
   },
   "Calls": {

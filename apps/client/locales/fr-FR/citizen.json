@@ -152,7 +152,7 @@
     "editPet": "Modifier l'animal",
     "deletePet": "Supprimer l'animal",
     "alert_deletePet": "Êtes-vous sûr de vouloir supprimer cet animal ? Cette action ne peut pas être annulée.",
-    "alert_deleteNote": "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est irréversible."  
+    "alert_deleteNote": "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est irréversible."
   },
   "LawBook": {
     "lawBook": "Code pénal",
@@ -164,4 +164,4 @@
     "jailTime": "Temps de prison",
     "isPrimary": "Est primaire"
   }
-} 
+}

@@ -203,7 +203,7 @@
     "maxFishingLicensePointsDescription": "Le nombre maximum de points de permis qu'un citoyen peut avoir avant que son permis de pêche soit suspendu (par défaut : 12)",
     "maxHuntingLicensePoints": "Maximum de point du permis de chasse",
     "maxHuntingLicensePointsDescription": "Le nombre maximum de points de permis qu'un citoyen peut avoir avant que son permis chasse soit suspendu (par défaut : 12)",
-    "fishingLicenseTemplate" : "Modèle de numéro du permis de pêche",
+    "fishingLicenseTemplate": "Modèle de numéro du permis de pêche",
     "fishingLicenseTemplateInfo": "Ceci est le modèle pour les numéros de permis pêche. Vous pouvez utiliser les variables suivantes : {variables}. Remarque : cela ne s'appliquera qu'aux citoyens nouvellement créés.",
     "huntingLicenseTemplate": "Modèle de numéro du permis de chasse",
     "huntingLicenseTemplateInfo": "Ceci est le modèle pour les numéros de permis de chasse. Vous pouvez utiliser les variables suivantes : {variables}. Remarque : cela ne s'appliquera qu'aux citoyens nouvellement créés.",
@@ -243,7 +243,7 @@
     "BUSINESS": "Entreprise",
     "BUSINESS-description": "Une fois activé, cela permettra aux citoyens de créer et de rejoindre des entreprises.",
     "ALLOW_DUPLICATE_CITIZEN_NAMES": "Autoriser les noms de citoyens en double",
-    "ALLOW_DUPLICATE_CITIZEN_NAMES-description": "Lorsque activé, cela permettra aux utilisateurs de créer des citoyens avec le même nom (nom et prénom)",   
+    "ALLOW_DUPLICATE_CITIZEN_NAMES-description": "Lorsque activé, cela permettra aux utilisateurs de créer des citoyens avec le même nom (nom et prénom)",
     "BLEETER": "Bleeter",
     "BLEETER-url": "https://docs.snailycad.org/docs/features/settings/bleeter",
     "BLEETER-description": "Lorsqu'elle est activée, cela permettra aux citoyens de créer des bleets.",
@@ -270,7 +270,7 @@
     "RADIO_CHANNEL_MANAGEMENT": "Gestion des chaînes radio",
     "RADIO_CHANNEL_MANAGEMENT-description": "Lorsque activé, cela permettra à la répartition de gérer le canal radio dans lequel se trouve une unité. Cela peut ensuite être utilisé pour améliorer l'expérience via l'API publique du CAD.",
     "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN": "Autoriser les citoyens à supprimer leur propre citoyen",
-    "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN-description": "Lorsque activé, cela permettra aux citoyens de supprimer leur propre citoyen.",    
+    "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN-description": "Lorsque activé, cela permettra aux citoyens de supprimer leur propre citoyen.",
     "DMV": "Département des Véhicules Automobiles (DVA)",
     "DMV-description": "Lorsqu'ils sont activés, les véhicules doivent d'abord être approuvés par le Département des véhicules automobiles du CAD.",
     "DMV-url": "https://docs.snailycad.org/docs/features/settings/department-of-motor-vehicles",
@@ -342,7 +342,7 @@
     "MEDICAL_RECORDS_CITIZEN_MANAGEABLE-description": "Lorsque activé, cela permettra aux citoyens de gérer leurs propres dossiers médicaux. Lorsqu'il est désactivé, cela permettra uniquement à EMS/FD de gérer les dossiers médicaux des citoyens.",
     "PETS": "Animaux de compagnie",
     "PETS-description": "Lorsqu'elle est activée, cela permettra aux citoyens de créer des animaux de compagnie.",
-   "REQUIRED_CITIZEN_IMAGE": "Image de citoyen requise",
+    "REQUIRED_CITIZEN_IMAGE": "Image de citoyen requise",
     "REQUIRED_CITIZEN_IMAGE-description": "Lorsque cette option est activée, les citoyens devront télécharger une image lors de la création d'un citoyen.",
     "LEO_EDITABLE_CITIZEN_PROFILE": "Profil de citoyen modifiable LEO",
     "LEO_EDITABLE_CITIZEN_PROFILE-description": "Lorsque activé, cela permettra à LEO/EMS/FD/Dispatch de modifier les profils des citoyens si l'utilisateur dispose de l'autorisation 'Gérer le profil des citoyens (non-administrateur)'.",
@@ -352,7 +352,7 @@
     "OPEN_LAW_BOOK-description": "Lorsque activé, cela permettra à chaque utilisateur de consulter les codes pénaux du CAD (Law Book)"
   },
   "Permissions": {
-   "defaultPermissions": "Autorisations par défaut",
+    "defaultPermissions": "Autorisations par défaut",
     "defaultPermissionsInfo": "Ces autorisations seront automatiquement accordées à chaque utilisateur créant un nouveau compte.",
     "warning": "Avertissement",
     "defaultPermissionsWarning": "Il est recommandé de ne modifier cela que si vous êtes sûr que chaque utilisateur qui crée un compte doit disposer des autorisations sélectionnées.",
@@ -364,7 +364,7 @@
     "other": "Autre",
     "leo": "Police",
     "dispatch": "Répartiteur",
-    "ManageSmartMotorwaySigns" : "Gérer les panneaux de circulation",
+    "ManageSmartMotorwaySigns": "Gérer les panneaux de circulation",
     "Leo": "Police",
     "owner": "Propriétaire",
     "ViewIncidents": "Afficher les incidents",
@@ -462,4 +462,4 @@
     "LeoManageCitizenProfile": "Gérer le profil citoyen (non-administrateur)",
     "ManageSmartSigns": "Gérer les panneaux intelligents"
   }
-} 
+}

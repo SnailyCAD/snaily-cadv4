@@ -140,7 +140,7 @@
     "dispatchPermissions": "Autorisations d'envoi",
     "whitelistStatus": "Statut de la liste blanche",
     "noUsersPending": "Aucun utilisateur n'est en attente d'accès.",
-    "DEFAULT_PERMISSIONS" : "Permissions par défaut",
+    "DEFAULT_PERMISSIONS": "Permissions par défaut",
     "impounded": "Mis en fourrière",
     "owners": "Propriétaires",
     "addCitizenEntry": "Ajouter une entrée citoyen",
@@ -190,7 +190,7 @@
     "activeWarrantAccepted": "une demande de mandat active a été acceptée avec l'identifiant <span>{value}</span>.",
     "activeWarrantDeclined": "une demande de mandat active a été refusée avec l'identifiant <span>{value}</span>.",
     "bulkRemoveValues": "Les valeurs sélectionnées ont été supprimées : <span>{value}</span>",
-   "leoIncidentsPurged": "Les incidents LEO sélectionnés ont été purgés. Ces incidents ne peuvent pas être récupérés et ont été supprimés définitivement : <span>{value}</span>. ",
+    "leoIncidentsPurged": "Les incidents LEO sélectionnés ont été purgés. Ces incidents ne peuvent pas être récupérés et ont été supprimés définitivement : <span>{value}</span>. ",
     "emsFdIncidentsPurged": "Les incidents EMS/FD sélectionnés ont été purgés. Ces incidents ne peuvent pas être récupérés et ont été supprimés définitivement : <span>{value}</span>. "
   }
-} 
+}

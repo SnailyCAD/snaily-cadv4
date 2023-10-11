@@ -156,7 +156,7 @@
   "LawBook": {
     "lawBook": "Legislation",
     "warningApplicable": "Cautionable",
-    "noPenalCodes": "No legislation has been registered", 
+    "noPenalCodes": "No legislation has been registered",
     "warningNotApplicable": "Caution Not Applicable",
     "fines": "Penalty Notices",
     "bail": "Bail",
@@ -164,4 +164,3 @@
     "isPrimary": "Is Primary"
   }
 }
- 

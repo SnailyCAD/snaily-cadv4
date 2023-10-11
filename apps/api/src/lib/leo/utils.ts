@@ -98,7 +98,7 @@ export async function updateOfficerDivisionsCallsigns({
   callsigns,
 }: {
   officerId: string;
-  disconnectConnectArr: DisconnectOrConnect<string, false>[];
+  disconnectConnectArr: DisconnectOrConnect<string>[];
   callsigns?: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>> | null;
 }) {
   if (!callsigns) return;

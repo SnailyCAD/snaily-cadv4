@@ -89,7 +89,7 @@
     "dashboard": "Tableau de bord",
     "myOfficers": "Mes Officiers",
     "myOfficerLogs": "Mes journaux d'officier",
-    "myRecordReports" : "Mes rapports",
+    "myRecordReports": "Mes rapports",
     "incidents": "Incidents",
     "impoundLot": "Fourrière",
     "manageUnits": "Gérer les unités",
@@ -112,8 +112,8 @@
     "whatsNew": "Quoi de neuf",
     "bureauOfFirearms": "Bureau des armes à feu",
     "emsFdIncidents": "Incidents EMS/FD",
-    "pets" : "Animaux domestiques",
-    "lawBook" : "Code pénal",
+    "pets": "Animaux domestiques",
+    "lawBook": "Code pénal",
     "hospitalServices": "Services hospitaliers"
   },
   "Errors": {
