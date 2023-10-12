@@ -99,7 +99,6 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
             <Button
               size="xs"
               isDisabled={rest.isDisabled}
-              // @ts-expect-error null is allowed here to clear the date value
               onPress={() => state.setValue(null)}
               type="button"
               className={cn("rounded-l-none", errorMessageClassName)}
