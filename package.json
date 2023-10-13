@@ -21,8 +21,8 @@
     "@casperiv/eslint-config": "8.0.0",
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
-    "eslint": "8.51.0",
-    "lerna": "^7.3.1",
+    "eslint": "8.50.0",
+    "lerna": "^7.3.0",
     "lint-staged": "^14.0.1"
   },
   "lint-staged": {
@@ -40,13 +40,6 @@
     "husky": "^8.0.3",
     "prettier": "3.0.3",
     "tsup": "6.6.2",
-    "turbo": "1.10.15"
-  },
-  "pnpm": {
-    "overrides": {
-      "glob-parent@<5.1.2": ">=5.1.2",
-      "zod@<=3.22.2": ">=3.22.3",
-      "postcss@<8.4.31": ">=8.4.31"
-    }
+    "turbo": "1.10.14"
   }
 }
