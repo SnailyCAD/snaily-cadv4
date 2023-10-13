@@ -186,20 +186,22 @@ export class CADSettingsController {
   ): Promise<APITypes.PutCADFeaturesData> {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
-    for (const feature of data.features) {
-      const createUpdateData = {
-        isEnabled: feature.isEnabled,
-        feature: feature.feature as Feature,
-        extraFields: JSON.stringify(feature.extraFields),
-        cadId: cad.id,
-      };
+    await prisma.$transaction(
+      data.features.map((feature) => {
+        const createUpdateData = {
+          isEnabled: feature.isEnabled,
+          feature: feature.feature as Feature,
+          extraFields: JSON.stringify(feature.extraFields),
+          cadId: cad.id,
+        };
 
-      await prisma.cadFeature.upsert({
-        where: { feature: feature.feature as Feature },
-        create: createUpdateData,
-        update: createUpdateData,
-      });
-    }
+        return prisma.cadFeature.upsert({
+          where: { feature: feature.feature as Feature },
+          create: createUpdateData,
+          update: createUpdateData,
+        });
+      }),
+    );
 
     const updated = await prisma.cad.findUniqueOrThrow({
       where: { id: cad.id },
