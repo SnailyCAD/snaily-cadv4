@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  glob-parent@<5.1.2: ">=5.1.2"
+  zod@<=3.22.2: ">=3.22.3"
+  postcss@<8.4.31: ">=8.4.31"
+
 importers:
   .:
     dependencies:
@@ -7871,7 +7876,7 @@ packages:
     hasBin: true
     peerDependencies:
       less: ^3.5.0 || ^4.0.0
-      postcss: ^7.0.0 || ^8.0.1
+      postcss: ">=8.4.31"
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       webpack: ^5.0.0
@@ -11500,7 +11505,7 @@ packages:
     engines: { node: ^10 || ^12 || >=14 }
     hasBin: true
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       browserslist: 4.21.10
       caniuse-lite: 1.0.30001538
@@ -12986,7 +12991,7 @@ packages:
       bluebird: 3.7.2
       extend-shallow: 2.0.1
       file-contents: 0.3.2
-      glob-parent: 2.0.0
+      glob-parent: 6.0.2
       graceful-fs: 4.2.11
       has-glob: 0.1.1
       is-absolute: 0.2.6
@@ -15791,15 +15796,6 @@ packages:
       }
     dev: true
 
-  /glob-parent@2.0.0:
-    resolution:
-      {
-        integrity: sha512-JDYOvfxio/t42HKdxkAYaCiBN7oYiuxykOxKxdaUW5Qn0zaYN3gRQWolrwdnf0shM9/EP0ebuuTmyoXNr1cC5w==,
-      }
-    dependencies:
-      is-glob: 2.0.1
-    dev: false
-
   /glob-parent@5.1.2:
     resolution:
       {
@@ -16461,7 +16457,7 @@ packages:
       }
     engines: { node: ^10 || ^12 || >= 14 }
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
     dev: true
@@ -19846,12 +19842,12 @@ packages:
       "@swc/helpers": 0.5.1
       busboy: 1.6.0
       caniuse-lite: 1.0.30001522
-      postcss: 8.4.14
+      postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(@babel/core@7.22.11)(react@18.2.0)
       watchpack: 2.4.0
-      zod: 3.21.4
+      zod: 3.22.4
     optionalDependencies:
       "@next/swc-darwin-arm64": 13.4.13
       "@next/swc-darwin-x64": 13.4.13
@@ -19889,13 +19885,13 @@ packages:
       "@swc/helpers": 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001538
-      postcss: 8.4.14
+      postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       sass: 1.69.3
       styled-jsx: 5.1.1(@babel/core@7.22.11)(react@18.2.0)
       watchpack: 2.4.0
-      zod: 3.21.4
+      zod: 3.22.4
     optionalDependencies:
       "@next/swc-darwin-arm64": 13.5.3
       "@next/swc-darwin-x64": 13.5.3
@@ -21306,7 +21302,7 @@ packages:
       }
     engines: { node: ">=14.0.0" }
     peerDependencies:
-      postcss: ^8.0.0
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
       postcss-value-parser: 4.2.0
@@ -21320,7 +21316,7 @@ packages:
       }
     engines: { node: ^12 || ^14 || >= 16 }
     peerDependencies:
-      postcss: ^8.4.21
+      postcss: ">=8.4.31"
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.4.31
@@ -21332,7 +21328,7 @@ packages:
       }
     engines: { node: ">= 10" }
     peerDependencies:
-      postcss: ">=8.0.9"
+      postcss: ">=8.4.31"
       ts-node: ">=9.0.0"
     peerDependenciesMeta:
       postcss:
@@ -21351,7 +21347,7 @@ packages:
       }
     engines: { node: ">= 14" }
     peerDependencies:
-      postcss: ">=8.0.9"
+      postcss: ">=8.4.31"
       ts-node: ">=9.0.0"
     peerDependenciesMeta:
       postcss:
@@ -21370,7 +21366,7 @@ packages:
       }
     engines: { node: ">= 14.15.0" }
     peerDependencies:
-      postcss: ^7.0.0 || ^8.0.1
+      postcss: ">=8.4.31"
       webpack: ^5.0.0
     dependencies:
       cosmiconfig: 8.3.6(typescript@5.2.2)
@@ -21389,7 +21385,7 @@ packages:
       }
     engines: { node: ^10 || ^12 || >= 14 }
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
     dev: true
@@ -21401,7 +21397,7 @@ packages:
       }
     engines: { node: ^10 || ^12 || >= 14 }
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.31)
       postcss: 8.4.31
@@ -21416,7 +21412,7 @@ packages:
       }
     engines: { node: ^10 || ^12 || >= 14 }
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
       postcss-selector-parser: 6.0.13
@@ -21429,7 +21425,7 @@ packages:
       }
     engines: { node: ^10 || ^12 || >= 14 }
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.31)
       postcss: 8.4.31
@@ -21442,7 +21438,7 @@ packages:
       }
     engines: { node: ">=12.0" }
     peerDependencies:
-      postcss: ^8.2.14
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
       postcss-selector-parser: 6.0.13
@@ -21473,17 +21469,6 @@ packages:
       {
         integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==,
       }
-
-  /postcss@8.4.14:
-    resolution:
-      {
-        integrity: sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==,
-      }
-    engines: { node: ^10 || ^12 || >=14 }
-    dependencies:
-      nanoid: 3.3.6
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
 
   /postcss@8.4.31:
     resolution:
@@ -24789,7 +24774,7 @@ packages:
       define-property: 0.2.5
       extend-shallow: 2.0.1
       file-contents: 0.2.4
-      glob-parent: 2.0.0
+      glob-parent: 6.0.2
       is-valid-glob: 0.3.0
       isobject: 2.1.0
       lazy-cache: 2.0.2
@@ -25031,7 +25016,7 @@ packages:
     hasBin: true
     peerDependencies:
       "@swc/core": ^1
-      postcss: ^8.4.12
+      postcss: ">=8.4.31"
       typescript: ^4.1.0
     peerDependenciesMeta:
       "@swc/core":
@@ -25070,7 +25055,7 @@ packages:
     hasBin: true
     peerDependencies:
       "@swc/core": ^1
-      postcss: ^8.4.12
+      postcss: ">=8.4.31"
       typescript: ">=4.1.0"
     peerDependenciesMeta:
       "@swc/core":
@@ -26862,18 +26847,11 @@ packages:
       readable-stream: 3.6.2
     dev: false
 
-  /zod@3.21.4:
-    resolution:
-      {
-        integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==,
-      }
-
   /zod@3.22.4:
     resolution:
       {
         integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==,
       }
-    dev: false
 
   /zustand@4.4.3(@types/react@18.2.28)(react@18.2.0):
     resolution:
