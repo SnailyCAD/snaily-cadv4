@@ -65,7 +65,15 @@
     "importWeapons": "Импортировать оружие",
     "customCallsignTemplate": "Пользовательский шаблон позывного",
     "customCallsignTemplateDescription": "Если установлен, то он перезапишет глобальный стандартный шаблон позывного. Вы можете использовать следующие переменные: {variables}",
-    "category": "Категория"
+    "category": "Категория",
+    "addGroup": "Добавить группу",
+    "manageGroup": "Управлять группой",
+    "INFRACTION": "Нарушение (infraction)",
+    "MISDEMEANOR": "Проступок (Misdemeanor)",
+    "FELONY": "Преступление (Felony)",
+    "warningApplicable": "Предупреждение применимо",
+    "warningNotApplicable": "Предупреждение не применимо",
+    "isPrimary": "Первично"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Управлять группами кодекса",

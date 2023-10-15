@@ -112,7 +112,9 @@
     "bureauOfFirearms": "Бюро огнестрельного оружия",
     "emsFdIncidents": "EMS/FD Инциденты",
     "hospitalServices": "Услуги госпиталя",
-    "pets": "Питомцы"
+    "pets": "Питомцы",
+    "lawBook": "Кодексы",
+    "myRecordReports": "Мои отчеты"
   },
   "Errors": {
     "unknown": "Произошла непредвиденная ошибка",
