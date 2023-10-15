@@ -11,7 +11,7 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leo-state";
 import { useValues } from "context/ValuesContext";
-import { EmergencyVehicleValue, Officer, ShouldDoType } from "@snailycad/types";
+import { EmergencyVehicleValue, Officer, ShouldDoType, WhatPages } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
@@ -38,7 +38,9 @@ export function SelectOfficerModal() {
   const includeStatuses = payload?.includeStatuses ?? false;
 
   const { codes10 } = useValues();
-  const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
+  const onDutyCode = codes10.values.find(
+    (v) => v.shouldDo === ShouldDoType.SET_ON_DUTY && v.whatPages.includes(WhatPages.LEO),
+  );
   const { state, execute } = useFetch();
 
   const { hasPermissions } = usePermission();

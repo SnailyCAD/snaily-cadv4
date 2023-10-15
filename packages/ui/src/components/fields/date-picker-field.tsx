@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useDatePickerState } from "@react-stately/datepicker";
-import { useDatePicker, AriaDateFieldProps } from "@react-aria/datepicker";
+import { useDatePicker, type AriaDateFieldProps } from "@react-aria/datepicker";
 import { Calendar2, ExclamationCircle, X } from "react-bootstrap-icons";
 import { Button } from "../button/button";
 import { useTranslations } from "next-intl";
-import { DateValue, parseDate } from "@internationalized/date";
+import { type DateValue, parseDate } from "@internationalized/date";
 import formatISO9075 from "date-fns/formatISO9075";
 import { ModalProvider } from "@react-aria/overlays";
 import { cn } from "mxcn";
@@ -99,7 +99,6 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
             <Button
               size="xs"
               isDisabled={rest.isDisabled}
-              // @ts-expect-error null is allowed here to clear the date value
               onPress={() => state.setValue(null)}
               type="button"
               className={cn("rounded-l-none", errorMessageClassName)}

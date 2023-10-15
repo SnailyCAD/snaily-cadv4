@@ -1,4 +1,4 @@
-import { AriaBreadcrumbItemProps, useBreadcrumbItem } from "@react-aria/breadcrumbs";
+import { type AriaBreadcrumbItemProps, useBreadcrumbItem } from "@react-aria/breadcrumbs";
 import * as React from "react";
 import { cn } from "mxcn";
 import Link from "next/link";

@@ -50,7 +50,7 @@ function areFormFieldsEnabled(options: AreFormFieldsDisabledOptions) {
 
   /** if there are no active dispatchers, but the unit is assigned to the call, it's editable */
   if (!options.hasActiveDispatchers) {
-    const isAssignedToCall = options.call?.assignedUnits.some(
+    const isAssignedToCall = options.call.assignedUnits.some(
       (u) => u.unit?.id === options.activeUnit?.id,
     );
     return isAssignedToCall;
@@ -144,15 +144,15 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
       {/* todo: custom component for expanded view */}
       {call ? (
         <div className="mb-4 flex flex-wrap flex-row gap-4 max-w-[1050px]">
-          {user?.developerMode ? <Infofield label={t("id")}>{call?.id}</Infofield> : null}
-          <Infofield label={t("call")}>#{call?.caseNumber}</Infofield>
+          {user?.developerMode ? <Infofield label={t("id")}>{call.id}</Infofield> : null}
+          <Infofield label={t("call")}>#{call.caseNumber}</Infofield>
           <Infofield label={t("lastUpdatedAt")}>
-            <FullDate>{call?.updatedAt}</FullDate>
+            <FullDate>{call.updatedAt}</FullDate>
           </Infofield>
           {primaryUnit ? <Infofield label={t("primaryUnit")}>{primaryUnit}</Infofield> : null}
-          {call.type ? <Infofield label={t("type")}>{call?.type.value.value}</Infofield> : null}
+          {call.type ? <Infofield label={t("type")}>{call.type.value.value}</Infofield> : null}
           {call.type?.priority ? (
-            <Infofield label={t("priority")}>{call?.type.priority}</Infofield>
+            <Infofield label={t("priority")}>{call.type.priority}</Infofield>
           ) : null}
         </div>
       ) : null}

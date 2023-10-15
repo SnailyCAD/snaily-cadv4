@@ -129,6 +129,9 @@ export function createInitialRecordValues(options: CreateInitialRecordValuesOpti
     vehicleModel:
       options.record?.vehicle?.model.value.value ?? options.record?.vehicleModel ?? null,
     vehicleColor: options.record?.vehicle?.color ?? options.record?.vehicleColor ?? null,
+    vehiclePaceType: options.record?.vehiclePaceType ?? null,
+    vehicleSpeed: options.record?.vehicleSpeed ?? null,
+    speedLimit: options.record?.speedLimit ?? null,
 
     call911Id: options.record?.call911Id ?? null,
     call911CaseNumber: options.record?.call911?.caseNumber

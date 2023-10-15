@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { Feature } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import {
   Button,
@@ -29,13 +28,18 @@ export function CitizenDropdown() {
       href: "/taxi",
       show: hasPermissions([Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls]),
     },
-    { name: t("bleeter"), href: "/bleeter" },
-    { name: t("truckLogs"), href: "/truck-logs" },
-    { name: t("business"), href: "/business" },
+    { name: t("bleeter"), href: "/bleeter", show: enabled.BLEETER },
+    { name: t("truckLogs"), href: "/truck-logs", show: enabled.TRUCK_LOGS },
+    { name: t("business"), href: "/business", show: enabled.BUSINESS },
     {
       name: t("pets"),
       href: "/pets",
       show: enabled.PETS,
+    },
+    {
+      name: t("lawBook"),
+      href: "/law-book",
+      show: enabled.OPEN_LAW_BOOK,
     },
   ];
 
@@ -65,9 +69,7 @@ export function CitizenDropdown() {
         <DropdownMenuLinkItem href="/citizen">{t("citizens")}</DropdownMenuLinkItem>
 
         {items.map((item) => {
-          const upperCase = item.href.replace(/-/g, "_").replace("/", "").toUpperCase() as Feature;
-
-          if (!enabled[upperCase]) {
+          if (!item.show) {
             return null;
           }
 

@@ -87,18 +87,20 @@ export function LiveMapTab() {
         icon: "info",
       });
 
-      await execute<PutCADMiscSettingsData>({
+      await execute<PutCADMiscSettingsData, typeof INITIAL_VALUES>({
         path: "/admin/manage/cad-settings/live-map/tiles",
         method: "PUT",
         data: formData,
         headers: { "content-type": "multipart/form-data" },
+        helpers,
       });
     }
 
-    const { json } = await execute<PutCADMiscSettingsData>({
+    const { json } = await execute<PutCADMiscSettingsData, typeof INITIAL_VALUES>({
       path: "/admin/manage/cad-settings/live-map",
       method: "PUT",
       data: { ...values, liveMapURLs },
+      helpers,
     });
 
     if (json?.id) {

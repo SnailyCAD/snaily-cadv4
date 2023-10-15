@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/config",
-  "version": "1.72.0",
+  "version": "1.74.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
     "tsup": "6.6.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
   "tsup": {
     "entry": [
@@ -39,7 +39,7 @@
     "bundle": false,
     "platform": "node",
     "treeshake": true,
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "format": [
       "cjs",

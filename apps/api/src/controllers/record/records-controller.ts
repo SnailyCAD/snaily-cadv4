@@ -25,6 +25,7 @@ import {
   Officer,
   User,
   Business,
+  PaymentStatus,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
@@ -50,6 +51,9 @@ import { citizenInclude } from "../citizen/CitizenController";
 import { generateCallsign } from "@snailycad/utils";
 import { Descendant, slateDataToString } from "@snailycad/utils/editor";
 import puppeteer from "puppeteer";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { captureException } from "@sentry/node";
+import { shouldCheckCitizenUserId } from "~/lib/citizen/has-citizen-access";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -247,7 +251,8 @@ export class RecordsController {
     });
 
     try {
-      const browser = await puppeteer.launch({ headless: "new" });
+      const args = process.env.IS_USING_ROOT_USER === "true" ? ["--no-sandbox"] : [];
+      const browser = await puppeteer.launch({ args, headless: "new" });
       const page = await browser.newPage();
 
       page.setContent(template, { waitUntil: "domcontentloaded" });
@@ -264,7 +269,8 @@ export class RecordsController {
       return pdf;
     } catch (err) {
       console.log(err);
-      throw err;
+      captureException(err);
+      return null;
     }
   }
 
@@ -385,15 +391,64 @@ export class RecordsController {
     return recordItem;
   }
 
+  @Post("/mark-as-paid/:id")
+  @Description("Allow a citizen to mark a record as paid")
+  @IsFeatureEnabled({
+    feature: Feature.CITIZEN_RECORD_PAYMENTS,
+  })
+  async markRecordAsPaid(
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
+    @Context("user") user: User,
+    @PathParams("id") recordId: string,
+  ): Promise<APITypes.PutRecordsByIdData> {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        userId: checkCitizenUserId ? user.id : undefined,
+        Record: { some: { id: recordId } },
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const record = await prisma.record.findFirst({
+      where: { id: recordId },
+    });
+
+    if (!record) {
+      throw new NotFound("recordNotFound");
+    }
+
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const updatedRecord = await prisma.record.update({
+      where: { id: recordId },
+      data: {
+        paymentStatus: PaymentStatus.PAID,
+      },
+      include: recordsInclude(isEnabled).include,
+    });
+
+    return updatedRecord;
+  }
+
   @UseBefore(ActiveOfficer)
   @Delete("/:id")
-  @Description("Delete a ticket, written warning or arrest report by its id")
+  @Description("Delete a warrant, ticket, written warning or arrest report by its id")
   @UsePermissions({
     permissions: [Permissions.Leo],
   })
   async deleteRecord(
     @PathParams("id") id: string,
     @BodyParams("type") type: "WARRANT" | (string & {}),
+    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.DeleteRecordsByIdData> {
     if (type === "WARRANT") {
       const warrant = await prisma.warrant.findUnique({
@@ -418,6 +473,20 @@ export class RecordsController {
     // @ts-expect-error simple shortcut
     await prisma[name].delete({
       where: { id },
+    });
+
+    const auditLogType =
+      type === "WARRANT"
+        ? AuditLogActionType.CitizenWarrantRemove
+        : AuditLogActionType.CitizenRecordRemove;
+
+    await createAuditLogEntry({
+      prisma,
+      executorId: sessionUserId,
+      action: {
+        type: auditLogType,
+        new: id,
+      },
     });
 
     return true;

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Value, ValueType } from "@snailycad/types";
+import { type Value, ValueType } from "@snailycad/types";
 import * as typeguards from "../src/typeguards";
 import { OFFICER, COMBINED_UNIT, EMS_FD_DEPUTY } from "./callsign.test";
 

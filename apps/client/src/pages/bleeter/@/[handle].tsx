@@ -119,11 +119,11 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
             )}
             {hasAdminPermissions ? (
               props.data.isVerified ? (
-                <Button onClick={() => handleProfileVerification()} className="text-sm" size="xs">
+                <Button onPress={() => handleProfileVerification()} className="text-sm" size="xs">
                   {t("unVerifyProfile")}
                 </Button>
               ) : (
-                <Button onClick={() => handleProfileVerification()} className="text-sm" size="xs">
+                <Button onPress={() => handleProfileVerification()} className="text-sm" size="xs">
                   {t("verifyProfile")}
                 </Button>
               )

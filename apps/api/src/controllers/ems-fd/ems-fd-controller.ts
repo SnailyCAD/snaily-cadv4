@@ -18,6 +18,7 @@ import {
   type User,
   Feature,
   Prisma,
+  WhatPages,
 } from "@prisma/client";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
@@ -481,6 +482,7 @@ export class EmsFdController {
         const onDutyCode = await prisma.statusValue.findFirst({
           where: {
             shouldDo: ShouldDoType.SET_ON_DUTY,
+            OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.EMS_FD } }],
           },
         });
 

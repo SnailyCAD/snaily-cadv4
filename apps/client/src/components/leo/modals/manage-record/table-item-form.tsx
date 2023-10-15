@@ -159,7 +159,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   return (
     <div className="flex flex-row gap-5">
       <FieldWrapper description={countDescription}>
-        <FormField className="!mb-0" label="Counts">
+        <FormField className="!mb-0" label={t("counts")}>
           <Input
             max={10}
             min={1}

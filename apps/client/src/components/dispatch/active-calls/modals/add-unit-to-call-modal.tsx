@@ -276,7 +276,7 @@ export function AddUnitToCallModal({ onClose }: Props) {
                           className="p-2"
                           size="xs"
                           type="button"
-                          onClick={() => handleRemoveUnit(unit, values, setValues)}
+                          onPress={() => handleRemoveUnit(unit, values, setValues)}
                         >
                           <TrashFill />
                         </Button>

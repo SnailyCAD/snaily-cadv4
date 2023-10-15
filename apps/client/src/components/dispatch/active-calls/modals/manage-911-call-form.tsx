@@ -294,7 +294,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   disabled={isDisabled || state === "loading"}
                   className="flex items-center ml-2"
                   type="button"
-                  onClick={() => {
+                  onPress={() => {
                     setFieldValue("status", WhitelistStatus.ACCEPTED);
                     handleSubmit();
                   }}

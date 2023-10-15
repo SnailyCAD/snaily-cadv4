@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.72.0",
+  "version": "1.74.0",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -37,8 +37,8 @@
     "prepublish": "pnpm build"
   },
   "dependencies": {
-    "@snailycad/permissions": "^1.72.0",
-    "discord-api-types": "0.37.56"
+    "@snailycad/permissions": "^1.74.0",
+    "discord-api-types": "0.37.58"
   },
   "devDependencies": {
     "tsup": "6.6.2",
@@ -51,7 +51,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "treeshake": true,
     "format": [

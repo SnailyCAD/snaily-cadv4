@@ -107,14 +107,15 @@ function ActiveDeputies({ initialDeputies }: Props) {
           features={{ isWithinCardOrModal: true }}
           containerProps={{ className: "mb-3 px-4" }}
           data={activeDeputies.map((deputy) => {
-            const backgroundColor = deputy.status?.color;
-            const textColor = deputy.status?.textColor;
-            const color = backgroundColor
-              ? textColor || generateContrastColor(backgroundColor)
-              : textColor;
-
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
+
+            const backgroundColor = deputy.status?.color;
+            const textColor = deputy.status?.textColor;
+            const color =
+              backgroundColor && !useDot
+                ? textColor || generateContrastColor(backgroundColor)
+                : textColor;
 
             return {
               id: deputy.id,
@@ -127,6 +128,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               name: nameAndCallsign,
               deputy: (
                 <DeputyColumn
+                  textColor={textColor}
                   deputy={deputy}
                   isDispatch={isDispatch}
                   nameAndCallsign={nameAndCallsign}
@@ -162,6 +164,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   unitId={deputy.id}
                   isDispatch={isDispatch}
                   callId={deputy.activeCallId}
+                  size="sm"
                 />
               ),
               radioChannel: <UnitRadioChannelModal unit={deputy} />,

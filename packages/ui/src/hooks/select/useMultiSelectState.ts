@@ -1,6 +1,6 @@
 import * as React from "react";
-import { MenuTriggerState, useMenuTriggerState } from "@react-stately/menu";
-import { MultiSelectListState, useMultiSelectListState } from "./useMultiSelectListState";
+import { type MenuTriggerState, useMenuTriggerState } from "@react-stately/menu";
+import { type MultiSelectListState, useMultiSelectListState } from "./useMultiSelectListState";
 
 import type { OverlayTriggerProps } from "@react-types/overlays";
 import type {

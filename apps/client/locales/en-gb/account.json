@@ -17,7 +17,7 @@
     "2fa": "Two Factor Authentication",
     "confirmNewPassword": "Confirm new password",
     "scanQRCode": "Scan this QR code to add it to your authenticator app",
-    "verifyCode": " Verify by entering a code from your authenticator app",
+    "verifyCode": "Verify by entering a code from your authenticator app",
     "disable": "Disable",
     "enable2FA": "Enable Two-Factor Authentication",
     "disable2FA": "Disable Two-Factor Authentication",
@@ -31,14 +31,14 @@
     "sounds": "Sounds",
     "panicButton": "Panic Button",
     "signal100": "Control",
-    "stopRoleplay": "Stop Event",
+    "stopRoleplay": "Stop roleplay",
     "addedToCall": "Added to call",
     "statusUpdate": "Status Update",
     "incomingCall": "Incoming Call",
-    "dotColor": "Dot Colour",
-    "fullRowColor": "Full Row Colour",
+    "dotColor": "Dot colour",
+    "fullRowColor": "Full row colour",
     "userApiToken": "User Api Token",
-    "reGenerateToken": "Re-generate Token",
+    "reGenerateToken": "Re-generate token",
     "token": "Token",
     "discord": "Discord",
     "steam": "Steam",
@@ -54,7 +54,8 @@
     "unavailableSounds": "Unavailable Sounds",
     "unavailableSoundsMessage": "These sounds are unavailable. They must be added by an admin.",
     "userApiTokenDescription": "This token can be used to communicate with SnailyCAD's API.",
-    "developerMode": "Developer Mode"
+    "developerMode": "Developer Mode",
+    "statusViewDescription": "How the colour of a state code is displayed in the active units table."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

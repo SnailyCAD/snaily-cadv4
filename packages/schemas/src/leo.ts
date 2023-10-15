@@ -85,6 +85,11 @@ export const LEO_INCIDENT_SCHEMA = z.object({
   situationCodeId: z.string().max(255).nullish(),
 });
 
+export const EMS_FD_INCIDENT_SCHEMA = LEO_INCIDENT_SCHEMA.extend({
+  address: z.string().nullish(),
+  fireType: z.string().nullish(),
+});
+
 export const LEO_VEHICLE_LICENSE_SCHEMA = VEHICLE_SCHEMA.pick({
   inspectionStatus: true,
   insuranceStatus: true,
@@ -148,4 +153,6 @@ export const LICENSE_POINTS_SCHEMA = z.object({
   pilotLicensePoints: z.number().finite().min(0),
   waterLicensePoints: z.number().finite().min(0),
   firearmsLicensePoints: z.number().finite().min(0),
+  huntingLicensePoints: z.number().finite().min(0),
+  fishingLicensePoints: z.number().finite().min(0),
 });

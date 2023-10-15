@@ -9,7 +9,14 @@ import { Citizen, DriversLicenseCategoryType, SuspendedCitizenLicenses } from "@
 import useFetch from "lib/useFetch";
 import type { PutCitizenLicensesByIdData } from "@snailycad/types/api";
 
-const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"] as const;
+const types = [
+  "driversLicense",
+  "pilotLicense",
+  "waterLicense",
+  "weaponLicense",
+  "fishingLicense",
+  "huntingLicense",
+] as const;
 
 export function LicensesCard() {
   const modalState = useModal();
@@ -23,13 +30,7 @@ export function LicensesCard() {
     const { json } = await execute<PutCitizenLicensesByIdData>({
       path: `/licenses/${citizen.id}`,
       method: "PUT",
-      data: {
-        ...values,
-        driversLicenseCategory: values.driversLicenseCategory,
-        pilotLicenseCategory: values.pilotLicenseCategory,
-        waterLicenseCategory: values.waterLicenseCategory,
-        firearmLicenseCategory: values.firearmLicenseCategory,
-      },
+      data: values,
     });
 
     if (json?.id) {
@@ -74,18 +75,27 @@ interface Props {
     | "pilotLicense"
     | "weaponLicense"
     | "waterLicense"
+    | "huntingLicense"
+    | "fishingLicense"
     | "suspendedLicenses"
     | "pilotLicenseNumber"
     | "waterLicenseNumber"
     | "weaponLicenseNumber"
     | "driversLicenseNumber"
+    | "fishingLicenseNumber"
+    | "huntingLicenseNumber"
   >;
 }
 
 type SuspendedLicenseType = keyof Omit<SuspendedCitizenLicenses, "id">;
 type LicenseNumbers = keyof Pick<
   Citizen,
-  "pilotLicenseNumber" | "waterLicenseNumber" | "weaponLicenseNumber" | "driversLicenseNumber"
+  | "pilotLicenseNumber"
+  | "waterLicenseNumber"
+  | "weaponLicenseNumber"
+  | "driversLicenseNumber"
+  | "fishingLicenseNumber"
+  | "huntingLicenseNumber"
 >;
 
 export function CitizenLicenses({ citizen }: Props) {
@@ -113,7 +123,19 @@ export function CitizenLicenses({ citizen }: Props) {
       DriversLicenseCategoryType.FIREARM,
       ["firearmsLicense", "firearmsLicenseTimeEnd", "weaponLicenseNumber"],
     ],
+    fishingLicense: [
+      DriversLicenseCategoryType.FISHING,
+      ["fishingLicense", "fishingLicenseTimeEnd", "fishingLicenseNumber"],
+    ],
+    huntingLicense: [
+      DriversLicenseCategoryType.HUNTING,
+      ["huntingLicense", "huntingLicenseTimeEnd", "huntingLicenseNumber"],
+    ],
   };
+
+  const otherLicenseCategories = citizen.dlCategory.filter(
+    (v) => v.type === DriversLicenseCategoryType.OTHER,
+  );
 
   return (
     <>
@@ -142,7 +164,6 @@ export function CitizenLicenses({ citizen }: Props) {
                 {t("Leo.suspended")}
                 {typeof suspendedTimeEnd === "string" ? (
                   <span>
-                    {" "}
                     ({t("Leo.endsOn")} <FullDate onlyDate>{new Date(suspendedTimeEnd)}</FullDate>)
                   </span>
                 ) : null}
@@ -169,6 +190,12 @@ export function CitizenLicenses({ citizen }: Props) {
           </div>
         );
       })}
+
+      {otherLicenseCategories.length > 0 ? (
+        <Infofield label={t("Citizen.otherLicenseCategory")}>
+          {otherLicenseCategories.map((v) => v?.value?.value).join(", ")}
+        </Infofield>
+      ) : null}
     </>
   );
 }

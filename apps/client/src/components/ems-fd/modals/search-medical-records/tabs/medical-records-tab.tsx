@@ -82,7 +82,7 @@ export function MedicalRecordsTab(props: MedicalRecordsTabProps) {
       <header className="flex items-center justify-between my-3">
         <h1 className="text-xl font-semibold">{t("Ems.medicalRecords")}</h1>
 
-        <Button size="xs" onClick={() => modalState.openModal(ModalIds.ManageMedicalRecords)}>
+        <Button size="xs" onPress={() => modalState.openModal(ModalIds.ManageMedicalRecords)}>
           {t("Ems.add")}
         </Button>
       </header>

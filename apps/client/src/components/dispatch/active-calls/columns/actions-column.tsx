@@ -32,9 +32,7 @@ export function ActiveCallsActionsColumn({
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { hasPermissions } = usePermission();
   const router = useRouter();
-  const { setCurrentlySelectedCall } = useCall911State((s) => ({
-    setCurrentlySelectedCall: s.setCurrentlySelectedCall,
-  }));
+  const setCurrentlySelectedCall = useCall911State((s) => s.setCurrentlySelectedCall);
 
   const t = useTranslations("Calls");
   const common = useTranslations("Common");

@@ -29,6 +29,7 @@ import { usePermission } from "hooks/usePermission";
 import { PrivateMessagesModal } from "../private-messages/private-messages-modal";
 import { GetActiveOfficersData } from "@snailycad/types/api";
 import { ActiveOfficersHeader } from "./active-officers-header";
+import { classNames } from "lib/classNames";
 
 const CreateTemporaryUnitModal = dynamic(
   async () =>
@@ -129,14 +130,15 @@ function ActiveOfficers({ initialOfficers }: Props) {
           containerProps={{ className: "mb-3 px-4" }}
           tableState={tableState}
           data={activeOfficers.map((officer) => {
-            const backgroundColor = officer.status?.color;
-            const textColor = officer.status?.textColor;
-            const color = backgroundColor
-              ? textColor || generateContrastColor(backgroundColor)
-              : textColor;
-
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+
+            const backgroundColor = officer.status?.color;
+            const textColor = officer.status?.textColor;
+            const color =
+              backgroundColor && !useDot
+                ? textColor || generateContrastColor(backgroundColor)
+                : textColor;
 
             return {
               id: officer.id,
@@ -149,6 +151,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               name: nameAndCallsign,
               officer: (
                 <OfficerColumn
+                  textColor={textColor}
                   nameAndCallsign={nameAndCallsign}
                   setTempUnit={officerState.setTempId}
                   officer={officer}
@@ -162,7 +165,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               division: (
                 <HoverCard>
                   <HoverCardTrigger asChild>
-                    <p className="max-w-xs truncate">
+                    <p className={classNames("max-w-xs truncate", textColor)}>
                       {isUnitOfficer(officer) && formatUnitDivisions(officer)}
                     </p>
                   </HoverCardTrigger>
@@ -197,6 +200,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   unitId={officer.id}
                   isDispatch={isDispatch}
                   callId={officer.activeCallId}
+                  size="sm"
                 />
               ),
               radioChannel: <UnitRadioChannelModal unit={officer} />,

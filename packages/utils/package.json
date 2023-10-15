@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.72.0",
+  "version": "1.74.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -75,12 +75,12 @@
     "test": "pnpm vitest run"
   },
   "devDependencies": {
-    "@types/node": "^20.5.7",
+    "@types/node": "^20.8.0",
     "c8": "^8.0.1",
     "tsup": "6.6.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
   "tsup": {
     "entry": [
@@ -89,7 +89,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "treeshake": true,
     "format": [
@@ -99,12 +99,12 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "tslib": "^2.6.2",
-    "slate-history": "^0.93.0",
-    "slate-react": "^0.98.3",
-    "@snailycad/types": "^1.72.0",
+    "@snailycad/types": "^1.74.0",
     "date-fns": "^2.30.0",
-    "undici": "5.23.0",
-    "slate": "0.94.1"
+    "slate": "0.94.1",
+    "slate-history": "^0.93.0",
+    "slate-react": "^0.99.0",
+    "tslib": "^2.6.2",
+    "undici": "5.25.3"
   }
 }

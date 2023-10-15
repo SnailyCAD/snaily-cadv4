@@ -53,6 +53,8 @@ export const Feature = {
   REQUIRED_CITIZEN_IMAGE: "REQUIRED_CITIZEN_IMAGE",
   LEO_EDITABLE_CITIZEN_PROFILE: "LEO_EDITABLE_CITIZEN_PROFILE",
   ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER: "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER",
+  OPEN_LAW_BOOK: "OPEN_LAW_BOOK",
+  CITIZEN_RECORD_PAYMENTS: "CITIZEN_RECORD_PAYMENTS",
 } as const;
 
 export type Feature = (typeof Feature)[keyof typeof Feature];
@@ -176,6 +178,9 @@ export const DriversLicenseCategoryType = {
   AVIATION: "AVIATION",
   WATER: "WATER",
   FIREARM: "FIREARM",
+  HUNTING: "HUNTING",
+  FISHING: "FISHING",
+  OTHER: "OTHER",
 } as const;
 
 export type DriversLicenseCategoryType =
@@ -285,6 +290,8 @@ export const LicenseExamType = {
   FIREARM: "FIREARM",
   WATER: "WATER",
   PILOT: "PILOT",
+  HUNTING: "HUNTING",
+  FISHING: "FISHING",
 } as const;
 
 export type LicenseExamType = (typeof LicenseExamType)[keyof typeof LicenseExamType];
@@ -338,3 +345,12 @@ export const DashboardLayoutCardType = {
 
 export type DashboardLayoutCardType =
   (typeof DashboardLayoutCardType)[keyof typeof DashboardLayoutCardType];
+
+export const VehiclePaceType = {
+  PACE: "PACE",
+  RADAR: "RADAR",
+  LASER: "LASER",
+  OTHER: "OTHER",
+} as const;
+
+export type VehiclePaceType = (typeof VehiclePaceType)[keyof typeof VehiclePaceType];

@@ -25,6 +25,7 @@ interface Props {
 export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, penalCode }: Props) {
   const { state, execute } = useFetch();
   const modalState = useModal();
+  const valuesT = useTranslations("Values");
   const t = useTranslations(type);
   const common = useTranslations("Common");
   const { LEO_BAIL } = useFeatureEnabled();
@@ -117,7 +118,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
           <Form>
             <TextField
               errorMessage={errors.title}
-              label="Title"
+              label={common("title")}
               autoFocus
               name="title"
               onChange={(value) => setFieldValue("title", String(value))}
@@ -126,11 +127,11 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
 
             <SelectField
               errorMessage={errors.type}
-              label="Type"
+              label={common("type")}
               name="type"
               options={Object.values(PenalCodeType).map((value) => ({
                 value,
-                label: value.toLowerCase(),
+                label: valuesT(value),
               }))}
               onSelectionChange={(key) => setFieldValue("type", key)}
               isClearable={false}
@@ -141,10 +142,10 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
               onChange={(isSelected) => setFieldValue("isPrimary", isSelected)}
               isSelected={values.isPrimary}
             >
-              Is Primary
+              {valuesT("isPrimary")}
             </CheckboxField>
 
-            <FormField errorMessage={errors.description} label="Description">
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Editor
                 value={values.descriptionData}
                 onChange={(v) => setFieldValue("descriptionData", v)}
@@ -157,7 +158,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
                   onChange={(isSelected) => setFieldValue("warningApplicable", isSelected)}
                   isSelected={values.warningApplicable}
                 >
-                  Warning Applicable
+                  {valuesT("warningApplicable")}
                 </CheckboxField>
 
                 <div>
@@ -170,7 +171,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
                   onChange={(isSelected) => setFieldValue("warningNotApplicable", isSelected)}
                   isSelected={values.warningNotApplicable}
                 >
-                  Warning not applicable
+                  {valuesT("warningNotApplicable")}
                 </CheckboxField>
 
                 <div>
@@ -183,7 +184,7 @@ export function ManagePenalCode({ onCreate, onUpdate, onClose, groupId, type, pe
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onPress={handleClose} variant="cancel">
-                Cancel
+                {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}

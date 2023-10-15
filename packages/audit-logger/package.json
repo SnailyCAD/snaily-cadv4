@@ -1,15 +1,17 @@
 {
   "name": "@snailycad/audit-logger",
-  "version": "1.72.0",
+  "version": "1.74.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
     "./server": {
+      "types": "./dist/server.d.ts",
       "require": "./dist/server.js",
       "import": "./dist/server.mjs"
     },
@@ -29,8 +31,7 @@
     "vite": "^4.4.9"
   },
   "peerDependencies": {
-    "@prisma/client": ">=5",
-    "@sentry/node": ">= 7.66.0"
+    "@sentry/node": ">=7.72.0"
   },
   "tsup": {
     "entry": [
@@ -40,18 +41,17 @@
     "bundle": false,
     "platform": "node",
     "treeshake": true,
-    "target": "node16",
+    "target": "node18",
     "silent": true,
     "format": [
       "cjs",
       "esm"
     ]
   },
-  "sideEffects": false,
   "dependencies": {
     "@snailycad/types": "workspace:*",
-    "rimraf": "^5.0.1",
-    "superjson": "^1.13.1"
+    "rimraf": "^5.0.5",
+    "superjson": "^1.13.3"
   },
   "typesVersions": {
     "*": {

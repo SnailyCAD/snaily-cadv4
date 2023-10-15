@@ -161,7 +161,7 @@ export default function ManageCitizens(props: Props) {
           message="This user was denied access. This user may first be approved by an administrator before any changes can be done."
           title="User was denied access"
         >
-          <Button onClick={handleAcceptUser} variant="amber" className="mt-3 max-w-fit">
+          <Button onPress={handleAcceptUser} variant="amber" className="mt-3 max-w-fit">
             Accept this user
           </Button>
         </Alert>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FocusScope } from "@react-aria/focus";
-import { AriaDialogProps, useDialog } from "@react-aria/dialog";
+import { type AriaDialogProps, useDialog } from "@react-aria/dialog";
 import {
   OverlayContainer,
   useOverlayPosition,

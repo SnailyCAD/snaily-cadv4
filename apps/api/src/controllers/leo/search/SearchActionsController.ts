@@ -91,6 +91,10 @@ export class SearchActionsController {
         pilotLicenseTimeEnd: data.suspended.pilotLicenseTimeEnd,
         waterLicense: data.suspended.waterLicense,
         waterLicenseTimeEnd: data.suspended.waterLicenseTimeEnd,
+        fishingLicense: data.suspended.fishingLicense,
+        fishingLicenseTimeEnd: data.suspended.fishingLicenseTimeEnd,
+        huntingLicense: data.suspended.huntingLicense,
+        huntingLicenseTimeEnd: data.suspended.huntingLicenseTimeEnd,
       };
 
       suspendedLicenses = await prisma.suspendedCitizenLicenses.upsert({
@@ -108,6 +112,8 @@ export class SearchActionsController {
         driversLicenseId: data.driversLicense,
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,
+        huntingLicenseId: data.huntingLicense,
+        fishingLicenseId: data.fishingLicense,
         waterLicenseId: data.waterLicense,
         suspendedLicensesId: suspendedLicenses?.id,
       },
@@ -143,6 +149,8 @@ export class SearchActionsController {
       pilotLicensePoints: data.pilotLicensePoints,
       waterLicensePoints: data.waterLicensePoints,
       firearmsLicensePoints: data.firearmsLicensePoints,
+      huntingLicensePoints: data.huntingLicensePoints,
+      fishingLicensePoints: data.fishingLicensePoints,
     };
 
     const updated = await prisma.citizen.update({

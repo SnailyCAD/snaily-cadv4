@@ -83,10 +83,13 @@ export default function BusinessPage(props: GetBusinessesData) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<GetBusinessesData> = async ({
+  locale,
+  req,
+}) => {
   const user = await getSessionUser(req);
   const [data] = await requestAll(req, [
-    ["/businesses", { businesses: [], joinableBusinesses: [] }],
+    ["/businesses", { ownedBusinesses: [], joinedBusinesses: [], joinableBusinesses: [] }],
   ]);
 
   return {

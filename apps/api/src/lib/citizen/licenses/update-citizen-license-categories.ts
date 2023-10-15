@@ -11,6 +11,9 @@ type LicenseSchema = Pick<
   | "pilotLicenseCategory"
   | "waterLicenseCategory"
   | "firearmLicenseCategory"
+  | "huntingLicenseCategory"
+  | "fishingLicenseCategory"
+  | "otherLicenseCategory"
 >;
 
 export async function updateCitizenLicenseCategories(
@@ -34,6 +37,15 @@ export async function updateCitizenLicenseCategories(
       data.firearmLicenseCategory ?? [],
       suspendedLicenses?.firearmsLicense,
     ),
+    ...returnNonSuspendedCategory(
+      data.huntingLicenseCategory ?? [],
+      suspendedLicenses?.huntingLicense,
+    ),
+    ...returnNonSuspendedCategory(
+      data.fishingLicenseCategory ?? [],
+      suspendedLicenses?.fishingLicense,
+    ),
+    ...returnNonSuspendedCategory(data.otherLicenseCategory ?? [], false),
   ];
   const disconnectConnectArr = manyToManyHelper(
     citizen.dlCategory?.map((v) => v.id) ?? [],

@@ -100,11 +100,17 @@ model MiscCadSettings {
   weaponLicenseTemplate      String? @db.Text
   waterLicenseNumberLength   Int?    @default(8)
   waterLicenseTemplate       String? @db.Text
+  huntingLicenseNumberLength Int?    @default(8)
+  huntingLicenseTemplate     String? @db.Text
+  fishingLicenseNumberLength  Int?    @default(8)
+  fishingLicenseTemplate      String? @db.Text
 
   driversLicenseMaxPoints Int? @default(12)
   pilotLicenseMaxPoints   Int? @default(12)
   weaponLicenseMaxPoints  Int? @default(12)
   waterLicenseMaxPoints   Int? @default(12)
+  fishingLicenseMaxPoints Int? @default(12)
+  huntingLicenseMaxPoints Int? @default(12)
 
   lastInactivitySyncTimestamp DateTime?
 
@@ -375,6 +381,12 @@ model Citizen {
   waterLicense         Value?                        @relation("waterLicenseToValue", fields: [waterLicenseId], references: [id])
   waterLicenseId       String?
   waterLicenseNumber   String?
+  huntingLicense       Value?                        @relation("huntingLicenseToValue", fields: [huntingLicenseId], references: [id])
+  huntingLicenseId     String?
+  huntingLicenseNumber String?
+  fishingLicense       Value?                        @relation("fishingLicenseToValue", fields: [fishingLicenseId], references: [id])
+  fishingLicenseId     String?
+  fishingLicenseNumber String?
   ccw                  Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
   ccwId                String?
   imageId              String?                       @db.Text
@@ -428,6 +440,8 @@ model CitizenLicensePoints {
   driverLicensePoints   Int       @default(0)
   pilotLicensePoints    Int       @default(0)
   waterLicensePoints    Int       @default(0)
+  huntingLicensePoints  Int       @default(0)
+  fishingLicensePoints  Int       @default(0)
   firearmsLicensePoints Int       @default(0)
   updatedAt             DateTime  @default(now()) @updatedAt
   citizens              Citizen[]
@@ -441,6 +455,10 @@ model SuspendedCitizenLicenses {
   pilotLicenseTimeEnd    DateTime?
   waterLicense           Boolean   @default(false)
   waterLicenseTimeEnd    DateTime?
+  fishingLicense         Boolean   @default(false)
+  fishingLicenseTimeEnd  DateTime?
+  huntingLicense         Boolean   @default(false)
+  huntingLicenseTimeEnd  DateTime?
   firearmsLicense        Boolean   @default(false)
   firearmsLicenseTimeEnd DateTime?
   citizens               Citizen[]
@@ -633,6 +651,8 @@ model Value {
   VehicleTrimLevels               VehicleValue[]                @relation("vehicleTrimLevels")
   RegisteredVehicle               RegisteredVehicle[]           @relation("registeredVehicleTrimLevels")
   Weapon                          Weapon[]                      @relation("weaponFlags")
+  fishingLicenseToValue           Citizen[]                     @relation("fishingLicenseToValue")
+  huntingLicenseToValue           Citizen[]                     @relation("huntingLicenseToValue")
 
   @@index([type])
 }
@@ -1435,6 +1455,9 @@ model Record {
   vehiclePlate         String?
   vehicleModel         String?
   vehicleColor         String?
+  vehicleSpeed         String?
+  speedLimit           String?
+  vehiclePaceType      VehiclePaceType?
   call911              Call911?            @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id            String?
   incident             LeoIncident?        @relation(fields: [incidentId], references: [id], onDelete: Cascade)
@@ -1588,7 +1611,9 @@ model EmsFdIncident {
   caseNumber           Int                    @default(autoincrement())
   description          String?                @db.Text
   descriptionData      Json?
+  address              String?
   postal               String?
+  fireType             String?
   // when null, it is the dispatcher
   creator              EmsFdDeputy?           @relation("emsFdIncidentCreator", fields: [creatorId], references: [id])
   creatorId            String?
@@ -1596,6 +1621,7 @@ model EmsFdIncident {
   firearmsInvolved     Boolean                @default(false)
   injuriesOrFatalities Boolean                @default(false)
   arrestsMade          Boolean                @default(false)
+  vehicleInvolved      Boolean                @default(false)
   isActive             Boolean                @default(false)
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @default(now()) @updatedAt
@@ -1703,6 +1729,8 @@ enum LicenseExamType {
   FIREARM
   WATER
   PILOT
+  HUNTING
+  FISHING
 }
 
 enum QualificationValueType {
@@ -1792,6 +1820,9 @@ enum DriversLicenseCategoryType {
   AVIATION
   WATER
   FIREARM
+  HUNTING
+  FISHING
+  OTHER
 }
 
 enum EmployeeAsEnum {
@@ -1957,6 +1988,8 @@ enum Feature {
   REQUIRED_CITIZEN_IMAGE // see #1681
   LEO_EDITABLE_CITIZEN_PROFILE // see #1698
   ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER // see #1722
+  OPEN_LAW_BOOK
+  CITIZEN_RECORD_PAYMENTS
 }
 
 enum DashboardLayoutCardType {
@@ -1966,4 +1999,11 @@ enum DashboardLayoutCardType {
   ACTIVE_OFFICERS
   ACTIVE_DEPUTIES
   ACTIVE_INCIDENTS
+}
+
+enum VehiclePaceType {
+  PACE
+  RADAR
+  LASER
+  OTHER
 }

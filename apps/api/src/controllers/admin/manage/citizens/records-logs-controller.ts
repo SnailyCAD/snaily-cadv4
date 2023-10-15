@@ -14,7 +14,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { AcceptDeclineType, ACCEPT_DECLINE_TYPES } from "../units/manage-units-controller";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 
-const recordsInclude = {
+export const recordsLogsInclude = {
   officer: { include: leoProperties },
   violations: {
     include: {
@@ -100,7 +100,7 @@ export class AdminManageCitizensController {
         skip: includeAll ? undefined : skip,
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
-          records: { include: recordsInclude },
+          records: { include: recordsLogsInclude },
           business: { include: { employees: { where: { role: { as: "OWNER" } } } } },
           citizen: {
             include: { user: { select: userProperties }, gender: true, ethnicity: true },
@@ -123,13 +123,14 @@ export class AdminManageCitizensController {
         where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
       }),
       prisma.recordLog.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
-        where: { OR: [{ citizenId }, { citizen: { socialSecurityNumber: citizenId } }] },
-        orderBy: { createdAt: "desc" },
         include: {
           warrant: { include: { officer: { include: leoProperties } } },
-          records: { include: recordsInclude },
+          records: { include: recordsLogsInclude },
+          business: { include: { employees: { where: { role: { as: "OWNER" } } } } },
           citizen: {
             include: { user: { select: userProperties }, gender: true, ethnicity: true },
           },
@@ -166,7 +167,7 @@ export class AdminManageCitizensController {
       data: {
         status: type === "ACCEPT" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
       },
-      include: recordsInclude,
+      include: recordsLogsInclude,
     });
 
     return updated;

@@ -1,15 +1,17 @@
 {
   "name": "@snailycad/permissions",
-  "version": "1.72.0",
+  "version": "1.74.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
     "./permissions": {
+      "types": "./dist/permissions.d.ts",
       "require": "./dist/permissions.js",
       "import": "./dist/permissions.mjs"
     },
@@ -33,7 +35,7 @@
     "tsup": "6.6.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
   "tsup": {
     "entry": [
@@ -42,7 +44,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
-    "target": "node16",
+    "target": "node18",
     "treeshake": true,
     "silent": true,
     "format": [

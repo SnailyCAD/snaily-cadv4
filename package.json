@@ -1,9 +1,10 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.72.0",
+  "version": "1.74.0",
   "scripts": {
     "start": "pnpm concurrently \"pnpm --filter \"@snailycad/client\" start\" \"pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/api\" start\"",
+    "full-start": "git stash && git pull && node scripts/copy-env.mjs --client --api && pnpm run build && pnpm run start",
     "build": "pnpm turbo run build --filter=\"{packages/**/**}\" && pnpm turbo run build --filter=\"{apps/**/**}\"",
     "dev": "docker compose up -d && pnpm turbo run watch --parallel --concurrency 11",
     "format": "prettier --write \"./(packages|apps)/**/**/*.{js,jsx,ts,mjs,tsx,md,css,json}\" --ignore-path .gitignore",
@@ -20,9 +21,9 @@
     "@casperiv/eslint-config": "8.0.0",
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
-    "eslint": "8.49.0",
-    "lerna": "^7.3.0",
-    "lint-staged": "^14.0.1"
+    "eslint": "8.51.0",
+    "lerna": "^7.3.1",
+    "lint-staged": "^15.0.1"
   },
   "lint-staged": {
     "*.{js,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,sass}\"": "prettier --write --ignore-path .prettierignore"
@@ -31,7 +32,7 @@
     "node": ">=18.16.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^8.1.0",
     "colorette": "2.0.20",
     "concurrently": "^8.2.1",
     "copy": "^0.3.2",
@@ -39,6 +40,6 @@
     "husky": "^8.0.3",
     "prettier": "3.0.3",
     "tsup": "6.6.2",
-    "turbo": "1.10.13"
+    "turbo": "1.10.15"
   }
 }

@@ -66,6 +66,8 @@ export const citizenInclude = Prisma.validator<Prisma.CitizenSelect>()({
   gender: true,
   weaponLicense: true,
   driversLicense: true,
+  huntingLicense: true,
+  fishingLicense: true,
   pilotLicense: true,
   waterLicense: true,
   dlCategory: { include: { value: true } },

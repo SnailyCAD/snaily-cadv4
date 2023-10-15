@@ -235,7 +235,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   const userSavedLocale = cookies.sn_locale ?? null;
   const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
 
-  const { data } = await handleRequest<cad | null>("/admin/manage/cad-settings").catch(() => ({
+  const { data } = await handleRequest<cad>("/admin/manage/cad-settings").catch(() => ({
     data: null,
   }));
 

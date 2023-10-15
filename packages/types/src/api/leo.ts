@@ -1,4 +1,5 @@
 import type * as Types from "../index.js";
+import type * as Prisma from "../prisma/index";
 
 /**
  * @method GET
@@ -167,3 +168,23 @@ export type GetUnitQualificationsByUnitIdData = Types.UnitQualification[];
  * @route /leo/callsign/:officerId
  */
 export type PutLeoCallsignData = Types.Officer;
+
+/**
+ * @method GET
+ * @route /leo/my-record-reports
+ */
+export interface GetMyRecordReports {
+  totalCount: number;
+  reports: (Prisma.RecordLog & {
+    business?: Prisma.Business | null;
+    citizen?:
+      | (Prisma.Citizen & {
+          user: Types.User | null;
+          ethnicity?: Prisma.Value | null;
+          gender?: Prisma.Value | null;
+        })
+      | null;
+    warrant: Types.Warrant | null;
+    records: Types.Record | null;
+  })[];
+}

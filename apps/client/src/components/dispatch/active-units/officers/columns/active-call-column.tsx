@@ -70,7 +70,10 @@ export function ActiveCallColumn({ unitId, callId, isDispatch, size = "md" }: Pr
   return (
     <>
       <Button
-        className={classNames("grid place-content-center", size === "sm" ? "w-10 h-8" : "w-10 h-9")}
+        className={classNames(
+          "grid place-content-center",
+          size === "sm" ? "max-w-fit h-8 px-2" : "max-w-fit h-9",
+        )}
         size={size}
         disabled={isBtnDisabled}
         onPress={handleOpen}

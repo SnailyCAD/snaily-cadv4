@@ -63,7 +63,7 @@ export function UtilityPanel({ children, isDispatch }: Props) {
         <Button
           className="flex items-center gap-2"
           size="xs"
-          onClick={() => modalState.openModal(ModalIds.EditDashboardLayout)}
+          onPress={() => modalState.openModal(ModalIds.EditDashboardLayout)}
         >
           <Grid1x2Fill />
           Edit Dashboard Layout

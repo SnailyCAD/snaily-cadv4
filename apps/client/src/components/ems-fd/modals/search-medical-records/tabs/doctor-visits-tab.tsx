@@ -28,7 +28,7 @@ export function DoctorVisitsTab(props: DoctorVisitsTabProps) {
       <header className="flex items-center justify-between my-3">
         <h1 className="text-xl font-semibold">{t("Ems.doctorVisits")}</h1>
 
-        <Button size="xs" onClick={() => modalState.openModal(ModalIds.CreateDoctorVisit)}>
+        <Button size="xs" onPress={() => modalState.openModal(ModalIds.CreateDoctorVisit)}>
           {t("Ems.add")}
         </Button>
       </header>

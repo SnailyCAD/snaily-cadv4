@@ -23,6 +23,8 @@ import type {
   PostCitizenRecordLogsData,
 } from "@snailycad/types/api";
 import { useQuery } from "@tanstack/react-query";
+import { RecordsCaseNumberColumn } from "../records-case-number-column";
+import { RecordsStatsColumn } from "../records-stats-column";
 
 interface Props {
   arrestReports: GetManagePendingArrestReports;
@@ -116,7 +118,7 @@ export function PendingCitizenRecordsTab({ arrestReports }: Props) {
 
             return {
               id: item.id,
-              caseNumber: `#${record.caseNumber}`,
+              caseNumber: <RecordsCaseNumberColumn record={record} />,
               type,
               citizen: item.citizen ? `${item.citizen.name} ${item.citizen.surname}` : "—",
               business: item.business ? `${item.business.name}` : "—",
@@ -133,6 +135,7 @@ export function PendingCitizenRecordsTab({ arrestReports }: Props) {
                   <HoverCardContent>{record.notes}</HoverCardContent>
                 </HoverCard>
               ),
+              stats: <RecordsStatsColumn record={record} />,
               violations: <ViolationsColumn violations={record.violations} />,
               createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
               status: <Status fallback="—">{record.status}</Status>,
@@ -171,6 +174,7 @@ export function PendingCitizenRecordsTab({ arrestReports }: Props) {
             { header: t("postal"), accessorKey: "postal" },
             { header: t("status"), accessorKey: "status" },
             { header: t("notes"), accessorKey: "notes" },
+            { header: t("notes"), accessorKey: "stats" },
             { header: t("violations"), accessorKey: "violations" },
             { header: common("createdAt"), accessorKey: "createdAt" },
             { header: common("actions"), accessorKey: "actions" },

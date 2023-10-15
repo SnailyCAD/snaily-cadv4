@@ -49,7 +49,7 @@ export function PrivateMessagesButton(props: Props) {
 
               <Button
                 size="sm"
-                onClick={() => modalState.openModal(ModalIds.PrivateMessage, props.unit)}
+                onPress={() => modalState.openModal(ModalIds.PrivateMessage, props.unit)}
               >
                 {t("privateMessages")}
               </Button>

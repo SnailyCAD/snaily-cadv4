@@ -193,6 +193,8 @@ export type GetManageCitizenByIdData =
       ethnicity?: Prisma.Value | null;
       gender?: Prisma.Value | null;
       weaponLicense: Prisma.Value | null;
+      huntingLicense: Prisma.Value | null;
+      fishingLicense: Prisma.Value | null;
       driversLicense: Prisma.Value | null;
       pilotLicense: Prisma.Value | null;
       waterLicense: Prisma.Value | null;

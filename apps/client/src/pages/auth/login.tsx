@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     props: {
       isLocalhost,
       isCORSError: !doURLsMatch,
-      CORS_ORIGIN_URL: !doURLsMatch ? CORS_ORIGIN_URL : null,
+      CORS_ORIGIN_URL,
       cad: data,
       userSavedLocale,
       userSavedIsDarkTheme,

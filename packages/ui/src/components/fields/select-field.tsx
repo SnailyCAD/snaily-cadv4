@@ -20,6 +20,7 @@ export interface SelectValue {
   label: React.ReactNode;
   isDisabled?: boolean;
   description?: string | null;
+  textValue?: string;
 }
 
 export type SelectFieldProps<T extends SelectValue> = Omit<
@@ -47,7 +48,11 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const selectionMode = props.selectionMode ?? "single";
 
   const children = React.useMemo(() => {
-    return props.options.map((option) => <Item key={option.value}>{option.label}</Item>);
+    return props.options.map((option) => (
+      <Item textValue={option.textValue || undefined} key={option.value}>
+        {option.label}
+      </Item>
+    ));
   }, [props.options]);
 
   const disabledKeys = React.useMemo(() => {

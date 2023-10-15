@@ -16,6 +16,7 @@ import Link from "next/link";
 import { FullDate, Status, buttonVariants } from "@snailycad/ui";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
+import { RecordsStatsColumn } from "components/leo/records-stats-column";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
@@ -70,10 +71,8 @@ export default function CitizenLogs(props: Props) {
         tableState={tableState}
         data={asyncTable.items.map((item) => {
           const type = item.records !== null ? TYPE_LABELS[item.records.type] : t("warrant");
-          const createdAt = item.warrant?.createdAt ?? item.records?.createdAt;
-          const officer = item.warrant?.officer ?? item.records?.officer;
-          const officerName = officer && makeUnitName(officer);
-          const callsign = officer && generateCallsign(officer);
+          const createdAt = item.records?.createdAt ?? item.warrant?.createdAt;
+          const officer = item.records?.officer ?? item.warrant?.officer;
 
           const extra = item.records
             ? {
@@ -81,6 +80,7 @@ export default function CitizenLogs(props: Props) {
                 status: <Status fallback="—">{item.records.status}</Status>,
                 postal: item.records.postal || common("none"),
                 notes: item.records.notes || common("none"),
+                stats: <RecordsStatsColumn record={item.records} />,
                 violations: <ViolationsColumn violations={item.records.violations} />,
                 paymentStatus: <Status fallback="—">{item.records.paymentStatus}</Status>,
               }
@@ -96,7 +96,7 @@ export default function CitizenLogs(props: Props) {
             id: item.id,
             type,
             citizen: `${item.citizen?.name} ${item.citizen?.surname}`,
-            officer: callsign && officerName ? `${callsign} ${officerName}` : "—",
+            officer: officer ? `${makeUnitName(officer)} ${generateCallsign(officer)}` : "—",
             ...extra,
             createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
           };
@@ -109,6 +109,7 @@ export default function CitizenLogs(props: Props) {
           { header: t("postal"), accessorKey: "postal" },
           { header: t("status"), accessorKey: "status" },
           { header: t("paymentStatus"), accessorKey: "paymentStatus" },
+          { header: t("stats"), accessorKey: "stats" },
           { header: t("notes"), accessorKey: "notes" },
           { header: t("violations"), accessorKey: "violations" },
           { header: common("createdAt"), accessorKey: "createdAt" },

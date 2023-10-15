@@ -36,6 +36,8 @@ const licenseNumberTypes = [
   "pilotLicenseTemplate",
   "weaponLicenseTemplate",
   "waterLicenseTemplate",
+  "fishingLicenseTemplate",
+  "huntingLicenseTemplate",
 ] as const;
 
 export function TemplateTab() {
@@ -72,6 +74,8 @@ export function TemplateTab() {
     pilotLicenseTemplate: miscSettings.pilotLicenseTemplate ?? "",
     weaponLicenseTemplate: miscSettings.weaponLicenseTemplate ?? "",
     waterLicenseTemplate: miscSettings.waterLicenseTemplate ?? "",
+    fishingLicenseTemplate: miscSettings.fishingLicenseTemplate ?? "",
+    huntingLicenseTemplate: miscSettings.huntingLicenseTemplate ?? "",
   };
 
   return (

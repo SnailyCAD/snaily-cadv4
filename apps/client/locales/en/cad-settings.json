@@ -133,6 +133,10 @@
     "weaponLicenseTemplateInfo": "This is the template for weapon license numbers. You can use the following variables: {variables}. Note: this will only apply to newly created citizens.",
     "waterLicenseTemplate": "Water license number template",
     "waterLicenseTemplateInfo": "This is the template for water license numbers. You can use the following variables: {variables}. Note: this will only apply to newly created citizens.",
+    "huntingLicenseTemplate": "Hunting license number template",
+    "huntingLicenseTemplateInfo": "This is the template for hunting license numbers. You can use the following variables: {variables}. Note: this will only apply to newly created citizens.",
+    "fishingLicenseTemplate": "Fishing license number template",
+    "fishingLicenseTemplateInfo": "This is the template for fishing license numbers. You can use the following variables: {variables}. Note: this will only apply to newly created citizens.",
     "miscSettings": "Miscellaneous Settings",
     "cadRelated": "CAD Related",
     "inactivityTimeouts": "Inactivity Timeouts",
@@ -156,6 +160,10 @@
     "maxPilotLicensePointsDescription": "The maximum amount of license points a citizen can have before their pilots license is suspended (Default: 12)",
     "maxWeaponLicensePoints": "Max Weapon License Points",
     "maxWeaponLicensePointsDescription": "The maximum amount of license points a citizen can have before their weapon license is suspended (Default: 12)",
+    "maxFishingLicensePoints": "Max Fishing License Points",
+    "maxFishingLicensePointsDescription": "The maximum amount of license points a citizen can have before their fishing license is suspended (Default: 12)",
+    "maxHuntingLicensePoints": "Max Hunting License Points",
+    "maxHuntingLicensePointsDescription": "The maximum amount of license points a citizen can have before their hunting license is suspended (Default: 12)",
     "maxWaterLicensePoints": "Max Water License Points",
     "maxWaterLicensePointsDescription": "The maximum amount of license points a citizen can have before their water license is suspended (Default: 12)",
     "other": "Other",
@@ -191,6 +199,10 @@
     "weaponLicenseNumberLengthDescription": "The length of the weapon license number (Default: 8)",
     "waterLicenseNumberLength": "Water License Number Length",
     "waterLicenseNumberLengthDescription": "The length of the water license number (Default: 8)",
+    "fishingLicenseNumberLength": "Fishing License Number Length",
+    "fishingLicenseNumberLengthDescription": "The length of the fishing license number (Default: 8)",
+    "huntingLicenseNumberLength": "Hunting License Number Length",
+    "huntingLicenseNumberLengthDescription": "The length of the hunting license number (Default: 8)",
     "seconds": "Seconds",
     "minutes": "Minutes",
     "hours": "Hours",
@@ -335,7 +347,11 @@
     "LEO_EDITABLE_CITIZEN_PROFILE": "LEO Editable Citizen Profile",
     "LEO_EDITABLE_CITIZEN_PROFILE-description": "When enabled, this will allow LEO/EMS/FD/Dispatch to edit citizen profiles if the user has the 'Manage Citizen Profile (non-admin)' permission.",
     "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER": "Allow multiple units with the same callsign and department per user",
-    "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER-description": "When enabled, officers and deputies can create multiple units with the same callsign and department."
+    "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER-description": "When enabled, officers and deputies can create multiple units with the same callsign and department.",
+    "OPEN_LAW_BOOK": "Open Law Book",
+    "OPEN_LAW_BOOK-description": "When enabled, this will allow every user to view the CAD's penal codes (Law Book)",
+    "CITIZEN_RECORD_PAYMENTS": "Citizen Record Payments",
+    "CITIZEN_RECORD_PAYMENTS-description": "When enabled, this will allow citizens to mark their own records as paid."
   },
   "Permissions": {
     "defaultPermissions": "Default Permissions",
@@ -445,6 +461,7 @@
     "SetUserDefinedCallsignOnOfficer": "Set User Defined Callsign On Officer",
     "SetUserDefinedCallsignOnEmsFd": "Set User Defined Callsign On EMS/FD Deputy",
     "LeoManageCitizenProfile": "Manage Citizen Profile (non-admin)",
-    "ManageSmartSigns": "Manage Smart Signs"
+    "ManageSmartSigns": "Manage Smart Signs",
+    "ManageSmartMotorwaySigns": "Manage Smart Motorway Signs"
   }
 }

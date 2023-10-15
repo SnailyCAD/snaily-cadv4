@@ -99,7 +99,7 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
             height: citizen.height,
             actions: (
               <Button
-                onClick={() => handleDeclareCitizenAliveClick(citizen.id)}
+                onPress={() => handleDeclareCitizenAliveClick(citizen.id)}
                 variant="success"
                 size="xs"
               >

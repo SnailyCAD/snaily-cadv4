@@ -30,7 +30,7 @@ export default function Courthouse(props: Props) {
   const { hasPermissions } = usePermission();
   const hasEntriesPerms = hasPermissions([Permissions.Leo]);
   const hasCourthouseAdminPerms = hasPermissions(defaultPermissions.defaultCourthousePermissions);
-  const enabledTypes = options.COURTHOUSE;
+  const enabledTypes = options.COURTHOUSE ?? [];
 
   const expungementRequestsEnabled = enabledTypes.includes(CourthouseType.EXPUNGEMENT_REQUEST);
   const nameChangeRequestsEnabled = enabledTypes.includes(CourthouseType.NAME_CHANGE_REQUEST);

@@ -216,6 +216,8 @@ export class LicenseExamsController {
       FIREARM: "weaponLicenseId",
       WATER: "waterLicenseId",
       PILOT: "pilotLicenseId",
+      HUNTING: "huntingLicenseId",
+      FISHING: "fishingLicenseId",
     } as const;
     const prismaName = prismaNames[exam.type];
 

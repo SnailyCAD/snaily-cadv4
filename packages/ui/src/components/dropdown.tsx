@@ -2,7 +2,7 @@ import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { cn } from "mxcn";
 import Link from "next/link";
-import { ButtonVariantProps, buttonVariants } from "./button/button";
+import { type ButtonVariantProps, buttonVariants } from "./button/button";
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
