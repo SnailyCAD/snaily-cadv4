@@ -1,4 +1,4 @@
-import { EmsFdDeputy, Officer, ShouldDoType } from "@prisma/client";
+import { type EmsFdDeputy, type Officer, ShouldDoType } from "@prisma/client";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";

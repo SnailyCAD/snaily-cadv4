@@ -1,5 +1,5 @@
 import { classNames } from "lib/classNames";
-import { DRAGGABLE_TABLE_HANDLE, useTableState } from "components/shared/Table";
+import { DRAGGABLE_TABLE_HANDLE, type useTableState } from "components/shared/Table";
 import { ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
 import type { ColumnDef, RowData } from "@tanstack/react-table";
 

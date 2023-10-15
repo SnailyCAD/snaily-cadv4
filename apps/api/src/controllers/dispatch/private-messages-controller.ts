@@ -7,7 +7,7 @@ import { Socket } from "services/socket-service";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
-import { DispatchChat, Prisma } from "@prisma/client";
+import { type DispatchChat, Prisma } from "@prisma/client";
 import {
   leoProperties,
   unitProperties,
@@ -17,7 +17,7 @@ import {
 } from "utils/leo/includes";
 import { findUnit } from "lib/leo/findUnit";
 import { hasPermission } from "@snailycad/permissions";
-import { User } from "@snailycad/types";
+import { type User } from "@snailycad/types";
 import { getActiveOfficer } from "lib/leo/activeOfficer";
 import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";

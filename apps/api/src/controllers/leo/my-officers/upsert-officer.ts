@@ -1,14 +1,14 @@
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import {
-  cad,
-  Citizen,
-  DivisionValue,
+  type cad,
+  type Citizen,
+  type DivisionValue,
   Feature,
-  LeoWhitelistStatus,
-  MiscCadSettings,
-  Officer,
+  type LeoWhitelistStatus,
+  type MiscCadSettings,
+  type Officer,
   ShouldDoType,
-  User,
+  type User,
   WhatPages,
 } from "@prisma/client";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";

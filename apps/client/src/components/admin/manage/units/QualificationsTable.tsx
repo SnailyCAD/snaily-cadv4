@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { QualificationValueType, type UnitQualification } from "@snailycad/types";
 import { Button, FullDate } from "@snailycad/ui";
 import { AlertModal } from "components/modal/AlertModal";
@@ -33,13 +33,11 @@ export function QualificationsTable({
   const modalState = useModal();
 
   const awards =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     unit.qualifications?.filter(
       (v) => v.qualification.qualificationType === QualificationValueType.AWARD,
     ) ?? [];
 
   const qualifications =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     unit.qualifications?.filter(
       (v) => v.qualification.qualificationType === QualificationValueType.QUALIFICATION,
     ) ?? [];

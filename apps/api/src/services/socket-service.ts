@@ -2,20 +2,20 @@ import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
 import {
-  LeoIncident,
-  Call911,
-  TowCall,
-  Bolo,
-  TaxiCall,
+  type LeoIncident,
+  type Call911,
+  type TowCall,
+  type Bolo,
+  type TaxiCall,
   ShouldDoType,
-  Officer,
-  CombinedLeoUnit,
-  IncidentEvent,
-  EmsFdDeputy,
-  Warrant,
-  ActiveTone,
-  DispatchChat,
-  Citizen,
+  type Officer,
+  type CombinedLeoUnit,
+  type IncidentEvent,
+  type EmsFdDeputy,
+  type Warrant,
+  type ActiveTone,
+  type DispatchChat,
+  type Citizen,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
 import {
@@ -26,7 +26,7 @@ import {
 } from "utils/leo/includes";
 import { Injectable } from "@tsed/di";
 import { generateCallsign } from "@snailycad/utils";
-import { MiscCadSettings } from "@snailycad/types";
+import { type MiscCadSettings } from "@snailycad/types";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
 

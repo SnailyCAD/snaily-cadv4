@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { Loader, Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";

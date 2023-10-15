@@ -1,13 +1,13 @@
 import type { ZodSchema } from "zod";
 import {
-  cad,
-  Citizen,
-  EmsFdDeputy,
+  type cad,
+  type Citizen,
+  type EmsFdDeputy,
   Feature,
-  LeoWhitelistStatus,
-  MiscCadSettings,
+  type LeoWhitelistStatus,
+  type MiscCadSettings,
   ShouldDoType,
-  User,
+  type User,
   WhatPages,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";

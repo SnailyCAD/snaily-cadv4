@@ -48,7 +48,7 @@ export function makeUnitName(
   if (!unit) return "UNKNOWN";
 
   const isCombined = isUnitCombined(unit) || isUnitCombinedEmsFd(unit);
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
   if (isCombined || !unit.citizen) return "";
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;

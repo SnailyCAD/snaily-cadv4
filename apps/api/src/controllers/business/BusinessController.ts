@@ -14,10 +14,10 @@ import { prisma } from "lib/data/prisma";
 import {
   type User,
   EmployeeAsEnum,
-  MiscCadSettings,
+  type MiscCadSettings,
   WhitelistStatus,
-  cad,
-  Prisma,
+  type cad,
+  type Prisma,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";

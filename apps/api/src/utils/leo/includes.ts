@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { LimitedUserPicks } from "@snailycad/types";
+import { type LimitedUserPicks } from "@snailycad/types";
 
 export const limitedUserSelect: Record<LimitedUserPicks, boolean> = {
   id: true,

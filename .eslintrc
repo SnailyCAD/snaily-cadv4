@@ -15,6 +15,7 @@
     "ecmaVersion": 2021,
     "sourceType": "module",
     "project": "./tsconfig.base.json",
+    "emitDecoratorMetadata": true,
     "ecmaFeatures": {
       "jsx": true
     }
@@ -27,6 +28,9 @@
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
     "@typescript-eslint/no-redundant-type-constituents": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/consistent-type-imports": "error"
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
+    ]
   }
 }

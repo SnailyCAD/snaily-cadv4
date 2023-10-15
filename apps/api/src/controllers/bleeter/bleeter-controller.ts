@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { BLEETER_PROFILE_SCHEMA, BLEETER_SCHEMA } from "@snailycad/schemas";
 import {
   Controller,
@@ -9,7 +9,7 @@ import {
   Post,
   BodyParams,
   Context,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   MultipartFile,
 } from "@tsed/common";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -18,13 +18,13 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
-import type { User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
-import { BleeterPost, BleeterProfile } from "@snailycad/types";
-import { Descendant, slateDataToString } from "@snailycad/utils/editor";
+import { type BleeterPost, type BleeterProfile } from "@snailycad/types";
+import { type Descendant, slateDataToString } from "@snailycad/utils/editor";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 

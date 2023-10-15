@@ -27,7 +27,6 @@ export function useGenerateCallsign() {
   const miscCadSettings = cad?.miscCadSettings;
 
   function _generateCallsign(unit: Unit, templateId: TemplateId = "callsignTemplate") {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!unit) return "";
 
     const activeDivisionCallsign =

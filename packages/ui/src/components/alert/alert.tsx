@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import { type VariantProps, cva } from "class-variance-authority";
 

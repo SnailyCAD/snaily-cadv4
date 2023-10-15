@@ -15,14 +15,14 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { Socket } from "services/socket-service";
 import { validateSchema } from "lib/data/validate-schema";
 import {
-  Citizen,
+  type Citizen,
   DiscordWebhookType,
   Feature,
-  Prisma,
-  RegisteredVehicle,
-  User,
-  Value,
-  VehicleValue,
+  type Prisma,
+  type RegisteredVehicle,
+  type User,
+  type Value,
+  type VehicleValue,
 } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";

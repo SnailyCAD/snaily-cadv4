@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { Button, Loader, SwitchField, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik, type FormikHelpers } from "formik";

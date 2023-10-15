@@ -51,7 +51,6 @@ export function AddCallPopover() {
           name="call911Id"
           selectedKey={values.call911Id}
           onSelectionChange={(key) => {
-            // eslint-disable-next-line
             if (key === null) {
               // key can be null
               setValues({ ...values, call911: null, call911Id: null });

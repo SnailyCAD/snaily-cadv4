@@ -39,6 +39,7 @@ interface Return<Data> {
 }
 
 let config: Awaited<ReturnType<typeof getNextI18nConfig>> | undefined;
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let handleRequest: typeof import("./fetch").handleRequest | undefined;
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {

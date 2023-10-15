@@ -6,7 +6,7 @@ import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import { type PenalCode, ValueType, PenalCodeType } from "@snailycad/types";
+import { type PenalCode, type ValueType, PenalCodeType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { ModalIds } from "types/modal-ids";

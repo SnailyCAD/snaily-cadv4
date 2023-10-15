@@ -1,7 +1,7 @@
-import { Middleware, MiddlewareMethods, Context, Next } from "@tsed/common";
+import { Middleware, type MiddlewareMethods, Context, Next } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
-import { CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/client";
+import { type CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/client";
 import type { CadFeatureOptions, Feature as TypesFeature } from "@snailycad/types";
 import { setCADFeatures } from "./auth/is-auth";
 import { prisma } from "lib/data/prisma";

@@ -1,12 +1,12 @@
 import {
-  MiscCadSettings,
+  type MiscCadSettings,
   JailTimeScale,
-  CombinedLeoUnit,
-  Officer,
-  AssignedUnit,
-  IncidentInvolvedUnit,
-  Feature,
-  cad,
+  type CombinedLeoUnit,
+  type Officer,
+  type AssignedUnit,
+  type IncidentInvolvedUnit,
+  type Feature,
+  type cad,
 } from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";

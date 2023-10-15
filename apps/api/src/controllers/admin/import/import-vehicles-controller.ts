@@ -6,7 +6,7 @@ import {
   BodyParams,
   MultipartFile,
   PathParams,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   QueryParams,
   UseBeforeEach,
 } from "@tsed/common";

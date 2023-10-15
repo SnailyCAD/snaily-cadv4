@@ -95,7 +95,6 @@ export function CADFeaturesTab() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
     const featuresArr = Object.entries(values.features).map(([key, value]) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const extraFields = values.options[key as keyof CadFeatureOptions] ?? undefined;
 
       return {

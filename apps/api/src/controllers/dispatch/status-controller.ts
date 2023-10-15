@@ -1,15 +1,15 @@
 import {
-  User,
+  type User,
   ShouldDoType,
-  MiscCadSettings,
-  cad,
-  Officer,
-  CombinedLeoUnit,
-  EmsFdDeputy,
+  type MiscCadSettings,
+  type cad,
+  type Officer,
+  type CombinedLeoUnit,
+  type EmsFdDeputy,
   WhitelistStatus,
   DiscordWebhookType,
   Feature,
-  DivisionValue,
+  type DivisionValue,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";

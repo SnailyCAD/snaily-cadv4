@@ -1,14 +1,14 @@
 import {
-  MiscCadSettings,
-  User,
+  type MiscCadSettings,
+  type User,
   Feature,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
+  type VehicleInspectionStatus,
+  type VehicleTaxStatus,
   WhitelistStatus,
   ValueType,
-  cad,
-  Prisma,
-  Value,
+  type cad,
+  type Prisma,
+  type Value,
   EmployeeAsEnum,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
@@ -19,7 +19,7 @@ import {
   PathParams,
   QueryParams,
   MultipartFile,
-  PlatformMulterFile,
+  type PlatformMulterFile,
 } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -36,7 +36,7 @@ import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "lib/data/many-to-many";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { getImageWebPPath } from "~/lib/images/get-image-webp-path";
 import fs from "node:fs/promises";
 import { ExtendedNotFound } from "~/exceptions/extended-not-found";

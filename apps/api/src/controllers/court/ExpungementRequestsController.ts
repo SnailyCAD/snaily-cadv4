@@ -1,4 +1,4 @@
-import { ExpungementRequestStatus, Feature, User, WhitelistStatus } from "@prisma/client";
+import { ExpungementRequestStatus, Feature, type User, WhitelistStatus } from "@prisma/client";
 import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";

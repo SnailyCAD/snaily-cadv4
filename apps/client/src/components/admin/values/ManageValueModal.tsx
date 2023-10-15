@@ -19,7 +19,7 @@ import {
   type AnyValue,
   DriversLicenseCategoryType,
   EmployeeAsEnum,
-  Feature,
+  type Feature,
   QualificationValueType,
   ValueType,
 } from "@snailycad/types";

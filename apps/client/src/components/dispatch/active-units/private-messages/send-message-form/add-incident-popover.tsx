@@ -51,7 +51,6 @@ export function AddIncidentPopover() {
           name="incidentId"
           selectedKey={values.incidentId}
           onSelectionChange={(key) => {
-            // eslint-disable-next-line
             if (key === null) {
               // key can be null
               setValues({ ...values, incident: null, incidentId: null });

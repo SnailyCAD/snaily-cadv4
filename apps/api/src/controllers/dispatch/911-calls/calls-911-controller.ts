@@ -4,7 +4,7 @@ import {
   UPDATE_ASSIGNED_UNIT_SCHEMA,
   CALL_911_SCHEMA,
   LINK_INCIDENT_TO_CALL_SCHEMA,
-  ASSIGNED_UNIT,
+  type ASSIGNED_UNIT,
 } from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -15,12 +15,12 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
 import {
   type cad,
-  User,
-  MiscCadSettings,
-  Call911,
+  type User,
+  type MiscCadSettings,
+  type Call911,
   DiscordWebhookType,
   ShouldDoType,
-  Prisma,
+  type Prisma,
   WhitelistStatus,
   WhatPages,
 } from "@prisma/client";

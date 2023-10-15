@@ -13,18 +13,18 @@ import { ActiveOfficer } from "middlewares/active-officer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/auth/is-auth";
 import {
-  Citizen,
+  type Citizen,
   Feature,
-  Record as CADRecord,
-  Violation,
-  Warrant,
+  type Record as CADRecord,
+  type Violation,
+  type Warrant,
   WarrantStatus,
   WhitelistStatus,
   DiscordWebhookType,
-  CombinedLeoUnit,
-  Officer,
-  User,
-  Business,
+  type CombinedLeoUnit,
+  type Officer,
+  type User,
+  type Business,
   PaymentStatus,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
@@ -49,7 +49,7 @@ import differenceInYears from "date-fns/differenceInYears";
 import { recordsInclude } from "../leo/search/SearchController";
 import { citizenInclude } from "../citizen/CitizenController";
 import { generateCallsign } from "@snailycad/utils";
-import { Descendant, slateDataToString } from "@snailycad/utils/editor";
+import { type Descendant, slateDataToString } from "@snailycad/utils/editor";
 import puppeteer from "puppeteer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { captureException } from "@sentry/node";

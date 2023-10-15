@@ -8,7 +8,7 @@ import { useAuth } from "context/AuthContext";
 import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormField } from "components/form/FormField";
-import { defaultPermissions, Permissions } from "@snailycad/permissions";
+import { defaultPermissions, type Permissions } from "@snailycad/permissions";
 import { toastMessage } from "lib/toastMessage";
 import type { GetCADDiscordRolesData, PostCADDiscordRolesData } from "@snailycad/types/api";
 import Link from "next/link";

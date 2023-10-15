@@ -1,6 +1,6 @@
-import { Feature, WhitelistStatus } from "@prisma/client";
+import { type Feature, WhitelistStatus } from "@prisma/client";
 import { Permissions, defaultPermissions, hasPermission } from "@snailycad/permissions";
-import { User } from "@snailycad/types";
+import { type User } from "@snailycad/types";
 import { Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { Description, Get } from "@tsed/schema";

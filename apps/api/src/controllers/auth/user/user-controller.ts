@@ -6,7 +6,13 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { setCookie } from "utils/set-cookie";
-import { cad, Rank, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
+import {
+  type cad,
+  Rank,
+  ShouldDoType,
+  type StatusViewMode,
+  type TableActionsAlignment,
+} from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import {
   CHANGE_PASSWORD_SCHEMA,
@@ -21,7 +27,7 @@ import { Socket } from "services/socket-service";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 import type * as APITypes from "@snailycad/types/api";
-import type { User } from "@snailycad/types";
+import { User } from "@snailycad/types";
 import { getActiveOfficer } from "~/lib/leo/activeOfficer";
 import { getActiveDeputy } from "~/lib/get-active-ems-fd-deputy";
 

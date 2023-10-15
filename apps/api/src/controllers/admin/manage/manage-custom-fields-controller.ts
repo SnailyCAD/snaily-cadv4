@@ -1,4 +1,4 @@
-import { CustomFieldCategory, Prisma } from "@prisma/client";
+import { type CustomFieldCategory, type Prisma } from "@prisma/client";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams, UseBeforeEach } from "@tsed/common";

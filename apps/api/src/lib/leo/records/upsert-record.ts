@@ -1,6 +1,12 @@
-import { Feature, CourtDate, CourtEntry, SeizedItem, Violation } from "@prisma/client";
+import {
+  Feature,
+  type CourtDate,
+  type CourtEntry,
+  type SeizedItem,
+  type Violation,
+} from "@prisma/client";
 import type { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/schemas";
-import { PaymentStatus, RecordType, WhitelistStatus } from "@snailycad/types";
+import { type PaymentStatus, type RecordType, WhitelistStatus } from "@snailycad/types";
 import { NotFound } from "@tsed/exceptions";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties } from "utils/leo/includes";
