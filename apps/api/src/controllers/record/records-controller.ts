@@ -53,6 +53,7 @@ import { Descendant, slateDataToString } from "@snailycad/utils/editor";
 import puppeteer from "puppeteer";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { captureException } from "@sentry/node";
+import { shouldCheckCitizenUserId } from "~/lib/citizen/has-citizen-access";
 
 export const assignedOfficersInclude = {
   combinedUnit: { include: combinedUnitProperties },
@@ -397,12 +398,14 @@ export class RecordsController {
   })
   async markRecordAsPaid(
     @Context("cad") cad: { features?: Record<Feature, boolean> },
+    @Context("user") user: User,
     @PathParams("id") recordId: string,
-    @Context("sessionUserId") sessionUserId: string,
   ): Promise<APITypes.PutRecordsByIdData> {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+
     const citizen = await prisma.citizen.findFirst({
       where: {
-        userId: sessionUserId,
+        userId: checkCitizenUserId ? user.id : undefined,
         Record: { some: { id: recordId } },
       },
     });
