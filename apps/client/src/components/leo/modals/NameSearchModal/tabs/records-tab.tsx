@@ -291,9 +291,9 @@ export function RecordsTable({
                         onPress={() => handleMarkAsPaid(record)}
                         size="xs"
                         className="inline-flex mr-2 items-center gap-2"
-                        disabled={exportState === "loading"}
+                        disabled={state === "loading"}
                       >
-                        {exportState === "loading" ? <Loader className="w-3 h-3" /> : null}
+                        {state === "loading" ? <Loader className="w-3 h-3" /> : null}
                         {t("Citizen.markAsPaid")}
                       </Button>
                     )
