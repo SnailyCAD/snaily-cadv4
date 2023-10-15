@@ -68,7 +68,8 @@
     "huntingLicenseCategory": "Hunting License Categories",
     "huntingLicensePoints": "Hunting License Points",
     "fishingLicensePoints": "Fishing License Points",
-    "otherLicenseCategory": "Other License Categories"
+    "otherLicenseCategory": "Other License Categories",
+    "markAsPaid": "Mark As Paid"
   },
   "Vehicles": {
     "model": "Model",

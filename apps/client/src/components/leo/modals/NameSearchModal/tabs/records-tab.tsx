@@ -1,7 +1,7 @@
 import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
-import { Record, RecordType } from "@snailycad/types";
+import { PaymentStatus, Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button, FullDate, Loader, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
@@ -14,10 +14,11 @@ import { Table, useTableState } from "components/shared/Table";
 import { ManageRecordModal } from "../../manage-record/manage-record-modal";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
-import type { DeleteRecordsByIdData } from "@snailycad/types/api";
+import type { DeleteRecordsByIdData, PutRecordsByIdData } from "@snailycad/types/api";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { getAPIUrl } from "@snailycad/utils/api-url";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface RecordsTabProps {
   records: Record[];
@@ -95,7 +96,7 @@ export function RecordsTab({
             {data.length <= 0 ? (
               <p className="text-neutral-700 dark:text-gray-400 my-2">{noValuesText}</p>
             ) : (
-              <RecordsTable currentResult={currentResult} data={data} />
+              <RecordsTable onEdit={handleRecordUpdate} currentResult={currentResult} data={data} />
             )}
           </React.Fragment>
         ) : (
@@ -151,6 +152,7 @@ export function RecordsTable({
   const modalState = useModal();
   const t = useTranslations();
   const router = useRouter();
+  const { execute, state } = useFetch();
 
   const isCitizenCreation = router.pathname === "/citizen/create";
   const isCitizen = router.pathname.startsWith("/citizen") && !isCitizenCreation;
@@ -158,6 +160,7 @@ export function RecordsTable({
   const { generateCallsign } = useGenerateCallsign();
   const tableState = useTableState();
   const currency = common("currency");
+  const { CITIZEN_RECORD_PAYMENTS } = useFeatureEnabled();
 
   const { hasPermissions } = usePermission();
   const _hasDeletePermissions =
@@ -185,6 +188,17 @@ export function RecordsTable({
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
+  }
+
+  async function handleMarkAsPaid(record: Record) {
+    const { json } = await execute<PutRecordsByIdData>({
+      path: `/records/mark-as-paid/${record.id}`,
+      method: "POST",
+    });
+
+    if (json.id) {
+      onEdit?.(json);
+    }
   }
 
   async function handleExportClick(record: Record) {
@@ -265,9 +279,27 @@ export function RecordsTable({
                 />
               ),
               createdAt: <FullDate>{record.createdAt}</FullDate>,
-              actions: isCitizen ? null : (
+              actions: (
                 <>
-                  {isCitizenCreation ? null : (
+                  {isCitizen && CITIZEN_RECORD_PAYMENTS ? (
+                    record.paymentStatus === PaymentStatus.PAID ? (
+                      "—"
+                    ) : (
+                      <Button
+                        variant="success"
+                        type="button"
+                        onPress={() => handleMarkAsPaid(record)}
+                        size="xs"
+                        className="inline-flex mr-2 items-center gap-2"
+                        disabled={exportState === "loading"}
+                      >
+                        {exportState === "loading" ? <Loader className="w-3 h-3" /> : null}
+                        {t("Citizen.markAsPaid")}
+                      </Button>
+                    )
+                  ) : null}
+
+                  {isCitizen ? null : (
                     <>
                       <Button
                         type="button"
@@ -288,20 +320,20 @@ export function RecordsTable({
                       >
                         {common("edit")}
                       </Button>
+
+                      {_hasDeletePermissions ? (
+                        <Button
+                          className="ml-2"
+                          type="button"
+                          onPress={() => handleDeleteClick(record)}
+                          size="xs"
+                          variant="danger"
+                        >
+                          {common("delete")}
+                        </Button>
+                      ) : null}
                     </>
                   )}
-
-                  {_hasDeletePermissions ? (
-                    <Button
-                      className="ml-2"
-                      type="button"
-                      onPress={() => handleDeleteClick(record)}
-                      size="xs"
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  ) : null}
                 </>
               ),
             };
@@ -315,7 +347,7 @@ export function RecordsTable({
           { header: t("Leo.paymentStatus"), accessorKey: "paymentStatus" },
           isCitizen ? { header: t("Leo.totalCost"), accessorKey: "totalCost" } : null,
           { header: common("createdAt"), accessorKey: "createdAt" },
-          isCitizen ? null : { header: common("actions"), accessorKey: "actions" },
+          { header: common("actions"), accessorKey: "actions" },
         ]}
       />
     </div>

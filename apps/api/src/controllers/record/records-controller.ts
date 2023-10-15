@@ -25,6 +25,7 @@ import {
   Officer,
   User,
   Business,
+  PaymentStatus,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
@@ -387,6 +388,52 @@ export class RecordsController {
     });
 
     return recordItem;
+  }
+
+  @Post("/mark-as-paid/:id")
+  @Description("Allow a citizen to mark a record as paid")
+  @IsFeatureEnabled({
+    feature: Feature.CITIZEN_RECORD_PAYMENTS,
+  })
+  async markRecordAsPaid(
+    @Context("cad") cad: { features?: Record<Feature, boolean> },
+    @PathParams("id") recordId: string,
+    @Context("sessionUserId") sessionUserId: string,
+  ): Promise<APITypes.PutRecordsByIdData> {
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        userId: sessionUserId,
+        Record: { some: { id: recordId } },
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const record = await prisma.record.findFirst({
+      where: { id: recordId },
+    });
+
+    if (!record) {
+      throw new NotFound("recordNotFound");
+    }
+
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const updatedRecord = await prisma.record.update({
+      where: { id: recordId },
+      data: {
+        paymentStatus: PaymentStatus.PAID,
+      },
+      include: recordsInclude(isEnabled).include,
+    });
+
+    return updatedRecord;
   }
 
   @UseBefore(ActiveOfficer)
