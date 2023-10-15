@@ -1,5 +1,5 @@
 import type { Call911, LeoIncident, Warrant } from "@prisma/client";
-import { DispatchChat } from "@snailycad/types";
+import { type DispatchChat } from "@snailycad/types";
 
 type _Call911 = Call911 & { assignedUnits?: any[] };
 type _Incident = LeoIncident & { unitsInvolved?: any[] };

@@ -1,4 +1,4 @@
-import { Warrant, WhitelistStatus } from "@snailycad/types";
+import { type Warrant, WhitelistStatus } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { Button, FullDate, TabsContent } from "@snailycad/ui";

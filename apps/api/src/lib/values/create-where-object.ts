@@ -1,4 +1,4 @@
-import { Prisma, ValueType } from "@prisma/client";
+import { type Prisma, ValueType } from "@prisma/client";
 import { GET_VALUES } from "controllers/admin/values/values-controller";
 import { getTypeFromPath } from "./utils";
 

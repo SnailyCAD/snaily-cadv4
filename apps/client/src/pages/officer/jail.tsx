@@ -6,7 +6,13 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Record, BaseCitizen, RecordRelease, ReleaseType, ValueType } from "@snailycad/types";
+import {
+  type Record,
+  type BaseCitizen,
+  type RecordRelease,
+  ReleaseType,
+  ValueType,
+} from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { Table, useTableState } from "components/shared/Table";

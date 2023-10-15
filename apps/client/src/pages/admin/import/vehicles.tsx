@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { RegisteredVehicle } from "@snailycad/types";
+import type { RegisteredVehicle } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { Button, FullDate } from "@snailycad/ui";
 import { ImportModal } from "components/admin/import/ImportModal";

@@ -1,4 +1,4 @@
-import { Table, useAsyncTable, useTableState } from "components/shared/Table";
+import { Table, type useAsyncTable, useTableState } from "components/shared/Table";
 import formatDistance from "date-fns/formatDistance";
 import { useImageUrl } from "hooks/useImageUrl";
 import { makeUnitName } from "lib/utils";

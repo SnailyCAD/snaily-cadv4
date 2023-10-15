@@ -1,4 +1,4 @@
-import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { UseBeforeEach, Context, MultipartFile, type PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
@@ -7,9 +7,16 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs/promises";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { generateString } from "utils/generate-string";
-import { User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
+import {
+  type User,
+  ValueType,
+  Feature,
+  type cad,
+  type MiscCadSettings,
+  Prisma,
+} from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/data/validate-schema";

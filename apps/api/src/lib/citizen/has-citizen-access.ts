@@ -1,4 +1,4 @@
-import { Feature, User } from "@prisma/client";
+import { Feature, type User } from "@prisma/client";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { isFeatureEnabled } from "lib/upsert-cad";
 

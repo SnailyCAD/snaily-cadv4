@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { ContentType, Get, Post } from "@tsed/schema";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";

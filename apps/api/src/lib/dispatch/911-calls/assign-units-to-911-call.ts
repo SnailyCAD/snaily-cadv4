@@ -1,4 +1,4 @@
-import { AssignedUnit, ShouldDoType } from "@prisma/client";
+import { type AssignedUnit, ShouldDoType } from "@prisma/client";
 import type { Call911 } from "@prisma/client";
 import { findUnit } from "~/lib/leo/findUnit";
 import { prisma } from "~/lib/data/prisma";

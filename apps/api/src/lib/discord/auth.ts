@@ -1,5 +1,9 @@
-import { DiscordRole, Rank, User, WhitelistStatus } from "@snailycad/types";
-import { APIGuildMember, Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
+import { type DiscordRole, Rank, type User, WhitelistStatus } from "@snailycad/types";
+import {
+  type APIGuildMember,
+  Routes,
+  type RESTGetAPIGuildMemberResult,
+} from "discord-api-types/v10";
 import { GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/data/prisma";
 import { manyToManyHelper } from "lib/data/many-to-many";

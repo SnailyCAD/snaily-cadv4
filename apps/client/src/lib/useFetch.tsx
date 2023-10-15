@@ -8,8 +8,8 @@ import { ModalIds } from "../types/modal-ids";
 import { useAuth } from "../context/AuthContext";
 import { getNextI18nConfig } from "./i18n/getNextI18nConfig";
 import {
-  ErrorMessage,
-  ErrorResponseData,
+  type ErrorMessage,
+  type ErrorResponseData,
   getErrorObj,
   getFeatureNotEnabledError,
   isAxiosError,
@@ -39,6 +39,7 @@ interface Return<Data> {
 }
 
 let config: Awaited<ReturnType<typeof getNextI18nConfig>> | undefined;
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let handleRequest: typeof import("./fetch").handleRequest | undefined;
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {

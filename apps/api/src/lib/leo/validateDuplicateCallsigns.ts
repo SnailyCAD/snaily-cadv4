@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 

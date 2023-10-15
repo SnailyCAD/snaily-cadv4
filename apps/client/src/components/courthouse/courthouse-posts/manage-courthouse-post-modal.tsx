@@ -4,7 +4,7 @@ import { Loader, Button, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";

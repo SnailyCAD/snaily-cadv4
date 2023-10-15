@@ -1,5 +1,5 @@
 import { Loader, SelectField, TextField } from "@snailycad/ui";
-import { Bolo, BoloType } from "@snailycad/types";
+import { type Bolo, BoloType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useTranslations } from "next-intl";
 import { makeUnitName } from "lib/utils";

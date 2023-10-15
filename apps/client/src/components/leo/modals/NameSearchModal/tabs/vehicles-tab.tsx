@@ -2,7 +2,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
 import { Button, FullDate, Status, TabsContent } from "@snailycad/ui";
-import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicle-search-state";
+import { useVehicleSearch, type VehicleSearchResult } from "state/search/vehicle-search-state";
 import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/name-search-state";
 import { ModalIds } from "types/modal-ids";

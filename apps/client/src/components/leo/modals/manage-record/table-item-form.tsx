@@ -4,9 +4,9 @@ import type { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
-import type React from "react";
+import React from "react";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { createInitialRecordValues } from "./manage-record-modal";
+import { type createInitialRecordValues } from "./manage-record-modal";
 
 type PenalCodeValueName = "counts" | "fine" | "jailTime" | "bail" | "communityService";
 interface PenalCodeValue<Name extends PenalCodeValueName> {

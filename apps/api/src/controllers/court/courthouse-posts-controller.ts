@@ -1,4 +1,4 @@
-import { Feature, User } from "@prisma/client";
+import { Feature, type User } from "@prisma/client";
 import {
   BodyParams,
   Context,

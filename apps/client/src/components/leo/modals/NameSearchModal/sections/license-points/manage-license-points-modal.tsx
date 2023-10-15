@@ -8,7 +8,7 @@ import { Button, Loader, TextField } from "@snailycad/ui";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/search/name-search-state";
-import { PutSearchActionsLicensePointsData } from "@snailycad/types/api";
+import type { PutSearchActionsLicensePointsData } from "@snailycad/types/api";
 import { toastMessage } from "lib/toastMessage";
 
 export function ManageLicensePointsModal() {

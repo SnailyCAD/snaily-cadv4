@@ -1,12 +1,12 @@
 import {
   ShouldDoType,
-  StatusValue,
-  Officer,
-  EmsFdDeputy,
-  Citizen,
-  CombinedLeoUnit,
-  MiscCadSettings,
-  cad,
+  type StatusValue,
+  type Officer,
+  type EmsFdDeputy,
+  type Citizen,
+  type CombinedLeoUnit,
+  type MiscCadSettings,
+  type cad,
   DiscordWebhookType,
 } from "@prisma/client";
 import { sendDiscordWebhook, sendRawWebhook } from "lib/discord/webhooks";

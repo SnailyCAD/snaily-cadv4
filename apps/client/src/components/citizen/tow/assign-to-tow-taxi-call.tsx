@@ -1,4 +1,4 @@
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { Loader, Button } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";

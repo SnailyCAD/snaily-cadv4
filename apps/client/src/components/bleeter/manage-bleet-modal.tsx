@@ -1,4 +1,4 @@
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { Loader, Input, Button, TextField } from "@snailycad/ui";
@@ -73,7 +73,6 @@ export function ManageBleetModal({ post, onCreate, onUpdate }: Props) {
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (json.id && values.image) {
       const fd = new FormData();
 

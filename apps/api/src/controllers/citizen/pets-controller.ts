@@ -1,4 +1,4 @@
-import { Feature, User } from "@prisma/client";
+import { Feature, type User } from "@prisma/client";
 import { PET_NOTE_SCHEMA, PET_MEDICAL_RECORD_SCHEMA, PET_SCHEMA } from "@snailycad/schemas";
 import {
   UseBeforeEach,
@@ -6,7 +6,7 @@ import {
   BodyParams,
   PathParams,
   MultipartFile,
-  PlatformMulterFile,
+  type PlatformMulterFile,
 } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
@@ -17,7 +17,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { validateSchema } from "lib/data/validate-schema";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { getImageWebPPath } from "~/lib/images/get-image-webp-path";
 import fs from "node:fs/promises";
 import { validateImageURL } from "~/lib/images/validate-image-url";

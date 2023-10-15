@@ -6,17 +6,17 @@ import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { CustomFieldCategory, Citizen, BoloType } from "@snailycad/types";
+import { CustomFieldCategory, type Citizen, BoloType } from "@snailycad/types";
 import format from "date-fns/format";
 import { NameSearchTabsContainer } from "./tabs/tabs-container";
-import { NameSearchResult, useNameSearch } from "state/search/name-search-state";
+import { type NameSearchResult, useNameSearch } from "state/search/name-search-state";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import dynamic from "next/dynamic";
 import {
-  LicenseInitialValues,
+  type LicenseInitialValues,
   ManageLicensesModal,
 } from "components/citizen/licenses/manage-licenses-modal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";

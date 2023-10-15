@@ -1,4 +1,4 @@
-import { usePermission, Permissions } from "hooks/usePermission";
+import { usePermission, type Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
 import type { ReactNode } from "react";
 

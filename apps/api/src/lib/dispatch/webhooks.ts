@@ -1,11 +1,11 @@
 import {
-  Officer,
-  EmsFdDeputy,
-  Citizen,
-  CombinedLeoUnit,
-  MiscCadSettings,
-  StatusValue,
-  Value,
+  type Officer,
+  type EmsFdDeputy,
+  type Citizen,
+  type CombinedLeoUnit,
+  type MiscCadSettings,
+  type StatusValue,
+  type Value,
   Feature,
 } from "@prisma/client";
 import { generateCallsign } from "@snailycad/utils";

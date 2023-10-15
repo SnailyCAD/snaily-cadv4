@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { Nav } from "components/shared/nav/Nav";
 import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { classNames } from "lib/classNames";

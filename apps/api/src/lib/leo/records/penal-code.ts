@@ -1,4 +1,4 @@
-import { cad, Feature, PenalCode } from "@prisma/client";
+import { type cad, Feature, type PenalCode } from "@prisma/client";
 import type { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";
 import type { z } from "zod";

@@ -5,7 +5,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { PetMedicalRecord } from "@snailycad/types";
+import type { PetMedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import type {
   PutPetByIdMedicalRecordsData,

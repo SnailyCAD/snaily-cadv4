@@ -30,7 +30,6 @@ export async function handleRequest<T = any>(
   let contentType = options?.headers?.["content-type"] ?? "application/json";
   const formData = data as unknown as FormData | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if ((formData?.get?.("file") || formData?.get?.("image")) && contentType === "application/json") {
     contentType = "multipart/form-data";
   }

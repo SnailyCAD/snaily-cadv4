@@ -1,4 +1,4 @@
-import {
+import type {
   GetBleeterProfileFollowersData,
   GetBleeterProfileFollowingData,
 } from "@snailycad/types/api";

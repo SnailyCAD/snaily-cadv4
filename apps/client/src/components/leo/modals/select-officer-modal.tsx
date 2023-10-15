@@ -4,14 +4,19 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leo-state";
 import { useValues } from "context/ValuesContext";
-import { EmergencyVehicleValue, Officer, ShouldDoType, WhatPages } from "@snailycad/types";
+import {
+  type EmergencyVehicleValue,
+  type Officer,
+  ShouldDoType,
+  WhatPages,
+} from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";

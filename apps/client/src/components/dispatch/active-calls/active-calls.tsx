@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
-import { AssignedUnit, WhitelistStatus } from "@snailycad/types";
+import { type Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
+import { type AssignedUnit, WhitelistStatus } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leo-state";

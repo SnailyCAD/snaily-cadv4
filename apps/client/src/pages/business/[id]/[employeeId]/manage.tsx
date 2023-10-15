@@ -5,7 +5,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 
-import { FullBusiness, FullEmployee, useBusinessState } from "state/business-state";
+import { type FullBusiness, type FullEmployee, useBusinessState } from "state/business-state";
 import { useTranslations } from "use-intl";
 import { EmployeeAsEnum } from "@snailycad/types";
 import dynamic from "next/dynamic";
@@ -13,7 +13,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/tabs/employees-tab/employees-tab";
 import { TabList, BreadcrumbItem, Breadcrumbs } from "@snailycad/ui";
-import { GetBusinessByIdData } from "@snailycad/types/api";
+import type { GetBusinessByIdData } from "@snailycad/types/api";
 
 interface Props {
   employee: FullEmployee | null;

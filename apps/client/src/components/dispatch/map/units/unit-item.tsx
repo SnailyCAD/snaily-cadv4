@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { MapPlayer } from "types/map";

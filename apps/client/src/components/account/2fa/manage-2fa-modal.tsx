@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/modal-ids";

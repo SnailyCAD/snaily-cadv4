@@ -1,4 +1,4 @@
-import { components, MultiValueGenericProps } from "react-select";
+import { components, type MultiValueGenericProps } from "react-select";
 import type { PenalCode } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";

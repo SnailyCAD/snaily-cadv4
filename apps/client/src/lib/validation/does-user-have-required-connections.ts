@@ -1,4 +1,4 @@
-import { Feature, Rank, User } from "@snailycad/types";
+import { Feature, Rank, type User } from "@snailycad/types";
 import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
 
 interface VerifyUserConnectionsOptions {

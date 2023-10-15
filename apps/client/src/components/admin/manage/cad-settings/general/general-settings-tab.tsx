@@ -16,7 +16,7 @@ import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { Formik, FormikHelpers } from "formik";
+import { Formik, type FormikHelpers } from "formik";
 import { toastMessage } from "lib/toastMessage";
 import type { PutCADSettingsData } from "@snailycad/types/api";
 import { TabsContent } from "@radix-ui/react-tabs";

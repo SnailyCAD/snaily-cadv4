@@ -1,4 +1,4 @@
-import { GetCitizenByIdRecordsData } from "@snailycad/types/api";
+import type { GetCitizenByIdRecordsData } from "@snailycad/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/records-tab";
 import { TableSkeletonLoader } from "components/shared/table/skeleton-loader";

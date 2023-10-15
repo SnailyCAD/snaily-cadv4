@@ -17,7 +17,7 @@ import { Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
 import { SelectColorPopover } from "./toolbar/select-color-popover";
-import { SlateElements, Text } from "@snailycad/utils/editor";
+import type { SlateElements, Text } from "@snailycad/utils/editor";
 
 /**
  * mostly example code from: https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx
