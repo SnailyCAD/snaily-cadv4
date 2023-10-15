@@ -3,7 +3,7 @@ import {
   PathParams,
   UseBeforeEach,
   MultipartFile,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   Context,
 } from "@tsed/common";
 import { ContentType, Post } from "@tsed/schema";
@@ -36,10 +36,10 @@ import {
   type QualificationValueType,
   WhatPages,
   ValueType,
-  Value,
-  cad,
-  PenalCodeType,
-  Feature,
+  type Value,
+  type cad,
+  type PenalCodeType,
+  type Feature,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { upsertWarningApplicable } from "~/lib/leo/records/penal-code";

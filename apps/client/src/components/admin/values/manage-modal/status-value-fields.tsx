@@ -1,14 +1,14 @@
 import { FormField } from "components/form/FormField";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
-import { AnyValue, ShouldDoType, StatusValueType, WhatPages } from "@snailycad/types";
+import { type AnyValue, ShouldDoType, StatusValueType, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
 import { Input, Button, SelectField, RadioGroupField, Radio } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "use-intl";
 import { isOfficerRankValue } from "@snailycad/utils";
-import { ManageValueFormValues } from "../ManageValueModal";
+import type { ManageValueFormValues } from "../ManageValueModal";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);

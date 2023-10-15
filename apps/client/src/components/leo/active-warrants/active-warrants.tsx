@@ -12,7 +12,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 import { Permissions, usePermission } from "hooks/usePermission";
 import dynamic from "next/dynamic";
-import { GetActiveWarrantsData } from "@snailycad/types/api";
+import type { GetActiveWarrantsData } from "@snailycad/types/api";
 
 const CreateWarrantModal = dynamic(
   async () => (await import("../modals/CreateWarrantModal")).CreateWarrantModal,

@@ -1,4 +1,4 @@
-import { User, Prisma } from "@prisma/client";
+import { type User, type Prisma } from "@prisma/client";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden } from "@tsed/exceptions";

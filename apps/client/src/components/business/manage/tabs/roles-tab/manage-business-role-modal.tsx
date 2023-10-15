@@ -1,10 +1,10 @@
 import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
-import { EmployeeAsEnum, EmployeeValue } from "@snailycad/types";
+import { EmployeeAsEnum, type EmployeeValue } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/modal-ids";
 import { getValueStrFromValue } from "lib/admin/values/utils";

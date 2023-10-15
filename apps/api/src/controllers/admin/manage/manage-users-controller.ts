@@ -2,9 +2,9 @@
 import {
   Rank,
   WhitelistStatus,
-  User,
+  type User,
   Prisma,
-  CustomRole,
+  type CustomRole,
   DiscordWebhookType,
 } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
@@ -34,7 +34,7 @@ import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger
 import { isDiscordIdInUse } from "lib/discord/utils";
 import { getTranslator } from "~/utils/get-translator";
 import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
-import { APIEmbed } from "discord-api-types/v10";
+import { type APIEmbed } from "discord-api-types/v10";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({

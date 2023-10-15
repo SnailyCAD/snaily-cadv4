@@ -1,9 +1,9 @@
 import { useTranslations } from "use-intl";
 import ReactSelect, {
-  Props as SelectProps,
-  GroupBase,
-  StylesConfig,
-  ActionMeta,
+  type Props as SelectProps,
+  type GroupBase,
+  type StylesConfig,
+  type ActionMeta,
 } from "react-select";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
@@ -79,7 +79,6 @@ export function Select({ name, onChange, ...rest }: Props) {
       onChange={(v: any, meta) => handleChange(v, meta)}
       noOptionsMessage={() => common("noOptions")}
       styles={styles({ ...theme, hasError: Boolean(rest.errorMessage) })}
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-unnecessary-condition
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
       components={
         rest.extra?.showPenalCodeDescriptions

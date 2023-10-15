@@ -2,7 +2,7 @@ import * as React from "react";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { Loader, SelectField, SelectValue, TextField } from "@snailycad/ui";
+import { Loader, SelectField, type SelectValue, TextField } from "@snailycad/ui";
 import { useCallsFilters } from "state/callsFiltersState";
 import type { useAsyncTable } from "components/shared/Table";
 import { useValues } from "context/ValuesContext";

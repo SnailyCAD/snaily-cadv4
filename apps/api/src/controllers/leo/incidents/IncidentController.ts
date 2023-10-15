@@ -17,7 +17,7 @@ import { getUserOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/ut
 import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
-import { cad } from "@snailycad/types";
+import { type cad } from "@snailycad/types";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 export const incidentInclude = {

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import { TableItemForm } from "./table-item-form";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { createInitialRecordValues } from "./manage-record-modal";
+import { type createInitialRecordValues } from "./manage-record-modal";
 
 interface Props {
   penalCodes: PenalCode[];

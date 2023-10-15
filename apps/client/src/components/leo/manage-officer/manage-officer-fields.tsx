@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { TextField, FormRow } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";

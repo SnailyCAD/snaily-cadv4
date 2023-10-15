@@ -14,19 +14,19 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses/update-citizen-license-categories";
 import {
-  cad,
+  type cad,
   Feature,
-  MiscCadSettings,
+  type MiscCadSettings,
   ValueType,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
+  type VehicleInspectionStatus,
+  type VehicleTaxStatus,
   WhitelistStatus,
-  User,
+  type User,
   CustomFieldCategory,
-  SuspendedCitizenLicenses,
+  type SuspendedCitizenLicenses,
   DiscordWebhookType,
-  Officer,
-  CombinedLeoUnit,
+  type Officer,
+  type CombinedLeoUnit,
 } from "@prisma/client";
 import { UseBeforeEach, Context, UseBefore } from "@tsed/common";
 import { ContentType, Description, Post, Put } from "@tsed/schema";

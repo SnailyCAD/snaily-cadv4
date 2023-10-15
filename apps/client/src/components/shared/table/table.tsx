@@ -2,12 +2,12 @@ import * as React from "react";
 import {
   getCoreRowModel,
   getSortedRowModel,
-  RowData,
+  type RowData,
   useReactTable,
-  Header,
+  type Header,
   getFilteredRowModel,
-  Row,
-  AccessorKeyColumnDef,
+  type Row,
+  type AccessorKeyColumnDef,
 } from "@tanstack/react-table";
 import { TableRow } from "./table-row";
 import { TablePagination } from "./table-pagination";

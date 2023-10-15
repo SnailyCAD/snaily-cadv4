@@ -5,8 +5,8 @@
 
 import {
   ApplicationRoleConnectionMetadataType,
-  RESTPutAPIApplicationRoleConnectionMetadataJSONBody,
-  RESTPutAPIApplicationRoleConnectionMetadataResult,
+  type RESTPutAPIApplicationRoleConnectionMetadataJSONBody,
+  type RESTPutAPIApplicationRoleConnectionMetadataResult,
   Routes,
 } from "discord-api-types/v10";
 import { performDiscordRequest } from "lib/discord/performDiscordRequest";

@@ -1,5 +1,11 @@
 import { getTranslator } from "utils/get-translator";
-import { ErrorMapCtx, util, ZodIssueCode, ZodIssueOptionalMessage, ZodParsedType } from "zod";
+import {
+  type ErrorMapCtx,
+  util,
+  ZodIssueCode,
+  type ZodIssueOptionalMessage,
+  ZodParsedType,
+} from "zod";
 
 export async function getErrorMap(locale?: string) {
   const t = await getTranslator({

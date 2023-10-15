@@ -1,6 +1,6 @@
 import { TabsContent } from "@radix-ui/react-tabs";
-import { MiscCadSettings } from "@snailycad/types";
-import { PutCADMiscSettingsData } from "@snailycad/types/api";
+import type { MiscCadSettings } from "@snailycad/types";
+import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import { Button, Input, Loader } from "@snailycad/ui";
 import { SettingsTabs } from "components/admin/cad-settings/layout";
 import { SettingsFormField } from "components/form/SettingsFormField";

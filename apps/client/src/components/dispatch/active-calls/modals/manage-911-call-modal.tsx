@@ -11,8 +11,8 @@ import { CallEventsArea } from "../../events/EventsArea";
 
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
-import { ActiveOfficer, useLeoState } from "state/leo-state";
-import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
+import { type ActiveOfficer, useLeoState } from "state/leo-state";
+import { type ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import type { Delete911CallByIdData } from "@snailycad/types/api";
 import { useCall911State } from "state/dispatch/call-911-state";
 import { Manage911CallForm } from "./manage-911-call-form";

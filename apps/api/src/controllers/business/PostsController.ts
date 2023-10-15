@@ -8,7 +8,8 @@ import { Forbidden, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/data/validate-schema";
-import type { cad, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import type { cad } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 

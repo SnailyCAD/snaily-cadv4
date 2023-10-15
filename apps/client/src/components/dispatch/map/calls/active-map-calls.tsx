@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import type { Full911Call } from "state/dispatch/dispatch-state";

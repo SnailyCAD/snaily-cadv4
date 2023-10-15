@@ -1,4 +1,4 @@
-import { SlateEditor } from "@snailycad/utils/editor";
+import type { SlateEditor } from "@snailycad/utils/editor";
 import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
 
 type SHORTCUTS = (typeof SHORTCUTS)[keyof typeof SHORTCUTS];

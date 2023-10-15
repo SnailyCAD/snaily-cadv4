@@ -1,4 +1,4 @@
-import { ApiToken, User } from "@snailycad/types";
+import { type ApiToken, type User } from "@snailycad/types";
 import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";

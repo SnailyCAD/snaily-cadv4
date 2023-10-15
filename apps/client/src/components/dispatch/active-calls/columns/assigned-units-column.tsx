@@ -6,7 +6,7 @@ import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
+import { type Full911Call, useDispatchState } from "state/dispatch/dispatch-state";
 import { DndActions } from "types/dnd-actions";
 import { classNames } from "lib/classNames";
 

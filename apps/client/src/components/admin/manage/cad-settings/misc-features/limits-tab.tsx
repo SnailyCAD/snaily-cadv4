@@ -1,4 +1,4 @@
-import { PutCADMiscSettingsData } from "@snailycad/types/api";
+import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import { Button, Input, Loader } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useAuth } from "context/AuthContext";
@@ -9,7 +9,7 @@ import { cleanValues } from "./other-misc-tab";
 import { toastMessage } from "lib/toastMessage";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { SettingsTabs } from "components/admin/cad-settings/layout";
-import { MiscCadSettings } from "@snailycad/types";
+import type { MiscCadSettings } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function LimitsTab() {

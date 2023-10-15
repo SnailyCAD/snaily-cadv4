@@ -1,4 +1,4 @@
-import { Record, Violation } from "@snailycad/types";
+import type { Record, Violation } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
 interface Props {

@@ -1,6 +1,6 @@
 import { LICENSE_EXAM_SCHEMA } from "@snailycad/schemas";
 import {
-  LicenseExam,
+  type LicenseExam,
   LicenseExamPassType,
   DriversLicenseCategoryType,
   ValueLicenseType,

@@ -10,11 +10,11 @@ import {
   type VehicleValue,
   type Value,
   ShouldDoType,
-  QualificationValue,
-  CallTypeValue,
+  type QualificationValue,
+  type CallTypeValue,
   type AnyValue,
-  AddressValue,
-  DriversLicenseCategoryValue,
+  type AddressValue,
+  type DriversLicenseCategoryValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,

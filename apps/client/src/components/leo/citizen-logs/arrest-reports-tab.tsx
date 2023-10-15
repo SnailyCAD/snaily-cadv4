@@ -9,7 +9,7 @@ import {
   Status,
   TabsContent,
 } from "@snailycad/ui";
-import { Record, RecordType } from "@snailycad/types";
+import { type Record, RecordType } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";

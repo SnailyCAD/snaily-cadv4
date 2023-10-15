@@ -4,7 +4,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import { prisma } from "lib/data/prisma";
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { Rank, type User, WhitelistStatus } from "@prisma/client";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { ContentType, Description } from "@tsed/schema";
 import { request } from "undici";

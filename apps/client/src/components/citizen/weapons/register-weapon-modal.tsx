@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
@@ -12,8 +12,8 @@ import { ModalIds } from "types/modal-ids";
 import {
   ValueLicenseType,
   ValueType,
-  Weapon,
-  WeaponValue,
+  type Weapon,
+  type WeaponValue,
   WhitelistStatus,
 } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";

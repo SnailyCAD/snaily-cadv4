@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { LicenseExam, LicenseExamStatus } from "@snailycad/types";
+import { type LicenseExam, LicenseExamStatus } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";

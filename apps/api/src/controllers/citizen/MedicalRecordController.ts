@@ -1,4 +1,5 @@
-import type { cad, Feature, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import type { cad, Feature } from "@prisma/client";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";

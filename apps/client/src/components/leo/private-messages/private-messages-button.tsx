@@ -1,12 +1,12 @@
 import { useListener } from "@casperiv/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { DispatchChat } from "@snailycad/types";
+import type { DispatchChat } from "@snailycad/types";
 import { Button } from "@snailycad/ui";
 import { useQuery } from "@tanstack/react-query";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
-import { ActiveDeputy } from "state/ems-fd-state";
-import { ActiveOfficer } from "state/leo-state";
+import type { ActiveDeputy } from "state/ems-fd-state";
+import type { ActiveOfficer } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";

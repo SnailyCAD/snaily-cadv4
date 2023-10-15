@@ -6,7 +6,7 @@ import {
   QueryParams,
   BodyParams,
   MultipartFile,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   UseBeforeEach,
 } from "@tsed/common";
 import { IsAuth } from "middlewares/auth/is-auth";

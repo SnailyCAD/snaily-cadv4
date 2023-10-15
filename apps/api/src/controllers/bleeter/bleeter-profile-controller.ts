@@ -3,7 +3,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Description } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
-import type { User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { Feature, IsFeatureEnabled } from "middlewares/is-enabled";
 import { UsePermissions } from "middlewares/use-permissions";

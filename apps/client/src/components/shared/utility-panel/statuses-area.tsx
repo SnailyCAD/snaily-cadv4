@@ -11,10 +11,10 @@ import type { ActiveDeputy } from "state/ems-fd-state";
 import type { ActiveOfficer } from "state/leo-state";
 import { ModalIds } from "types/modal-ids";
 import {
-  CombinedEmsFdUnit,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  Officer,
+  type CombinedEmsFdUnit,
+  type CombinedLeoUnit,
+  type EmsFdDeputy,
+  type Officer,
   ShouldDoType,
   WhatPages,
   type StatusValue,

@@ -1,5 +1,5 @@
 import { defaultPermissions } from "@snailycad/permissions";
-import { GetBleeterProfileByHandleData } from "@snailycad/types/api";
+import type { GetBleeterProfileByHandleData } from "@snailycad/types/api";
 import { Button, Loader } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { BleeterPostsList } from "components/bleeter/list/posts-list";
@@ -19,7 +19,7 @@ import { classNames } from "lib/classNames";
 import { getTranslations } from "lib/getTranslation";
 import useFetch from "lib/useFetch";
 import { requestAll } from "lib/utils";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { PatchCheckFill } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";

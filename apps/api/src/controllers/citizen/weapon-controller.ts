@@ -1,4 +1,4 @@
-import { User, Feature, cad, Prisma, WhitelistStatus } from "@prisma/client";
+import { type User, Feature, type cad, type Prisma, WhitelistStatus } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";

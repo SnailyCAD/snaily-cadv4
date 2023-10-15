@@ -1,12 +1,12 @@
-import { Prisma } from "@prisma/client";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { type Prisma } from "@prisma/client";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import {
   BodyParams,
   Context,
   MultipartFile,
   PathParams,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   QueryParams,
   UseBeforeEach,
 } from "@tsed/common";

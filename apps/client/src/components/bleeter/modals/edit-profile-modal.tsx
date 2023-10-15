@@ -3,7 +3,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { NewBleeterExperienceForm } from "../new-bleeter-experience";
-import { BleeterProfile } from "@snailycad/types";
+import type { BleeterProfile } from "@snailycad/types";
 
 interface EditBleeterProfileModalProps {
   profile: BleeterProfile;

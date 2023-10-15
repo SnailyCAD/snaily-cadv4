@@ -22,7 +22,7 @@ import { dataToSlate, Editor } from "components/editor/editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { EmsFdIncident, LeoIncident, StatusValueType, ValueType } from "@snailycad/types";
+import { type EmsFdIncident, type LeoIncident, StatusValueType, ValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import type { PostIncidentsData, PutIncidentByIdData } from "@snailycad/types/api";
 import { AddressPostalSelect } from "components/form/select/PostalSelect";
@@ -30,8 +30,8 @@ import { InvolvedUnitsTable } from "./involved-units/involved-units-table";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { useAuth } from "context/AuthContext";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
-import { ActiveOfficer, useLeoState } from "state/leo-state";
-import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
+import { type ActiveOfficer, useLeoState } from "state/leo-state";
+import { type ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 
 interface Props<T extends LeoIncident | EmsFdIncident> {
   incident?: T | null;

@@ -8,12 +8,12 @@ import {
   Configuration,
   Inject,
   PlatformApplication,
-  PlatformContext,
-  Request,
-  Response,
-  ResponseErrorObject,
+  type PlatformContext,
+  type Request,
+  type Response,
+  type ResponseErrorObject,
 } from "@tsed/common";
-import { Catch, ExceptionFilterMethods } from "@tsed/platform-exceptions";
+import { Catch, type ExceptionFilterMethods } from "@tsed/platform-exceptions";
 import type { Exception } from "@tsed/exceptions";
 import { json } from "express";
 import compress from "compression";

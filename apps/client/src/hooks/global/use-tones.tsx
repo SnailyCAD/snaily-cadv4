@@ -4,7 +4,7 @@ import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useAudio } from "react-use";
 import { useRouter } from "next/router";
-import { ActiveTone, ActiveToneType } from "@snailycad/types";
+import { type ActiveTone, ActiveToneType } from "@snailycad/types";
 import { useQuery } from "@tanstack/react-query";
 import type { GETDispatchTonesData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";

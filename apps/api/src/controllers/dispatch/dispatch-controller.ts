@@ -6,7 +6,7 @@ import { prisma } from "lib/data/prisma";
 import { Socket } from "services/socket-service";
 import { UseAfter, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/auth/is-auth";
-import { cad, Feature, MiscCadSettings, ShouldDoType, User } from "@snailycad/types";
+import { type cad, Feature, type MiscCadSettings, ShouldDoType, type User } from "@snailycad/types";
 import { validateSchema } from "lib/data/validate-schema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { getActiveOfficer } from "lib/leo/activeOfficer";

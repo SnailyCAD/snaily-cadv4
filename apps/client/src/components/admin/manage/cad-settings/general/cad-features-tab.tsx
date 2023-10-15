@@ -4,8 +4,8 @@ import { useTranslations } from "use-intl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import {
-  CadFeature,
-  CadFeatureOptions,
+  type CadFeature,
+  type CadFeatureOptions,
   CourthouseType,
   Feature,
   LicenseExamType,
@@ -95,7 +95,6 @@ export function CADFeaturesTab() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!cad) return;
     const featuresArr = Object.entries(values.features).map(([key, value]) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const extraFields = values.options[key as keyof CadFeatureOptions] ?? undefined;
 
       return {
