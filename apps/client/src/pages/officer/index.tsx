@@ -10,7 +10,7 @@ import { useLeoState } from "state/leo-state";
 import {
   ActiveToneType,
   DashboardLayoutCardType,
-  Record,
+  type Record,
   RecordType,
   ValueType,
 } from "@snailycad/types";

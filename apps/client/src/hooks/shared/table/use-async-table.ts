@@ -1,7 +1,7 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
-import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
+import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
 import { useList } from "./use-list";
 
 interface FetchOptions {

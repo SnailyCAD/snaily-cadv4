@@ -2,15 +2,20 @@ import process from "node:process";
 import { BodyParams, Context, Controller, UseBeforeEach } from "@tsed/common";
 import { ContentType, Get, Post } from "@tsed/schema";
 import {
-  APITextChannel,
+  type APITextChannel,
   ChannelType,
-  RESTGetAPIGuildChannelsResult,
-  RESTGetAPIWebhookResult,
+  type RESTGetAPIGuildChannelsResult,
+  type RESTGetAPIWebhookResult,
   Routes,
 } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { prisma } from "lib/data/prisma";
-import { cad, DiscordWebhook, DiscordWebhookType, MiscCadSettings } from "@prisma/client";
+import {
+  type cad,
+  type DiscordWebhook,
+  type DiscordWebhookType,
+  type MiscCadSettings,
+} from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";

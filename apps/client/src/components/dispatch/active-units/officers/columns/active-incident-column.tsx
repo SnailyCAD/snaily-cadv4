@@ -8,7 +8,7 @@ import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
-import { GetIncidentByIdData } from "@snailycad/types/api";
+import type { GetIncidentByIdData } from "@snailycad/types/api";
 import { classNames } from "lib/classNames";
 
 const ManageIncidentModal = dynamic(

@@ -4,7 +4,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ContentType, Description, Get, Post } from "@tsed/schema";
 import {
-  AcceptDeclineType,
+  type AcceptDeclineType,
   ACCEPT_DECLINE_TYPES,
 } from "controllers/admin/manage/units/manage-units-controller";
 import { prisma } from "lib/data/prisma";

@@ -1,11 +1,16 @@
-import { SlateEditor, SlateElements, Text, slateDataToString } from "@snailycad/utils/editor";
+import {
+  type SlateEditor,
+  type SlateElements,
+  type Text,
+  slateDataToString,
+} from "@snailycad/utils/editor";
 import * as React from "react";
-import { Editor as _Editor, Node as SlateNode, Descendant, createEditor } from "slate";
+import { Editor as _Editor, Node as SlateNode, type Descendant, createEditor } from "slate";
 import {
   Editable,
   ReactEditor,
-  RenderElementProps,
-  RenderLeafProps,
+  type RenderElementProps,
+  type RenderLeafProps,
   Slate,
   withReact,
 } from "slate-react";

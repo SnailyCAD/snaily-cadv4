@@ -3,7 +3,7 @@ import { icon as leafletIcon } from "leaflet";
 import { Marker, Tooltip, useMap } from "react-leaflet";
 import { convertToMap } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
-import { BLIP_SIZES, Blip, BlipsData, MarkerType } from "types/map";
+import { BLIP_SIZES, type Blip, type BlipsData, type MarkerType } from "types/map";
 import { MapItem, useDispatchMapState } from "state/mapState";
 
 export function RenderMapBlips() {

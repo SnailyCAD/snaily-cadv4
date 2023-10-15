@@ -11,7 +11,7 @@ import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
 import type { GetDeadCitizensData, PostEmsFdDeclareCitizenById } from "@snailycad/types/api";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
-import { Citizen } from "@snailycad/types";
+import type { Citizen } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";

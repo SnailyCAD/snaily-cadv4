@@ -6,7 +6,7 @@ import { useCall911State } from "state/dispatch/call-911-state";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";
-import { Get911CallByIdData } from "@snailycad/types/api";
+import type { Get911CallByIdData } from "@snailycad/types/api";
 import { classNames } from "lib/classNames";
 
 const Manage911CallModal = dynamic(

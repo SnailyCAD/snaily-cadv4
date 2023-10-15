@@ -10,16 +10,16 @@ import {
 } from "@snailycad/schemas";
 import { Loader, Button, SelectField, TextField, SwitchField } from "@snailycad/ui";
 import { Modal } from "components/modal/Modal";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import {
-  AnyValue,
+  type AnyValue,
   DriversLicenseCategoryType,
   EmployeeAsEnum,
-  Feature,
+  type Feature,
   QualificationValueType,
   ValueType,
 } from "@snailycad/types";

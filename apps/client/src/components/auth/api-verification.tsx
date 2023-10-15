@@ -1,4 +1,4 @@
-import { GetCADSettingsData } from "@snailycad/types/api";
+import type { GetCADSettingsData } from "@snailycad/types/api";
 import { Alert } from "@snailycad/ui";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "lib/useFetch";

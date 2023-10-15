@@ -1,10 +1,10 @@
 import { useTranslations } from "use-intl";
 import { Button, Status, TabsContent } from "@snailycad/ui";
-import { FullEmployee, useBusinessState } from "state/business-state";
+import { type FullEmployee, useBusinessState } from "state/business-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { ManageEmployeeModal } from "./manage-employee-modal";
-import { Employee, EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
+import { type Employee, EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";

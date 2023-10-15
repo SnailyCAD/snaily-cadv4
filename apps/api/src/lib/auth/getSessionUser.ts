@@ -170,7 +170,6 @@ export async function getSessionUser(
 }
 
 function createUserData(user: User & { password: string; hasPassword?: boolean }) {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!user) return user as GetUserData;
 
   const { tempPassword, password = "", ...rest } = user;

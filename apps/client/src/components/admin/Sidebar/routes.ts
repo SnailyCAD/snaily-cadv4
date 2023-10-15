@@ -1,5 +1,5 @@
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
-import { Feature, ValueType } from "@snailycad/types";
+import { type Feature, ValueType } from "@snailycad/types";
 
 export interface SidebarRoute {
   permissions: Permissions[];

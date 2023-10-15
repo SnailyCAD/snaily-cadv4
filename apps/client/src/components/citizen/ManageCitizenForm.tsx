@@ -18,7 +18,7 @@ import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import type { FormikHelpers } from "formik";
-import { User, Citizen, PenalCode, ValueType } from "@snailycad/types";
+import { type User, type Citizen, type PenalCode, ValueType } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import {

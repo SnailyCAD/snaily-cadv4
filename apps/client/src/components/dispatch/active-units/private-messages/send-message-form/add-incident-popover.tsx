@@ -3,7 +3,7 @@ import * as Popover from "@radix-ui/react-popover";
 import { Button, SelectField } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { useFormikContext } from "formik";
-import { LeoIncident } from "@snailycad/types";
+import type { LeoIncident } from "@snailycad/types";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
@@ -51,7 +51,6 @@ export function AddIncidentPopover() {
           name="incidentId"
           selectedKey={values.incidentId}
           onSelectionChange={(key) => {
-            // eslint-disable-next-line
             if (key === null) {
               // key can be null
               setValues({ ...values, incident: null, incidentId: null });

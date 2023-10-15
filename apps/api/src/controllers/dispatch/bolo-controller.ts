@@ -12,12 +12,12 @@ import { leoProperties } from "utils/leo/includes";
 
 import { validateSchema } from "lib/data/validate-schema";
 import {
-  Bolo,
+  type Bolo,
   BoloType,
-  CombinedLeoUnit,
+  type CombinedLeoUnit,
   DiscordWebhookType,
-  Officer,
-  Prisma,
+  type Officer,
+  type Prisma,
 } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { APIEmbed } from "discord-api-types/v10";

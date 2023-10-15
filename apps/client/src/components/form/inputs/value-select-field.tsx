@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AnyValue, ValueType } from "@snailycad/types";
+import { type AnyValue, ValueType } from "@snailycad/types";
 import { useFormikContext } from "formik";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 import { AsyncListSearchField, Item } from "@snailycad/ui";

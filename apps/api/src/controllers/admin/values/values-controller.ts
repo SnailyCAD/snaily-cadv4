@@ -6,7 +6,7 @@ import {
   BodyParams,
   QueryParams,
   MultipartFile,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   Context,
 } from "@tsed/common";
 import fs from "node:fs/promises";
@@ -17,10 +17,14 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { typeHandlers } from "./import-values-controller";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
-import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
+import {
+  type ValuesSelect,
+  getTypeFromPath,
+  getPermissionsForValuesRequest,
+} from "lib/values/utils";
 import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/use-permissions";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { BULK_DELETE_SCHEMA } from "@snailycad/schemas";

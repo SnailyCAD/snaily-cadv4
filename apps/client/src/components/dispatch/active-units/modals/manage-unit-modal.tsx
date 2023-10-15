@@ -10,7 +10,12 @@ import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import type { ActiveDeputy } from "state/ems-fd-state";
 import { makeUnitName } from "lib/utils";
-import { CombinedLeoUnit, StatusValueType, StatusValue, ValueType } from "@snailycad/types";
+import {
+  type CombinedLeoUnit,
+  StatusValueType,
+  type StatusValue,
+  ValueType,
+} from "@snailycad/types";
 import { classNames } from "lib/classNames";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { isUnitCombined } from "@snailycad/utils";

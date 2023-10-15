@@ -13,7 +13,7 @@ import { useMounted } from "@casperiv/useful";
 import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseThirdPartyConnections } from "lib/utils";
-import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds.server";
+import { getAvailableSounds, type Sounds } from "lib/server/getAvailableSounds.server";
 import { AccountInfoTab } from "components/account/account-info-tab";
 
 const AccountSettingsTab = dynamic(

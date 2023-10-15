@@ -1,5 +1,5 @@
 import type { cad, User } from "@prisma/client";
-import { DISABLED_API_TOKEN_ROUTES, Method } from "@snailycad/config";
+import { DISABLED_API_TOKEN_ROUTES, type Method } from "@snailycad/config";
 import type { GetUserData } from "@snailycad/types/api";
 import type { Req } from "@tsed/common";
 import { userProperties } from "lib/auth/getSessionUser";

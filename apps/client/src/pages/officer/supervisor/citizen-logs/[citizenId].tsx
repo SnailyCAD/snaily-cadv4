@@ -4,7 +4,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Citizen, RecordLog, RecordType } from "@snailycad/types";
+import { type Citizen, type RecordLog, RecordType } from "@snailycad/types";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import type { GetManageRecordsLogsCitizenData } from "@snailycad/types/api";

@@ -11,7 +11,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { TowTaxiCallsTable } from "components/citizen/tow/tow-taxi-calls-table";
 import { Permissions } from "@snailycad/permissions";
-import { GetTaxiCallsData } from "@snailycad/types/api";
+import type { GetTaxiCallsData } from "@snailycad/types/api";
 
 interface Props {
   initialData: GetTaxiCallsData;

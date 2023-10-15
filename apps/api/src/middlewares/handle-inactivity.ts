@@ -1,7 +1,14 @@
-import { Feature, IncidentInvolvedUnit, MiscCadSettings } from "@prisma/client";
+import { Feature, type IncidentInvolvedUnit, type MiscCadSettings } from "@prisma/client";
 import { captureException } from "@sentry/node";
 import type { cad } from "@prisma/client";
-import { Context, Inject, Injectable, Middleware, MiddlewareMethods, Next } from "@tsed/common";
+import {
+  Context,
+  Inject,
+  Injectable,
+  Middleware,
+  type MiddlewareMethods,
+  Next,
+} from "@tsed/common";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { handleEndCall } from "lib/dispatch/911-calls/handle-end-911-call";
 import { prisma } from "lib/data/prisma";

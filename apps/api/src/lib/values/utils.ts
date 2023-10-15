@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Rank, ValueType, User } from "@prisma/client";
+import { type Prisma, type PrismaClient, Rank, type ValueType, type User } from "@prisma/client";
 import { Permissions } from "@snailycad/permissions";
 import type { Req } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";

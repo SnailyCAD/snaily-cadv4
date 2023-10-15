@@ -4,7 +4,12 @@ import { makeUnitName } from "lib/utils";
 import useFetch from "lib/useFetch";
 import type { PutIncidentByIdData } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
-import { EmsFdIncident, IncidentInvolvedUnit, LeoIncident, StatusViewMode } from "@snailycad/types";
+import {
+  type EmsFdIncident,
+  type IncidentInvolvedUnit,
+  type LeoIncident,
+  StatusViewMode,
+} from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Button, FullDate, Loader } from "@snailycad/ui";
 import { useModal } from "state/modalState";

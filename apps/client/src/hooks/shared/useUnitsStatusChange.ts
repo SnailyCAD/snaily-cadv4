@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StatusValue, StatusValueType, ShouldDoType } from "@snailycad/types";
+import { type StatusValue, StatusValueType, ShouldDoType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
 

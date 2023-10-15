@@ -5,9 +5,9 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
-  EmsFdDeputy,
-  CombinedEmsFdUnit,
-  Business,
+  type EmsFdDeputy,
+  type CombinedEmsFdUnit,
+  type Business,
 } from "@snailycad/types";
 import { isUnitCombined, isUnitCombinedEmsFd, isUnitOfficer } from "@snailycad/utils/typeguards";
 import { handleRequest } from "./fetch";
@@ -48,7 +48,7 @@ export function makeUnitName(
   if (!unit) return "UNKNOWN";
 
   const isCombined = isUnitCombined(unit) || isUnitCombinedEmsFd(unit);
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
   if (isCombined || !unit.citizen) return "";
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;

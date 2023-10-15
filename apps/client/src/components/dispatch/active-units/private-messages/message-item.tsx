@@ -1,10 +1,10 @@
-import { DispatchChat } from "@snailycad/types";
+import type { DispatchChat } from "@snailycad/types";
 import { Button, FullDate } from "@snailycad/ui";
 import { isUnitOfficer } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
-import { Full911Call, useCall911State } from "state/dispatch/call-911-state";
+import { type Full911Call, useCall911State } from "state/dispatch/call-911-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";

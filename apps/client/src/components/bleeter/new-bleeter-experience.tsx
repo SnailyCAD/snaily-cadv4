@@ -1,8 +1,8 @@
-import { BleeterProfile } from "@snailycad/types";
+import type { BleeterProfile } from "@snailycad/types";
 import { Button, Loader, TextField, FormRow } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { Title } from "components/shared/Title";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { useModal } from "state/modalState";

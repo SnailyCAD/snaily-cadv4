@@ -6,7 +6,7 @@ import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
 import { ManagePetMedicalRecordModal } from "./manage-pet-medical-record-modal";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
-import { PetMedicalRecord } from "@snailycad/types";
+import type { PetMedicalRecord } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 

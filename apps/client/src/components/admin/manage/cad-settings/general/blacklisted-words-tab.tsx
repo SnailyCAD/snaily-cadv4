@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { GetBlacklistedWordsData } from "@snailycad/types/api";
+import type { GetBlacklistedWordsData } from "@snailycad/types/api";
 import { Button, FullDate } from "@snailycad/ui";
 import { SettingsTabs } from "components/admin/cad-settings/layout";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
@@ -11,7 +11,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { AlertModal } from "components/modal/AlertModal";
 import { SearchArea } from "components/shared/search/search-area";
-import { BlacklistedWord } from "@snailycad/types";
+import type { BlacklistedWord } from "@snailycad/types";
 import { ImportBlacklistedWordsModal } from "./import-blacklisted-words-modal";
 
 export function BlacklistedWordsTab() {

@@ -1,4 +1,4 @@
-import { PathParams, QueryParams, Middleware, MiddlewareMethods, Next } from "@tsed/common";
+import { PathParams, QueryParams, Middleware, type MiddlewareMethods, Next } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
 
 // penal_code_group is only allowed for /position

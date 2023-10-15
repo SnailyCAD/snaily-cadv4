@@ -3,7 +3,7 @@ import {
   UseBeforeEach,
   Use,
   MultipartFile,
-  PlatformMulterFile,
+  type PlatformMulterFile,
   UseAfter,
 } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
@@ -17,11 +17,11 @@ import {
   ShouldDoType,
   type User,
   Feature,
-  Prisma,
+  type Prisma,
   WhatPages,
 } from "@prisma/client";
-import type { EmsFdDeputy } from "@snailycad/types";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { EmsFdDeputy } from "@snailycad/types";
+import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";

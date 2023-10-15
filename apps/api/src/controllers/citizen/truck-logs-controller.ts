@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";

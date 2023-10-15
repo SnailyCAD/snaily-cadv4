@@ -1,7 +1,7 @@
 import process from "node:process";
-import { Feature, CadFeature, cad, Prisma } from "@prisma/client";
+import { type Feature, type CadFeature, type cad, Prisma } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
-import { Context, Middleware, Req, MiddlewareMethods, Res } from "@tsed/common";
+import { Context, Middleware, Req, type MiddlewareMethods, Res } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { getCADVersion } from "@snailycad/utils/version";
@@ -11,7 +11,7 @@ import { setErrorMap } from "zod";
 import { getErrorMap } from "../../utils/zod-error-map";
 import { createFeaturesObject, overwriteFeatures } from "../is-enabled";
 import { getUserFromSession, setGlobalUserFromCADAPIToken } from "./utils/get-user";
-import { CadFeatureOptions } from "@snailycad/types";
+import { type CadFeatureOptions } from "@snailycad/types";
 
 @Middleware()
 export class IsAuth implements MiddlewareMethods {

@@ -5,7 +5,7 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { EMS_FD_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
+import { type Officer, type MiscCadSettings, type CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";

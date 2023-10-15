@@ -9,14 +9,14 @@ import { callInclude, leoProperties } from "utils/leo/includes";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import {
-  cad,
-  Citizen,
+  type cad,
+  type Citizen,
   CustomFieldCategory,
-  DepartmentValue,
+  type DepartmentValue,
   Feature,
-  Officer,
+  type Officer,
   WhitelistStatus,
-  User,
+  type User,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";

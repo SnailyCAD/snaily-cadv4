@@ -1,10 +1,10 @@
-import { MiscCadSettings } from "@snailycad/types";
+import type { MiscCadSettings } from "@snailycad/types";
 import { Button, Input, Loader } from "@snailycad/ui";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { toastMessage } from "lib/toastMessage";
 import { useTranslations } from "use-intl";
 import { cleanValues } from "./other-misc-tab";
-import { PutCADMiscSettingsData } from "@snailycad/types/api";
+import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import useFetch from "lib/useFetch";
 import { useAuth } from "context/AuthContext";
 import { Form, Formik } from "formik";

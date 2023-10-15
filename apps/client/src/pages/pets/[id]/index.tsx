@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GetPetByIdData } from "@snailycad/types/api";
+import type { GetPetByIdData } from "@snailycad/types/api";
 import { BreadcrumbItem, Breadcrumbs, Loader } from "@snailycad/ui";
 import { Layout } from "components/Layout";
 import { PetInformationCard } from "components/citizen/pets/pet-information-card";
@@ -7,7 +7,7 @@ import { Title } from "components/shared/Title";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { usePetsState } from "state/citizen/pets-state";
 import { useTranslations } from "use-intl";
 import { PetMedicalRecordsCard } from "components/citizen/pets/medical-records/pet-medical-records-card";

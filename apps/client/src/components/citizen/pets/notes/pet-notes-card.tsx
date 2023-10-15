@@ -1,4 +1,4 @@
-import { Note } from "@snailycad/types";
+import type { Note } from "@snailycad/types";
 import { Button, FullDate } from "@snailycad/ui";
 import { Table, useTableState } from "components/shared/Table";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";

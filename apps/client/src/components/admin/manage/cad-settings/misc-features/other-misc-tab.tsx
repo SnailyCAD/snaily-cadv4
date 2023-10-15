@@ -5,7 +5,7 @@ import { useTranslations } from "use-intl";
 import { Loader, Input, Button } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
-import { JailTimeScale, MiscCadSettings } from "@snailycad/types";
+import { JailTimeScale, type MiscCadSettings } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { Select } from "components/form/Select";
 import { toastMessage } from "lib/toastMessage";

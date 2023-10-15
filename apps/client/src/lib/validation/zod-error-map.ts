@@ -1,5 +1,11 @@
 import { createTranslator } from "use-intl";
-import { ErrorMapCtx, util, ZodIssueCode, ZodIssueOptionalMessage, ZodParsedType } from "zod";
+import {
+  type ErrorMapCtx,
+  util,
+  ZodIssueCode,
+  type ZodIssueOptionalMessage,
+  ZodParsedType,
+} from "zod";
 
 export interface GetErrorMapOptions {
   locale: string;

@@ -4,8 +4,8 @@ import { ContentType, Description, Post } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import {
-  CombinedEmsFdUnit,
-  CombinedLeoUnit,
+  type CombinedEmsFdUnit,
+  type CombinedLeoUnit,
   Feature,
   ShouldDoType,
   WhatPages,

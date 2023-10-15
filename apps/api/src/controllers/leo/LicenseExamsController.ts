@@ -1,8 +1,8 @@
 import {
-  Prisma,
-  LicenseExam,
-  DriversLicenseCategoryValue,
-  LicenseExamType,
+  type Prisma,
+  type LicenseExam,
+  type DriversLicenseCategoryValue,
+  type LicenseExamType,
   Feature,
 } from "@prisma/client";
 import { LicenseExamPassType, LicenseExamStatus } from "@snailycad/types";

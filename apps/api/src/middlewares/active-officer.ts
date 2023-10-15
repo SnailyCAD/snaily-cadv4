@@ -1,4 +1,4 @@
-import { Context, Middleware, Req, MiddlewareMethods, Res, Next } from "@tsed/common";
+import { Context, Middleware, Req, type MiddlewareMethods, Res, Next } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
 import { getSessionUser } from "lib/auth/getSessionUser";
 import { getActiveOfficer } from "lib/leo/activeOfficer";
