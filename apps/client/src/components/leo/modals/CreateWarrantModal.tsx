@@ -1,4 +1,4 @@
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { Loader, Button, SelectField, TextField } from "@snailycad/ui";
 import useFetch from "lib/useFetch";

@@ -1,9 +1,9 @@
 import { useTranslations } from "use-intl";
 import ReactSelect, {
-  Props as SelectProps,
-  GroupBase,
-  StylesConfig,
-  ActionMeta,
+  type Props as SelectProps,
+  type GroupBase,
+  type StylesConfig,
+  type ActionMeta,
 } from "react-select";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";

@@ -1,13 +1,13 @@
 import * as React from "react";
 import { PET_SCHEMA } from "@snailycad/schemas";
-import { Pet } from "@snailycad/types";
-import { PostPetsData } from "@snailycad/types/api";
+import type { Pet } from "@snailycad/types";
+import type { PostPetsData } from "@snailycad/types/api";
 import { Button, DatePickerField, Loader, TextField, FormRow } from "@snailycad/ui";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Modal } from "components/modal/Modal";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 import { useAuth } from "context/AuthContext";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";

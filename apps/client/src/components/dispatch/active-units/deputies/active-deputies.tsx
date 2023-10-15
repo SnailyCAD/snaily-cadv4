@@ -4,12 +4,12 @@ import { Button } from "@snailycad/ui";
 import { ManageUnitModal } from "../modals/manage-unit-modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
-import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
+import { type ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { CombinedEmsFdUnit, EmsFdDeputy, StatusViewMode } from "@snailycad/types";
+import { type CombinedEmsFdUnit, type EmsFdDeputy, StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
@@ -26,7 +26,7 @@ import { useMounted } from "@casperiv/useful";
 import { generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 import { MergeUnitModal } from "../modals/merge-unit-modal";
-import { GetEmsFdActiveDeputies } from "@snailycad/types/api";
+import type { GetEmsFdActiveDeputies } from "@snailycad/types/api";
 import { ActiveDeputiesHeader } from "./active-deputies-header";
 
 interface Props {

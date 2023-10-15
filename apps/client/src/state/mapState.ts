@@ -1,6 +1,6 @@
 import { ConnectionStatus } from "@snailycad/ui";
 import { Socket } from "socket.io-client";
-import { SmartMotorwaySignMarker, SmartSignMarker } from "types/map";
+import type { SmartMotorwaySignMarker, SmartSignMarker } from "types/map";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";

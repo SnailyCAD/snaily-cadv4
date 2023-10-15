@@ -1,4 +1,4 @@
-import { BleeterPost, BleeterProfile } from "@snailycad/types";
+import type { BleeterPost, BleeterProfile } from "@snailycad/types";
 import { FullDate } from "@snailycad/ui";
 import { Editor } from "components/editor/editor";
 import { ImageWrapper } from "components/shared/image-wrapper";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Select, SelectValue } from "components/form/Select";
+import { Select, type SelectValue } from "components/form/Select";
 import { Alert, Button, Loader } from "@snailycad/ui";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";

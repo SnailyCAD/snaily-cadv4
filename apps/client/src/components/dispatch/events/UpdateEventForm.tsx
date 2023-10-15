@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, Formik, FormikHelpers, useFormikContext } from "formik";
+import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
 import { Button, Loader, TextField } from "@snailycad/ui";
 import type { Call911Event, IncidentEvent } from "@snailycad/types";
 import { useTranslations } from "next-intl";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PenalCodeGroup, ValueType } from "@snailycad/types";
+import { type PenalCodeGroup, ValueType } from "@snailycad/types";
 import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";

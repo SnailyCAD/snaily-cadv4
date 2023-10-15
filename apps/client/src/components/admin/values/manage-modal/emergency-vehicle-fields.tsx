@@ -5,7 +5,7 @@ import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
-import { ManageValueFormValues } from "../ManageValueModal";
+import type { ManageValueFormValues } from "../ManageValueModal";
 
 export function useDefaultDivisions() {
   const { division } = useValues();

@@ -1,7 +1,7 @@
 import { useTranslations } from "use-intl";
 import { Button, TabsContent } from "@snailycad/ui";
 import { useBusinessState } from "state/business-state";
-import { Employee, WhitelistStatus } from "@snailycad/types";
+import { type Employee, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Table, useTableState } from "components/shared/Table";
 import type { PutBusinessEmployeesData } from "@snailycad/types/api";

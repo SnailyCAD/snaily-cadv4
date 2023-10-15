@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button, HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
-import { ActiveOfficer, useLeoState } from "state/leo-state";
+import { type ActiveOfficer, useLeoState } from "state/leo-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
-import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
+import { type CombinedLeoUnit, StatusViewMode, type Officer } from "@snailycad/types";
 import { useActiveDispatchers } from "hooks/realtime/use-active-dispatchers";
 import { useTableState, Table, useAsyncTable } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -27,7 +27,7 @@ import dynamic from "next/dynamic";
 import { Permissions } from "@snailycad/permissions";
 import { usePermission } from "hooks/usePermission";
 import { PrivateMessagesModal } from "../private-messages/private-messages-modal";
-import { GetActiveOfficersData } from "@snailycad/types/api";
+import type { GetActiveOfficersData } from "@snailycad/types/api";
 import { ActiveOfficersHeader } from "./active-officers-header";
 import { classNames } from "lib/classNames";
 

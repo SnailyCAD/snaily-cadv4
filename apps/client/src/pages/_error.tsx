@@ -1,6 +1,6 @@
 import { Button } from "@snailycad/ui";
 import type { NextPageContext } from "next";
-import NextErrorComponent, { ErrorProps } from "next/error";
+import NextErrorComponent, { type ErrorProps } from "next/error";
 import * as Sentry from "@sentry/nextjs";
 
 interface ErrorPageProps extends ErrorProps {

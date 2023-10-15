@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@snailycad/ui";
-import { Column, flexRender, Header, RowData } from "@tanstack/react-table";
+import { type Column, flexRender, type Header, type RowData } from "@tanstack/react-table";
 import { classNames } from "lib/classNames";
 import { ArrowDownSquareFill, Check, ThreeDots } from "react-bootstrap-icons";
 

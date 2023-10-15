@@ -4,7 +4,7 @@ import { Button, SelectField } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { useFormikContext } from "formik";
 import { useCall911State } from "state/dispatch/call-911-state";
-import { Call911 } from "@snailycad/types";
+import type { Call911 } from "@snailycad/types";
 import { ChevronDown } from "react-bootstrap-icons";
 
 export function AddCallPopover() {

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Call911, DispatchChat, LeoIncident } from "@snailycad/types";
+import type { Call911, DispatchChat, LeoIncident } from "@snailycad/types";
 import { Button, Loader, TextField } from "@snailycad/ui";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { AddCallPopover } from "./add-call-popover";

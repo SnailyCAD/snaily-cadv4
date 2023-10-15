@@ -1,5 +1,5 @@
 import * as React from "react";
-import { icon as leafletIcon, LeafletEvent } from "leaflet";
+import { icon as leafletIcon, type LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { Full911Call } from "state/dispatch/dispatch-state";

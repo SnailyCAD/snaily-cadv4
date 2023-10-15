@@ -17,7 +17,7 @@ import type { CombinedEmsFdUnit, EmsFdDeputy } from "@snailycad/types";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { isUnitCombinedEmsFd } from "@snailycad/utils";
 import { useRouter } from "next/router";
-import { ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
+import { type ActiveDeputy, useEmsFdState } from "state/ems-fd-state";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";

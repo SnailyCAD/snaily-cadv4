@@ -8,8 +8,8 @@ import { ModalIds } from "../types/modal-ids";
 import { useAuth } from "../context/AuthContext";
 import { getNextI18nConfig } from "./i18n/getNextI18nConfig";
 import {
-  ErrorMessage,
-  ErrorResponseData,
+  type ErrorMessage,
+  type ErrorResponseData,
   getErrorObj,
   getFeatureNotEnabledError,
   isAxiosError,

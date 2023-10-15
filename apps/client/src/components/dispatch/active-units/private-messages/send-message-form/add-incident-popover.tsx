@@ -3,7 +3,7 @@ import * as Popover from "@radix-ui/react-popover";
 import { Button, SelectField } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { useFormikContext } from "formik";
-import { LeoIncident } from "@snailycad/types";
+import type { LeoIncident } from "@snailycad/types";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 

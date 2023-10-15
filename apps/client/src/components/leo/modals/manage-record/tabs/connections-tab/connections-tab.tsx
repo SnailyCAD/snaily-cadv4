@@ -10,7 +10,7 @@ import { useTranslations } from "use-intl";
 
 import dynamic from "next/dynamic";
 import type { Call911, Record } from "@snailycad/types";
-import { Get911CallsData } from "@snailycad/types/api";
+import type { Get911CallsData } from "@snailycad/types/api";
 
 const ManageIncidentModal = dynamic(
   async () => (await import("components/leo/incidents/manage-incident-modal")).ManageIncidentModal,

@@ -1,4 +1,4 @@
-import { EmsFdDeputy, Officer, WhitelistStatus } from "@snailycad/types";
+import { type EmsFdDeputy, type Officer, WhitelistStatus } from "@snailycad/types";
 import { Button, HoverCard, HoverCardContent, HoverCardTrigger, Status } from "@snailycad/ui";
 import { useTranslations } from "next-intl";
 import { Info } from "react-bootstrap-icons";

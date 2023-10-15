@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "@sentry/nextjs";
 import { TableActionsAlignment } from "@snailycad/types";
-import { Cell, flexRender, Row, RowData } from "@tanstack/react-table";
+import { type Cell, flexRender, type Row, type RowData } from "@tanstack/react-table";
 import { classNames } from "lib/classNames";
 
 interface Props<TData extends RowData> {

@@ -5,9 +5,9 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
-  EmsFdDeputy,
-  CombinedEmsFdUnit,
-  Business,
+  type EmsFdDeputy,
+  type CombinedEmsFdUnit,
+  type Business,
 } from "@snailycad/types";
 import { isUnitCombined, isUnitCombinedEmsFd, isUnitOfficer } from "@snailycad/utils/typeguards";
 import { handleRequest } from "./fetch";

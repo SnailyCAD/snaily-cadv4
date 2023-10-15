@@ -3,10 +3,10 @@ import * as Popover from "@radix-ui/react-popover";
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { useFormikContext } from "formik";
-import { DepartmentValueLink } from "@snailycad/types";
+import type { DepartmentValueLink } from "@snailycad/types";
 import { Table, useTableState } from "components/shared/Table";
 import { v4 } from "uuid";
-import { ManageValueFormValues } from "../ManageValueModal";
+import type { ManageValueFormValues } from "../ManageValueModal";
 
 export function DepartmentLinksSection() {
   const [openPopover, setOpenPopover] = React.useState<"new" | null>(null);

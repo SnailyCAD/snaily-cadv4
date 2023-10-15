@@ -1,7 +1,7 @@
 import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
-import { PaymentStatus, Record, RecordType } from "@snailycad/types";
+import { PaymentStatus, type Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button, FullDate, Loader, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";

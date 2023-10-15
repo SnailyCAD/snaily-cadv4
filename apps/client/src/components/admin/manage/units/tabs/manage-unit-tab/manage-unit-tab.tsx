@@ -1,7 +1,7 @@
 import * as React from "react";
 import { getUnitDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useValues } from "context/ValuesContext";
 import {
   Loader,

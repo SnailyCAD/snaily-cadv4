@@ -1,4 +1,9 @@
-import { Citizen, DriversLicenseCategoryType, ValueLicenseType, ValueType } from "@snailycad/types";
+import {
+  type Citizen,
+  DriversLicenseCategoryType,
+  ValueLicenseType,
+  ValueType,
+} from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";

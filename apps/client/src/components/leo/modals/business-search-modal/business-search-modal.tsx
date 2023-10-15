@@ -10,7 +10,7 @@ import { Table, useTableState } from "components/shared/Table";
 import { formatCitizenAddress } from "lib/utils";
 import type { PostLeoSearchBusinessData } from "@snailycad/types/api";
 import type { BaseCitizen } from "@snailycad/types";
-import { BusinessSearchResult, useBusinessSearch } from "state/search/business-search-state";
+import { type BusinessSearchResult, useBusinessSearch } from "state/search/business-search-state";
 import dynamic from "next/dynamic";
 
 const BusinessSearchTabsContainer = dynamic(

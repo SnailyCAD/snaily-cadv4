@@ -3,7 +3,7 @@ import type { GetIncidentsData } from "@snailycad/types/api";
 import { SocketEvents } from "@snailycad/config";
 import { useListener } from "@casperiv/use-socket.io";
 import { useAsyncTable } from "components/shared/Table";
-import { LeoIncident } from "@snailycad/types";
+import type { LeoIncident } from "@snailycad/types";
 import { useDispatchState } from "state/dispatch/dispatch-state";
 
 export function useActiveIncidentsTable() {

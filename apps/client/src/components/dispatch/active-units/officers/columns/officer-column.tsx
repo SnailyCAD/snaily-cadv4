@@ -6,7 +6,7 @@ import useFetch from "lib/useFetch";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
-import { ActiveOfficer, useLeoState } from "state/leo-state";
+import { type ActiveOfficer, useLeoState } from "state/leo-state";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";

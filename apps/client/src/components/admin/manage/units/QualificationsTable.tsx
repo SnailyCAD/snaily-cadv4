@@ -1,5 +1,5 @@
 import type * as React from "react";
-import { QualificationValueType, UnitQualification } from "@snailycad/types";
+import { QualificationValueType, type UnitQualification } from "@snailycad/types";
 import { Button, FullDate } from "@snailycad/ui";
 import { AlertModal } from "components/modal/AlertModal";
 import { Table, useTableState } from "components/shared/Table";

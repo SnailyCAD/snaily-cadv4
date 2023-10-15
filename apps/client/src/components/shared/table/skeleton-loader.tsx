@@ -1,5 +1,5 @@
 import { classNames } from "lib/classNames";
-import { _RowData } from "./table";
+import type { _RowData } from "./table";
 
 interface TableSkeletonLoaderProps {
   tableHeaders?: { id: string }[];

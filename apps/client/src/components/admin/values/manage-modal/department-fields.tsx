@@ -6,7 +6,7 @@ import { useTranslations } from "use-intl";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { CALLSIGN_TEMPLATE_VARIABLES } from "components/admin/manage/cad-settings/misc-features/template-tab";
 import { DepartmentLinksSection } from "./department-links-section";
-import { ManageValueFormValues } from "../ManageValueModal";
+import type { ManageValueFormValues } from "../ManageValueModal";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",

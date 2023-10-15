@@ -1,12 +1,12 @@
 import {
-  CombinedEmsFdUnit,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  Officer,
+  type CombinedEmsFdUnit,
+  type CombinedLeoUnit,
+  type EmsFdDeputy,
+  type Officer,
   ShouldDoType,
 } from "@snailycad/types";
 import { isUnitCombined, isUnitCombinedEmsFd } from "@snailycad/utils";
-import { MapPlayer, PlayerDataEventPayload } from "types/map";
+import type { MapPlayer, PlayerDataEventPayload } from "types/map";
 
 interface ActiveUnitsOptions {
   players: (MapPlayer | PlayerDataEventPayload)[];

@@ -3,7 +3,7 @@ import { Loader, Button } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
-import { Modal, ModalProps } from "./Modal";
+import { Modal, type ModalProps } from "./Modal";
 import type { ModalIds } from "types/modal-ids";
 
 type Props = Pick<ModalProps, "title" | "className"> & {

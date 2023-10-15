@@ -20,6 +20,7 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "pretty": true,
+    "forceConsistentCasingInFileNames": true,
 
     /* Additional Checks */
     "noUnusedLocals": true /* Report errors on unused locals. */,
@@ -28,6 +29,10 @@
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
     "allowUnreachableCode": false,
-    "lib": ["es2022"]
+    "lib": ["es2022"],
+
+    /* Monorepo options */
+    "composite": true,
+    "declarationMap": true
   }
 }

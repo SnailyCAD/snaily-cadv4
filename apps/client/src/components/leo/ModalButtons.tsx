@@ -1,5 +1,5 @@
 import { Button } from "@snailycad/ui";
-import { ActiveOfficer, useLeoState } from "state/leo-state";
+import { type ActiveOfficer, useLeoState } from "state/leo-state";
 import { ActiveToneType, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

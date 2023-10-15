@@ -7,7 +7,7 @@ import useFetch from "lib/useFetch";
 import { useCall911State } from "state/dispatch/call-911-state";
 import type { Post911CallAssignUnAssign, PUT911CallAssignedUnit } from "@snailycad/types/api";
 import { useAuth } from "context/AuthContext";
-import { AssignedUnit, StatusViewMode } from "@snailycad/types";
+import { type AssignedUnit, StatusViewMode } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Button, FullDate, Loader, SelectField } from "@snailycad/ui";
 import { useModal } from "state/modalState";

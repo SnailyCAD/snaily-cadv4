@@ -1,7 +1,7 @@
 import type * as React from "react";
 import { Button, Loader, SwitchField, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";

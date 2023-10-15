@@ -2,7 +2,7 @@ import * as Popover from "@radix-ui/react-popover";
 import * as React from "react";
 import { Alert, Button, Input, Loader, TextField } from "@snailycad/ui";
 import { useAuth } from "context/AuthContext";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
@@ -11,7 +11,7 @@ import type { PutCADMiscSettingsData } from "@snailycad/types/api";
 import Link from "next/link";
 import { BoxArrowUpRight, ChevronDown } from "react-bootstrap-icons";
 import { Table, useTableState } from "components/shared/Table";
-import { MiscCadSettings, LiveMapURL } from "@snailycad/types";
+import type { MiscCadSettings, LiveMapURL } from "@snailycad/types";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { SettingsTabs } from "components/admin/cad-settings/layout";
 

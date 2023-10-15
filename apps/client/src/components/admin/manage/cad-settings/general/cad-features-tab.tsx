@@ -4,8 +4,8 @@ import { useTranslations } from "use-intl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import {
-  CadFeature,
-  CadFeatureOptions,
+  type CadFeature,
+  type CadFeatureOptions,
   CourthouseType,
   Feature,
   LicenseExamType,
