@@ -19,7 +19,7 @@ import { ManageRecordModal } from "../modals/manage-record/manage-record-modal";
 import useFetch from "lib/useFetch";
 import { ViolationsColumn } from "../ViolationsColumn";
 import type {
-  GetManagePendingArrestReports,
+  GetManagePendingCitizenRecords,
   PostCitizenRecordLogsData,
 } from "@snailycad/types/api";
 import { useQuery } from "@tanstack/react-query";
@@ -27,7 +27,7 @@ import { RecordsCaseNumberColumn } from "../records-case-number-column";
 import { RecordsStatsColumn } from "../records-stats-column";
 
 interface Props {
-  arrestReports: GetManagePendingArrestReports;
+  pendingCitizenRecords: GetManagePendingCitizenRecords;
 }
 
 const TYPE_LABELS = {
@@ -36,7 +36,7 @@ const TYPE_LABELS = {
   [RecordType.WRITTEN_WARNING]: "Written Warning",
 };
 
-export function PendingCitizenRecordsTab({ arrestReports }: Props) {
+export function PendingCitizenRecordsTab({ pendingCitizenRecords }: Props) {
   const [tempRecord, setTempRecord] = React.useState<Record | null>(null);
 
   const { data, isLoading, refetch } = useQuery({
@@ -54,14 +54,14 @@ export function PendingCitizenRecordsTab({ arrestReports }: Props) {
   const asyncTable = useAsyncTable({
     getKey: (item) => item.recordId ?? item.warrantId ?? item.id,
     fetchOptions: {
-      onResponse: (data: GetManagePendingArrestReports) => ({
-        data: data.arrestReports,
+      onResponse: (data: GetManagePendingCitizenRecords) => ({
+        data: data.pendingCitizenRecords,
         totalCount: data.totalCount,
       }),
-      path: "/admin/manage/pending-arrest-reports",
+      path: "/admin/manage/pending-citizen-records",
     },
-    totalCount: arrestReports.totalCount,
-    initialData: arrestReports.arrestReports,
+    totalCount: pendingCitizenRecords.totalCount,
+    initialData: pendingCitizenRecords.pendingCitizenRecords,
   });
 
   const modalState = useModal();
@@ -71,7 +71,7 @@ export function PendingCitizenRecordsTab({ arrestReports }: Props) {
   const { state, execute } = useFetch();
   const tableState = useTableState();
 
-  function handleViewClick(item: GetManagePendingArrestReports["arrestReports"][number]) {
+  function handleViewClick(item: GetManagePendingCitizenRecords["pendingCitizenRecords"][number]) {
     setTempRecord(item.records!);
 
     modalState.openModal(ModalIds.ManageRecord, {
