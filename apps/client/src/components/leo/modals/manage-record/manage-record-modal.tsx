@@ -287,6 +287,7 @@ export function ManageRecordModal(props: Props) {
         {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <TabList
+              defaultValue="general-information-tab"
               queryState={false}
               tabs={[
                 { name: t("generalInformation"), value: "general-information-tab" },

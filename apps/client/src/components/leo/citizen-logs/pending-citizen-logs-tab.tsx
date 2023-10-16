@@ -71,7 +71,7 @@ export function PendingCitizenRecordsTab({ pendingCitizenRecords }: Props) {
   const { state, execute } = useFetch();
   const tableState = useTableState();
 
-  function handleViewClick(item: GetManagePendingCitizenRecords["pendingCitizenRecords"][number]) {
+  function handleEditClick(item: GetManagePendingCitizenRecords["pendingCitizenRecords"][number]) {
     setTempRecord(item.records!);
 
     modalState.openModal(ModalIds.ManageRecord, {
@@ -93,6 +93,12 @@ export function PendingCitizenRecordsTab({ pendingCitizenRecords }: Props) {
       asyncTable.remove(item.id);
       await refetch();
     }
+  }
+
+  async function handleRecordUpdate() {
+    await refetch();
+    asyncTable.refetch();
+    setTempRecord(null);
   }
 
   return (
@@ -141,8 +147,8 @@ export function PendingCitizenRecordsTab({ pendingCitizenRecords }: Props) {
               status: <Status fallback="—">{record.status}</Status>,
               actions: (
                 <>
-                  <Button size="xs" className="mr-2" onPress={() => handleViewClick(item)}>
-                    {common("view")}
+                  <Button size="xs" className="mr-2" onPress={() => handleEditClick(item)}>
+                    {common("edit")}
                   </Button>
                   <Button
                     variant="success"
@@ -187,8 +193,8 @@ export function PendingCitizenRecordsTab({ pendingCitizenRecords }: Props) {
           id={ModalIds.ManageRecord}
           type={tempRecord.type}
           isEdit
+          onUpdate={handleRecordUpdate}
           record={tempRecord}
-          isReadOnly
         />
       ) : null}
     </TabsContent>
