@@ -153,11 +153,11 @@ export interface GetManageRecordLogsData {
 
 /**
  * @method GET
- * @route /admin/manage/citizens/pending-arrest-reports
+ * @route /admin/manage/citizens/pending-citizen-records
  */
-export interface GetManagePendingArrestReports {
+export interface GetManagePendingCitizenRecords {
   totalCount: number;
-  arrestReports: GetManageRecordsLogsCitizenData["recordsLogs"];
+  pendingCitizenRecords: GetManageRecordsLogsCitizenData["recordsLogs"];
 }
 
 /**

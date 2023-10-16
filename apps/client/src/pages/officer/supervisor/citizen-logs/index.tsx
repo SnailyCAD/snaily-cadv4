@@ -9,14 +9,14 @@ import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { TabList } from "@snailycad/ui";
 import { CitizenLogsTab } from "components/leo/citizen-logs/citizen-logs-tab";
-import { PendingCitizenRecordsTab } from "components/leo/citizen-logs/arrest-reports-tab";
+import { PendingCitizenRecordsTab } from "components/leo/citizen-logs/pending-citizen-logs-tab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { GetManagePendingArrestReports, GetManageRecordLogsData } from "@snailycad/types/api";
+import type { GetManagePendingCitizenRecords, GetManageRecordLogsData } from "@snailycad/types/api";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
   citizens: GetManageRecordLogsData;
-  pendingCitizenRecords: GetManagePendingArrestReports;
+  pendingCitizenRecords: GetManagePendingCitizenRecords;
 }
 
 export default function CitizenLogs(props: Props) {
@@ -47,7 +47,7 @@ export default function CitizenLogs(props: Props) {
       <TabList tabs={TABS}>
         <CitizenLogsTab citizens={props.citizens} />
         {CITIZEN_RECORD_APPROVAL ? (
-          <PendingCitizenRecordsTab arrestReports={props.pendingCitizenRecords} />
+          <PendingCitizenRecordsTab pendingCitizenRecords={props.pendingCitizenRecords} />
         ) : null}
       </TabList>
     </Layout>
@@ -58,7 +58,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   const user = await getSessionUser(req);
   const [citizens, pendingCitizenRecords] = await requestAll(req, [
     ["/admin/manage/records-logs", { citizens: [], totalCount: 0 }],
-    ["/admin/manage/pending-arrest-reports", { pendingCitizenRecords: [], totalCount: 0 }],
+    ["/admin/manage/pending-citizen-records", { pendingCitizenRecords: [], totalCount: 0 }],
   ]);
 
   return {
@@ -67,7 +67,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       pendingCitizenRecords,
       citizens,
       messages: {
-        ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(
+          ["leo", "common", "courthouse", "citizen"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };
