@@ -9,7 +9,10 @@ import type { EmsFdDeputy } from "@snailycad/types";
 import type { ActiveOfficer } from "state/leo-state";
 import { useAuth } from "context/AuthContext";
 
-type ButtonProps = Pick<JSX.IntrinsicElements["button"], "name" | "type" | "title" | "disabled">;
+type ButtonProps = Pick<
+  React.JSX.IntrinsicElements["button"],
+  "name" | "type" | "title" | "disabled"
+>;
 interface Props extends ButtonProps {
   button: ModalButton;
   unit?: ActiveOfficer | EmsFdDeputy | null;

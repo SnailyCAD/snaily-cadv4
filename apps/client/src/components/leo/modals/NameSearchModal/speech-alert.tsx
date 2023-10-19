@@ -43,5 +43,5 @@ export function SpeechAlert(props: SpeechAlertProps) {
     speaked.current = true;
   }, [props]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return props.children as JSX.Element;
+  return props.children as React.JSX.Element;
 }
