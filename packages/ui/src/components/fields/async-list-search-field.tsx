@@ -6,7 +6,6 @@ import type { ComboBoxProps } from "@react-types/combobox";
 import { Label } from "../label";
 import { Input } from "../inputs/input";
 import { ErrorMessage } from "../error-message";
-import { Popover } from "../overlays/async-list/popover";
 import { AsyncListFieldListBox } from "../list/async-list/async-list-list-box";
 import { useAsyncList } from "@react-stately/data";
 import { USER_API_TOKEN_HEADER } from "@snailycad/config";
@@ -18,6 +17,7 @@ import { Loader } from "../loader";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { AsyncListSearchFieldActions } from "./async-list-search-field/actions";
 import { cn } from "mxcn";
+import { Popover } from "..";
 
 interface AsyncListFieldFetchOptions {
   filterTextRequired?: boolean;
@@ -197,7 +197,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
         {state.isOpen ? (
           <Popover
-            menuClassName={props.menuClassName}
+            className={props.menuClassName}
             isOpen={state.isOpen}
             onClose={state.close}
             popoverRef={popoverRef}

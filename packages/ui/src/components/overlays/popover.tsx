@@ -1,14 +1,14 @@
 import * as React from "react";
 import { FocusScope } from "@react-aria/focus";
-import { type AriaDialogProps, useDialog } from "@react-aria/dialog";
+import { type AriaDialogProps } from "@react-aria/dialog";
 import {
   OverlayContainer,
   useOverlayPosition,
   useOverlay,
-  useModal,
   DismissButton,
 } from "@react-aria/overlays";
 import { mergeProps } from "@react-aria/utils";
+import { cn } from "mxcn";
 
 interface Props extends AriaDialogProps {
   children: React.ReactNode;
@@ -27,25 +27,12 @@ export function Popover(props: Props) {
   const { popoverRef = ref, isOpen, onClose, children, isCalendar, ...otherProps } = props;
 
   const { overlayProps } = useOverlay({ isOpen, onClose, isDismissable: true }, popoverRef);
-  const { modalProps } = useModal();
-  const { dialogProps } = useDialog(otherProps, popoverRef);
-
-  const { overlayProps: positionProps, updatePosition } = useOverlayPosition({
+  const { overlayProps: positionProps } = useOverlayPosition({
     isOpen,
-    offset: 2,
-    containerPadding: 0,
     overlayRef: ref,
     targetRef: outerRef,
     placement: "bottom start",
   });
-
-  React.useLayoutEffect(() => {
-    if (isOpen) {
-      requestAnimationFrame(() => {
-        updatePosition();
-      });
-    }
-  }, [isOpen, updatePosition]);
 
   const inputWidth = outerRef.current?.clientWidth ?? 0;
   const leftStyle = parseInt(positionProps.style?.left?.toString() || "0", 10);
@@ -63,13 +50,13 @@ export function Popover(props: Props) {
       <OverlayContainer>
         <FocusScope contain>
           <div
-            {...mergeProps(overlayProps, modalProps, dialogProps)}
+            {...mergeProps(overlayProps, otherProps)}
             ref={popoverRef}
-            className="w-full absolute top-full bg-gray-200 dark:bg-primary border border-gray-400 dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
-            style={{
-              zIndex: 999,
-              ...style,
-            }}
+            className={cn(
+              "w-full absolute bg-gray-200 dark:bg-primary border border-gray-400 dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10",
+              props.className,
+            )}
+            style={style}
           >
             {children}
             <DismissButton onDismiss={onClose} />

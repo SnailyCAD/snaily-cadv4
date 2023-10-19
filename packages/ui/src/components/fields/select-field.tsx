@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { AriaSelectProps } from "@react-types/select";
 import { Item } from "@react-stately/collections";
-import { ModalProvider } from "@react-aria/overlays";
 import { cn } from "mxcn";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/select/list-box";
@@ -14,6 +13,7 @@ import { SelectActions } from "../inputs/select/select-actions";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
 import { useButton } from "@react-aria/button";
+import { ModalProvider } from "@react-aria/overlays";
 
 export interface SelectValue {
   value: string;
