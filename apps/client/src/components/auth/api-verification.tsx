@@ -16,7 +16,6 @@ export function ApiVerification(props: Props) {
 
   const { error } = useQuery({
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
     queryKey: ["api-verification"],
     retry: 0,
     queryFn: async () => {
