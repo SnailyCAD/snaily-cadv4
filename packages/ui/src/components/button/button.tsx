@@ -34,7 +34,7 @@ export const buttonVariants = cva(
   },
 );
 
-type BaseButtonProps = Omit<JSX.IntrinsicElements["button"], "onPress"> & AriaButtonProps;
+type BaseButtonProps = Omit<React.JSX.IntrinsicElements["button"], "onPress"> & AriaButtonProps;
 export type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 export type ButtonProps = BaseButtonProps & ButtonVariantProps;
 

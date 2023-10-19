@@ -1,7 +1,7 @@
 import { cn } from "mxcn";
 import * as React from "react";
 
-type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
+type Props = Omit<React.JSX.IntrinsicElements["input"], "id"> & {
   errorMessage?: string | null;
 };
 

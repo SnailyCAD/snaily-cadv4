@@ -11,7 +11,7 @@ export function useInvalidateQuery<T extends unknown[]>(queryKeyParts: T) {
   const query = queries.find((q) => queryKeyParts.every((k) => q.queryKey.includes(k)));
 
   async function invalidateQuery() {
-    await queryClient.invalidateQueries(query?.queryKey);
+    await queryClient.invalidateQueries({ queryKey: query?.queryKey });
     return queryKeyParts;
   }
 

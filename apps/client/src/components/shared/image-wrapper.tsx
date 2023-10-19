@@ -6,7 +6,7 @@ interface Props extends ImageProps {
 }
 
 export function ImageWrapper(props: Props) {
-  const fallback = (props.fallback ?? null) as JSX.Element;
+  const fallback = (props.fallback ?? null) as React.JSX.Element;
   const [hasError, setHasError] = React.useState(false);
 
   return hasError ? fallback : <Image {...props} onError={() => setHasError(true)} />;

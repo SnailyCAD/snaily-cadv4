@@ -80,7 +80,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
             )}
           >
             {isMounted ? <DateField errorMessage={rest.errorMessage} {...fieldProps} /> : null}
-            {state.validationState === "invalid" && (
+            {state.isInvalid && (
               <ExclamationCircle className="w-6 h-6 text-red-500 absolute right-1" />
             )}
           </div>
