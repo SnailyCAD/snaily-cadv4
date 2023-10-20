@@ -26,7 +26,8 @@ export function CitizenDropdown() {
     {
       name: t("taxi"),
       href: "/taxi",
-      show: hasPermissions([Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls]),
+      show:
+        enabled.TAXI && hasPermissions([Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls]),
     },
     { name: t("bleeter"), href: "/bleeter", show: enabled.BLEETER },
     { name: t("truckLogs"), href: "/truck-logs", show: enabled.TRUCK_LOGS },
