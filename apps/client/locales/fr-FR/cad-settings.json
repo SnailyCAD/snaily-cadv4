@@ -349,7 +349,9 @@
     "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER": "Autoriser plusieurs unités avec le même indicatif et même service par utilisateur",
     "ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER-description": "Lorsque cette option est activée, les officiers et les adjoints peuvent créer plusieurs unités avec le même indicatif et le même département.",
     "OPEN_LAW_BOOK": "Livre de droit ouvert",
-    "OPEN_LAW_BOOK-description": "Lorsque activé, cela permettra à chaque utilisateur de consulter les codes pénaux du CAD (Law Book)"
+    "OPEN_LAW_BOOK-description": "Lorsque activé, cela permettra à chaque utilisateur de consulter les codes pénaux du CAD (Law Book)",
+    "CITIZEN_RECORD_PAYMENTS": "Paiements des dossiers des citoyens",
+    "CITIZEN_RECORD_PAYMENTS-description": "Lorsqu'elle est activée, cela permettra aux citoyens de marquer leurs propres dossiers comme étant payés."
   },
   "Permissions": {
     "defaultPermissions": "Autorisations par défaut",

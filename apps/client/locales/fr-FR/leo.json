@@ -385,7 +385,8 @@
     "motorway_sign_150": "Vitesse 150",
     "all": "Tous",
     "ungrouped": "Non groupé",
-    "counts": "Nombre"
+    "counts": "Nombre",
+    "stats": "Statistiques"
   },
   "Bolos": {
     "activeBolos": "Bolos actifs",
