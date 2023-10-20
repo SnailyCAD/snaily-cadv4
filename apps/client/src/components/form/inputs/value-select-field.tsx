@@ -43,25 +43,10 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
     setSearch(() => getDefaultSearchValue());
   }, [getDefaultSearchValue]);
 
-  function handleSuggestionPress({
-    node,
-    localValue,
-  }: {
-    node?: Node<T> | null;
-    localValue?: string;
-  }) {
-    // when the menu closes, it will set the `searchValue` to `""`. We want to keep the value of the search
-    if (typeof node === "undefined" && typeof localValue === "undefined") {
-      return;
-    }
-
-    if (typeof localValue !== "undefined") {
-      setSearch(localValue);
-    }
-
+  function handleSuggestionPress(node?: Node<AnyValue> | null) {
     const fieldData = { [props.fieldName]: node?.key ?? null };
     setValues({ ...values, ...fieldData });
-    props.onSelectionChange?.(node?.value ?? null);
+    props.onSelectionChange?.((node?.value as T | null) ?? null);
   }
 
   return (
@@ -80,7 +65,8 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
       errorMessage={errors[props.fieldName] as string}
       localValue={search}
       inputValue={search}
-      setValues={handleSuggestionPress}
+      onInputChange={(value) => setSearch(value)}
+      onSelectionChange={handleSuggestionPress}
       fetchOptions={{
         filterTextRequired: false,
         apiPath(inputValue) {

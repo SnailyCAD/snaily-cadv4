@@ -75,7 +75,7 @@ export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props)
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setFieldValue, setValues, values, isValid, errors }) => (
+        {({ setFieldValue, values, isValid, errors }) => (
           <Form>
             <FormRow>
               <TextField
@@ -105,12 +105,11 @@ export function ManageTruckLogModal({ onUpdate, onCreate, onClose, log }: Props)
               selectedKey={values.vehicleId}
               localValue={values.vehicleName}
               errorMessage={errors.vehicleId}
-              setValues={({ localValue, node }) => {
-                const vehicleName =
-                  typeof localValue !== "undefined" ? { vehicleName: localValue } : {};
-                const vehicleId = node ? { vehicleId: node.key as string } : {};
-
-                setValues({ ...values, ...vehicleName, ...vehicleId });
+              onInputChange={(value) => setFieldValue("vehicleName", value)}
+              onSelectionChange={(node) => {
+                if (node) {
+                  setFieldValue("vehicleId", node.key as string);
+                }
               }}
               label={t("vehicle")}
               fetchOptions={{

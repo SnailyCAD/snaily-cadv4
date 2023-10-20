@@ -42,7 +42,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     pageIndex: options.fetchOptions.pageIndex ?? 0,
   });
 
-  const { isInitialLoading, error } = useQuery({
+  const { isInitialLoading, error, refetch } = useQuery({
     retry: false,
     enabled: !options.disabled,
     initialData: options.initialData ?? undefined,
@@ -131,5 +131,6 @@ export function useAsyncTable<T>(options: Options<T>) {
     setFilters,
     isLoading: loadingState === "loading",
     pagination,
+    refetch,
   };
 }

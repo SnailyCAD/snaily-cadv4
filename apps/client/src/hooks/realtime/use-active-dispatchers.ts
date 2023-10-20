@@ -46,7 +46,7 @@ export function useActiveDispatchers() {
   useListener(
     { eventName: SocketEvents.UpdateDispatchersState, checkHasListeners: true },
     async () => {
-      await queryClient.resetQueries(["/dispatch"]);
+      await queryClient.resetQueries({ queryKey: ["/dispatch"] });
     },
   );
 

@@ -105,11 +105,16 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
             <AsyncListSearchField<User>
               isClearable
-              setValues={({ localValue, node }) => {
+              onInputChange={(value) =>
+                asyncTable.setFilters((prevFilters) => ({
+                  ...prevFilters,
+                  username: value,
+                }))
+              }
+              onSelectionChange={(node) => {
                 asyncTable.setFilters((prevFilters) => ({
                   ...prevFilters,
                   userId: node?.value?.id,
-                  username: localValue,
                 }));
               }}
               localValue={asyncTable.filters?.username ?? ""}

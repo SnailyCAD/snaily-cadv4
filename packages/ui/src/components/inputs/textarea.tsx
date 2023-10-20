@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "mxcn";
 
-type Props = Omit<JSX.IntrinsicElements["textarea"], "id" | "ref"> & {
+type Props = Omit<React.JSX.IntrinsicElements["textarea"], "id" | "ref"> & {
   errorMessage?: string | null;
 };
 

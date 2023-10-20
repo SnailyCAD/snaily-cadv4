@@ -21,7 +21,7 @@ export function VersionDisplay({ cad }: Props) {
   );
 }
 
-function Link(props: JSX.IntrinsicElements["a"]) {
+function Link(props: React.JSX.IntrinsicElements["a"]) {
   return (
     <a
       {...props}

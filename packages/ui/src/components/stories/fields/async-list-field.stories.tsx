@@ -27,12 +27,11 @@ function DefaultRenderer() {
         bodyKey: "name",
         filterTextRequired: true,
       }}
-      setValues={({ localValue, node }) => {
-        if (typeof localValue !== "undefined") {
-          setLocalSearchValue(localValue);
+      onInputChange={(value) => setLocalSearchValue(value)}
+      onSelectionChange={(node) => {
+        if (node?.value) {
+          setSelectedItem(node.value.id);
         }
-
-        setSelectedItem(node?.value?.id ?? null);
       }}
     >
       {(item) => (

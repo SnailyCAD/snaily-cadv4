@@ -46,7 +46,7 @@ export function TonesModal({ types }: Props) {
       });
 
       helpers.resetForm();
-      await queryClient.resetQueries(["active-tones"]);
+      await queryClient.resetQueries({ queryKey: ["active-tones"] });
     }
   }
 
@@ -57,7 +57,7 @@ export function TonesModal({ types }: Props) {
     });
 
     if (json) {
-      await queryClient.resetQueries(["active-tones"]);
+      await queryClient.resetQueries({ queryKey: ["active-tones"] });
       resetForm();
 
       toastMessage({

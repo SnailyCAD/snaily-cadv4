@@ -94,18 +94,19 @@ export function AddInvolvedUnitToIncidentModal<T extends LeoIncident | EmsFdInci
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ setValues, values, errors }) => (
+        {({ setValues, setFieldValue, values, errors }) => (
           <Form>
             <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit>
               autoFocus
-              setValues={({ localValue, node }) => {
-                const unitQuery =
-                  typeof localValue !== "undefined" ? { unitQuery: localValue } : {};
-                const unitId = node
-                  ? { unit: node.key as string, unitQuery: localValue || values.unitQuery }
-                  : {};
-
-                setValues({ ...values, ...unitQuery, ...unitId });
+              onInputChange={(value) => setFieldValue("unitQuery", value)}
+              onSelectionChange={(node) => {
+                if (node?.value) {
+                  setValues({
+                    ...values,
+                    unit: node.key as string,
+                    unitQuery: node.textValue,
+                  });
+                }
               }}
               localValue={values.unitQuery}
               errorMessage={errors.unit}

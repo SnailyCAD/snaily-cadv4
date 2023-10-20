@@ -75,7 +75,7 @@ export class AdminManageCitizensController {
     return { citizens, totalCount };
   }
 
-  @Get("/pending-arrest-reports")
+  @Get("/pending-citizen-records")
   @Description("Get all the record logs within the CAD")
   @UsePermissions({
     permissions: [
@@ -85,11 +85,11 @@ export class AdminManageCitizensController {
       Permissions.ViewCitizenLogs,
     ],
   })
-  async getPendingArrestReports(
+  async getPendingCitizenRecords(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ): Promise<APITypes.GetManagePendingArrestReports> {
-    const [totalCount, arrestReports] = await prisma.$transaction([
+  ): Promise<APITypes.GetManagePendingCitizenRecords> {
+    const [totalCount, pendingCitizenRecords] = await prisma.$transaction([
       prisma.recordLog.count({
         where: { records: { status: WhitelistStatus.PENDING } },
       }),
@@ -109,7 +109,7 @@ export class AdminManageCitizensController {
       }),
     ]);
 
-    return { arrestReports, totalCount };
+    return { pendingCitizenRecords, totalCount };
   }
 
   @Get("/records-logs/:citizenId")
@@ -146,7 +146,7 @@ export class AdminManageCitizensController {
   @UsePermissions({
     permissions: [Permissions.ManageCitizens, Permissions.ViewCitizenLogs],
   })
-  async acceptOrDeclineArrestReport(
+  async acceptOrDeclinePendingCitizenLog(
     @PathParams("id") id: string,
     @BodyParams("type") type: AcceptDeclineType | null,
   ): Promise<APITypes.PostCitizenRecordLogsData> {

@@ -66,6 +66,13 @@ export function getPermissionsForValuesRequest(request: Req) {
     throw new BadRequest("Must specify `params.path`");
   }
 
+  if (path.toLowerCase() === "penal_code_group") {
+    return {
+      permissions: [Permissions.ManageValuePenalCode],
+      fallback: (u: User) => u.rank !== Rank.USER,
+    };
+  }
+
   const type = getTypeFromPath(path) as ValueType | "ALL";
   if (type === "ALL") {
     return {

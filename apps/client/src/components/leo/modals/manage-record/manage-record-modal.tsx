@@ -287,6 +287,7 @@ export function ManageRecordModal(props: Props) {
         {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <TabList
+              defaultValue="general-information-tab"
               queryState={false}
               tabs={[
                 { name: t("generalInformation"), value: "general-information-tab" },
@@ -304,12 +305,15 @@ export function ManageRecordModal(props: Props) {
                         className="w-full"
                         autoFocus
                         isDisabled={props.isReadOnly || Boolean(props.record)}
-                        setValues={({ localValue, node }) => {
-                          const labelValue =
-                            typeof localValue !== "undefined" ? { businessName: localValue } : {};
-                          const valueField = node ? { businessId: node.key as string } : {};
-
-                          setValues({ ...values, ...labelValue, ...valueField });
+                        onInputChange={(value) => setFieldValue("businessName", value)}
+                        onSelectionChange={(node) => {
+                          if (node) {
+                            setValues({
+                              ...values,
+                              businessName: node.value?.name ?? node.textValue,
+                              businessId: node.key as string,
+                            });
+                          }
                         }}
                         localValue={values.businessName}
                         errorMessage={errors.businessId}

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.74.0",
+  "version": "1.75.1",
   "scripts": {
     "start": "pnpm concurrently \"pnpm --filter \"@snailycad/client\" start\" \"pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/api\" start\"",
     "full-start": "git stash && git pull && node scripts/copy-env.mjs --client --api && pnpm run build && pnpm run start",
@@ -22,6 +22,7 @@
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
     "eslint": "8.51.0",
+    "eslint-plugin-deprecation": "^2.0.0",
     "lerna": "^7.3.1",
     "lint-staged": "^15.0.1"
   },

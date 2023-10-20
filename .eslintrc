@@ -8,7 +8,8 @@
   "extends": [
     "@casperiv/eslint-config",
     "@casperiv/eslint-config-react",
-    "@casperiv/eslint-config-next"
+    "@casperiv/eslint-config-next",
+    "plugin:deprecation/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

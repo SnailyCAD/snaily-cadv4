@@ -1,10 +1,14 @@
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { SelectField } from "../../fields/select-field";
+import { SelectField, type SelectFieldProps } from "../../fields/select-field";
+import { within, userEvent } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
 
 const meta = {
   title: "Inputs/SelectField",
   component: SelectField,
   tags: ["autodocs"],
+  render: (args) => <Renderer {...args} />,
 } satisfies Meta<typeof SelectField>;
 
 export default meta;
@@ -37,15 +41,50 @@ const LARGE_LIST = Array.from({ length: 30 })
     value: `option-${i}`,
   }));
 
+function Renderer(args: SelectFieldProps<any>) {
+  const [selectedKey, setSelectedKey] = React.useState<React.Key | null>(null);
+  const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>([]);
+
+  return (
+    <SelectField
+      {...args}
+      {...(args.selectionMode === "multiple" ? { selectedKeys } : { selectedKey })}
+      data-testid="test-select"
+      onSelectionChange={(key) => {
+        if (args.selectionMode === "multiple") {
+          setSelectedKeys(key as string[]);
+        } else {
+          setSelectedKey(key as string | null);
+        }
+      }}
+    />
+  );
+}
+
 export const Default: Story = {
-  args: {
-    label: "Select an option",
-    options: OPTIONS,
-    selectedKey: "option-3",
+  args: { label: "Select an option", options: OPTIONS },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const portal = within(document.body);
+    const selectInput = canvas.getByTestId("test-select");
+
+    expect(selectInput).toHaveTextContent("Select...");
+
+    await userEvent.click(selectInput);
+
+    OPTIONS.map(async (option) => {
+      expect(await portal.findByText(option.label)).toBeInTheDocument();
+    });
+
+    const firstOption = OPTIONS.at(0)!;
+    await userEvent.click(portal.getByText(firstOption.label));
+
+    expect(selectInput).toHaveTextContent(firstOption.label);
   },
 };
 
 export const Disabled: Story = {
+  render: (args) => <Renderer {...args} />,
   args: {
     label: "Select an option",
     options: OPTIONS,

@@ -109,11 +109,12 @@ export function ManageUnitTab({ unit: data }: Props) {
                 <AsyncListSearchField<User>
                   autoFocus
                   isDisabled={areFormFieldsDisabled}
-                  setValues={({ localValue, node }) => {
+                  onInputChange={(value) => setFieldValue("username", value)}
+                  onSelectionChange={(node) => {
                     setValues({
                       ...values,
                       userId: node?.value?.id ?? values.userId,
-                      username: localValue ?? values.username,
+                      username: node?.value?.username ?? values.username,
                     });
                   }}
                   localValue={values.username}

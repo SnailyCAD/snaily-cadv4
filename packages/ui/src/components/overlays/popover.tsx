@@ -1,81 +1,47 @@
 import * as React from "react";
-import { FocusScope } from "@react-aria/focus";
-import { type AriaDialogProps, useDialog } from "@react-aria/dialog";
-import {
-  OverlayContainer,
-  useOverlayPosition,
-  useOverlay,
-  useModal,
-  DismissButton,
-} from "@react-aria/overlays";
+import { type OverlayTriggerState } from "@react-stately/overlays";
+import { DismissButton, Overlay, usePopover, type AriaPopoverProps } from "@react-aria/overlays";
 import { mergeProps } from "@react-aria/utils";
+import { cn } from "mxcn";
 
-interface Props extends AriaDialogProps {
+interface Props extends Omit<AriaPopoverProps, "popoverRef"> {
   children: React.ReactNode;
-  onClose(): void;
-  isOpen: boolean;
   popoverRef?: React.MutableRefObject<HTMLDivElement | null>;
   className?: string;
   isCalendar?: boolean;
+
+  state: OverlayTriggerState;
 }
 
 const MENU_WIDTH = 300;
 
 export function Popover(props: Props) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const outerRef = React.useRef<HTMLDivElement>(null);
-  const { popoverRef = ref, isOpen, onClose, children, isCalendar, ...otherProps } = props;
+  const { popoverRef = ref, triggerRef, children, isCalendar, state, ...otherProps } = props;
 
-  const { overlayProps } = useOverlay({ isOpen, onClose, isDismissable: true }, popoverRef);
-  const { modalProps } = useModal();
-  const { dialogProps } = useDialog(otherProps, popoverRef);
+  const { popoverProps } = usePopover(
+    { popoverRef, triggerRef, placement: "bottom start", ...otherProps },
+    state,
+  );
 
-  const { overlayProps: positionProps, updatePosition } = useOverlayPosition({
-    isOpen,
-    offset: 2,
-    containerPadding: 0,
-    overlayRef: ref,
-    targetRef: outerRef,
-    placement: "bottom start",
-  });
-
-  React.useLayoutEffect(() => {
-    if (isOpen) {
-      requestAnimationFrame(() => {
-        updatePosition();
-      });
-    }
-  }, [isOpen, updatePosition]);
-
-  const inputWidth = outerRef.current?.clientWidth ?? 0;
-  const leftStyle = parseInt(positionProps.style?.left?.toString() || "0", 10);
-  const width = isCalendar ? MENU_WIDTH : inputWidth;
-  const left = isCalendar ? inputWidth - MENU_WIDTH + leftStyle : leftStyle;
-
-  const style = {
-    ...positionProps.style,
-    left,
-    width,
-  };
+  const fieldWidth = triggerRef.current?.clientWidth ?? 0;
+  const width = isCalendar ? MENU_WIDTH : fieldWidth;
+  const style = { ...popoverProps.style, width };
 
   return (
-    <div ref={outerRef}>
-      <OverlayContainer>
-        <FocusScope contain>
-          <div
-            {...mergeProps(overlayProps, modalProps, dialogProps)}
-            ref={popoverRef}
-            className="w-full absolute top-full bg-gray-200 dark:bg-primary border border-gray-400 dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10"
-            style={{
-              zIndex: 999,
-              ...style,
-            }}
-          >
-            {children}
-            <DismissButton onDismiss={onClose} />
-          </div>
-        </FocusScope>
-      </OverlayContainer>
-    </div>
+    <Overlay>
+      <div
+        {...mergeProps(popoverProps, otherProps)}
+        style={style}
+        ref={popoverRef}
+        className={cn(
+          "absolute bg-gray-200 dark:bg-primary border border-gray-400 dark:border-secondary rounded-md shadow-lg mt-2 p-2 z-10",
+          props.className,
+        )}
+      >
+        {children}
+        <DismissButton onDismiss={state.close} />
+      </div>
+    </Overlay>
   );
 }

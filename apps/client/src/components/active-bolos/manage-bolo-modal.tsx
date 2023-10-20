@@ -181,21 +181,23 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   }}
                   allowsCustomValue
                   localValue={values.plateSearch}
-                  setValues={({ node, localValue }) => {
-                    const vehicle = node?.value
-                      ? {
-                          plate: node.value.plate,
-                          color: node.value.color,
-                          model: node.value.model.value.value,
-                          vehicleId: node.value.id,
-                        }
-                      : {};
+                  onInputChange={(value) => setFieldValue("plateSearch", value)}
+                  onSelectionChange={(node) => {
+                    if (node?.value) {
+                      const vehicle = node?.value
+                        ? {
+                            plate: node.value.plate,
+                            color: node.value.color,
+                            model: node.value.model.value.value,
+                            vehicleId: node.value.id,
+                          }
+                        : {};
 
-                    setValues({
-                      ...values,
-                      ...vehicle,
-                      plateSearch: localValue ?? node?.value?.plate ?? "",
-                    });
+                      setValues({
+                        ...values,
+                        ...vehicle,
+                      });
+                    }
                   }}
                 >
                   {(item) => (

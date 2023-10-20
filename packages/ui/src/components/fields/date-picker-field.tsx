@@ -48,7 +48,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
   }, [_value]);
 
   const state = useDatePickerState({ ...rest, defaultValue: value });
-  const ref = React.useRef<HTMLDivElement | null>(null);
+  const triggerRef = React.useRef<HTMLDivElement | null>(null);
   const {
     groupProps,
     labelProps,
@@ -57,7 +57,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
     dialogProps,
     calendarProps,
     errorMessageProps,
-  } = useDatePicker({ ...rest }, state, ref);
+  } = useDatePicker({ ...rest }, state, triggerRef);
 
   const errorMessageClassName =
     rest.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700";
@@ -69,7 +69,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           {rest.label}{" "}
           {rest.isOptional ? <span className="text-sm italic">({optionalText})</span> : null}
         </label>
-        <div {...groupProps} ref={ref} className="flex group">
+        <div {...groupProps} ref={triggerRef} className="flex group w-full">
           <div
             className={cn(
               "relative bg-white dark:bg-secondary p-1.5 px-3 w-full rounded-l-md border border-r-0",
@@ -80,7 +80,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
             )}
           >
             {isMounted ? <DateField errorMessage={rest.errorMessage} {...fieldProps} /> : null}
-            {state.validationState === "invalid" && (
+            {state.isInvalid && (
               <ExclamationCircle className="w-6 h-6 text-red-500 absolute right-1" />
             )}
           </div>
@@ -108,13 +108,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           ) : null}
         </div>
         {state.isOpen && (
-          <Popover
-            isCalendar
-            className="right-0"
-            {...dialogProps}
-            isOpen={state.isOpen}
-            onClose={() => state.setOpen(false)}
-          >
+          <Popover triggerRef={triggerRef} isCalendar state={state} {...dialogProps}>
             <Calendar {...calendarProps} />
           </Popover>
         )}

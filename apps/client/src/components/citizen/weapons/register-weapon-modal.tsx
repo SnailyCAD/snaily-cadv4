@@ -130,12 +130,15 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
             ) : (
               <AsyncListSearchField<WeaponValue>
                 localValue={values.modelName}
-                setValues={({ localValue, node }) => {
-                  const modelName =
-                    typeof localValue !== "undefined" ? { modelName: localValue } : {};
-                  const model = node ? { model: node.key as string } : {};
-
-                  setValues({ ...values, ...modelName, ...model });
+                onInputChange={(value) => setFieldValue("modelName", value)}
+                onSelectionChange={(node) => {
+                  if (node) {
+                    setValues({
+                      ...values,
+                      modelName: node.value?.value.value ?? node.textValue,
+                      model: node.key as string,
+                    });
+                  }
                 }}
                 errorMessage={errors.model}
                 label={tVehicle("model")}

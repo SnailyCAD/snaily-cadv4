@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "mxcn";
 
-type Props = JSX.IntrinsicElements["input"];
+type Props = React.JSX.IntrinsicElements["input"];
 
 export const Checkbox = React.forwardRef<HTMLInputElement, Props>((props, ref) => (
   <input

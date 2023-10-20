@@ -143,21 +143,22 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
       className={currentResult ? "w-[900px]" : "w-[650px]"}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setValues, errors, values, isValid }) => (
+        {({ setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
             <AsyncListSearchField<VehicleSearchResult>
               allowsCustomValue
               autoFocus
-              setValues={({ localValue, node }) => {
-                const searchValue =
-                  typeof localValue !== "undefined" ? { vinNumber: localValue } : {};
-                const plateOrVin = node ? { plateOrVin: node.key as string } : {};
-
+              onInputChange={(value) => setFieldValue("vinNumber", value)}
+              onSelectionChange={(node) => {
                 if (node) {
                   setCurrentResult(node.value);
-                }
 
-                setValues({ ...values, ...searchValue, ...plateOrVin });
+                  setValues({
+                    ...values,
+                    vinNumber: node.value?.vinNumber ?? node.textValue,
+                    plateOrVin: node.key as string,
+                  });
+                }
               }}
               localValue={values.vinNumber}
               errorMessage={errors.plateOrVin}

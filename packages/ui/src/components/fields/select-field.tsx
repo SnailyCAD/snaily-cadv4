@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { AriaSelectProps } from "@react-types/select";
 import { Item } from "@react-stately/collections";
-import { ModalProvider } from "@react-aria/overlays";
 import { cn } from "mxcn";
 import { Popover } from "../overlays/popover";
 import { ListBox } from "../list/select/list-box";
@@ -14,6 +13,7 @@ import { SelectActions } from "../inputs/select/select-actions";
 import { ErrorMessage } from "../error-message";
 import { Label } from "../label";
 import { useButton } from "@react-aria/button";
+import { ModalProvider } from "@react-aria/overlays";
 
 export interface SelectValue {
   value: string;
@@ -75,6 +75,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
     selectionMode,
   });
 
+  const triggerRef = React.useRef<HTMLDivElement | null>(null);
   const ref = React.useRef<HTMLDivElement | null>(null);
   const { labelProps, triggerProps, errorMessageProps, valueProps, menuProps } = useMultiSelect(
     { ...props, selectedKey: undefined, disallowEmptySelection, children, disabledKeys },
@@ -92,7 +93,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
       <div className={cn("flex flex-col mb-3", props.className)}>
         <Label {...props} labelProps={labelProps} />
         <div className="relative group">
-          <div className="flex">
+          <div ref={triggerRef} className="flex">
             <div
               role="button"
               {...buttonProps}
@@ -135,7 +136,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
             />
           </div>
           {state.isOpen && (
-            <Popover isCalendar={props.isCalendar} isOpen={state.isOpen} onClose={state.close}>
+            <Popover triggerRef={triggerRef} isCalendar={props.isCalendar} state={state}>
               <ListBox {...menuProps} state={state} />
             </Popover>
           )}

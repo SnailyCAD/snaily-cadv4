@@ -102,8 +102,8 @@ model MiscCadSettings {
   waterLicenseTemplate       String? @db.Text
   huntingLicenseNumberLength Int?    @default(8)
   huntingLicenseTemplate     String? @db.Text
-  fishingLicenseNumberLength  Int?    @default(8)
-  fishingLicenseTemplate      String? @db.Text
+  fishingLicenseNumberLength Int?    @default(8)
+  fishingLicenseTemplate     String? @db.Text
 
   driversLicenseMaxPoints Int? @default(12)
   pilotLicenseMaxPoints   Int? @default(12)
@@ -471,7 +471,7 @@ model Pet {
   color       String   @db.VarChar(255)
   weight      String   @db.VarChar(255)
   dateOfBirth DateTime
-  citizen     Citizen  @relation(fields: [citizenId], references: [id])
+  citizen     Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId   String
   imageId     String?
 
