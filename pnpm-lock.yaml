@@ -75,7 +75,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/audit-logger
       "@snailycad/config":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../../packages/config
       "@snailycad/image-data-uri":
         specifier: ^3.2.0
@@ -93,7 +93,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/types
       "@snailycad/utils":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../../packages/utils
       "@tsed/common":
         specifier: ^7.37.0
@@ -334,7 +334,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/audit-logger
       "@snailycad/config":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../../packages/config
       "@snailycad/permissions":
         specifier: workspace:*
@@ -349,7 +349,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       "@snailycad/utils":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../../packages/utils
       "@tailwindcss/typography":
         specifier: ^0.5.10
@@ -622,7 +622,7 @@ importers:
   packages/types:
     dependencies:
       "@snailycad/permissions":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../permissions
       discord-api-types:
         specifier: 0.37.58
@@ -764,13 +764,13 @@ importers:
         specifier: ^3.21.0
         version: 3.21.0(react@18.2.0)
       "@snailycad/config":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../config
       "@snailycad/types":
         specifier: workspace:*
         version: link:../types
       "@snailycad/utils":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../utils
       "@types/react":
         specifier: ^18.2.29
@@ -879,7 +879,7 @@ importers:
   packages/utils:
     dependencies:
       "@snailycad/types":
-        specifier: ^1.75.0
+        specifier: ^1.75.1
         version: link:../types
       date-fns:
         specifier: ^2.30.0
@@ -19982,7 +19982,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       sass: 1.69.4
-      styled-jsx: 5.1.1(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.22.11)(react@18.2.0)
       watchpack: 2.4.0
     optionalDependencies:
       "@next/swc-darwin-arm64": 13.5.6
@@ -24380,26 +24380,6 @@ packages:
         optional: true
     dependencies:
       "@babel/core": 7.22.11
-      client-only: 0.0.1
-      react: 18.2.0
-    dev: false
-
-  /styled-jsx@5.1.1(react@18.2.0):
-    resolution:
-      {
-        integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==,
-      }
-    engines: { node: ">= 12.0.0" }
-    peerDependencies:
-      "@babel/core": "*"
-      babel-plugin-macros: "*"
-      react: ">= 16.8.0 || 17.x.x || ^18.0.0-0"
-    peerDependenciesMeta:
-      "@babel/core":
-        optional: true
-      babel-plugin-macros:
-        optional: true
-    dependencies:
       client-only: 0.0.1
       react: 18.2.0
 
