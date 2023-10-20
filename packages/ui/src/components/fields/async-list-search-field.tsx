@@ -30,7 +30,7 @@ interface AsyncListFieldFetchOptions {
 }
 
 export interface AsyncListFieldProps<T extends object>
-  extends Omit<ComboBoxProps<T>, "onSelectionChange"> {
+  extends Omit<ComboBoxProps<T>, "onSelectionChange" | "onInputChange"> {
   label: React.ReactNode;
   isOptional?: boolean;
   isClearable?: boolean;
@@ -45,10 +45,12 @@ export interface AsyncListFieldProps<T extends object>
 
   /** the value that handles the input value */
   localValue: string;
-  setValues(values: { localValue?: string; node?: Node<T> | null }): void;
+  onInputChange(value: string): void;
+  onSelectionChange(node: Node<T> | null): void;
 }
 
 function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
+  const triggerRef = React.useRef<HTMLDivElement | null>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listBoxRef = React.useRef<HTMLUListElement | null>(null);
   const popoverRef = React.useRef<HTMLDivElement | null>(null);
@@ -104,7 +106,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
   function handleSelectionChange(key?: React.Key, value?: string) {
     try {
       if (props.isClearable && key === "cleared") {
-        props.setValues({ localValue: "", node: null });
+        props.onSelectionChange(null);
         return;
       }
 
@@ -112,21 +114,18 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         // if there are no items to select from, and the value is empty, then we should clear the value
         // only if we do not allow custom values
         if (list.items.length <= 0 && !value && !props.allowsCustomValue) {
-          props.setValues({ localValue: "" });
           return;
         }
 
-        props.setValues({ localValue: value });
         return;
       }
 
       const item = state.collection.getItem(key) as Node<T> | null;
       if (item) {
-        props.setValues({ localValue: item.textValue, node: item });
+        props.onSelectionChange(item);
       }
     } catch (err) {
       console.error(err);
-      props.setValues({ localValue: value });
     }
   }
 
@@ -135,7 +134,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
       ? list.items.filter((value, index) => props.filterFn?.(value, index))
       : list.items,
     inputValue: props.localValue,
-    onInputChange: (value: string) => handleSelectionChange(undefined, value),
+    onInputChange: props.onInputChange,
   };
 
   const state = useComboBoxState({
@@ -164,7 +163,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     <div className={cn("text-field flex flex-col mb-3", props.className)}>
       <Label {...props} labelProps={labelProps} />
 
-      <div className="relative group flex">
+      <div ref={triggerRef} className="relative group flex">
         <Input
           {...inputProps}
           ref={inputRef}
@@ -177,14 +176,15 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         />
 
         {list.isLoading ? (
-          <div
+          <span
+            aria-hidden
             className={cn(
               "absolute top-0 bottom-0 flex items-center justify-center",
               showClearableButton ? "right-20" : "right-11",
             )}
           >
             <Loader />
-          </div>
+          </span>
         ) : null}
 
         <AsyncListSearchFieldActions
@@ -197,9 +197,9 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
 
         {state.isOpen ? (
           <Popover
+            triggerRef={triggerRef}
             className={props.menuClassName}
-            isOpen={state.isOpen}
-            onClose={state.close}
+            state={state}
             popoverRef={popoverRef}
           >
             {state.collection.size > 0 ? (

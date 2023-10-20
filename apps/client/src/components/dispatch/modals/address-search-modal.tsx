@@ -61,21 +61,22 @@ export function AddressSearchModal() {
       className="w-[800px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setValues, errors, values, isValid }) => (
+        {({ setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
             <AsyncListSearchField<AddressSearchResult[number]>
               allowsCustomValue
               autoFocus
-              setValues={({ localValue, node }) => {
-                const searchValue =
-                  typeof localValue !== "undefined" ? { searchValue: localValue } : {};
-                const address = node ? { address: node.key as string } : {};
-
+              onInputChange={(value) => setFieldValue("searchValue", value)}
+              onSelectionChange={(node) => {
                 if (node?.value) {
+                  setValues({
+                    ...values,
+                    searchValue: node.value.address,
+                    address: node.key as string,
+                  });
+
                   setResults([node.value]);
                 }
-
-                setValues({ ...values, ...searchValue, ...address });
               }}
               localValue={values.searchValue}
               errorMessage={errors.address}

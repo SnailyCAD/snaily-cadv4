@@ -106,26 +106,21 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       className="w-[850px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ setValues, errors, values, isValid }) => (
+        {({ setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
             <AsyncListSearchField<SearchResult>
               autoFocus
               allowsCustomValue
-              setValues={({ localValue, node }) => {
-                if (typeof node === "undefined" && typeof localValue === "undefined") {
-                  setValues({ ...values, name: values.searchValue });
-                  return;
-                }
-
-                const searchValue =
-                  typeof localValue !== "undefined" ? { searchValue: localValue } : {};
-                const name = node ? { name: node.key as string } : {};
-
-                if (node) {
+              onInputChange={(value) => setFieldValue("searchValue", value)}
+              onSelectionChange={(node) => {
+                if (node?.value) {
                   handleFoundName(node.value);
+                  setValues({
+                    ...values,
+                    name: node.key as string,
+                    searchValue: `${node.value.name} ${node.value.surname}`,
+                  });
                 }
-
-                setValues({ ...values, ...searchValue, ...name });
               }}
               localValue={values.searchValue}
               errorMessage={errors.name}

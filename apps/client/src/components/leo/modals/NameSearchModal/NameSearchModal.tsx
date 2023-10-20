@@ -128,7 +128,7 @@ export function NameSearchModal() {
     const { json, error } = await execute<PostLeoSearchCitizenData>({
       path: "/search/name",
       method: "POST",
-      data: values,
+      data: { name: values.name || values.searchValue, id: values.id },
     });
     if (error) return;
 
@@ -169,31 +169,22 @@ export function NameSearchModal() {
       className={currentResult ? "min-w-[1200px]" : "w-[650px]"}
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setValues, errors, values }) => (
+        {({ setValues, setFieldValue, errors, values }) => (
           <Form>
             <AsyncListSearchField<NameSearchResult>
               autoFocus
               allowsCustomValue
-              setValues={({ localValue, node }) => {
-                // when the menu closes, it will set the `searchValue` to `""`. We want to keep the value of the search
-                if (typeof node === "undefined" && typeof localValue === "undefined") {
-                  setValues({ ...values, name: values.searchValue });
-                  return;
-                }
-
-                const searchValue =
-                  typeof localValue !== "undefined" ? { searchValue: localValue } : {};
-                let name = node ? { name: node.textValue as string } : {};
-
-                if (typeof node === "undefined" && localValue !== "") {
-                  name = { name: localValue };
-                }
-
+              onInputChange={(value) => setFieldValue("searchValue", value)}
+              onSelectionChange={(node) => {
                 if (node) {
                   setCurrentResult(node.value);
                 }
 
-                setValues({ ...values, ...searchValue, ...name });
+                setValues({
+                  ...values,
+                  searchValue: node?.textValue ?? "",
+                  name: node?.textValue ?? "",
+                });
               }}
               localValue={values.searchValue}
               errorMessage={errors.name}

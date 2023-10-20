@@ -37,7 +37,8 @@ export function ConnectionsTab({
   isReadOnly?: boolean;
 }) {
   const t = useTranslations("Leo");
-  const { handleChange, setValues, errors, values } = useFormikContext<_FormikContext>();
+  const { handleChange, setFieldValue, setValues, errors, values } =
+    useFormikContext<_FormikContext>();
 
   const { calls, setCurrentlySelectedCall } = useCall911State((state) => ({
     calls: state.calls,
@@ -107,17 +108,15 @@ export function ConnectionsTab({
           localValue={values.call911CaseNumber}
           selectedKey={values.call911Id}
           className="w-full"
-          setValues={({ localValue, node }) => {
-            const caseNumber =
-              typeof localValue !== "undefined" ? { call911CaseNumber: localValue } : {};
-
-            const call911Id = node ? { call911Id: node.key as string } : {};
-
-            setValues({
-              ...values,
-              ...caseNumber,
-              ...call911Id,
-            });
+          onInputChange={(value) => setFieldValue("call911CaseNumber", value)}
+          onSelectionChange={(node) => {
+            if (node) {
+              setValues({
+                ...values,
+                call911CaseNumber: String(node.value?.caseNumber ?? node.textValue),
+                call911Id: node.key as string,
+              });
+            }
           }}
           fetchOptions={{
             apiPath: (query) => `/911-calls?query=${query}&includeEnded=true`,

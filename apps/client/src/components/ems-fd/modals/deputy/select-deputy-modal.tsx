@@ -106,12 +106,15 @@ export function SelectDeputyModal() {
               isOptional
               label={t("Ems.emergencyVehicle")}
               localValue={values.vehicleSearch}
-              setValues={({ localValue, node }) => {
-                const vehicleId = !node ? {} : { vehicleId: node.key as string };
-                const searchValue =
-                  typeof localValue === "undefined" ? {} : { vehicleSearch: localValue };
-
-                setValues({ ...values, ...vehicleId, ...searchValue });
+              onInputChange={(value) => setFieldValue("vehicleSearch", value)}
+              onSelectionChange={(node) => {
+                if (node) {
+                  setValues({
+                    ...values,
+                    vehicleSearch: node.value?.value.value ?? node.textValue,
+                    vehicleId: node.key as string,
+                  });
+                }
               }}
               fetchOptions={{
                 apiPath: (query) =>

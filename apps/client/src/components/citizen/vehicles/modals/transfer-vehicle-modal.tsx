@@ -86,12 +86,16 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             {values.transferType === "business" ? (
               <AsyncListSearchField<Business>
                 className="w-full"
-                setValues={({ localValue, node }) => {
-                  const labelValue =
-                    typeof localValue !== "undefined" ? { businessName: localValue } : {};
-                  const valueField = node?.value ? { businessId: node.key as string } : {};
-
-                  setValues({ ...values, ...labelValue, ...valueField });
+                allowsCustomValue
+                onInputChange={(value) => setFieldValue("businessName", value)}
+                onSelectionChange={(node) => {
+                  if (node) {
+                    setValues({
+                      ...values,
+                      businessName: node.value?.name ?? node.textValue,
+                      businessId: node.key as string,
+                    });
+                  }
                 }}
                 localValue={values.businessName}
                 errorMessage={errors.businessId}

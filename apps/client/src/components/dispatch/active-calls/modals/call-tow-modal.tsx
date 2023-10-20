@@ -122,16 +122,20 @@ export function DispatchCallTowModal({ call }: Props) {
                   }}
                   allowsCustomValue
                   localValue={values.plateSearch}
-                  setValues={({ node, localValue }) => {
-                    const vehicle = node?.value
-                      ? { plate: node.value.plate, model: node.value.model.value.value }
-                      : {};
+                  onInputChange={(value) => setFieldValue("plateSearch", value)}
+                  onSelectionChange={(node) => {
+                    if (node?.value) {
+                      const vehicle = {
+                        plate: node.value.plate,
+                        model: node.value.model.value.value,
+                      };
 
-                    setValues({
-                      ...values,
-                      ...vehicle,
-                      plateSearch: localValue ?? node?.value?.plate ?? "",
-                    });
+                      setValues({
+                        ...values,
+                        ...vehicle,
+                        plateSearch: node?.value?.plate ?? node.textValue,
+                      });
+                    }
                   }}
                 >
                   {(item) => (

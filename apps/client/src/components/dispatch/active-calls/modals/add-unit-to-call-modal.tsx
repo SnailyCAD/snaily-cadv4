@@ -168,14 +168,15 @@ export function AddUnitToCallModal({ onClose }: Props) {
             <div className="border border-secondary rounded-md p-4 mt-5">
               <AsyncListSearchField<Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit>
                 autoFocus
-                setValues={({ localValue, node }) => {
-                  const unitQuery =
-                    typeof localValue !== "undefined" ? { unitQuery: localValue } : {};
-                  const unitId = node
-                    ? { unit: node.value, unitQuery: localValue || values.unitQuery }
-                    : {};
-
-                  setValues({ ...values, ...unitQuery, ...unitId });
+                onInputChange={(value) => setFieldValue("unitQuery", value)}
+                onSelectionChange={(node) => {
+                  if (node?.value) {
+                    setValues({
+                      ...values,
+                      unit: node.value,
+                      unitQuery: node.textValue,
+                    });
+                  }
                 }}
                 localValue={values.unitQuery}
                 errorMessage={errors.unit}

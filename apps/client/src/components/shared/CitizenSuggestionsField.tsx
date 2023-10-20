@@ -23,7 +23,7 @@ interface Props<Suggestion extends NameSearchResult> {
 export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
   props: Props<Suggestion>,
 ) {
-  const { setValues, errors, values } = useFormikContext<any>();
+  const { setValues, setFieldValue, errors, values } = useFormikContext<any>();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
@@ -34,13 +34,21 @@ export function CitizenSuggestionsField<Suggestion extends NameSearchResult>(
       isDisabled={props.isDisabled}
       isOptional={props.isOptional}
       allowsCustomValue={props.allowsCustomValue}
-      setValues={({ localValue, node }) => {
-        const labelValue =
-          typeof localValue !== "undefined" ? { [props.labelFieldName]: localValue } : {};
-        const valueField = node?.value ? { [props.valueFieldName]: node.key as string } : {};
+      onInputChange={(value) => setFieldValue(props.labelFieldName, value)}
+      onSelectionChange={(node) => {
+        if (node) {
+          setFieldValue(props.valueFieldName, node.key as string);
 
-        props.onNodeChange?.(node);
-        setValues({ ...values, ...labelValue, ...valueField });
+          setValues({
+            ...values,
+            [props.labelFieldName]: node.value
+              ? `${node.value.name} ${node.value.surname}`
+              : node.textValue,
+            [props.valueFieldName]: node.key as string,
+          });
+
+          props.onNodeChange?.(node);
+        }
       }}
       localValue={values[props.labelFieldName]}
       errorMessage={errors[props.valueFieldName] as string}

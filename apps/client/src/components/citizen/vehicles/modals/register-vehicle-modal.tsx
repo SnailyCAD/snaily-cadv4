@@ -202,24 +202,23 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             <AsyncListSearchField<VehicleValue>
               allowsCustomValue={CUSTOM_TEXTFIELD_VALUES}
               localValue={values.modelName}
-              setValues={({ localValue, node }) => {
-                if (CUSTOM_TEXTFIELD_VALUES) {
-                  if (typeof localValue === "undefined") return;
-
+              onInputChange={(value) => setFieldValue("modelName", value)}
+              onSelectionChange={(node) => {
+                if (CUSTOM_TEXTFIELD_VALUES && node) {
                   setValues({
                     ...values,
-                    modelName: localValue,
-                    model: localValue,
+                    modelName: node.textValue,
+                    model: node.textValue,
                   });
-
-                  return;
                 }
 
-                const modelName =
-                  typeof localValue !== "undefined" ? { modelName: localValue } : {};
-                const model = node ? { model: node.key as string, modelValue: node.value } : {};
-
-                setValues({ ...values, ...modelName, ...model });
+                if (node) {
+                  setValues({
+                    ...values,
+                    modelName: node.value?.value.value ?? node.textValue,
+                    model: node.key as string,
+                  });
+                }
               }}
               errorMessage={errors.model}
               label={tVehicle("model")}
