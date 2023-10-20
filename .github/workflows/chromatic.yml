@@ -1,5 +1,7 @@
 name: "Chromatic Publish (Storybook)"
 
+on: [push]
+
 jobs:
   test:
     runs-on: ubuntu-latest
