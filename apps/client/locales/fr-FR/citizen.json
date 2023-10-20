@@ -68,7 +68,8 @@
     "id": "Id",
     "huntingLicensePoints": "Points de permis de chasse",
     "fishingLicensePoints": "Points de permis de pêche",
-    "otherLicenseCategory": "Autres catégories de permis"
+    "otherLicenseCategory": "Autres catégories de permis",
+    "markAsPaid": "Marquer comme payé"
   },
   "Vehicles": {
     "model": "Modèle",
@@ -102,7 +103,8 @@
     "trimLevels": "Niveaux de finition",
     "transferVehicleInfo": "Transférez votre <span>{model}</span> à un nouveau propriétaire. ",
     "alert_deleteVehicle": "Voulez-vous vraiment supprimer ce véhicule ? ",
-    "image": "Image"
+    "image": "Image",
+    "transferToBusiness": "Transfert en entreprise"
   },
   "Weapons": {
     "model": "Modèle",
