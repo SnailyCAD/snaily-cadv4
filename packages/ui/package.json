@@ -15,7 +15,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic": "pnpm chromatic",
-    "prepublish": "pnpm build"
+    "prepublish": "pnpm build",
+    "test:e2e": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"http-server storybook-static --port 6006 --silent\" \"wait-on http-get://127.0.0.1:6006 -v && pnpm test-storybook\""
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.5.0",
@@ -23,8 +24,10 @@
     "@storybook/addon-links": "^7.5.0",
     "@storybook/addon-styling": "^1.3.7",
     "@storybook/blocks": "^7.5.0",
+    "@storybook/jest": "^0.2.3",
     "@storybook/react": "^7.5.0",
     "@storybook/react-vite": "^7.5.0",
+    "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
