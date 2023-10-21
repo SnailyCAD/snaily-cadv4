@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.75.1",
+  "version": "1.75.2",
   "scripts": {
     "start": "pnpm concurrently \"pnpm --filter \"@snailycad/client\" start\" \"pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/api\" start\"",
     "full-start": "git stash && git pull && node scripts/copy-env.mjs --client --api && pnpm run build && pnpm run start",
