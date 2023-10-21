@@ -551,8 +551,18 @@ export class ValuesController {
         return id;
       }
 
-      if (type === "PENAL_CODE") {
-        await prisma.penalCode.delete({ where: { id } });
+      if (type === ValueType.PENAL_CODE) {
+        const value = await prisma.penalCode.delete({ where: { id } });
+
+        if (sessionUserId) {
+          await createAuditLogEntry({
+            translationKey: "deletedEntry",
+            action: { type: AuditLogActionType.ValueAdd, new: value },
+            prisma,
+            executorId: sessionUserId,
+          });
+        }
+
         return id;
       }
 
