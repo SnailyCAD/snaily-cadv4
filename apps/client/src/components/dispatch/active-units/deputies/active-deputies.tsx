@@ -128,6 +128,7 @@ function ActiveDeputies({ initialDeputies }: Props) {
               name: nameAndCallsign,
               deputy: (
                 <DeputyColumn
+                  useDot={useDot}
                   textColor={textColor}
                   deputy={deputy}
                   isDispatch={isDispatch}
