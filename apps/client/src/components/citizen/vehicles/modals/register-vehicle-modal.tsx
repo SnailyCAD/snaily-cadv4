@@ -202,7 +202,12 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             <AsyncListSearchField<VehicleValue>
               allowsCustomValue={CUSTOM_TEXTFIELD_VALUES}
               localValue={values.modelName}
-              onInputChange={(value) => setFieldValue("modelName", value)}
+              onInputChange={(value) => {
+                setFieldValue("modelName", value);
+                if (CUSTOM_TEXTFIELD_VALUES && value) {
+                  setFieldValue("model", value);
+                }
+              }}
               onSelectionChange={(node) => {
                 if (CUSTOM_TEXTFIELD_VALUES && node) {
                   setValues({
@@ -210,6 +215,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                     modelName: node.textValue,
                     model: node.textValue,
                   });
+                  return;
                 }
 
                 if (node) {
