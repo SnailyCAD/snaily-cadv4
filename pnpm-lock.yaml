@@ -176,6 +176,9 @@ importers:
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
+      lodash.set:
+        specifier: ^4.3.2
+        version: 4.3.2
       multer:
         specifier: ^1.4.5-lts.1
         version: 1.4.5-lts.1
@@ -258,6 +261,9 @@ importers:
       "@types/jsonwebtoken":
         specifier: 9.0.3
         version: 9.0.3
+      "@types/lodash.set":
+        specifier: ^4.3.8
+        version: 4.3.8
       "@types/multer":
         specifier: ^1.4.8
         version: 1.4.8
@@ -10489,6 +10495,15 @@ packages:
       "@types/geojson": 7946.0.10
     dev: false
 
+  /@types/lodash.set@4.3.8:
+    resolution:
+      {
+        integrity: sha512-WYIWnVO5xkcEKehhZf0Whrf9wj9D1AuaGTpwT/mCEJXKgdC2UWcMpvRqJahKQNhnOjmGEhpUqbYNJ6gUgdGSQw==,
+      }
+    dependencies:
+      "@types/lodash": 4.14.200
+    dev: true
+
   /@types/lodash@4.14.200:
     resolution:
       {
@@ -19607,6 +19622,13 @@ packages:
     resolution:
       {
         integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==,
+      }
+    dev: false
+
+  /lodash.set@4.3.2:
+    resolution:
+      {
+        integrity: sha512-4hNPN5jlm/N/HLMCO43v8BXKq9Z7QdAGc/VGrRD61w8gN9g/6jF9A4L1pbUgBLCffi0w9VsXfTOij5x8iTyFvg==,
       }
     dev: false
 

@@ -32,6 +32,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import set from "lodash.set";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -74,6 +75,7 @@ export class ValuesController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = true,
+    @QueryParams("sorting") sorting: string = "",
   ): Promise<APITypes.GetValuesData | APITypes.GetValuesPenalCodesData> {
     // allow more paths in one request
     let paths =
@@ -82,6 +84,16 @@ export class ValuesController {
     if (path === "all") {
       paths = validValuePaths.filter((v) => v !== "penal_code_group");
     }
+
+    const orderBy = sorting.split(",").reduce((obj, cv) => {
+      const [key, sortOrder] = cv.split(":") as [string, "asc" | "desc"];
+
+      return set(obj, key, sortOrder);
+    }, {});
+
+    console.log({
+      orderBy,
+    });
 
     const values = await Promise.all(
       paths.map(async (path) => {
@@ -114,7 +126,7 @@ export class ValuesController {
                 ...(type === "ADDRESS" ? {} : { _count: true }),
                 value: true,
               },
-              orderBy: { value: { position: "asc" } },
+              orderBy: sorting ? orderBy : { value: { position: "asc" } },
               take: includeAll ? undefined : 35,
               skip: includeAll ? undefined : skip,
             }),
