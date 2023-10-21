@@ -220,7 +220,7 @@ export type WarningApplicable = Prisma.WarningApplicable;
 export type WarningNotApplicable = Prisma.WarningNotApplicable;
 
 export type Violation = Prisma.Violation & {
-  penalCode: PenalCode;
+  penalCode: PenalCode | null;
 };
 
 export type SeizedItem = Prisma.SeizedItem;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Record } from "@snailycad/types";
+import type { Record, Violation } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/editor/editor";
 import { useValues } from "context/ValuesContext";
 import { useTranslations } from "next-intl";
@@ -12,12 +12,27 @@ interface Props {
 export function ViolationsColumn({ violations }: Props) {
   const { penalCode } = useValues();
   const common = useTranslations("Common");
+  const t = useTranslations("Leo");
 
   const getPenalCode = React.useCallback(
-    (penalCodeId: string) => {
-      return penalCode.values.find((p) => p.id === penalCodeId) ?? null;
+    (violation: Violation | { penalCodeId: string | null }) => {
+      if (!violation.penalCodeId) {
+        return { title: t("deletedPenalCode"), description: common("none") };
+      }
+
+      const isViolation = "penalCode" in violation;
+      if (isViolation) {
+        return violation.penalCode;
+      }
+
+      const isString = "penalCodeId" in violation;
+      if (isString) {
+        return penalCode.values.find((p) => p.id === violation.penalCodeId) ?? null;
+      }
+
+      return null;
     },
-    [penalCode.values],
+    [penalCode.values, common, t],
   );
 
   if (violations.length <= 0) {
@@ -29,9 +44,8 @@ export function ViolationsColumn({ violations }: Props) {
       {violations.map((violation, idx) => {
         const comma = idx !== violations.length - 1 ? ", " : "";
         const key = "id" in violation ? violation.id : idx;
+        const penalCode = getPenalCode(violation);
 
-        const penalCode =
-          "penalCode" in violation ? violation.penalCode : getPenalCode(violation.penalCodeId);
         if (!penalCode) return null;
 
         return (

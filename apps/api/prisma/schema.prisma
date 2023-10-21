@@ -709,13 +709,13 @@ model WarningNotApplicable {
 }
 
 model Violation {
-  id               String    @id @default(uuid())
+  id               String     @id @default(uuid())
   fine             Int?
   jailTime         Int?
   bail             Int?
   communityService String?
-  penalCode        PenalCode @relation(fields: [penalCodeId], references: [id])
-  penalCodeId      String
+  penalCode        PenalCode? @relation(fields: [penalCodeId], references: [id], onDelete: SetNull)
+  penalCodeId      String?
   records          Record[]
   counts           Int?
 }
