@@ -191,7 +191,7 @@ export class Calls911Controller {
       data: {
         location: data.location ?? undefined,
         postal: data.postal ?? undefined,
-        description: data.description ?? undefined,
+        description: data.descriptionData ? null : data.description,
         descriptionData: data.descriptionData ?? undefined,
         name: data.name ?? undefined,
         userId: user.id || undefined,
@@ -312,7 +312,7 @@ export class Calls911Controller {
       data: {
         location: data.location,
         postal: data.postal,
-        description: data.description,
+        description: data.descriptionData ? null : data.description,
         name: data.name,
         userId: user.id,
         positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,

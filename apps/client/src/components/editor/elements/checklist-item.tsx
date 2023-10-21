@@ -1,13 +1,13 @@
 import { classNames } from "lib/classNames";
 import { Transforms } from "slate";
-import { ReactEditor, useReadOnly, useSlateStatic, type RenderElementProps } from "slate-react";
+import { ReactEditor, useReadOnly, type RenderElementProps, useSlate } from "slate-react";
 import type { CheckListItemElement as ICheckListItemElement } from "@snailycad/utils/editor";
 import { CheckboxField } from "@snailycad/ui";
 
 type Props = RenderElementProps & { element: ICheckListItemElement };
 
 export function CheckListItemElement({ attributes, children, element }: Props) {
-  const editor = useSlateStatic();
+  const editor = useSlate();
   const readOnly = useReadOnly();
 
   function handleSelectionChange(isSelected: boolean) {

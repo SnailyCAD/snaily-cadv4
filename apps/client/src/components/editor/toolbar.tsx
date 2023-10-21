@@ -1,4 +1,3 @@
-import * as RToolbar from "@radix-ui/react-toolbar";
 import {
   Fonts,
   ListCheck,
@@ -25,12 +24,8 @@ import type { SlateElements, Text } from "@snailycad/utils/editor";
 
 export function Toolbar() {
   return (
-    <RToolbar.Root className="flex gap-1 mb-2 overflow-x-auto border-b border-secondary bg-tertiary p-2">
-      <RToolbar.ToolbarToggleGroup
-        className="flex gap-1"
-        type="multiple"
-        aria-label="Text formatting"
-      >
+    <div className="flex gap-1 mb-2 overflow-x-auto border-b border-secondary bg-tertiary p-2">
+      <div className="flex gap-1" aria-label="Text formatting">
         <MarkButton format="bold" icon={<TypeBold aria-label="bold" />} />
         <MarkButton format="italic" icon={<TypeItalic aria-label="italic" />} />
         <MarkButton format="underline" icon={<TypeUnderline aria-label="underline" />} />
@@ -40,20 +35,16 @@ export function Toolbar() {
         />
         <SelectColorPopover format="background-color" icon={<PaintBucket />} />
         <SelectColorPopover format="text-color" icon={<Fonts />} />
-      </RToolbar.ToolbarToggleGroup>
-      <RToolbar.Separator className="w-[1px] bg-neutral-400 dark:bg-secondary mx-1" />
-      <RToolbar.ToolbarToggleGroup
-        aria-label="Block formatting"
-        className="flex gap-1"
-        type="single"
-      >
+      </div>
+      <span className="w-[1px] bg-neutral-400 dark:bg-secondary mx-1" />
+      <div aria-label="Block formatting" className="flex gap-1">
         <BlockButton format="heading-one" icon={<TypeH1 aria-label="heading-one" />} />
         <BlockButton format="heading-two" icon={<TypeH2 aria-label="heading-two" />} />
         <BlockButton format="block-quote" icon={<Quote aria-label="block-quote" />} />
         <BlockButton format="bulleted-list" icon={<ListUl aria-label="bulleted-list" />} />
         <BlockButton format="check-list-item" icon={<ListCheck aria-label="check-list-item" />} />
-      </RToolbar.ToolbarToggleGroup>
-    </RToolbar.Root>
+      </div>
+    </div>
   );
 }
 
@@ -67,17 +58,15 @@ function BlockButton({ format, icon }: BlockButtonProps) {
   const isActive = isBlockActive(editor, format);
 
   return (
-    <RToolbar.ToolbarToggleItem asChild value={format}>
-      <Button
-        title={format}
-        type="button"
-        variant={isActive ? null : "default"}
-        className={classNames(isActive && "text-white bg-neutral-700")}
-        onPress={() => toggleBlock(editor, format)}
-      >
-        {icon}
-      </Button>
-    </RToolbar.ToolbarToggleItem>
+    <Button
+      title={format}
+      type="button"
+      variant={isActive ? null : "default"}
+      className={classNames(isActive && "text-white bg-neutral-700")}
+      onPress={() => toggleBlock(editor, format)}
+    >
+      {icon}
+    </Button>
   );
 }
 
@@ -92,16 +81,14 @@ function MarkButton({ format, icon, value = true }: MarkButtonProps) {
   const isActive = isMarkActive(editor, format);
 
   return (
-    <RToolbar.ToolbarToggleItem asChild value={format}>
-      <Button
-        title={format}
-        type="button"
-        variant={isActive ? null : "default"}
-        className={classNames(isActive && "text-white bg-neutral-700")}
-        onPress={() => toggleMark(editor, format, value)}
-      >
-        {icon}
-      </Button>
-    </RToolbar.ToolbarToggleItem>
+    <Button
+      title={format}
+      type="button"
+      variant={isActive ? null : "default"}
+      className={classNames(isActive && "text-white bg-neutral-700")}
+      onPress={() => toggleMark(editor, format, value)}
+    >
+      {icon}
+    </Button>
   );
 }

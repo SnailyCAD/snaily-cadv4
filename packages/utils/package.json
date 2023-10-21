@@ -75,11 +75,11 @@
     "test": "pnpm vitest run"
   },
   "devDependencies": {
-    "@types/node": "^20.8.0",
+    "@types/node": "^20.8.7",
     "c8": "^8.0.1",
     "tsup": "6.6.2",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9",
+    "vite": "^4.5.0",
     "vitest": "^0.34.6"
   },
   "tsup": {
@@ -101,10 +101,10 @@
   "dependencies": {
     "@snailycad/types": "^1.75.1",
     "date-fns": "^2.30.0",
-    "slate": "0.94.1",
-    "slate-history": "^0.93.0",
-    "slate-react": "^0.99.0",
+    "slate": "0.100.0",
+    "slate-history": "^0.100.0",
+    "slate-react": "^0.100.0",
     "tslib": "^2.6.2",
-    "undici": "5.25.3"
+    "undici": "5.26.4"
   }
 }

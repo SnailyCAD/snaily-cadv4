@@ -115,6 +115,8 @@ export function Editor(props: EditorProps) {
     editor.onChange();
   }, [props.value]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  console.log({ props });
+
   return (
     <div
       className={classNames(
@@ -127,14 +129,8 @@ export function Editor(props: EditorProps) {
       <Slate
         editor={editor}
         initialValue={props.value as Descendant[]}
-        onChange={(value) => {
-          const isAstChange = editor.operations.some(
-            (operation) => operation.type !== "set_selection",
-          );
-
-          if (isAstChange) {
-            handleChange(value);
-          }
+        onValueChange={(value) => {
+          handleChange(value);
         }}
       >
         {props.isReadonly ? null : <Toolbar />}
