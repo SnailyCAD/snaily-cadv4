@@ -12,6 +12,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import type { DeleteNotesData } from "@snailycad/types/api";
 import { useTemporaryItem } from "hooks/shared/useTemporaryItem";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 interface Props<T extends VehicleSearchResult | NameSearchResult> {
   currentResult: VehicleSearchResult | NameSearchResult;
@@ -94,7 +95,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
           features={{ isWithinCardOrModal: true }}
           data={notes.map((note) => ({
             id: note.id,
-            text: note.text,
+            text: <CallDescription data={{ description: note.text }} />,
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (
               <>

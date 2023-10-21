@@ -13,6 +13,7 @@ import { type Warrant, WarrantStatus } from "@snailycad/types";
 import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { CallDescription } from "components/dispatch/active-calls/CallDescription";
 
 const values = [
   { label: "Inactive", value: WarrantStatus.INACTIVE },
@@ -110,7 +111,7 @@ export function NameSearchWarrantsTab() {
                   officer: warrant.officer
                     ? `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`
                     : "—",
-                  description: warrant.description,
+                  description: <CallDescription data={warrant} />,
                   createdAt: <FullDate>{warrant.createdAt}</FullDate>,
                   status: warrant.status,
                   actions: hasManageWarrantsPermissions ? (
