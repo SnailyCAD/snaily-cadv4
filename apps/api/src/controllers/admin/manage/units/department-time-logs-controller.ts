@@ -10,6 +10,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { _leoProperties, unitProperties } from "utils/leo/includes";
+import { getPrismaModelOrderBy } from "~/utils/order-by";
 
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
 export type AcceptDeclineType = (typeof ACCEPT_DECLINE_TYPES)[number];
@@ -35,6 +36,7 @@ export class AdminManageUnitsController {
     @QueryParams("startDate", String) startDate?: string,
     @QueryParams("endDate", String) endDate?: string,
     @QueryParams("query", String) query?: string,
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetDepartmentTimeLogsUnitsData> {
     const _startDate = startDate ? new Date(startDate) : undefined;
     _startDate?.setHours(0, 0, 0, 0);
@@ -56,9 +58,10 @@ export class AdminManageUnitsController {
       ];
     }
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const officerLogs = await prisma.officerLog.findMany({
       include: { officer: { include: _leoProperties }, emsFdDeputy: { include: unitProperties } },
-      orderBy: { createdAt: "desc" },
+      orderBy: sorting ? orderBy : { createdAt: "desc" },
       where,
     });
 
@@ -132,7 +135,7 @@ export class AdminManageUnitsController {
     }
 
     const units = Array.from(groupedByUnit.values());
-    const sortedByHours = units.sort((a, b) => b.hours - a.hours);
+    const sortedByHours = sorting ? units : units.sort((a, b) => b.hours - a.hours);
     const skipped = includeAll ? sortedByHours : sortedByHours.slice(skip, skip + 35);
     const totalCount = sortedByHours.length;
 
@@ -154,6 +157,7 @@ export class AdminManageUnitsController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("query", String) query = "",
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetDepartmentTimeLogsDepartmentsData> {
     const departmentInclude = {
       department: { include: { value: true } },
@@ -180,12 +184,13 @@ export class AdminManageUnitsController {
         }
       : undefined;
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const officerLogs = await prisma.officerLog.findMany({
       include: {
         officer: { include: departmentInclude },
         emsFdDeputy: { include: departmentInclude },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: sorting ? orderBy : { createdAt: "desc" },
       where,
     });
 
