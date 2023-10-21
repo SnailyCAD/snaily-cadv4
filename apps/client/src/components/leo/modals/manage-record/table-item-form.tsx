@@ -81,6 +81,7 @@ interface HandleValueChangeOptions {
 export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
+  const isDeleted = !penalCode.id;
 
   const minFine = getPenalCodeMinFines(penalCode);
   const maxFine = getPenalCodeMaxFines(penalCode);
@@ -88,11 +89,12 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
-  const jailTimeDisabled = isReadOnly || !penalCode.warningNotApplicable?.prisonTerm.length;
-  const bailDisabled = isReadOnly || !penalCode.warningNotApplicable?.bail.length;
+  const jailTimeDisabled =
+    isDeleted || isReadOnly || !penalCode.warningNotApplicable?.prisonTerm.length;
+  const bailDisabled = isDeleted || isReadOnly || !penalCode.warningNotApplicable?.bail.length;
   const warningNotApplicableDisabled =
-    isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
-  const finesDisabled = isReadOnly || !hasFines(penalCode);
+    isDeleted || isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
+  const finesDisabled = isDeleted || isReadOnly || !hasFines(penalCode);
 
   const { setFieldValue, values, errors } =
     useFormikContext<ReturnType<typeof createInitialRecordValues>>();
@@ -102,7 +104,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
   >;
 
   const current = values.violations.find(
-    (v: SelectValue<PenalCode>) => v.value?.id === penalCode.id,
+    (v: SelectValue<Partial<PenalCode>>) => v.value?.id === penalCode.id,
   );
 
   const currentValue = parseCurrentValue(current?.value ?? null);
@@ -166,7 +168,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             name="fine.counts"
             onChange={(event) => handleValueChange({ fieldName: "counts", event })}
             type="number"
-            disabled={isReadOnly}
+            disabled={isDeleted || isReadOnly}
             className="max-w-[125px] min-w-[125px] py-0.5"
             value={transformField(currentValue.counts.value, "1")}
           />
@@ -199,7 +201,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
               min={minFine}
               max={maxFine}
               type="number"
-              disabled={isReadOnly || !currentValue.fine.enabled}
+              disabled={isDeleted || isReadOnly || !currentValue.fine.enabled}
               className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
               value={
                 !isNaN(parseFloat(String(currentValue.fine.value))) ? currentValue.fine.value : ""
@@ -210,6 +212,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
         <FieldWrapper errorMessage={violationErrors[penalCode.id]?.communityService}>
           <div className="flex items-center">
             <CheckboxField
+              isDisabled={isDeleted || isReadOnly}
               isSelected={currentValue.communityService.enabled}
               className="mb-0"
               onChange={(isSelected) =>
@@ -222,7 +225,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             <Textarea
               name="communityService.value"
               onChange={(event) => handleValueChange({ fieldName: "communityService", event })}
-              disabled={isReadOnly || !currentValue.communityService.enabled}
+              disabled={isDeleted || isReadOnly || !currentValue.communityService.enabled}
               className="max-w-[250px] min-w-[250px] ml-5 py-0.5"
               value={currentValue.communityService.value}
             />
@@ -253,7 +256,10 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
               max={maxJailTime}
               type="number"
               disabled={
-                isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime.enabled
+                isDeleted ||
+                isReadOnly ||
+                warningNotApplicableDisabled ||
+                !currentValue.jailTime.enabled
               }
               className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
               value={!isNaN(Number(currentValue.jailTime.value)) ? currentValue.jailTime.value : ""}
@@ -266,6 +272,7 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
                   onChange={(event) => handleValueChange({ fieldName: "bail", event })}
                   name="bail.value"
                   disabled={
+                    isDeleted ||
                     isReadOnly ||
                     bailDisabled ||
                     warningNotApplicableDisabled ||
@@ -310,7 +317,7 @@ function FieldWrapper({
 /** appends default data to the current penal code */
 export function parseCurrentValue(
   penalCode:
-    | (PenalCode & Partial<Record<PenalCodeValueName, PenalCodeValue<PenalCodeValueName>>>)
+    | (Partial<PenalCode> & Partial<Record<PenalCodeValueName, PenalCodeValue<PenalCodeValueName>>>)
     | null,
 ) {
   return {

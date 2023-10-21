@@ -75,6 +75,7 @@ interface Props {
 }
 
 interface CreateInitialRecordValuesOptions {
+  t: ReturnType<typeof useTranslations<"Leo">>;
   type: RecordType;
   record?: Record | null;
   penalCodes: PenalCode[];
@@ -98,7 +99,7 @@ export function createInitialRecordValues(options: CreateInitialRecordValuesOpti
 
     violations: (options.record?.violations ?? []).map((v) => {
       return {
-        label: v.penalCode.title,
+        label: v.penalCode?.title ?? options.t("deletedPenalCode"),
         value: {
           ...v.penalCode,
           fine: { enabled: Boolean(v.fine), value: v.fine },
@@ -264,6 +265,7 @@ export function ManageRecordModal(props: Props) {
   const validate = handleValidate(schema);
 
   const INITIAL_VALUES = createInitialRecordValues({
+    t,
     type: props.type,
     record: props.record,
     penalCodes,
