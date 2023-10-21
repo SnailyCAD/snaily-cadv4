@@ -37,7 +37,7 @@ export default function TowLogs(props: Props) {
       },
     },
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   function assignedUnit(call: TowCall) {
     return call.assignedUnit ? (

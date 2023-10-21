@@ -36,12 +36,20 @@ export function AllUsersTab({ users, totalCount }: GetManageUsersData) {
     search,
     initialData: users,
     totalCount,
+    sortingSchema: {
+      username: "username",
+      rank: "rank",
+      whitelistStatus: "whitelistStatus",
+    },
     fetchOptions: {
       path: "/admin/manage/users",
       onResponse: (json: GetManageUsersData) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({
+    sorting: asyncTable.sorting,
+    pagination: asyncTable.pagination,
+  });
 
   return (
     <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">

@@ -20,6 +20,7 @@ import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties, unitProperties } from "utils/leo/includes";
 import { recordsInclude } from "~/controllers/leo/search/SearchController";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
+import { getPrismaModelOrderBy } from "~/utils/order-by";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -37,6 +38,7 @@ export class AdminManageCitizensController {
     @QueryParams("userId", String) userId?: string,
     @QueryParams("includeOfficers", Boolean) includeOfficers = false,
     @QueryParams("includeDeputies", Boolean) includeDeputies = false,
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetManageCitizensData> {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
@@ -58,10 +60,12 @@ export class AdminManageCitizensController {
           }
         : undefined;
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const [totalCount, citizens] = await prisma.$transaction([
       prisma.citizen.count({ where }),
       prisma.citizen.findMany({
         where,
+        orderBy,
         include: {
           gender: true,
           ethnicity: true,

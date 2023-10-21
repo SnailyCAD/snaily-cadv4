@@ -37,7 +37,7 @@ export function BlacklistedWordsTab() {
     },
   });
   const [tempWord, wordState] = useTemporaryItem(asyncTable.items);
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   function onRemoveWordClick(word: BlacklistedWord) {
     wordState.setTempId(word.id);

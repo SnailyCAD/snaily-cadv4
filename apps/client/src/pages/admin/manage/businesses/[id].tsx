@@ -62,7 +62,7 @@ export default function ManageBusinesses({ business, businessId }: Props) {
     totalCount: business.totalCount,
     initialData: business.employees,
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempEmployee, employeeState] = useTemporaryItem(asyncTable.items);
 
   const t = useTranslations();
