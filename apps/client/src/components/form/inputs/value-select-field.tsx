@@ -55,7 +55,6 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
       filterFn={props.filterFn}
       placeholder="Select..."
       isClearable={props.isClearable}
-      menuClassName="min-w-[350px] right-0"
       isDisabled={props.isDisabled}
       selectedKey={values[props.fieldName]}
       allowsCustomValue

@@ -51,10 +51,6 @@ export function AddressPostalSelect(props: Props) {
     node?: Node<AddressValue> | null;
     localValue?: string;
   }) {
-    console.log({
-      node: _values.node,
-    });
-
     if (_values.type === "address") {
       setValues({
         ...values,
@@ -121,7 +117,8 @@ export function AddressPostalSelect(props: Props) {
       )}
 
       <AsyncListSearchField<AddressValue>
-        menuClassName="min-w-[350px] right-0"
+        menuClassName="min-w-[350px]"
+        menuPlacement="bottom end"
         isDisabled={props.isDisabled}
         selectedKey={selectedPostal}
         allowsCustomValue
