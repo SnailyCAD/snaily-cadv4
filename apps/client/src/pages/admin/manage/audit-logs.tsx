@@ -38,6 +38,10 @@ export default function ManageAuditLogs({ data }: Props) {
 
   const asyncTable = useAsyncTable({
     search,
+    sortingSchema: {
+      executor: "executor.username",
+      createdAt: "createdAt",
+    },
     fetchOptions: {
       path: "/admin/manage/cad-settings/audit-logs",
       onResponse: (data: GetAuditLogsData) => ({
@@ -49,7 +53,10 @@ export default function ManageAuditLogs({ data }: Props) {
     initialData: data.logs,
   });
 
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({
+    sorting: asyncTable.sorting,
+    pagination: asyncTable.pagination,
+  });
 
   return (
     <AdminLayout

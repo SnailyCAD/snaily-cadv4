@@ -94,6 +94,7 @@ export class CADSettingsController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
     @QueryParams("type", String) type?: string,
+    @QueryParams("sorting") sorting = "",
   ): Promise<any> {
     const OR: Prisma.Enumerable<Prisma.AuditLogWhereInput> = [];
     const _typeWhere: Prisma.Enumerable<Prisma.AuditLogWhereInput> | undefined =
@@ -112,12 +113,13 @@ export class CADSettingsController {
 
     const where = { OR: OR.length > 0 ? OR : undefined };
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const [totalCount, auditLogs] = await prisma.$transaction([
       prisma.auditLog.count({ where }),
       prisma.auditLog.findMany({
         take: 35,
         skip,
-        orderBy: { createdAt: "desc" },
+        orderBy: sorting ? orderBy : { createdAt: "desc" },
         include: { executor: { select: userProperties } },
         where,
       }),
