@@ -156,7 +156,13 @@ export class CADSettingsController {
         registrationCode: data.registrationCode,
         logoId: data.image,
         timeZone: data.timeZone || null,
-        miscCadSettings: { update: { roleplayEnabled: data.roleplayEnabled } },
+        miscCadSettings: {
+          update: {
+            roleplayEnabled: data.roleplayEnabled,
+            authScreenBgImageId: data.authScreenBgImageId || null,
+            authScreenHeaderImageId: data.authScreenHeaderImageId || null,
+          },
+        },
       },
       include: { features: true, miscCadSettings: true, apiToken: true },
     });

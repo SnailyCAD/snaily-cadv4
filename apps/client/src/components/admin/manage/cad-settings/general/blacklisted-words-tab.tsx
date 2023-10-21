@@ -25,6 +25,7 @@ export function BlacklistedWordsTab() {
   const asyncTable = useAsyncTable<BlacklistedWord>({
     search,
     fetchOptions: {
+      refetchOnWindowFocus: false,
       onResponse(data: GetBlacklistedWordsData) {
         return { totalCount: data.totalCount, data: data.blacklistedWords };
       },
