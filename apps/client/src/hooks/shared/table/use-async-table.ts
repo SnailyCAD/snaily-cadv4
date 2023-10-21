@@ -154,8 +154,6 @@ export function useAsyncTable<T>(options: Options<T>) {
     ...list,
     sorting: sortingState,
     noItemsAvailable: !isLoading && !error && list.items.length <= 0,
-    /** @deprecated */
-    // eslint-disable-next-line deprecation/deprecation
     isInitialLoading: isLoading,
     filters,
     setFilters,
