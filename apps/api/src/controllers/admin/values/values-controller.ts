@@ -32,7 +32,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { createSearchWhereObject } from "lib/values/create-where-object";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
-import set from "lodash.set";
+import { getPrismaModelOrderBy } from "~/utils/order-by";
 
 export const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -85,15 +85,7 @@ export class ValuesController {
       paths = validValuePaths.filter((v) => v !== "penal_code_group");
     }
 
-    const orderBy = sorting.split(",").reduce((obj, cv) => {
-      const [key, sortOrder] = cv.split(":") as [string, "asc" | "desc"];
-
-      return set(obj, key, sortOrder);
-    }, {});
-
-    console.log({
-      orderBy,
-    });
+    const orderBy = getPrismaModelOrderBy(sorting);
 
     const values = await Promise.all(
       paths.map(async (path) => {
@@ -117,7 +109,7 @@ export class ValuesController {
         if (data) {
           const [totalCount, values] = await prisma.$transaction([
             // @ts-expect-error ignore
-            prisma[data.name].count({ orderBy: { value: { position: "asc" } }, where }),
+            prisma[data.name].count({ where }),
             // @ts-expect-error ignore
             prisma[data.name].findMany({
               where,
@@ -143,13 +135,13 @@ export class ValuesController {
           const [totalCount, penalCodes] = await prisma.$transaction([
             prisma.penalCode.count({
               where,
-              orderBy: { title: "asc" },
+              orderBy: sorting ? orderBy : { title: "asc" },
             }),
             prisma.penalCode.findMany({
               take: includeAll ? undefined : 35,
               skip: includeAll ? undefined : skip,
               where,
-              orderBy: { title: "asc" },
+              orderBy: sorting ? orderBy : { title: "asc" },
               include: {
                 warningApplicable: true,
                 warningNotApplicable: true,
@@ -171,7 +163,7 @@ export class ValuesController {
             where,
             take: includeAll ? undefined : 35,
             skip: includeAll ? undefined : skip,
-            orderBy: { position: "asc" },
+            orderBy: sorting ? orderBy : { position: "asc" },
             include: {
               _count: true,
               ...(type === ValueType.OFFICER_RANK

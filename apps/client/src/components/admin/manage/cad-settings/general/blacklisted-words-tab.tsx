@@ -24,6 +24,10 @@ export function BlacklistedWordsTab() {
 
   const asyncTable = useAsyncTable<BlacklistedWord>({
     search,
+    sortingSchema: {
+      createdAt: "createdAt",
+      word: "word",
+    },
     fetchOptions: {
       refetchOnWindowFocus: false,
       onResponse(data: GetBlacklistedWordsData) {
@@ -96,7 +100,6 @@ export function BlacklistedWordsTab() {
               { header: common("createdAt"), accessorKey: "createdAt" },
               { header: common("actions"), accessorKey: "actions" },
             ]}
-            isLoading={asyncTable.isInitialLoading}
             tableState={tableState}
           />
 

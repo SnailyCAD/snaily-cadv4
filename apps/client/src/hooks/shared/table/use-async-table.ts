@@ -45,7 +45,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     pageIndex: options.fetchOptions.pageIndex ?? 0,
   });
 
-  const { isInitialLoading, error, refetch } = useQuery({
+  const { isLoading, error, refetch } = useQuery({
     retry: false,
     enabled: !options.disabled,
     initialData: options.initialData ?? undefined,
@@ -153,8 +153,10 @@ export function useAsyncTable<T>(options: Options<T>) {
   return {
     ...list,
     sorting: sortingState,
-    noItemsAvailable: !isInitialLoading && !error && list.items.length <= 0,
-    isInitialLoading,
+    noItemsAvailable: !isLoading && !error && list.items.length <= 0,
+    /** @deprecated */
+    // eslint-disable-next-line deprecation/deprecation
+    isInitialLoading: isLoading,
     filters,
     setFilters,
     isLoading: loadingState === "loading",
