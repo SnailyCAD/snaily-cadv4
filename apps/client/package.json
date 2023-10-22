@@ -94,7 +94,7 @@
     "use-intl": "^2.21.0",
     "uuid": "^9.0.1",
     "zod": "3.22.4",
-    "zustand": "^4.4.3"
+    "zustand": "^4.4.4"
   },
   "devDependencies": {
     "dotenv": "^16.3.1",
