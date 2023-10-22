@@ -22,6 +22,12 @@ export function DepartmentTimeLogsTab() {
   const asyncTable = useAsyncTable<DepartmentReturnType>({
     search,
     totalCount: 0,
+    sortingSchema: {
+      firstSeen: "firstSeen",
+      lastSeen: "lastSeen",
+      department: "department",
+      hours: "hours",
+    },
     fetchOptions: {
       path: `/admin/manage/units/department-time-logs/${groupedBy}`,
       onResponse: (
@@ -35,7 +41,10 @@ export function DepartmentTimeLogsTab() {
 
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({
+    sorting: asyncTable.sorting,
+    pagination: asyncTable.pagination,
+  });
   const { number } = useFormatter();
 
   return (
@@ -84,7 +93,6 @@ export function DepartmentTimeLogsTab() {
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
-          isLoading={asyncTable.isInitialLoading}
           tableState={tableState}
           data={asyncTable.items.map((item) => {
             const hours = item.hours < 1 ? "Less than 1" : number(item.hours);

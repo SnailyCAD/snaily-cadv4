@@ -46,7 +46,7 @@ export default function MyOfficersLogs({ reports: data }: Props) {
     totalCount: data.totalCount,
     initialData: data.reports,
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   return (
     <Layout permissions={{ permissions: [Permissions.Leo] }} className="dark:text-white">

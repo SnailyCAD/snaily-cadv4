@@ -46,7 +46,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
     initialData: data.vehicles,
     totalCount: data.totalCount,
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempVehicle, vehicleState] = useTemporaryItem(asyncTable.items);
 
   function handleCheckoutClick(item: ImpoundedVehicle) {

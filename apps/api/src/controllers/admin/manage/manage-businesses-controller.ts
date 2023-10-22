@@ -14,6 +14,7 @@ import { UPDATE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { EmployeeAsEnum } from "@snailycad/types";
 import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { getPrismaModelOrderBy } from "~/utils/order-by";
 
 const businessInclude = {
   user: {
@@ -40,6 +41,7 @@ export class AdminManageBusinessesController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("query", String) query = "",
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetManageBusinessesData> {
     const where = {} as Prisma.BusinessWhereInput;
 
@@ -51,6 +53,7 @@ export class AdminManageBusinessesController {
       where.status = WhitelistStatus.PENDING;
     }
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const [totalCount, businesses] = await prisma.$transaction([
       prisma.business.count({ where }),
       prisma.business.findMany({
@@ -58,6 +61,7 @@ export class AdminManageBusinessesController {
         skip: includeAll ? undefined : skip,
         where,
         include: businessInclude,
+        orderBy,
       }),
     ]);
 

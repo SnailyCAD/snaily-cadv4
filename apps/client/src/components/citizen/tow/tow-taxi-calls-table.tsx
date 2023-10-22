@@ -42,7 +42,7 @@ export function TowTaxiCallsTable({ initialData, type, noCallsText }: Props) {
       },
     },
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempCall, callState] = useTemporaryItem<string, TowCall | TaxiCall>(asyncTable.items);
 
   const modalState = useModal();

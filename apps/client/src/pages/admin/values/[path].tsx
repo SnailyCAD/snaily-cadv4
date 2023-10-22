@@ -87,6 +87,12 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const [search, setSearch] = React.useState("");
   const asyncTable = useAsyncTable({
     search,
+    sortingSchema: {
+      value: "value.value",
+      gameHash: "hash",
+      isDisabled: "value.isDisabled",
+      createdAt: "value.createdAt",
+    },
     fetchOptions: {
       onResponse(json: GetValuesData) {
         const [forType] = json;
@@ -112,6 +118,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
   const tableState = useTableState({
+    sorting: asyncTable.sorting,
     pagination: asyncTable.pagination,
     dragDrop: { onListChange: setList },
   });
