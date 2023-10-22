@@ -23,8 +23,10 @@ export function DepartmentTimeLogsTab() {
     search,
     totalCount: 0,
     sortingSchema: {
-      firstSeen: "startedAt",
-      lastSeen: "endedAt",
+      firstSeen: "firstSeen",
+      lastSeen: "lastSeen",
+      department: "department",
+      hours: "hours",
     },
     fetchOptions: {
       path: `/admin/manage/units/department-time-logs/${groupedBy}`,

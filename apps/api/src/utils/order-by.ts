@@ -6,3 +6,11 @@ export function getPrismaModelOrderBy(sorting: string) {
     return set(obj, key, sortOrder);
   }, {});
 }
+
+export function getFirstOrderBy(sorting: string) {
+  const [first] = sorting.split(",");
+  if (!first) return null;
+
+  const [key, sortOrder] = first.split(":") as [string, "asc" | "desc"];
+  return [key, sortOrder] as const;
+}
