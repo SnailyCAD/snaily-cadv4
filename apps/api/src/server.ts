@@ -62,7 +62,10 @@ if (process.env.NODE_ENV === "development") {
     cookieParser(),
     compress(),
     json({ limit: "500kb" }),
-    cors({ origin: parsedCORSOrigin === "*" ? "*" : allowedCorsOrigins, credentials: true }),
+    cors({
+      origin: parsedCORSOrigin === "*" ? "*" : allowedCorsOrigins,
+      credentials: parsedCORSOrigin === "*" ? undefined : true,
+    }),
     Sentry.Handlers.requestHandler({
       request: true,
       serverName: true,
