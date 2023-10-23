@@ -5,7 +5,12 @@ import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-par
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { EMS_FD_INCIDENT_SCHEMA } from "@snailycad/schemas";
-import { type Officer, type MiscCadSettings, type CombinedLeoUnit } from "@prisma/client";
+import {
+  type Officer,
+  type MiscCadSettings,
+  type CombinedLeoUnit,
+  DiscordWebhookType,
+} from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -18,6 +23,11 @@ import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-uni
 import { ActiveDeputy } from "middlewares/active-deputy";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { _leoProperties, assignedUnitsInclude, unitProperties } from "utils/leo/includes";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { User } from "@snailycad/types";
+import type { APIEmbed } from "discord-api-types/v10";
+import { getTranslator } from "~/utils/get-translator";
+import { slateDataToString } from "@snailycad/utils/editor";
 
 export const incidentInclude = {
   creator: { include: unitProperties },
@@ -116,6 +126,7 @@ export class IncidentController {
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
     @Context("sessionUserId") sessionUserId: string,
+    @Context("user") user: User,
   ): Promise<APITypes.PostIncidentsData<"ems-fd">> {
     const data = validateSchema(EMS_FD_INCIDENT_SCHEMA, body);
     const officer = getUserOfficerFromActiveOfficer({
@@ -169,6 +180,13 @@ export class IncidentController {
       this.socket.emitCreateActiveIncident(corrected);
       await this.socket.emitUpdateOfficerStatus();
     }
+
+    const webhookData = await createIncidentWebhookData(corrected, user.locale ?? "en");
+    await sendDiscordWebhook({
+      data: webhookData,
+      type: DiscordWebhookType.EMS_FD_INCIDENT_CREATED,
+      extraMessageData: { userDiscordId: user.discordId },
+    });
 
     return corrected;
   }
@@ -380,4 +398,54 @@ export class IncidentController {
 
     return true;
   }
+}
+
+export async function createIncidentWebhookData(
+  incident: APITypes.PostIncidentsData<"ems-fd" | "leo">,
+  locale: string,
+) {
+  const t = await getTranslator({
+    type: "webhooks",
+    namespace: "Incidents",
+    locale,
+  });
+
+  const isEmsFd = "fireType" in incident;
+  const title = isEmsFd ? t("createdEms") : t("createdLeo");
+
+  return {
+    embeds: [
+      {
+        title,
+        description: slateDataToString(incident.descriptionData) || incident.description || "---",
+        fields: [
+          {
+            inline: true,
+            name: t("fireArmsInvolved"),
+            value: incident.firearmsInvolved ? t("yes") : t("no"),
+          },
+          {
+            inline: true,
+            name: t("injuriesOrFatalities"),
+            value: incident.injuriesOrFatalities ? t("yes") : t("no"),
+          },
+          {
+            inline: true,
+            name: t("arrestsMade"),
+            value: incident.arrestsMade ? t("yes") : t("no"),
+          },
+          {
+            name: t("situationCode"),
+            value: incident.situationCode?.value.value ?? t("none"),
+            inline: true,
+          },
+          {
+            name: t("postal"),
+            value: incident.postal ?? t("none"),
+            inline: true,
+          },
+        ],
+      },
+    ],
+  } as { embeds: APIEmbed[] };
 }

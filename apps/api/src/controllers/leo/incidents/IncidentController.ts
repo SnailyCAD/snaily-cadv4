@@ -7,7 +7,12 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { leoProperties, _leoProperties, assignedUnitsInclude } from "utils/leo/includes";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/active-officer";
-import type { Officer, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
+import {
+  type Officer,
+  type MiscCadSettings,
+  type CombinedLeoUnit,
+  DiscordWebhookType,
+} from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { Socket } from "services/socket-service";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
@@ -17,8 +22,10 @@ import { getUserOfficerFromActiveOfficer, getInactivityFilter } from "lib/leo/ut
 import type * as APITypes from "@snailycad/types/api";
 import { getNextIncidentId } from "lib/incidents/get-next-incident-id";
 import { assignUnitsInvolvedToIncident } from "lib/incidents/handle-involved-units";
-import { type cad } from "@snailycad/types";
+import { User, type cad } from "@snailycad/types";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { createIncidentWebhookData } from "~/controllers/ems-fd/incidents/ems-fd-incidents-controller";
+import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -112,6 +119,7 @@ export class IncidentController {
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
     @Context("sessionUserId") sessionUserId: string,
+    @Context("user") user: User,
   ): Promise<APITypes.PostIncidentsData<"leo">> {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const officer = getUserOfficerFromActiveOfficer({
@@ -163,6 +171,13 @@ export class IncidentController {
       this.socket.emitCreateActiveIncident(corrected);
       await this.socket.emitUpdateOfficerStatus();
     }
+
+    const webhookData = await createIncidentWebhookData(corrected, user.locale ?? "en");
+    await sendDiscordWebhook({
+      data: webhookData,
+      type: DiscordWebhookType.LEO_INCIDENT_CREATED,
+      extraMessageData: { userDiscordId: user.discordId },
+    });
 
     return corrected;
   }
