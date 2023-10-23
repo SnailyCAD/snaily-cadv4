@@ -74,7 +74,9 @@
     "FELONY": "Felony",
     "warningApplicable": "Warning Applicable",
     "warningNotApplicable": "Warning Not Applicable",
-    "isPrimary": "Is Primary"
+    "isPrimary": "Is Primary",
+    "isDispositionDescription": "A disposition code can be used when a call is closed. This will be used to determine the outcome of the call.",
+    "isDisposition": "Is Disposition"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Manage Penal Code Groups",

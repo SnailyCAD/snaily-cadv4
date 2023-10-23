@@ -111,6 +111,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     departments: call?.departments?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     divisions: call?.divisions?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     situationCode: call?.situationCodeId ?? null,
+    dispositionCodeId: call?.dispositionCodeId ?? null,
     type: call?.typeId ?? null,
     notifyAssignedUnits: true,
     openCallModalAfterCreation: true,
@@ -208,7 +209,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 ) : null}
               </FormRow>
 
-              <FormRow>
+              <FormRow useFlex>
                 <ValueSelectField
                   isOptional
                   isDisabled={isDisabled}
@@ -218,6 +219,19 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   values={codes10.values}
                   valueType={ValueType.CODES_10}
                   filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
+                  className="w-full"
+                />
+
+                <ValueSelectField
+                  isOptional
+                  isDisabled={isDisabled}
+                  isClearable
+                  label={t("dispositionCode")}
+                  fieldName="dispositionCode"
+                  values={callType.values}
+                  valueType={ValueType.CALL_TYPE}
+                  filterFn={(value) => value.isDisposition}
+                  className="w-full"
                 />
 
                 <ValueSelectField
@@ -228,8 +242,21 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   fieldName="type"
                   values={callType.values}
                   valueType={ValueType.CALL_TYPE}
+                  filterFn={(value) => !value.isDisposition}
+                  className="w-full"
                 />
               </FormRow>
+
+              <ValueSelectField
+                isOptional
+                isDisabled={isDisabled}
+                isClearable
+                label={t("situationCode")}
+                fieldName="situationCode"
+                values={codes10.values}
+                valueType={ValueType.CODES_10}
+                filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
+              />
 
               <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor

@@ -44,6 +44,8 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
   }, [getDefaultSearchValue]);
 
   function handleSuggestionPress(node?: Node<AnyValue> | null) {
+    if (node) setSearch(node?.textValue);
+
     const fieldData = { [props.fieldName]: node?.key ?? null };
     setValues({ ...values, ...fieldData });
     props.onSelectionChange?.((node?.value as T | null) ?? null);
