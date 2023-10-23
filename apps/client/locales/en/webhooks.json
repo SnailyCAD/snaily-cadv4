@@ -89,5 +89,16 @@
     "userChangeTitle": "User Whitelist Status Change",
     "departmentChangeDescription": "Unit: {unit}'s whitelist status has been changed to {status}.",
     "departmentChangeTitle": "Unit Department Whitelist Status Change"
+  },
+  "Incidents": {
+    "createdEms": "EMS/FD Incident Created",
+    "createdLeo": "LEO Incident Created",
+    "fireArmsIncluded": "Firearm(s) included",
+    "injuriesOrFatalities": "Injuries or fatalities",
+    "arrestsMade": "Arrest(s) made",
+    "situationCode": "Situation Code",
+    "postal": "Postal",
+    "yes": "Yes",
+    "no": "No"
   }
 }
