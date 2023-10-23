@@ -189,6 +189,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           priority: v.priority ?? common("none"),
+          isDisposition: common(yesOrNoText(v.isDisposition)),
         };
       }
       case ValueType.DRIVERSLICENSE_CATEGORY: {
@@ -275,7 +276,10 @@ export function useTableHeadersOfType(type: ValueType): ColumnDef<{ id: string }
       ];
     }
     case ValueType.CALL_TYPE: {
-      return [{ header: t("priority"), accessorKey: "priority" }];
+      return [
+        { header: t("priority"), accessorKey: "priority" },
+        { header: t("isDisposition"), accessorKey: "isDisposition" },
+      ];
     }
     case ValueType.DRIVERSLICENSE_CATEGORY: {
       return [
