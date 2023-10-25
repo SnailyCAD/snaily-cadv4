@@ -5,6 +5,7 @@ import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { Modal } from "./Modal";
 import "cropperjs/dist/cropper.css";
+import { classNames } from "lib/classNames";
 
 interface Props {
   onSuccess(url: Blob, filename: string): void;
@@ -20,7 +21,6 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
 
   const [src, setSrc] = React.useState<string | null>(null);
   const [cropper, setCropper] = React.useState<CropperJS>();
-  const width = !src ? 450 : options?.width ?? 900;
   const height = options?.height ?? 400;
   const aspectRatio = options?.aspectRatio ?? 1;
 
@@ -47,7 +47,12 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
   }
 
   return (
-    <Modal modalStyles={{ width }} title={common("cropImage")} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      className={classNames(!src ? "min-w-[450px]" : "min-w-[900px]")}
+      title={common("cropImage")}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       {src ? (
         <Cropper
           style={{ height, width: "100%" }}

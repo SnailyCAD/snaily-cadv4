@@ -5,7 +5,6 @@ import { useModal } from "state/modalState";
 import { classNames } from "lib/classNames";
 
 export interface ModalProps {
-  modalStyles?: React.CSSProperties;
   title: string;
   children: React.ReactNode;
   dialogClassName?: string;
@@ -16,7 +15,6 @@ export interface ModalProps {
 }
 
 export function Modal({
-  modalStyles = {},
   title,
   children,
   isOpen,
@@ -85,11 +83,11 @@ export function Modal({
                       borderRadius: 0,
                       width: "100vw",
                     }
-                  : modalStyles
+                  : {}
               }
               className={classNames(
+                "max-w-[100%] inline-block text-left transition-all transform bg-white border border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
                 isFullscreen ? "p-2" : "align-middle p-4 px-6 my-8",
-                "inline-block text-left transition-all transform bg-white border border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
                 isAlert ? "z-[998]" : "z-30",
                 className,
               )}
