@@ -229,15 +229,14 @@
 
           <thead>
             <tr>
-              <th colspan="4"><%= translator("notes") %></th>
+              <th colspan="4"><%= translator("description") %></th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
               <td colspan="4">
-                <%= slateDataToString(record.descriptionData) || record.notes || translator("none")
-                %>
+                <%= slateDataToString(record.descriptionData) || record.notes || "-" %>
               </td>
             </tr>
           </tbody>
@@ -251,8 +250,7 @@
           <tbody>
             <tr>
               <td colspan="4">
-                <%= record.violations.map((violation) =>
-                translator(violation.penalCode.title)).join(", ") %>
+                <%= record.violations.map((violation) => violation.penalCode.title).join(", ") %>
               </td>
             </tr>
           </tbody>

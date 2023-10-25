@@ -83,7 +83,8 @@
     "citizenRecord": "Citizen Records",
     "exportInformation": "Export Information",
     "dateOfExport": "Date of export",
-    "records": "Records"
+    "records": "Records",
+    "type": "Type"
   },
   "WhitelistStatusChange": {
     "accepted": "accepted",
