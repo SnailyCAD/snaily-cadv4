@@ -22,7 +22,6 @@ import {
   WhitelistStatus,
   DiscordWebhookType,
   type CombinedLeoUnit,
-  type Officer,
   type User,
   type Business,
   PaymentStatus,
@@ -37,7 +36,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/socket-service";
 import { assignUnitsToWarrant } from "~/lib/leo/records/assign-units-to-warrant";
-import type { MiscCadSettings, cad } from "@snailycad/types";
+import type { MiscCadSettings, Officer, cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "~/lib/leo/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
@@ -275,6 +274,7 @@ export class RecordsController {
   }
 
   @Post("/pdf/citizen/:id")
+  @UseBefore(ActiveOfficer)
   @Description("Export an entire citizen record to a PDF file.")
   @UsePermissions({
     permissions: [Permissions.Leo],
@@ -285,24 +285,19 @@ export class RecordsController {
     @Context("cad")
     cad: cad & { miscCadSettings: MiscCadSettings; features: Record<Feature, boolean> },
     @Context("user") user: User,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ) {
     const isEnabled = isFeatureEnabled({
       feature: Feature.CITIZEN_RECORD_APPROVAL,
       features: cad.features,
       defaultReturn: false,
     });
-    // const record = await prisma.record.findUnique({
-    //   where: { id: citizenId },
-    //   include: { ...recordsInclude(isEnabled).include, citizen: { include: citizenInclude } },
-    // });
 
-    // if (!record) {
-    //   throw new NotFound("recordNotFound");
-    // }
-
-    // if (!record.citizen) {
-    //   throw new BadRequest("recordNotAssociatedWithCitizen");
-    // }
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: user.id,
+      activeOfficer,
+      allowDispatch: true,
+    });
 
     const citizen = await prisma.citizen.findUnique({
       where: { id: citizenId },
@@ -327,7 +322,7 @@ export class RecordsController {
       namespace: "Records",
     });
 
-    function formatOfficer(officer: Officer & { citizen: Citizen }) {
+    function formatOfficer(officer: Officer) {
       const unitName = officer ? `${officer.citizen.name} ${officer.citizen.surname}` : "";
       const officerCallsign = officer
         ? generateCallsign(officer, cad.miscCadSettings.callsignTemplate)
@@ -343,7 +338,7 @@ export class RecordsController {
       sumOf,
       age: calculateAge(citizen.dateOfBirth),
       citizen,
-      officer: "john doe", // todo formatOfficer,
+      officer: officer ? formatOfficer(officer as Officer) : "Dispatch",
       dateOfExport: Date.now(),
       records,
       translator,
