@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
@@ -13,10 +14,12 @@ import { useRouter } from "next/router";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import Link from "next/link";
-import { FullDate, Status, buttonVariants } from "@snailycad/ui";
+import { Button, FullDate, Loader, Status, buttonVariants } from "@snailycad/ui";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 import { RecordsStatsColumn } from "components/leo/records-stats-column";
+import { downloadFile } from "components/leo/modals/NameSearchModal/tabs/records-tab";
+import { getAPIUrl } from "@snailycad/utils/api-url";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
@@ -29,6 +32,7 @@ export default function CitizenLogs(props: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
+  const [exportState, setExportState] = React.useState<"idle" | "loading">("idle");
 
   const TYPE_LABELS = {
     [RecordType.TICKET]: t("ticket"),
@@ -49,6 +53,27 @@ export default function CitizenLogs(props: Props) {
   });
   const tableState = useTableState({ pagination: asyncTable.pagination });
 
+  async function handleExportClick() {
+    setExportState("loading");
+
+    // using regular fetch here because axios doesn't support blob responses
+    const apiUrl = getAPIUrl();
+    const response = await fetch(`${apiUrl}/records/pdf/citizen/${query.citizenId}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        accept: "application/pdf",
+      },
+    });
+
+    const blob = new Blob([await response.blob()], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+
+    downloadFile(url, `citizen-criminal-record-${query.citizenId}.pdf`);
+
+    setExportState("idle");
+  }
+
   return (
     <Layout
       permissions={{
@@ -59,12 +84,23 @@ export default function CitizenLogs(props: Props) {
       <div className="flex items-center justify-between mt-5">
         <Title>{t("citizenLogs")}</Title>
 
-        <Link
-          className={buttonVariants({ className: "flex items-center gap-2" })}
-          href="/officer/supervisor/citizen-logs"
-        >
-          <ArrowLeft /> {t("viewAllRecordLogs")}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Button
+            className="flex items-center gap-2"
+            isDisabled={exportState === "loading"}
+            onPress={handleExportClick}
+          >
+            {exportState === "loading" ? <Loader /> : null}
+            {t("exportCriminalRecord")}
+          </Button>
+
+          <Link
+            className={buttonVariants({ className: "flex items-center gap-2" })}
+            href="/officer/supervisor/citizen-logs"
+          >
+            <ArrowLeft /> {t("viewAllRecordLogs")}
+          </Link>
+        </div>
       </div>
 
       <Table

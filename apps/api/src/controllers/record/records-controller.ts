@@ -22,7 +22,6 @@ import {
   WhitelistStatus,
   DiscordWebhookType,
   type CombinedLeoUnit,
-  type Officer,
   type User,
   type Business,
   PaymentStatus,
@@ -37,7 +36,7 @@ import type * as APITypes from "@snailycad/types/api";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { Socket } from "services/socket-service";
 import { assignUnitsToWarrant } from "~/lib/leo/records/assign-units-to-warrant";
-import type { MiscCadSettings, cad } from "@snailycad/types";
+import type { MiscCadSettings, Officer, cad } from "@snailycad/types";
 import { userProperties } from "lib/auth/getSessionUser";
 import { upsertRecord } from "~/lib/leo/records/upsert-record";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
@@ -247,6 +246,101 @@ export class RecordsController {
       age,
       record,
       formattedDescription,
+      translator,
+    });
+
+    try {
+      const args = process.env.IS_USING_ROOT_USER === "true" ? ["--no-sandbox"] : [];
+      const browser = await puppeteer.launch({ args, headless: "new" });
+      const page = await browser.newPage();
+
+      page.setContent(template, { waitUntil: "domcontentloaded" });
+
+      await page.emulateMediaType("screen");
+
+      const pdf = await page.pdf({
+        format: "letter",
+        printBackground: true,
+        scale: 0.8,
+        preferCSSPageSize: true,
+      });
+
+      return pdf;
+    } catch (err) {
+      console.log(err);
+      captureException(err);
+      return null;
+    }
+  }
+
+  @Post("/pdf/citizen/:id")
+  @UseBefore(ActiveOfficer)
+  @Description("Export an entire citizen record to a PDF file.")
+  @UsePermissions({
+    permissions: [Permissions.Leo],
+  })
+  @Header("Content-Type", "application/pdf")
+  async exportCitizenCriminalRecordToPDF(
+    @PathParams("id") citizenId: string,
+    @Context("cad")
+    cad: cad & { miscCadSettings: MiscCadSettings; features: Record<Feature, boolean> },
+    @Context("user") user: User,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ) {
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const officer = getUserOfficerFromActiveOfficer({
+      userId: user.id,
+      activeOfficer,
+      allowDispatch: true,
+    });
+
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: citizenId },
+      include: citizenInclude,
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const records = await prisma.record.findMany({
+      where: { citizenId: citizen.id },
+      include: recordsInclude(isEnabled).include,
+    });
+
+    const root = __dirname;
+    const templatePath = resolve(root, "../../templates/citizen-criminal-record.ejs");
+
+    const translator = await getTranslator({
+      type: "webhooks",
+      locale: user.locale,
+      namespace: "Records",
+    });
+
+    function formatOfficer(officer: Officer) {
+      const unitName = officer ? `${officer.citizen.name} ${officer.citizen.surname}` : "";
+      const officerCallsign = officer
+        ? generateCallsign(officer, cad.miscCadSettings.callsignTemplate)
+        : "";
+
+      return `${officerCallsign} ${unitName}`;
+    }
+
+    const template = await ejs.renderFile(templatePath, {
+      formatDate,
+      formatOfficer,
+      slateDataToString,
+      sumOf,
+      age: calculateAge(citizen.dateOfBirth),
+      citizen,
+      officer: officer ? formatOfficer(officer as Officer) : "Dispatch",
+      dateOfExport: Date.now(),
+      records,
       translator,
     });
 
@@ -597,4 +691,19 @@ function formatDate(date: string | Date | number, options?: { onlyDate: boolean 
   const dateObj = new Date(date);
   const hmsString = options?.onlyDate ? "" : " HH:mm:ss";
   return format(dateObj, `yyyy-MM-dd${hmsString}`);
+}
+
+function sumOf(violations: Violation[], type: "fine" | "jailTime" | "bail") {
+  let sum = 0;
+
+  for (const violation of violations) {
+    const counts = violation.counts || 1;
+    const fine = violation[type];
+
+    if (fine) {
+      sum += fine * counts;
+    }
+  }
+
+  return Intl.NumberFormat("en-BE").format(sum);
 }

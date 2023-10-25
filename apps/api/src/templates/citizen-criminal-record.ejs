@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criminal Record (Full)</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap");
+
+      *,
+      *::after,
+      *::before {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #16151a;
+        --secondary: #35343c;
+        --gray: #9ca3af;
+      }
+
+      body {
+        font-family:
+          "Assistant",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+        color: #f4f4f4;
+        background-color: var(--primary);
+      }
+
+      h1,
+      h2,
+      h3 {
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: bolder;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .container__section:not(:first-of-type) {
+        margin-top: 2rem;
+      }
+
+      .container__section__description {
+        max-width: 650px;
+        font-weight: 500;
+      }
+
+      .container__section__table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .container__section__table th,
+      .container__section__table td {
+        padding: 0.5rem;
+        text-align: left;
+        border: 1.5px solid var(--secondary);
+        text-transform: capitalize;
+      }
+
+      .container__section__table th {
+        color: var(--gray);
+        background-color: var(--secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      .container__section__table__violation {
+        margin-top: 0.5rem;
+      }
+
+      .container__section__table__record {
+        margin-top: 1.5rem;
+      }
+
+      .container {
+        padding: 3em;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body id="element-to-copy">
+    <div class="container">
+      <h1 class="container__title"><%= translator("citizenRecord") %></h1>
+
+      <section class="container__section">
+        <h2 class="container__section__title"><%= translator("exportInformation") %></h2>
+
+        <table class="container__section__table">
+          <thead>
+            <tr>
+              <th><%= translator("officer") %></th>
+              <th><%= translator("dateOfExport") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><%= officer %></td>
+              <td><%= formatDate(dateOfExport) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="container__section">
+        <h2 class="container__section__title"><%= translator("citizenInformation") %></h2>
+
+        <table class="container__section__table">
+          <thead>
+            <tr>
+              <th><%= translator("firstName") %></th>
+              <th><%= translator("surname") %></th>
+              <th><%= translator("dateOfBirth") %></th>
+              <th><%= translator("age") %></th>
+              <th colspan="2"><%= translator("socialSecurityNumber") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><%= citizen.name %></td>
+              <td><%= citizen.surname %></td>
+              <td><%= formatDate(citizen.dateOfBirth, { onlyDate: true }) %></td>
+              <td><%= age %></td>
+              <td colspan="2"><%= citizen.socialSecurityNumber %></td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th><%= translator("gender") %></th>
+              <th><%= translator("ethnicity") %></th>
+              <th><%= translator("hairColor") %></th>
+              <th><%= translator("eyeColor") %></th>
+              <th><%= translator("weight") %></th>
+              <th><%= translator("height") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><%= citizen.gender?.value %></td>
+              <td><%= citizen.ethnicity.value %></td>
+              <td><%= citizen.hairColor %></td>
+              <td><%= citizen.eyeColor %></td>
+              <td><%= citizen.weight %></td>
+              <td><%= citizen.height %></td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th colspan="2"><%= translator("address") %></th>
+              <th><%= translator("postal") %></th>
+              <th><%= translator("phoneNumber") %></th>
+              <th colspan="2"><%= translator("description") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td colspan="2"><%= citizen.address || "-" %></td>
+              <td><%= citizen.postal || "-" %></td>
+              <td><%= citizen.phoneNumber || "-" %></td>
+              <td colspan="2"><%= citizen.occupation || "-" %></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="container__section">
+        <h2 class="container__section__title"><%= translator("records") %></h2>
+
+        <% records.map((record) => { %>
+
+        <table class="container__section__table container__section__table__record">
+          <thead>
+            <tr>
+              <th><%= translator("type") %></th>
+              <th colspan="2"><%= translator("caseNumber") %></th>
+              <th><%= translator("createdAt") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><%= translator(record.type) %></td>
+              <td colspan="2"><%= record.caseNumber %></td>
+              <td><%= formatDate(record.createdAt, { onlyDate: true }) %></td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th colspan="2"><%= translator("officer") %></th>
+              <th><%= translator("postal") %></th>
+              <th><%= translator("status") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td colspan="2"><%= formatOfficer(record.officer) %></td>
+              <td><%= record.postal %></td>
+              <td><%= record.status %></td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th colspan="4"><%= translator("description") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <%= slateDataToString(record.descriptionData) || record.notes || "-" %>
+              </td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th colspan="4"><%= translator("violations") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <%= record.violations.map((violation) => violation.penalCode.title).join(", ") %>
+              </td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <th><%= translator("fines") %></th>
+              <th><%= translator("jailTime") %></th>
+              <th><%= translator("bail") %></th>
+              <th><%= translator("communityService") %></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><%= sumOf(record.violations, "fine") || "-" %></td>
+              <td><%= sumOf(record.violations, "jailTime") || "-" %></td>
+              <td><%= sumOf(record.violations, "bail") || "-" %></td>
+              <td><%= record.communityService || "-" %></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <% }); %>
+      </section>
+    </div>
+  </body>
+</html>
