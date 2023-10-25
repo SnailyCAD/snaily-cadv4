@@ -314,7 +314,7 @@ export class RecordsController {
     });
 
     const root = __dirname;
-    const templatePath = resolve(root, "../../templates/all-records.ejs");
+    const templatePath = resolve(root, "../../templates/citizen-criminal-record.ejs");
 
     const translator = await getTranslator({
       type: "webhooks",
