@@ -79,7 +79,11 @@
     "paymentStatus": "Payment Status",
     "createdAt": "Created At",
     "officer": "Officer",
-    "socialSecurityNumber": "Social Security Number"
+    "socialSecurityNumber": "Social Security Number",
+    "citizenRecord": "Citizen Records",
+    "exportInformation": "Export Information",
+    "dateOfExport": "Date of export",
+    "records": "Records"
   },
   "WhitelistStatusChange": {
     "accepted": "accepted",

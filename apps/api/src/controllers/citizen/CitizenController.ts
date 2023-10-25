@@ -36,7 +36,7 @@ import { recordsInclude } from "controllers/leo/search/SearchController";
 import { leoProperties } from "utils/leo/includes";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
 
-export const citizenInclude = Prisma.validator<Prisma.CitizenSelect>()({
+export const citizenInclude = Prisma.validator<Prisma.CitizenInclude>()({
   user: { select: userProperties },
   flags: true,
   suspendedLicenses: true,
