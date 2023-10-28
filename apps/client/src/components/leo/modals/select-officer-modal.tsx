@@ -1,7 +1,5 @@
 import { SELECT_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Loader, Button, AsyncListSearchField, Item, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, type FormikHelpers } from "formik";
@@ -16,17 +14,17 @@ import {
   type Officer,
   ShouldDoType,
   WhatPages,
+  ValueType,
 } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { isUnitDisabled, makeUnitName } from "lib/utils";
-import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import { makeUnitName } from "lib/utils";
+import type { GetMyOfficersData, PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import { useUserOfficers } from "hooks/leo/use-get-user-officers";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 export function SelectOfficerModal() {
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
-  const { userOfficers, isLoading } = useUserOfficers();
 
   const { activeOfficers, setActiveOfficers } = useDispatchState((state) => ({
     activeOfficers: state.activeOfficers,
@@ -85,6 +83,7 @@ export function SelectOfficerModal() {
   const INITIAL_VALUES = {
     officerId: "",
     officer: null as Officer | null,
+    officerSearch: "",
     status: null,
     vehicleId: null as string | null,
     vehicleSearch: "",
@@ -99,30 +98,45 @@ export function SelectOfficerModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
+        {({ setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
             {includeStatuses ? (
               <p className="my-3 text-neutral-700 dark:text-gray-400">{error("noActiveOfficer")}</p>
             ) : null}
 
-            <FormField errorMessage={errors.officer} label={t("officer")}>
-              <Select
-                isLoading={isLoading}
-                value={
-                  values.officer
-                    ? `${generateCallsign(values.officer)} ${makeUnitName(values.officer)}`
-                    : null
+            <AsyncListSearchField<GetMyOfficersData["officers"][number]>
+              allowsCustomValue
+              errorMessage={errors.officer}
+              label={t("officer")}
+              localValue={values.officerSearch}
+              onInputChange={(value) => setFieldValue("officerSearch", value)}
+              onSelectionChange={(node) => {
+                if (node) {
+                  setValues({
+                    ...values,
+                    officerSearch: node.textValue,
+                    officerId: node.key as string,
+                    officer: node.value ?? null,
+                  });
                 }
-                name="officer"
-                onChange={handleChange}
-                isClearable
-                values={userOfficers.map((officer) => ({
-                  label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
-                  value: officer,
-                  isDisabled: isUnitDisabled(officer),
-                }))}
-              />
-            </FormField>
+              }}
+              fetchOptions={{
+                apiPath: (query) => `/leo?query=${query}`,
+                onResponse(json: GetMyOfficersData) {
+                  return json.officers;
+                },
+              }}
+            >
+              {(item) => {
+                const formattedName = `${generateCallsign(item)} ${makeUnitName(item)}`;
+
+                return (
+                  <Item key={item.id} textValue={formattedName}>
+                    {formattedName}
+                  </Item>
+                );
+              }}
+            </AsyncListSearchField>
 
             <AsyncListSearchField<EmergencyVehicleValue>
               isClearable
@@ -150,20 +164,16 @@ export function SelectOfficerModal() {
             </AsyncListSearchField>
 
             {includeStatuses ? (
-              <FormField label={t("status")}>
-                <Select
-                  value={values.status}
-                  name="status"
-                  onChange={handleChange}
-                  isClearable
-                  values={codes10.values
-                    .filter((v) => v.shouldDo !== "SET_OFF_DUTY" && v.type === "STATUS_CODE")
-                    .map((status) => ({
-                      label: status.value.value,
-                      value: status.id,
-                    }))}
-                />
-              </FormField>
+              <ValueSelectField
+                label={t("status")}
+                fieldName="status"
+                valueType={ValueType.CODES_10}
+                values={codes10.values}
+                isClearable
+                filterFn={(value) =>
+                  value.shouldDo !== "SET_OFF_DUTY" && value.type === "STATUS_CODE"
+                }
+              />
             ) : null}
 
             {canSetUserDefinedCallsign ? (

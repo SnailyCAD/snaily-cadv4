@@ -16,6 +16,7 @@ import { upsertOfficer } from "./upsert-officer";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { hasPermission } from "@snailycad/permissions";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
+import { createWhere } from "../create-where-obj";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -26,11 +27,23 @@ export class MyOfficersController {
     permissions: [Permissions.Leo],
   })
   @Description("Get all the current user's officers.")
-  async getUserOfficers(@Context("user") user: User): Promise<APITypes.GetMyOfficersData> {
+  async getUserOfficers(
+    @Context("user") user: User,
+    @QueryParams("query") query: string,
+  ): Promise<APITypes.GetMyOfficersData> {
+    const where = createWhere({
+      query,
+      type: "OFFICER",
+      pendingOnly: false,
+      extraWhere: {
+        userId: user.id,
+      },
+    });
+
     const [totalCount, officers] = await prisma.$transaction([
-      prisma.officer.count({ where: { userId: user.id } }),
+      prisma.officer.count({ where }),
       prisma.officer.findMany({
-        where: { userId: user.id },
+        where,
         orderBy: { updatedAt: "desc" },
         include: {
           ...leoProperties,

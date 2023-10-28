@@ -109,6 +109,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     try {
       if (props.isClearable && key === "cleared") {
         props.onSelectionChange(null);
+        props.onInputChange("");
         return;
       }
 

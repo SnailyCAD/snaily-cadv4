@@ -1,7 +1,5 @@
 import { SELECT_DEPUTY_SCHEMA } from "@snailycad/schemas";
 import { Loader, Button, AsyncListSearchField, Item, TextField } from "@snailycad/ui";
-import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { Form, Formik, type FormikHelpers } from "formik";
@@ -13,14 +11,12 @@ import { useEmsFdState } from "state/ems-fd-state";
 import { useValues } from "context/ValuesContext";
 import { type EmsFdDeputy, ShouldDoType, WhatPages } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { isUnitDisabled, makeUnitName } from "lib/utils";
-import type { PutDispatchStatusByUnitId } from "@snailycad/types/api";
+import { makeUnitName } from "lib/utils";
+import type { GetMyDeputiesData, PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import type { EmergencyVehicleValue } from "@snailycad/types";
-import { useGetUserDeputies } from "hooks/ems-fd/use-get-user-deputies";
 import { Permissions, usePermission } from "hooks/usePermission";
 
 export function SelectDeputyModal() {
-  const { userDeputies, isLoading } = useGetUserDeputies();
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
 
   const modalState = useModal();
@@ -67,6 +63,7 @@ export function SelectDeputyModal() {
   const INITIAL_VALUES = {
     deputyId: "",
     deputy: null as EmsFdDeputy | null,
+    deputySearch: "",
     vehicleId: null as string | null,
     vehicleSearch: "",
     userDefinedCallsign: canSetUserDefinedCallsign ? "" : undefined,
@@ -80,26 +77,41 @@ export function SelectDeputyModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, setFieldValue, errors, values, isValid }) => (
+        {({ setValues, setFieldValue, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.deputy} label={t("Ems.deputy")}>
-              <Select
-                isLoading={isLoading}
-                value={
-                  values.deputy
-                    ? `${generateCallsign(values.deputy)} ${makeUnitName(values.deputy)}`
-                    : null
+            <AsyncListSearchField<GetMyDeputiesData["deputies"][number]>
+              allowsCustomValue
+              errorMessage={errors.deputy}
+              label={t("Ems.deputy")}
+              localValue={values.deputySearch}
+              onInputChange={(value) => setFieldValue("deputySearch", value)}
+              onSelectionChange={(node) => {
+                if (node) {
+                  setValues({
+                    ...values,
+                    deputySearch: node.textValue,
+                    deputyId: node.key as string,
+                    deputy: node.value ?? null,
+                  });
                 }
-                name="deputy"
-                onChange={handleChange}
-                isClearable
-                values={userDeputies.map((deputy) => ({
-                  label: `${generateCallsign(deputy)} ${makeUnitName(deputy)}`,
-                  value: deputy,
-                  isDisabled: isUnitDisabled(deputy),
-                }))}
-              />
-            </FormField>
+              }}
+              fetchOptions={{
+                apiPath: (query) => `/ems-fd?query=${query}`,
+                onResponse(json: GetMyDeputiesData) {
+                  return json.deputies;
+                },
+              }}
+            >
+              {(item) => {
+                const formattedName = `${generateCallsign(item)} ${makeUnitName(item)}`;
+
+                return (
+                  <Item key={item.id} textValue={formattedName}>
+                    {formattedName}
+                  </Item>
+                );
+              }}
+            </AsyncListSearchField>
 
             <AsyncListSearchField<EmergencyVehicleValue>
               errorMessage={errors.vehicleId}
