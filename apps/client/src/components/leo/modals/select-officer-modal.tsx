@@ -55,9 +55,8 @@ export function SelectOfficerModal() {
   ) {
     if (!onDutyCode) return;
 
-    const officerId = values.officer?.id;
     const { json } = await execute<PutDispatchStatusByUnitId, typeof INITIAL_VALUES>({
-      path: `/dispatch/status/${officerId}`,
+      path: `/dispatch/status/${values.officerId}`,
       method: "PUT",
       data: {
         status: includeStatuses ? values.status : onDutyCode.id,
@@ -105,8 +104,7 @@ export function SelectOfficerModal() {
             ) : null}
 
             <AsyncListSearchField<GetMyOfficersData["officers"][number]>
-              allowsCustomValue
-              errorMessage={errors.officer}
+              errorMessage={errors.officerId}
               label={t("officer")}
               localValue={values.officerSearch}
               onInputChange={(value) => setFieldValue("officerSearch", value)}

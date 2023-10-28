@@ -69,7 +69,7 @@ export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
 });
 
 export const SELECT_OFFICER_SCHEMA = z.object({
-  officer: z.object({ id: z.string().min(2).max(255) }),
+  officerId: z.string().min(2),
   userDefinedCallsign: z.string().nullish(),
 });
 

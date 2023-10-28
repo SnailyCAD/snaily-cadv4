@@ -41,12 +41,10 @@ export function SelectDeputyModal() {
     if (!onDutyCode) return;
 
     const { json } = await execute<PutDispatchStatusByUnitId, typeof INITIAL_VALUES>({
-      path: `/dispatch/status/${values.deputy?.id}`,
+      path: `/dispatch/status/${values.deputyId}`,
       method: "PUT",
       data: {
-        ...values,
-        deputyId: values.deputy?.id,
-        deputy: values.deputy?.id,
+        vehicleId: values.vehicleId,
         status: onDutyCode.id,
         userDefinedCallsign: canSetUserDefinedCallsign ? values.userDefinedCallsign : undefined,
       },
@@ -81,7 +79,7 @@ export function SelectDeputyModal() {
           <Form>
             <AsyncListSearchField<GetMyDeputiesData["deputies"][number]>
               allowsCustomValue
-              errorMessage={errors.deputy}
+              errorMessage={errors.deputyId}
               label={t("Ems.deputy")}
               localValue={values.deputySearch}
               onInputChange={(value) => setFieldValue("deputySearch", value)}
