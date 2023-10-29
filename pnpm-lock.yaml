@@ -82,7 +82,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/audit-logger
       "@snailycad/config":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../../packages/config
       "@snailycad/image-data-uri":
         specifier: ^3.2.0
@@ -100,7 +100,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/types
       "@snailycad/utils":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../../packages/utils
       "@tsed/common":
         specifier: ^7.39.1
@@ -347,7 +347,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/audit-logger
       "@snailycad/config":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../../packages/config
       "@snailycad/permissions":
         specifier: workspace:*
@@ -362,7 +362,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       "@snailycad/utils":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../../packages/utils
       "@tailwindcss/typography":
         specifier: ^0.5.10
@@ -635,7 +635,7 @@ importers:
   packages/types:
     dependencies:
       "@snailycad/permissions":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../permissions
       discord-api-types:
         specifier: 0.37.58
@@ -777,13 +777,13 @@ importers:
         specifier: ^3.21.0
         version: 3.21.0(react@18.2.0)
       "@snailycad/config":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../config
       "@snailycad/types":
         specifier: workspace:*
         version: link:../types
       "@snailycad/utils":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../utils
       "@types/react":
         specifier: ^18.2.31
@@ -901,7 +901,7 @@ importers:
   packages/utils:
     dependencies:
       "@snailycad/types":
-        specifier: ^1.76.0
+        specifier: ^1.76.1
         version: link:../types
       date-fns:
         specifier: ^2.30.0
