@@ -104,6 +104,7 @@ export function SelectOfficerModal() {
             ) : null}
 
             <AsyncListSearchField<GetMyOfficersData["officers"][number]>
+              allowsCustomValue
               errorMessage={errors.officerId}
               label={t("officer")}
               localValue={values.officerSearch}
