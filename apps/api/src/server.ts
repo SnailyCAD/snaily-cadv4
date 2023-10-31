@@ -29,8 +29,7 @@ import { z } from "zod";
 
 const rootDir = __dirname;
 const processEnvPort = process.env.PORT || process.env.PORT_API;
-const parsedCORSOrigin = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://localhost:3000");
-const allowedCorsOrigins = [parsedCORSOrigin];
+const allowedCorsOrigins = parseCORSOrigin(process.env.CORS_ORIGIN_URL ?? "http://localhost:3000");
 
 if (process.env.NODE_ENV === "development") {
   allowedCorsOrigins.push("http://localhost:6006");
@@ -63,8 +62,8 @@ if (process.env.NODE_ENV === "development") {
     compress(),
     json({ limit: "500kb" }),
     cors({
-      origin: parsedCORSOrigin === "*" ? "*" : allowedCorsOrigins,
-      credentials: parsedCORSOrigin === "*" ? undefined : true,
+      origin: allowedCorsOrigins,
+      credentials: true,
     }),
     Sentry.Handlers.requestHandler({
       request: true,
@@ -93,7 +92,7 @@ if (process.env.NODE_ENV === "development") {
     pingTimeout: 60000,
     cors: {
       credentials: true,
-      origin: parsedCORSOrigin,
+      origin: allowedCorsOrigins,
     },
   },
 })
