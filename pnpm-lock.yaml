@@ -73,11 +73,11 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       "@prisma/client":
-        specifier: ^5.4.2
-        version: 5.4.2(prisma@5.4.2)
+        specifier: ^5.5.2
+        version: 5.5.2(prisma@5.5.2)
       "@sentry/node":
-        specifier: ^7.74.1
-        version: 7.74.1
+        specifier: ^7.77.0
+        version: 7.77.0
       "@snailycad/audit-logger":
         specifier: workspace:*
         version: link:../../packages/audit-logger
@@ -103,47 +103,47 @@ importers:
         specifier: ^1.76.1
         version: link:../../packages/utils
       "@tsed/common":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/engines@7.39.1)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/engines@7.41.2)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.41.2)
       "@tsed/components-scan":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)
       "@tsed/core":
-        specifier: ^7.39.1
-        version: 7.39.1
+        specifier: ^7.41.2
+        version: 7.41.2
       "@tsed/di":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
       "@tsed/exceptions":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)
       "@tsed/json-mapper":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/logger":
         specifier: ^6.6.3
         version: 6.6.3
       "@tsed/platform-exceptions":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/schema@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/platform-express":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/common@7.39.1)(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/logger@6.6.3)(@tsed/openspec@7.39.1)(@tsed/schema@7.39.1)(@types/multer@1.4.9)(body-parser@1.20.1)(multer@1.4.5-lts.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/common@7.41.2)(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.41.2)(@tsed/schema@7.41.2)(@types/multer@1.4.9)(body-parser@1.20.1)(multer@1.4.5-lts.1)
       "@tsed/platform-middlewares":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/schema@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/platform-params":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/schema":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       "@tsed/socketio":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/di@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/logger@6.6.3)(@tsed/platform-middlewares@7.39.1)(@tsed/schema@7.39.1)(socket.io@4.7.2)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/di@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/logger@6.6.3)(@tsed/platform-middlewares@7.41.2)(@tsed/schema@7.41.2)(socket.io@4.7.2)
       "@tsed/swagger":
-        specifier: ^7.39.1
-        version: 7.39.1(@tsed/common@7.39.1)
+        specifier: ^7.41.2
+        version: 7.41.2(@tsed/common@7.41.2)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -166,8 +166,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       discord-api-types:
-        specifier: 0.37.60
-        version: 0.37.60
+        specifier: 0.37.62
+        version: 0.37.62
       ejs:
         specifier: ^3.1.9
         version: 3.1.9
@@ -199,11 +199,11 @@ importers:
         specifier: ^12.0.1
         version: 12.0.1
       prisma:
-        specifier: ^5.4.2
-        version: 5.4.2
+        specifier: ^5.5.2
+        version: 5.5.2
       puppeteer:
-        specifier: ^21.4.0
-        version: 21.4.0(typescript@5.2.2)
+        specifier: ^21.4.1
+        version: 21.4.1(typescript@5.2.2)
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
@@ -223,8 +223,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       undici:
-        specifier: ^5.26.4
-        version: 5.26.4
+        specifier: ^5.27.0
+        version: 5.27.0
       use-intl:
         specifier: ^2.21.0
         version: 2.21.0(react@18.2.0)
@@ -297,10 +297,10 @@ importers:
         version: 5.2.2
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
       vitest:
         specifier: ^0.34.6
-        version: 0.34.6(sass@1.69.4)
+        version: 0.34.6(sass@1.69.5)
 
   apps/client:
     dependencies:
@@ -335,14 +335,14 @@ importers:
         specifier: ^3.21.0
         version: 3.21.0(react@18.2.0)
       "@sentry/browser":
-        specifier: ^7.74.1
-        version: 7.74.1
+        specifier: ^7.77.0
+        version: 7.77.0
       "@sentry/nextjs":
-        specifier: ^7.74.1
-        version: 7.74.1(next@13.5.6)(react@18.2.0)
+        specifier: ^7.77.0
+        version: 7.77.0(next@13.5.6)(react@18.2.0)
       "@sentry/tracing":
-        specifier: ^7.74.1
-        version: 7.74.1
+        specifier: ^7.77.0
+        version: 7.77.0
       "@snailycad/audit-logger":
         specifier: workspace:*
         version: link:../../packages/audit-logger
@@ -366,10 +366,10 @@ importers:
         version: link:../../packages/utils
       "@tailwindcss/typography":
         specifier: ^0.5.10
-        version: 0.5.10(tailwindcss@3.3.3)
+        version: 0.5.10(tailwindcss@3.3.5)
       "@tanstack/react-query":
-        specifier: ^5.0.0
-        version: 5.0.0(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^5.4.3
+        version: 5.4.3(react-dom@18.2.0)(react@18.2.0)
       "@tanstack/react-table":
         specifier: 8.10.7
         version: 8.10.7(react-dom@18.2.0)(react@18.2.0)
@@ -404,8 +404,8 @@ importers:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
       axios:
-        specifier: ^1.5.1
-        version: 1.5.1
+        specifier: ^1.6.0
+        version: 1.6.0
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
@@ -435,7 +435,7 @@ importers:
         version: 3.0.1
       next:
         specifier: 13.5.6
-        version: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+        version: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
       next-intl:
         specifier: 2.21.0
         version: 2.21.0(next@13.5.6)(react@18.2.0)
@@ -494,8 +494,8 @@ importers:
         specifier: ^17.4.0
         version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
       remark-emoji:
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^4.0.1
+        version: 4.0.1
       remark-external-links:
         specifier: ^9.0.1
         version: 9.0.1
@@ -512,8 +512,8 @@ importers:
         specifier: ^0.100.0
         version: 0.100.0(slate@0.100.0)
       slate-react:
-        specifier: ^0.100.0
-        version: 0.100.0(react-dom@18.2.0)(react@18.2.0)(slate@0.100.0)
+        specifier: ^0.100.1
+        version: 0.100.1(react-dom@18.2.0)(react@18.2.0)(slate@0.100.0)
       socket.io-client:
         specifier: ^4.7.2
         version: 4.7.2
@@ -533,8 +533,8 @@ importers:
         specifier: 3.22.4
         version: 3.22.4
       zustand:
-        specifier: ^4.4.4
-        version: 4.4.4(@types/react@18.2.31)(react@18.2.0)
+        specifier: ^4.4.5
+        version: 4.4.5(@types/react@18.2.31)(react@18.2.0)
     devDependencies:
       dotenv:
         specifier: ^16.3.1
@@ -543,20 +543,20 @@ importers:
         specifier: ^8.4.31
         version: 8.4.31
       sass:
-        specifier: ^1.69.4
-        version: 1.69.4
+        specifier: ^1.69.5
+        version: 1.69.5
       tailwindcss:
-        specifier: ^3.3.3
-        version: 3.3.3
+        specifier: ^3.3.5
+        version: 3.3.5
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
       vitest:
         specifier: ^0.34.6
-        version: 0.34.6(sass@1.69.4)
+        version: 0.34.6(sass@1.69.5)
 
   packages/audit-logger:
     dependencies:
@@ -596,7 +596,7 @@ importers:
         version: 4.4.9
       vitest:
         specifier: ^0.34.6
-        version: 0.34.6(sass@1.69.4)
+        version: 0.34.6(sass@1.69.5)
 
   packages/permissions:
     devDependencies:
@@ -611,7 +611,7 @@ importers:
         version: 4.4.9
       vitest:
         specifier: ^0.34.6
-        version: 0.34.6(sass@1.69.4)
+        version: 0.34.6(sass@1.69.5)
 
   packages/schemas:
     dependencies:
@@ -896,7 +896,7 @@ importers:
         version: 5.2.2
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
 
   packages/utils:
     dependencies:
@@ -936,10 +936,10 @@ importers:
         version: 5.2.2
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+        version: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
       vitest:
         specifier: ^0.34.6
-        version: 0.34.6(sass@1.69.4)
+        version: 0.34.6(sass@1.69.5)
 
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -2758,7 +2758,7 @@ packages:
     dependencies:
       eslint: 8.52.0
       eslint-config-next: 13.5.6(eslint@8.52.0)(typescript@5.2.2)
-      next: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      next: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
       - supports-color
@@ -2818,7 +2818,7 @@ packages:
       socket.io: 4.7.2
       socket.io-client: 4.7.2
       tsup: 7.2.0(postcss@8.4.31)(typescript@5.2.2)
-      zustand: 4.4.4(@types/react@18.2.31)(react@18.2.0)
+      zustand: 4.4.5(@types/react@18.2.31)(react@18.2.0)
     transitivePeerDependencies:
       - "@swc/core"
       - "@types/react"
@@ -2886,7 +2886,7 @@ packages:
       discord-api-types: 0.37.50
       magic-bytes.js: 1.0.15
       tslib: 2.6.2
-      undici: 5.26.4
+      undici: 5.27.0
     dev: false
 
   /@discordjs/util@1.0.1:
@@ -4248,7 +4248,7 @@ packages:
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.2.2)
       typescript: 5.2.2
-      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
     dev: true
 
   /@jridgewell/gen-mapping@0.3.3:
@@ -5222,10 +5222,10 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@prisma/client@5.4.2(prisma@5.4.2):
+  /@prisma/client@5.5.2(prisma@5.5.2):
     resolution:
       {
-        integrity: sha512-2xsPaz4EaMKj1WS9iW6MlPhmbqtBsXAOeVttSePp8vTFTtvzh2hZbDgswwBdSCgPzmmwF+tLB259QzggvCmJqA==,
+        integrity: sha512-54XkqR8M+fxbzYqe+bIXimYnkkcGqgOh0dn0yWtIk6CQT4IUCAvNFNcQZwk2KqaLU+/1PHTSWrcHtx4XjluR5w==,
       }
     engines: { node: ">=16.13" }
     requiresBuild: true
@@ -5235,8 +5235,8 @@ packages:
       prisma:
         optional: true
     dependencies:
-      "@prisma/engines-version": 5.4.1-2.ac9d7041ed77bcc8a8dbd2ab6616b39013829574
-      prisma: 5.4.2
+      "@prisma/engines-version": 5.5.1-1.aebc046ce8b88ebbcb45efe31cbe7d06fd6abc0a
+      prisma: 5.5.2
     dev: false
 
   /@prisma/debug@5.2.0:
@@ -5252,10 +5252,10 @@ packages:
       - supports-color
     dev: false
 
-  /@prisma/engines-version@5.4.1-2.ac9d7041ed77bcc8a8dbd2ab6616b39013829574:
+  /@prisma/engines-version@5.5.1-1.aebc046ce8b88ebbcb45efe31cbe7d06fd6abc0a:
     resolution:
       {
-        integrity: sha512-wvupDL4AA1vf4TQNANg7kR7y98ITqPsk6aacfBxZKtrJKRIsWjURHkZCGcQliHdqCiW/hGreO6d6ZuSv9MhdAA==,
+        integrity: sha512-O+qHFnZvAyOFk1tUco2/VdiqS0ym42a3+6CYLScllmnpbyiTplgyLt2rK/B9BTjYkSHjrgMhkG47S0oqzdIckA==,
       }
     dev: false
 
@@ -5267,10 +5267,10 @@ packages:
     requiresBuild: true
     dev: false
 
-  /@prisma/engines@5.4.2:
+  /@prisma/engines@5.5.2:
     resolution:
       {
-        integrity: sha512-fqeucJ3LH0e1eyFdT0zRx+oETLancu5+n4lhiYECyEz6H2RDskPJHJYHkVc0LhkU4Uv7fuEnppKU3nVKNzMh8g==,
+        integrity: sha512-Be5hoNF8k+lkB3uEMiCHbhbfF6aj1GnrTBnn5iYFT7GEr3TsOEp1soviEcBR0tYCgHbxjcIxJMhdbvxALJhAqg==,
       }
     requiresBuild: true
     dev: false
@@ -7640,32 +7640,30 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@sentry-internal/tracing@7.74.1:
+  /@sentry-internal/tracing@7.77.0:
     resolution:
       {
-        integrity: sha512-nNaiZreQxCitG2PzYPaC7XtyA9OMsETGYMKAtiK4p62/uTmeYbsBva9BoNx1XeiHRwbrVQYRMKQ9nV5e2jS4/A==,
+        integrity: sha512-8HRF1rdqWwtINqGEdx8Iqs9UOP/n8E0vXUu3Nmbqj4p5sQPA7vvCfq+4Y4rTqZFc7sNdFpDsRION5iQEh8zfZw==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry/core": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
-      tslib: 2.6.2
+      "@sentry/core": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
     dev: false
 
-  /@sentry/browser@7.74.1:
+  /@sentry/browser@7.77.0:
     resolution:
       {
-        integrity: sha512-OYWNne/KO60lOvkIpIlJUyiJt/9j8DGI57thSDFEYSmmbNqMitczUTBOaEStouvHKyfchqLZm1CZfWKt+z0VOA==,
+        integrity: sha512-nJ2KDZD90H8jcPx9BysQLiQW+w7k7kISCWeRjrEMJzjtge32dmHA8G4stlUTRIQugy5F+73cOayWShceFP7QJQ==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry-internal/tracing": 7.74.1
-      "@sentry/core": 7.74.1
-      "@sentry/replay": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
-      tslib: 2.6.2
+      "@sentry-internal/tracing": 7.77.0
+      "@sentry/core": 7.77.0
+      "@sentry/replay": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
     dev: false
 
   /@sentry/cli@1.75.2:
@@ -7700,40 +7698,38 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@sentry/core@7.74.1:
+  /@sentry/core@7.77.0:
     resolution:
       {
-        integrity: sha512-LvEhOSfdIvwkr+PdlrT/aA/iOLhkXrSkvjqAQyogE4ddCWeYfS0NoirxNt1EaxMBAWKhYZRqzkA7WA4LDLbzlA==,
+        integrity: sha512-Tj8oTYFZ/ZD+xW8IGIsU6gcFXD/gfE+FUxUaeSosd9KHwBQNOLhZSsYo/tTVf/rnQI/dQnsd4onPZLiL+27aTg==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
-      tslib: 2.6.2
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
     dev: false
 
-  /@sentry/integrations@7.74.1:
+  /@sentry/integrations@7.77.0:
     resolution:
       {
-        integrity: sha512-Q7chPehHpHB4WOQ1J/X6NiN2ptiqJMmxtL+6wHumzIAyrjup3c9XekR83qEs8zpqYJAlb/4MUlwd9fPbkhGXnQ==,
+        integrity: sha512-P055qXgBHeZNKnnVEs5eZYLdy6P49Zr77A1aWJuNih/EenzMy922GOeGy2mF6XYrn1YJSjEwsNMNsQkcvMTK8Q==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry/core": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
+      "@sentry/core": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
       localforage: 1.10.0
-      tslib: 2.6.2
     dev: false
 
-  /@sentry/nextjs@7.74.1(next@13.5.6)(react@18.2.0):
+  /@sentry/nextjs@7.77.0(next@13.5.6)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-1RySEs3WBEqlpQCAFQ/XwV+oW4wEAtpYglvAyDBwPen/s6KnkkZ0za0l3Ug0O6S9HvMiNll1rPhvnkH5nM37Tg==,
+        integrity: sha512-8tYPBt5luFjrng1sAMJqNjM9sq80q0jbt6yariADU9hEr7Zk8YqFaOI2/Q6yn9dZ6XyytIRtLEo54kk2AO94xw==,
       }
     engines: { node: ">=8" }
     peerDependencies:
-      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0
+      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0 || ^14.0
       react: 16.x || 17.x || 18.x
       webpack: ">= 4.0.0"
     peerDependenciesMeta:
@@ -7741,21 +7737,20 @@ packages:
         optional: true
     dependencies:
       "@rollup/plugin-commonjs": 24.0.0(rollup@2.78.0)
-      "@sentry/core": 7.74.1
-      "@sentry/integrations": 7.74.1
-      "@sentry/node": 7.74.1
-      "@sentry/react": 7.74.1(react@18.2.0)
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
-      "@sentry/vercel-edge": 7.74.1
+      "@sentry/core": 7.77.0
+      "@sentry/integrations": 7.77.0
+      "@sentry/node": 7.77.0
+      "@sentry/react": 7.77.0(react@18.2.0)
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
+      "@sentry/vercel-edge": 7.77.0
       "@sentry/webpack-plugin": 1.20.0
       chalk: 3.0.0
-      next: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      next: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
       stacktrace-parser: 0.1.10
-      tslib: 2.6.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -7780,62 +7775,59 @@ packages:
       - supports-color
     dev: false
 
-  /@sentry/node@7.74.1:
+  /@sentry/node@7.77.0:
     resolution:
       {
-        integrity: sha512-aMUQ2LFZF64FBr+cgjAqjT4OkpYBIC9lyWI8QqjEHqNho5+LGu18/iVrJPD4fgs4UhGdCuAiQjpC36MbmnIDZA==,
+        integrity: sha512-Ob5tgaJOj0OYMwnocc6G/CDLWC7hXfVvKX/ofkF98+BbN/tQa5poL+OwgFn9BA8ud8xKzyGPxGU6LdZ8Oh3z/g==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry-internal/tracing": 7.74.1
-      "@sentry/core": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
-      cookie: 0.5.0
+      "@sentry-internal/tracing": 7.77.0
+      "@sentry/core": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
       https-proxy-agent: 5.0.1
-      lru_map: 0.3.3
-      tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@sentry/react@7.74.1(react@18.2.0):
+  /@sentry/react@7.77.0(react@18.2.0):
     resolution:
       {
-        integrity: sha512-16oTsNi2hl/S5AL/e5bo9DQZDwXPkX0nC8ajrpU0z2pH4cwjQZUZt/9Xq1+MKqDIEZkqDcMwpTmBptOvy1Pvkw==,
+        integrity: sha512-Q+htKzib5em0MdaQZMmPomaswaU3xhcVqmLi2CxqQypSjbYgBPPd+DuhrXKoWYLDDkkbY2uyfe4Lp3yLRWeXYw==,
       }
     engines: { node: ">=8" }
     peerDependencies:
       react: 15.x || 16.x || 17.x || 18.x
     dependencies:
-      "@sentry/browser": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
+      "@sentry/browser": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
-      tslib: 2.6.2
     dev: false
 
-  /@sentry/replay@7.74.1:
+  /@sentry/replay@7.77.0:
     resolution:
       {
-        integrity: sha512-qmbOl+jYdyhoHFbPp9WemKx8UojID5hVmuVLxNIP0ANqAwmE9OQEK9YFg2cf7L/TpKb1tqz0qLgi5MYIdcdpgQ==,
+        integrity: sha512-M9Ik2J5ekl+C1Och3wzLRZVaRGK33BlnBwfwf3qKjgLDwfKW+1YkwDfTHbc2b74RowkJbOVNcp4m8ptlehlSaQ==,
       }
     engines: { node: ">=12" }
     dependencies:
-      "@sentry/core": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
+      "@sentry-internal/tracing": 7.77.0
+      "@sentry/core": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
     dev: false
 
-  /@sentry/tracing@7.74.1:
+  /@sentry/tracing@7.77.0:
     resolution:
       {
-        integrity: sha512-YqhLMY28uukOR8FtoCMvzdzBYkTtwj/JHUensDEpTZG5OoQTjrcgttpL+WMaCBUy1MpOIo7FyLB5aoRq2U7AIA==,
+        integrity: sha512-zr6eSCW3NJ124uj4Fy/6hh77cziy43dpYE1WpgvO/yhl1+kdrY2XVJ0bXGqwHU0KBm/eSgHD7yecUxmZUXiabA==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry-internal/tracing": 7.74.1
+      "@sentry-internal/tracing": 7.77.0
     dev: false
 
   /@sentry/types@7.72.0:
@@ -7846,10 +7838,10 @@ packages:
     engines: { node: ">=8" }
     dev: false
 
-  /@sentry/types@7.74.1:
+  /@sentry/types@7.77.0:
     resolution:
       {
-        integrity: sha512-2jIuPc+YKvXqZETwr2E8VYnsH1zsSUR/wkIvg1uTVeVNyoowJv+YsOtCdeGyL2AwiotUBSPKu7O1Lz0kq5rMOQ==,
+        integrity: sha512-nfb00XRJVi0QpDHg+JkqrmEBHsqBnxJu191Ded+Cs1OJ5oPXEW6F59LVcBScGvMqe+WEk1a73eH8XezwfgrTsA==,
       }
     engines: { node: ">=8" }
     dev: false
@@ -7865,28 +7857,26 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@sentry/utils@7.74.1:
+  /@sentry/utils@7.77.0:
     resolution:
       {
-        integrity: sha512-qUsqufuHYcy5gFhLZslLxA5kcEOkkODITXW3c7D+x+8iP/AJqa8v8CeUCVNS7RetHCuIeWAbbTClC4c411EwQg==,
+        integrity: sha512-NmM2kDOqVchrey3N5WSzdQoCsyDkQkiRxExPaNI2oKQ/jMWHs9yt0tSy7otPBcXs0AP59ihl75Bvm1tDRcsp5g==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry/types": 7.74.1
-      tslib: 2.6.2
+      "@sentry/types": 7.77.0
     dev: false
 
-  /@sentry/vercel-edge@7.74.1:
+  /@sentry/vercel-edge@7.77.0:
     resolution:
       {
-        integrity: sha512-E2lTfEtDFSh57EkjVe4EcgcdjOM8UvfZVsmANBqG4bnwRKrNX9GouClzKU2Ckd5vQnOiCH9r8x2aJ/dTqyBswQ==,
+        integrity: sha512-ffddPCgxVeAccPYuH5sooZeHBqDuJ9OIhIRYKoDi4TvmwAzWo58zzZWhRpkHqHgIQdQvhLVZ5F+FSQVWnYSOkw==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry/core": 7.74.1
-      "@sentry/types": 7.74.1
-      "@sentry/utils": 7.74.1
-      tslib: 2.6.2
+      "@sentry/core": 7.77.0
+      "@sentry/types": 7.77.0
+      "@sentry/utils": 7.77.0
     dev: false
 
   /@sentry/webpack-plugin@1.20.0:
@@ -8019,7 +8009,7 @@ packages:
     dependencies:
       fs-extra: 10.1.0
       mime-types: 2.1.35
-      undici: 5.26.4
+      undici: 5.27.0
     dev: false
 
   /@snailycad/prisma-generator-redundant-types@2.0.2:
@@ -8571,7 +8561,7 @@ packages:
       magic-string: 0.30.3
       rollup: 3.28.1
       typescript: 5.2.2
-      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -9153,7 +9143,7 @@ packages:
       react: 18.2.0
       react-docgen: 6.0.4
       react-dom: 18.2.0(react@18.2.0)
-      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
     transitivePeerDependencies:
       - "@preact/preset-vite"
       - encoding
@@ -9529,7 +9519,7 @@ packages:
         integrity: sha512-z/G02d+59gyyUb7KYhKi9jOhicek6QD2oMaotUyG+lUkybpXoV49dY9bj7Ah5Q+y7knK2jU67UTX9FyfGzaxQg==,
       }
 
-  /@tailwindcss/typography@0.5.10(tailwindcss@3.3.3):
+  /@tailwindcss/typography@0.5.10(tailwindcss@3.3.5):
     resolution:
       {
         integrity: sha512-Pe8BuPJQJd3FfRnm6H0ulKIGoMEQS+Vq01R6M5aCrFB/ccR/shT+0kXLjouGC1gFLm9hopTFN+DMP0pfwRWzPw==,
@@ -9541,20 +9531,20 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.3.3
+      tailwindcss: 3.3.5
     dev: false
 
-  /@tanstack/query-core@5.0.0:
+  /@tanstack/query-core@5.4.3:
     resolution:
       {
-        integrity: sha512-Y1BpiA6BblJd/UlVqxEVeAG7IACn568YJuTTItAiecBI7En+33g780kg+/8lhgl+BzcUPN7o+NjBrSRGJoemyQ==,
+        integrity: sha512-fnI9ORjcuLGm1sNrKatKIosRQUpuqcD4SV7RqRSVmj8JSicX2aoMyKryHEBpVQvf6N4PaBVgBxQomjsbsGPssQ==,
       }
     dev: false
 
-  /@tanstack/react-query@5.0.0(react-dom@18.2.0)(react@18.2.0):
+  /@tanstack/react-query@5.4.3(react-dom@18.2.0)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-diQoC8FNBcO5Uf5yuaJlXthTtbO1xM8kzOX+pSBUMT9n/cqQ/u1wJGCtukvhDWA+6j07WmIj4bfqNbd2KOB6jQ==,
+        integrity: sha512-4aSOrRNa6yEmf7mws5QPTVMn8Lp7L38tFoTZ0c1ZmhIvbr8GIA0WT7X5N3yz/nuK8hUtjw9cAzBr4BPDZZ+tzA==,
       }
     peerDependencies:
       react: ^18.0.0
@@ -9566,7 +9556,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      "@tanstack/query-core": 5.0.0
+      "@tanstack/query-core": 5.4.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -9699,29 +9689,29 @@ packages:
       }
     dev: false
 
-  /@tsed/common@7.39.1(@tsed/engines@7.39.1)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.39.1):
+  /@tsed/common@7.41.2(@tsed/engines@7.41.2)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.41.2):
     resolution:
       {
-        integrity: sha512-4/dwovdSY7yED/1Da8Yu8FWprPRUQSeTyF1R264D/QyjOSZQ32sJCOi/XSpRA+nkNIVMFa1ELdildE3nQE0SeA==,
+        integrity: sha512-pNWC0695BmxTr48XZPXOkokmtp/i60rgk5wu9rMoZ9KxHmWSpmElornoDeZdpG/OT4b2+eCsWhsOxnOzDI0kbA==,
       }
     peerDependencies:
       "@tsed/logger": ">=6.2.2"
       "@tsed/logger-file": ">=6.2.2"
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/exceptions": 7.39.1(@tsed/core@7.39.1)
-      "@tsed/json-mapper": 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/exceptions": 7.41.2(@tsed/core@7.41.2)
+      "@tsed/json-mapper": 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/logger": 6.6.3
       "@tsed/logger-file": 6.6.2(@tsed/logger@6.6.3)
-      "@tsed/platform-exceptions": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-log-middleware": 7.39.1(@tsed/di@7.39.1)(@tsed/platform-middlewares@7.39.1)(@tsed/platform-params@7.39.1)
-      "@tsed/platform-middlewares": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-params": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-response-filter": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-router": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/platform-params@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-views": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/engines@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/platform-exceptions": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-log-middleware": 7.41.2(@tsed/di@7.41.2)(@tsed/platform-middlewares@7.41.2)(@tsed/platform-params@7.41.2)
+      "@tsed/platform-middlewares": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-params": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-response-filter": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-router": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/platform-params@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-views": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/engines@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       "@types/json-schema": 7.0.11
       accepts: 1.3.8
       tslib: 2.5.0
@@ -9731,82 +9721,82 @@ packages:
       - "@tsed/openspec"
     dev: false
 
-  /@tsed/components-scan@7.39.1(@tsed/core@7.39.1):
+  /@tsed/components-scan@7.41.2(@tsed/core@7.41.2):
     resolution:
       {
-        integrity: sha512-RI3vIlFk4Yx6NRniifmXyiuk7UPobNjU3spegkhJyEByjv4+2B3iK9kiPUKHEsoNYdGnud6sfPqQcQw7ZDoqmg==,
+        integrity: sha512-MapTsfOaMegYuxHkL+aAlj2bmXLb0IKBJr1RejuiH0CHXboJhTH8Db60PZe2ghYnoVv5zLn3g3wUenbECzbDYQ==,
       }
     peerDependencies:
       "@tsed/core": ">=7.9.0"
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/normalize-path": 7.39.1
+      "@tsed/core": 7.41.2
+      "@tsed/normalize-path": 7.41.2
       globby: 11.0.3
       tslib: 2.5.0
     dev: false
 
-  /@tsed/core@7.39.1:
+  /@tsed/core@7.41.2:
     resolution:
       {
-        integrity: sha512-8RDbFglnNe1oysm7jLvOnP3fN0pxZMaA78op5xscYobLHMwGqYZza7P4832o8ny7y27avaEmofkNBUcqKSjvsg==,
+        integrity: sha512-dDzJ8SsG5V8bjNQugWGYUV5hWvjfD4bXnTv3s5dq787I744oPA68KluDA6/X0FYTzeA/HBIvadH9scpGXmHR/A==,
       }
     dependencies:
       reflect-metadata: 0.1.13
       tslib: 2.5.0
     dev: false
 
-  /@tsed/di@7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1):
+  /@tsed/di@7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-WzLO6YM0gE/GIzVxZiW0W23rILBCNmrhuXbeUn7FEPlxGDKonnjGOiAnQQNU1zVglCO/zgtDmtBND9Uo3ZaDXg==,
+        integrity: sha512-FhfU3TdN/2Y9pl0VGtsS99jLHbG4WPvM2Oo2i6tC7MRW8HhhlVo4GS4T31SgX6ioMtE/GwkhPM3I2MhAitMwJw==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
+      "@tsed/core": ^7.41.2
       "@tsed/logger": ">=6.2.2"
-      "@tsed/schema": ^7.39.1
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
+      "@tsed/core": 7.41.2
       "@tsed/logger": 6.6.3
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/engines@7.39.1:
+  /@tsed/engines@7.41.2:
     resolution:
       {
-        integrity: sha512-t5oansXSNhy5MHPrEcmtaHF2ML3v3rfCeDRed3NtVa9WofjABiRZO01KUUlv4E3x15lOQijooVo5u+5GPkx2vQ==,
+        integrity: sha512-rN8FLoifaVTGUyZ/7KfGwSSQT2DAutWEYxjPY/5rsReM+YUctNFg1xERVfcpklrfJ8E8L1hPhXv69t45SB9RyQ==,
       }
     dependencies:
       filedirname: 2.7.0
-      fs-extra: 10.0.1
+      fs-extra: 11.1.1
       tslib: 2.5.0
     dev: false
 
-  /@tsed/exceptions@7.39.1(@tsed/core@7.39.1):
+  /@tsed/exceptions@7.41.2(@tsed/core@7.41.2):
     resolution:
       {
-        integrity: sha512-0XSQwrDLj8Ihg15+cdeQJgguFxxyYSeRPqAu17SLAt1lGez6PKeWRsLEmAO18ezadZyYtCo/2Jkzxz57JEleeQ==,
+        integrity: sha512-dg/lRvvnYUoHdmDA6rC4lxeZ0oUZ48y/TwSBaxlpnhbn+NN5Ock2mwFbRsd0BAY4gpD5d+a8Ivc0jUuK4Gz9lQ==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
+      "@tsed/core": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
+      "@tsed/core": 7.41.2
       change-case: 4.1.2
       statuses: 2.0.1
       tslib: 2.5.0
     dev: false
 
-  /@tsed/json-mapper@7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/json-mapper@7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-fiF7GhLIm3JmAfqtOGRCB9ptK5XlrkX8X/qvP3gHDMkiarhtoxFNFnY573lyypZewmwPqm8NgvHG1cAZlJ6N/A==,
+        integrity: sha512-j8ijpplRVHlRn76hcbZ3RsxAtob8W1+OMWnpZgXpzeES8Xi2HQiE9WM4YNYqsfEYH8IRQhCYXfuKnN+hOImBpg==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
@@ -9837,55 +9827,55 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@tsed/normalize-path@7.39.1:
+  /@tsed/normalize-path@7.41.2:
     resolution:
       {
-        integrity: sha512-FMobqkuz3D362ps7LNlUokGQYoTSE0srX/IiKvwZZavpSSQ5yz3BIfyASE/30EVD1cGUelRtgCIJ076Ia2as6A==,
+        integrity: sha512-Xo8iOY2u9qu7iT8ebJEerFrlBm9CyNAKVt5TrEFWaC4W5NmglKmCaONLjadLXxto4i0lblUYIVn/B42VzTBFxg==,
       }
     dependencies:
       normalize-path: 3.0.0
       tslib: 2.5.0
     dev: false
 
-  /@tsed/openspec@7.39.1:
+  /@tsed/openspec@7.41.2:
     resolution:
       {
-        integrity: sha512-vI5ad4oIaO2N7iW1+IAOoTFIikgQvyikObM42jEiEorHDiSXb06Ta8GT2/srhnO0Q7wpuLevs/G+meEipOptgA==,
+        integrity: sha512-FfokQGNukW1w+ECmtKQ1V65+2LRHi7yM9xPOLAHS1Ew3rwa0qkJkNnuSD0ORJzTI4oozBvB0m2E9EKUWWrCFeA==,
       }
     dev: false
 
-  /@tsed/platform-exceptions@7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/platform-exceptions@7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-pwpnN/Lng2g6JKKo7UzJ7rzwCt+owqj04B/zR17kbjz5ttcSqN8/177WpwO+xrbpCnFPEeSCETodhzzWzQXYcQ==,
+        integrity: sha512-1mNpDX3lrlA7WkUHYtSyfD8tMiMNoVEOwh1lSF7veFXQDGDjZoA3PZdIYBlBQhI1FAjV0fUJ1tU9saMo4L1YLA==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/exceptions": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/exceptions": ^7.41.2
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/exceptions": 7.39.1(@tsed/core@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/exceptions": 7.41.2(@tsed/core@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/platform-express@7.39.1(@tsed/common@7.39.1)(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/logger@6.6.3)(@tsed/openspec@7.39.1)(@tsed/schema@7.39.1)(@types/multer@1.4.9)(body-parser@1.20.1)(multer@1.4.5-lts.1):
+  /@tsed/platform-express@7.41.2(@tsed/common@7.41.2)(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.41.2)(@tsed/schema@7.41.2)(@types/multer@1.4.9)(body-parser@1.20.1)(multer@1.4.5-lts.1):
     resolution:
       {
-        integrity: sha512-KB95zob8yNMZJ9fsIz9ystRZ7UDJk6RAVYiVb4BDjqpfVn7ockwwH9Gf0ajnaqtndSzXp8Tg8Ay1Ik6aU66GQA==,
+        integrity: sha512-3aj7X3wxti0L6IbSPeys7gxjBsa/u8apvDsCst5kB4vVWQRXO1G8mnHldZhEpZmp9b5Zy9YAbG/BPnW5o1GWow==,
       }
     peerDependencies:
-      "@tsed/common": ^7.39.1
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/json-mapper": ^7.39.1
+      "@tsed/common": ^7.41.2
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/json-mapper": ^7.41.2
       "@tsed/logger": ">=6.2.2"
-      "@tsed/openspec": ^7.39.1
-      "@tsed/platform-views": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/openspec": ^7.41.2
+      "@tsed/platform-views": ^7.41.2
+      "@tsed/schema": ^7.41.2
       "@types/multer": ^1.4.5
       body-parser: ^1.19.0
       multer: ^1.4.5-lts.1
@@ -9893,13 +9883,13 @@ packages:
       "@tsed/platform-views":
         optional: true
     dependencies:
-      "@tsed/common": 7.39.1(@tsed/engines@7.39.1)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.39.1)
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/json-mapper": 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
+      "@tsed/common": 7.41.2(@tsed/engines@7.41.2)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.41.2)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/json-mapper": 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/logger": 6.6.3
-      "@tsed/openspec": 7.39.1
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/openspec": 7.41.2
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       "@types/multer": 1.4.9
       body-parser: 1.20.1
       express: 4.18.2
@@ -9909,31 +9899,31 @@ packages:
       - supports-color
     dev: false
 
-  /@tsed/platform-log-middleware@7.39.1(@tsed/di@7.39.1)(@tsed/platform-middlewares@7.39.1)(@tsed/platform-params@7.39.1):
+  /@tsed/platform-log-middleware@7.41.2(@tsed/di@7.41.2)(@tsed/platform-middlewares@7.41.2)(@tsed/platform-params@7.41.2):
     resolution:
       {
-        integrity: sha512-WZeg0plnAborG6PKBw7hiQx5FZbHltVQbfr7xZr21TcSVq5Foi3XoWYYKKfZ3Ut1f3J0SIZxQvzvgO/HwcoNvA==,
+        integrity: sha512-MFz04tS0WjzdKydWnus6qREClRje5nIs9aSqsCVcuWEwubY+0Qcl1wgzAqQdsOxGIXybY9A3Sk8rympCVhD+Tg==,
       }
     peerDependencies:
-      "@tsed/di": ^7.39.1
-      "@tsed/platform-middlewares": ^7.39.1
-      "@tsed/platform-params": ^7.39.1
+      "@tsed/di": ^7.41.2
+      "@tsed/platform-middlewares": ^7.41.2
+      "@tsed/platform-params": ^7.41.2
     dependencies:
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/platform-middlewares": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-params": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1)
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/platform-middlewares": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-params": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/platform-middlewares@7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/platform-middlewares@7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-YXzVcUEnVEY/0HrArD3MK1JnQXPYVwSPxb6ar+fFYJwZ0vBdBYrkDBVMsDQXiAyGsHVIPlCBMTzBveE9iU4NjQ==,
+        integrity: sha512-PgUvAjRQ13kh6WIKLMdUvsfaKZyPo13QQnHu68Xp48nODCxZ3CzeXYu/jBV/2wQIuZpZZrrawmqnujbGA8eXIg==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/schema": ^7.41.2
     peerDependenciesMeta:
       "@tsed/core":
         optional: true
@@ -9942,149 +9932,149 @@ packages:
       "@tsed/schema":
         optional: true
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/platform-params@7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/platform-params@7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-k68f2irfdDZlbjQM6MVq5kRgYp5TCGPhKZhMkg1/9yA0WNUzSV5ht4rKyk+OE7SSHkJ/8p4tSCkVK6ami0Cs/g==,
+        integrity: sha512-O00YUCTJTrxyR2+VVkbojpeP1PVQpLkFhc/KPonOJXgu9e2ftCGQ38vXShMQJwLQfwpBEZtdjuf8KpnVpSGNnA==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/exceptions": ^7.39.1
-      "@tsed/json-mapper": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/exceptions": ^7.41.2
+      "@tsed/json-mapper": ^7.41.2
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/exceptions": 7.39.1(@tsed/core@7.39.1)
-      "@tsed/json-mapper": 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/exceptions": 7.41.2(@tsed/core@7.41.2)
+      "@tsed/json-mapper": 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/platform-response-filter@7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/platform-response-filter@7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-ayAFJMQXU2cq+rn68/3/FGprqzdoQY8mYM7XaEtZ191E/ygdn2X3/GQ6J9WvAM1zEqLAkbeqRtdGXnVlKwbo3A==,
+        integrity: sha512-EGAWcaPJ3aA73U6P7hK3QMInGwGFfcolJMOjtCLSR8ZKLp30j/SM1D94cLGZTqdoBFQXi2smGRKoCUpBjR5enA==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/exceptions": ^7.39.1
-      "@tsed/json-mapper": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/exceptions": ^7.41.2
+      "@tsed/json-mapper": ^7.41.2
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/exceptions": 7.39.1(@tsed/core@7.39.1)
-      "@tsed/json-mapper": 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/exceptions": 7.41.2(@tsed/core@7.41.2)
+      "@tsed/json-mapper": 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/platform-router@7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/platform-params@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/platform-router@7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/platform-params@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-/105c83e3aF/sV/kfivrGJSBFBMFOHG+M7SB2UZksHfMeJtfQ2qis5H/2OqRAzogy0SDhJYs7SRTOlBrF9Qoug==,
+        integrity: sha512-w0NQeBTqy2x1T2AMPoYZL/0khyHDYansARAyBg6QVI2j75VJUWRMC/VJutJWedUuiFd4QZX365JFwH6s0gs9aQ==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/exceptions": ^7.39.1
-      "@tsed/json-mapper": ^7.39.1
-      "@tsed/platform-params": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/exceptions": ^7.41.2
+      "@tsed/json-mapper": ^7.41.2
+      "@tsed/platform-params": ^7.41.2
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/exceptions": 7.39.1(@tsed/core@7.39.1)
-      "@tsed/json-mapper": 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/platform-params": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/exceptions": 7.41.2(@tsed/core@7.41.2)
+      "@tsed/json-mapper": 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/platform-params": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       tslib: 2.5.0
     dev: false
 
-  /@tsed/platform-views@7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/engines@7.39.1)(@tsed/exceptions@7.39.1)(@tsed/schema@7.39.1):
+  /@tsed/platform-views@7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/engines@7.41.2)(@tsed/exceptions@7.41.2)(@tsed/schema@7.41.2):
     resolution:
       {
-        integrity: sha512-P4vBbLXIppYtGXguZ04LTTvUzP6UJQcs1fyZCRP8uR22BUzRG1cqottNicAqtiA67M8hPSEUQ9LY0A8hGD8q+w==,
+        integrity: sha512-45NNJ9n2OplW6LD1sfCxnyMgPO6l2ojABwjRNkz2Myy1DaPIc3S/BJnZm+jXJQ6xHZUxuLMepZgvmO4t+0c4zQ==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/di": ^7.39.1
-      "@tsed/engines": ^7.39.1
-      "@tsed/exceptions": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/di": ^7.41.2
+      "@tsed/engines": ^7.41.2
+      "@tsed/exceptions": ^7.41.2
+      "@tsed/schema": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/engines": 7.39.1
-      "@tsed/exceptions": 7.39.1(@tsed/core@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/core": 7.41.2
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/engines": 7.41.2
+      "@tsed/exceptions": 7.41.2(@tsed/core@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       ejs: 3.1.9
       tslib: 2.5.0
     dev: false
 
-  /@tsed/schema@7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1):
+  /@tsed/schema@7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2):
     resolution:
       {
-        integrity: sha512-Awxv8mPpgZrLNM99vUOcnJw1W9LtK2ZyUq54b1xC8MJyqwTEmRbqTJK5ezr+0wlxjc1jFSOFGklX/0zjwA656g==,
+        integrity: sha512-eOfKb+wbe+D+Bi1sS+5HwpQEBBxYc9ahLrE7fjZh7l1vziWo4hf0t6FA4g4t/hZlq1QAQ1PixwddvJQ4ieMi6w==,
       }
     peerDependencies:
-      "@tsed/core": ^7.39.1
-      "@tsed/openspec": ^7.39.1
+      "@tsed/core": ^7.41.2
+      "@tsed/openspec": ^7.41.2
     dependencies:
-      "@tsed/core": 7.39.1
-      "@tsed/openspec": 7.39.1
+      "@tsed/core": 7.41.2
+      "@tsed/openspec": 7.41.2
       change-case: 4.1.2
-      fs-extra: 10.1.0
+      fs-extra: 11.1.1
       json-schema: 0.4.0
       picomatch: 2.3.1
       statuses: 2.0.1
       tslib: 2.5.0
     dev: false
 
-  /@tsed/socketio@7.39.1(@tsed/di@7.39.1)(@tsed/json-mapper@7.39.1)(@tsed/logger@6.6.3)(@tsed/platform-middlewares@7.39.1)(@tsed/schema@7.39.1)(socket.io@4.7.2):
+  /@tsed/socketio@7.41.2(@tsed/di@7.41.2)(@tsed/json-mapper@7.41.2)(@tsed/logger@6.6.3)(@tsed/platform-middlewares@7.41.2)(@tsed/schema@7.41.2)(socket.io@4.7.2):
     resolution:
       {
-        integrity: sha512-3NgAjxGU0qi+JkqtzU8SbTTu3PQpvsT0T3qvyahTVn3D77Eg4AtWwW9FpJiLq2wfcIq67uBKdjUqZZAygfgHAQ==,
+        integrity: sha512-UbqxYFakzvGrPk3eKdb1etTGeCyVxrFbWR55hdRSI5Kx5TBIVxNdI4toMDqyAoqbsDvhx9y1bUDQk4mzL2GSSw==,
       }
     peerDependencies:
-      "@tsed/di": ^7.39.1
-      "@tsed/json-mapper": ^7.39.1
+      "@tsed/di": ^7.41.2
+      "@tsed/json-mapper": ^7.41.2
       "@tsed/logger": ">=6.2.2"
-      "@tsed/platform-middlewares": ^7.39.1
-      "@tsed/schema": ^7.39.1
+      "@tsed/platform-middlewares": ^7.41.2
+      "@tsed/schema": ^7.41.2
       socket.io: ">=4.0.0"
     dependencies:
-      "@tsed/di": 7.39.1(@tsed/core@7.39.1)(@tsed/logger@6.6.3)(@tsed/schema@7.39.1)
-      "@tsed/json-mapper": 7.39.1(@tsed/core@7.39.1)(@tsed/schema@7.39.1)
+      "@tsed/di": 7.41.2(@tsed/core@7.41.2)(@tsed/logger@6.6.3)(@tsed/schema@7.41.2)
+      "@tsed/json-mapper": 7.41.2(@tsed/core@7.41.2)(@tsed/schema@7.41.2)
       "@tsed/logger": 6.6.3
-      "@tsed/platform-middlewares": 7.39.1(@tsed/core@7.39.1)(@tsed/di@7.39.1)(@tsed/schema@7.39.1)
-      "@tsed/schema": 7.39.1(@tsed/core@7.39.1)(@tsed/openspec@7.39.1)
+      "@tsed/platform-middlewares": 7.41.2(@tsed/core@7.41.2)(@tsed/di@7.41.2)(@tsed/schema@7.41.2)
+      "@tsed/schema": 7.41.2(@tsed/core@7.41.2)(@tsed/openspec@7.41.2)
       socket.io: 4.7.2
       tslib: 2.5.0
     dev: false
 
-  /@tsed/swagger@7.39.1(@tsed/common@7.39.1):
+  /@tsed/swagger@7.41.2(@tsed/common@7.41.2):
     resolution:
       {
-        integrity: sha512-AG5A+UYts7UT5KygU/cC/BZ23PaHUNcftukYOhjq5xRCJf580tuoHVuzZic48B+Z90w3+fngqOBAxx+ATNqSBA==,
+        integrity: sha512-6s9661crHSXyGeuzo5QahsGCGrWc+rKT/ENRYdpqa5tZC8FzFp6VKJMyKurYrXXzhV8gvSodbOmD6zLhiVztZQ==,
       }
     peerDependencies:
-      "@tsed/common": ^7.39.1
+      "@tsed/common": ^7.41.2
     dependencies:
-      "@tsed/common": 7.39.1(@tsed/engines@7.39.1)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.39.1)
-      "@tsed/normalize-path": 7.39.1
-      "@tsed/openspec": 7.39.1
+      "@tsed/common": 7.41.2(@tsed/engines@7.41.2)(@tsed/logger-file@6.6.2)(@tsed/logger@6.6.3)(@tsed/openspec@7.41.2)
+      "@tsed/normalize-path": 7.41.2
+      "@tsed/openspec": 7.41.2
       filedirname: 2.7.0
-      fs-extra: 10.0.1
+      fs-extra: 11.1.1
       micromatch: 4.0.5
       swagger-ui-dist: 4.19.1
       tslib: 2.5.0
@@ -10557,6 +10547,15 @@ packages:
     resolution:
       {
         integrity: sha512-YLeG8CujC9adtj/kuDzq1N4tCDYKoZ5l/bnjq8d74+t/3q/tHquJOJKUQXJrLCflOHpKjXgcI/a929gpmLOEng==,
+      }
+    dependencies:
+      "@types/unist": 3.0.0
+    dev: false
+
+  /@types/mdast@4.0.2:
+    resolution:
+      {
+        integrity: sha512-tYR83EignvhYO9iU3kDg8V28M0jqyh9zzp5GV+EO+AYnyUl3P5ltkTeJuTiFZQFz670FSb3EwT/6LQdX+UdKfw==,
       }
     dependencies:
       "@types/unist": 3.0.0
@@ -11041,7 +11040,7 @@ packages:
       "@babel/plugin-transform-react-jsx-source": 7.22.5(@babel/core@7.22.11)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11885,10 +11884,10 @@ packages:
       - debug
     dev: true
 
-  /axios@1.5.1:
+  /axios@1.6.0:
     resolution:
       {
-        integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==,
+        integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==,
       }
     dependencies:
       follow-redirects: 1.15.2
@@ -14144,10 +14143,10 @@ packages:
       }
     dev: false
 
-  /discord-api-types@0.37.60:
+  /discord-api-types@0.37.62:
     resolution:
       {
-        integrity: sha512-5BELXTsv7becqVHrD81nZrqT4oEyXXWBwbsO/kwDDu6X3u19VV1tYDB5I5vaVAK+c1chcDeheI9zACBLm41LiQ==,
+        integrity: sha512-KpLQ6TiylGSSHj8AQW8Hz1ek1MkBbQUWs4gZhWH0rvSsWSj9tfav6EIitSxbFmqveqfu8oiPFI7vgFE4kBhTcQ==,
       }
     dev: false
 
@@ -16013,18 +16012,6 @@ packages:
         integrity: sha512-cR/vflFyPZtrN6b38ZyWxpWdhlXrzZEBawlpBQMq7033xVY7/kg0GDMBK5jg8lDYQckdJ5x/YC88lM3C7VMsLg==,
       }
     engines: { node: ">=0.10.0" }
-
-  /fs-extra@10.0.1:
-    resolution:
-      {
-        integrity: sha512-NbdoVMZso2Lsrn/QwLXOy6rm0ufY2zEOKCDzJR/0kBsb0E6qed0P3iYK+Ath3BfvXEeu4JhEtXLgILx5psUfag==,
-      }
-    engines: { node: ">=12" }
-    dependencies:
-      graceful-fs: 4.2.11
-      jsonfile: 6.1.0
-      universalify: 2.0.0
-    dev: false
 
   /fs-extra@10.1.0:
     resolution:
@@ -21031,7 +21018,7 @@ packages:
     dependencies:
       "@formatjs/intl-localematcher": 0.2.32
       negotiator: 0.6.3
-      next: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4)
+      next: 13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
       react: 18.2.0
       use-intl: 2.21.0(react@18.2.0)
     dev: false
@@ -21079,7 +21066,7 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /next@13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.4):
+  /next@13.5.6(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5):
     resolution:
       {
         integrity: sha512-Y2wTcTbO4WwEsVb4A8VSnOsG1I9ok+h74q0ZdxkwM3EODqrs4pasq7O0iUxbcS9VtWMicG7f3+HAj0r1+NtKSw==,
@@ -21104,7 +21091,7 @@ packages:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      sass: 1.69.4
+      sass: 1.69.5
       styled-jsx: 5.1.1(@babel/core@7.22.11)(react@18.2.0)
       watchpack: 2.4.0
     optionalDependencies:
@@ -21637,7 +21624,7 @@ packages:
       "@yarnpkg/lockfile": 1.1.0
       "@yarnpkg/parsers": 3.0.0-rc.46
       "@zkochan/js-yaml": 0.0.6
-      axios: 1.5.1
+      axios: 1.6.0
       chalk: 4.1.2
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
@@ -22817,16 +22804,16 @@ packages:
     engines: { node: ">= 0.8" }
     dev: true
 
-  /prisma@5.4.2:
+  /prisma@5.5.2:
     resolution:
       {
-        integrity: sha512-GDMZwZy7mysB2oXU+angQqJ90iaPFdD0rHaZNkn+dio5NRkGLmMqmXs31//tg/qXT3iB0cTQwnGGQNuirhSTZg==,
+        integrity: sha512-WQtG6fevOL053yoPl6dbHV+IWgKo25IRN4/pwAGqcWmg7CrtoCzvbDbN9fXUc7QS2KK0LimHIqLsaCOX/vHl8w==,
       }
     engines: { node: ">=16.13" }
     hasBin: true
     requiresBuild: true
     dependencies:
-      "@prisma/engines": 5.4.2
+      "@prisma/engines": 5.5.2
     dev: false
 
   /proc-log@3.0.0:
@@ -23037,10 +23024,10 @@ packages:
       - utf-8-validate
     dev: true
 
-  /puppeteer-core@21.4.0:
+  /puppeteer-core@21.4.1:
     resolution:
       {
-        integrity: sha512-ONYjYgHItm6i9WdJf+MnRTRPB4HegwPbPfi1jjNN0LCW3rnNich/5hXgZFcn2oWvgFc8DWLDIcwly7C8z+EvIw==,
+        integrity: sha512-Lh0e+oGhUquxVOi1U701gTfFLFvw5gDBFh3CWpnfAvtItmyZKUce4R54VNfOJfi+KKnzhVPdB/lDrg65gdRIng==,
       }
     engines: { node: ">=16.3.0" }
     dependencies:
@@ -23057,17 +23044,17 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@21.4.0(typescript@5.2.2):
+  /puppeteer@21.4.1(typescript@5.2.2):
     resolution:
       {
-        integrity: sha512-KkiDe39NJxlw7fyiN6fieM9SVsewzt037nUZRoffNuFtYdAl5rRLVtleBuVZ5i1swK/R4CmA6Pbka/ytpFCu4Q==,
+        integrity: sha512-opJqQeYMjAB3ICG8lCF3wtSs9k05dozmrEMrHgo3ZWbISiy8qbv/yAJz/6Io221qSh3yURfVf6Z7crrlzKZjLQ==,
       }
     engines: { node: ">=16.3.0" }
     requiresBuild: true
     dependencies:
       "@puppeteer/browsers": 1.8.0
       cosmiconfig: 8.3.6(typescript@5.2.2)
-      puppeteer-core: 21.4.0
+      puppeteer-core: 21.4.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -23948,16 +23935,18 @@ packages:
       es6-error: 4.1.1
     dev: true
 
-  /remark-emoji@4.0.0:
+  /remark-emoji@4.0.1:
     resolution:
       {
-        integrity: sha512-lQP1lFaYOz6zyJTBfOwYChM1YkgJEVcxSnUBkjo9qujqWwpY36MRFzDjYDk9YNdHqkw5yExB8MnVVHb6wX9QNA==,
+        integrity: sha512-fHdvsTR1dHkWKev9eNyhTo4EFwbUvJ8ka9SgeWkMPYFX4WoI7ViVBms3PjlQYgw5TLvNQso3GUB/b/8t3yo+dg==,
       }
     engines: { node: ^12.20.0 || ^14.13.1 || >=16.0.0 }
     dependencies:
+      "@types/mdast": 4.0.2
       emoticon: 4.0.1
       mdast-util-find-and-replace: 3.0.1
       node-emoji: 2.1.0
+      unified: 11.0.4
     dev: false
 
   /remark-external-links@8.0.0:
@@ -24401,10 +24390,10 @@ packages:
         integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==,
       }
 
-  /sass@1.69.4:
+  /sass@1.69.5:
     resolution:
       {
-        integrity: sha512-+qEreVhqAy8o++aQfCJwp0sklr2xyEzkm9Pp/Igu9wNPoe7EZEQ8X/MBvvXggI2ql607cxKg/RKOwDj6pp2XDA==,
+        integrity: sha512-qg2+UCJibLr2LCVOt3OlPhr/dqVHWOa9XtZf2OjbLs/T4VPSJ00udtgJxH3neXZm+QqX8B+3cU7RaLqp1iVfcQ==,
       }
     engines: { node: ">=14.0.0" }
     hasBin: true
@@ -24739,6 +24728,30 @@ packages:
     resolution:
       {
         integrity: sha512-cWq3tiOvYDJE96ISjnZrX/5IrGcqT4tVVW+PeGquUbrEK/Vq9/850juucjXMLl4zQAtXehy+fxWaJQWPeclUDQ==,
+      }
+    peerDependencies:
+      react: ">=18.2.0"
+      react-dom: ">=18.2.0"
+      slate: ">=0.99.0"
+    dependencies:
+      "@juggle/resize-observer": 3.4.0
+      "@types/is-hotkey": 0.1.8
+      "@types/lodash": 4.14.200
+      direction: 1.0.4
+      is-hotkey: 0.2.0
+      is-plain-object: 5.0.0
+      lodash: 4.17.21
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      scroll-into-view-if-needed: 3.1.0
+      slate: 0.100.0
+      tiny-invariant: 1.3.1
+    dev: false
+
+  /slate-react@0.100.1(react-dom@18.2.0)(react@18.2.0)(slate@0.100.0):
+    resolution:
+      {
+        integrity: sha512-CHlUhopb+3VL0YWXPGcloUlaib4BvaT50+UOudj+rsZaa/EQVgmP6czLqLlXhlyLNiOnp5QaWso/qeoLwuBOyQ==,
       }
     peerDependencies:
       react: ">=18.2.0"
@@ -25693,6 +25706,40 @@ packages:
       postcss-nested: 6.0.1(postcss@8.4.31)
       postcss-selector-parser: 6.0.13
       resolve: 1.22.4
+      sucrase: 3.34.0
+    transitivePeerDependencies:
+      - ts-node
+    dev: true
+
+  /tailwindcss@3.3.5:
+    resolution:
+      {
+        integrity: sha512-5SEZU4J7pxZgSkv7FP1zY8i2TIAOooNZ1e/OGtxIEv6GltpoiXUqWvLy89+a10qYTB1N5Ifkuw9lqQkN9sscvA==,
+      }
+    engines: { node: ">=14.0.0" }
+    hasBin: true
+    dependencies:
+      "@alloc/quick-lru": 5.2.0
+      arg: 5.0.2
+      chokidar: 3.5.3
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.1
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.19.3
+      lilconfig: 2.1.0
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.0.0
+      postcss: 8.4.31
+      postcss-import: 15.1.0(postcss@8.4.31)
+      postcss-js: 4.0.1(postcss@8.4.31)
+      postcss-load-config: 4.0.1(postcss@8.4.31)
+      postcss-nested: 6.0.1(postcss@8.4.31)
+      postcss-selector-parser: 6.0.13
+      resolve: 1.22.8
       sucrase: 3.34.0
     transitivePeerDependencies:
       - ts-node
@@ -26683,6 +26730,16 @@ packages:
       "@fastify/busboy": 2.0.0
     dev: false
 
+  /undici@5.27.0:
+    resolution:
+      {
+        integrity: sha512-l3ydWhlhOJzMVOYkymLykcRRXqbUaQriERtR70B9LzNkZ4bX52Fc8wbTDneMiwo8T+AemZXvXaTx+9o5ROxrXg==,
+      }
+    engines: { node: ">=14.0" }
+    dependencies:
+      "@fastify/busboy": 2.0.0
+    dev: false
+
   /unicode-canonical-property-names-ecmascript@2.0.0:
     resolution:
       {
@@ -26745,6 +26802,21 @@ packages:
     resolution:
       {
         integrity: sha512-jlCV402P+YDcFcB2VcN/n8JasOddqIiaxv118wNBoZXEhOn+lYG7BR4Bfg2BwxvlK58dwbuH2w7GX2esAjL6Mg==,
+      }
+    dependencies:
+      "@types/unist": 3.0.0
+      bail: 2.0.2
+      devlop: 1.1.0
+      extend: 3.0.2
+      is-plain-obj: 4.1.0
+      trough: 2.1.0
+      vfile: 6.0.1
+    dev: false
+
+  /unified@11.0.4:
+    resolution:
+      {
+        integrity: sha512-apMPnyLjAX+ty4OrNap7yumyVAMlKx5IWU2wlzzUdYJO9A8f1p9m/gywF/GM2ZDFcjQPrx59Mc90KwmxsoklxQ==,
       }
     dependencies:
       "@types/unist": 3.0.0
@@ -27257,7 +27329,7 @@ packages:
       replace-ext: 0.0.1
     dev: false
 
-  /vite-node@0.34.6(@types/node@20.8.7)(sass@1.69.4):
+  /vite-node@0.34.6(@types/node@20.8.7)(sass@1.69.5):
     resolution:
       {
         integrity: sha512-nlBMJ9x6n7/Amaz6F3zJ97EBwR2FkzhBRxF5e+jE6LA3yi6Wtc2lyTij1OnDMIr34v5g/tVQtsVAzhT0jc5ygA==,
@@ -27270,7 +27342,7 @@ packages:
       mlly: 1.4.0
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
     transitivePeerDependencies:
       - "@types/node"
       - less
@@ -27320,7 +27392,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@4.5.0(@types/node@20.8.7)(sass@1.69.4):
+  /vite@4.5.0(@types/node@20.8.7)(sass@1.69.5):
     resolution:
       {
         integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==,
@@ -27355,12 +27427,12 @@ packages:
       esbuild: 0.18.20
       postcss: 8.4.31
       rollup: 3.28.1
-      sass: 1.69.4
+      sass: 1.69.5
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@0.34.6(sass@1.69.4):
+  /vitest@0.34.6(sass@1.69.5):
     resolution:
       {
         integrity: sha512-+5CALsOvbNKnS+ZHMXtuUC7nL8/7F1F2DnHGjSsszX8zCjWSSviphCb/NuS9Nzf4Q03KyyDRBAXhF/8lffME4Q==,
@@ -27415,8 +27487,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.0
       tinypool: 0.7.0
-      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.4)
-      vite-node: 0.34.6(@types/node@20.8.7)(sass@1.69.4)
+      vite: 4.5.0(@types/node@20.8.7)(sass@1.69.5)
+      vite-node: 0.34.6(@types/node@20.8.7)(sass@1.69.5)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
@@ -28055,10 +28127,10 @@ packages:
       }
     dev: false
 
-  /zustand@4.4.4(@types/react@18.2.31)(react@18.2.0):
+  /zustand@4.4.5(@types/react@18.2.31)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-5UTUIAiHMNf5+mFp7/AnzJXS7+XxktULFN0+D1sCiZWyX7ZG+AQpqs2qpYrynRij4QvoDdCD+U+bmg/cG3Ucxw==,
+        integrity: sha512-jgIrBBLKncQW74PA2Lclct3gwD4aPughwGE4FqlXrv3rDqQox7JCn8rwUiFK6ygJcbBAvfTf8fF+ICg7HLD2FQ==,
       }
     engines: { node: ">=12.7.0" }
     peerDependencies:
