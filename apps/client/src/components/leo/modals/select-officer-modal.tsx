@@ -98,8 +98,6 @@ export function SelectOfficerModal() {
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ setValues, setFieldValue, errors, values, isValid }) => {
-          console.log({ errors, values, isValid });
-
           return (
             <Form>
               {includeStatuses ? (

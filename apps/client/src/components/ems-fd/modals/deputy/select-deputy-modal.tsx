@@ -76,8 +76,6 @@ export function SelectDeputyModal() {
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ setValues, setFieldValue, errors, values, isValid }) => {
-          console.log({ errors, values, isValid });
-
           return (
             <Form>
               <AsyncListSearchField<GetMyDeputiesData["deputies"][number]>
