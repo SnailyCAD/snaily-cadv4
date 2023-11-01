@@ -75,95 +75,99 @@ export function SelectDeputyModal() {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ setValues, setFieldValue, errors, values, isValid }) => (
-          <Form>
-            <AsyncListSearchField<GetMyDeputiesData["deputies"][number]>
-              allowsCustomValue
-              errorMessage={errors.deputyId}
-              label={t("Ems.deputy")}
-              localValue={values.deputySearch}
-              onInputChange={(value) => setFieldValue("deputySearch", value)}
-              onSelectionChange={(node) => {
-                if (node) {
-                  setValues({
-                    ...values,
-                    deputySearch: node.textValue,
-                    deputyId: node.key as string,
-                    deputy: node.value ?? null,
-                  });
-                }
-              }}
-              fetchOptions={{
-                apiPath: (query) => `/ems-fd?query=${query}`,
-                onResponse(json: GetMyDeputiesData) {
-                  return json.deputies;
-                },
-              }}
-            >
-              {(item) => {
-                const formattedName = `${generateCallsign(item)} ${makeUnitName(item)}`;
+        {({ setValues, setFieldValue, errors, values, isValid }) => {
+          console.log({ errors, values, isValid });
 
-                return (
-                  <Item key={item.id} textValue={formattedName}>
-                    {formattedName}
-                  </Item>
-                );
-              }}
-            </AsyncListSearchField>
+          return (
+            <Form>
+              <AsyncListSearchField<GetMyDeputiesData["deputies"][number]>
+                allowsCustomValue
+                errorMessage={errors.deputyId}
+                label={t("Ems.deputy")}
+                localValue={values.deputySearch}
+                onInputChange={(value) => setFieldValue("deputySearch", value)}
+                onSelectionChange={(node) => {
+                  if (node) {
+                    setValues({
+                      ...values,
+                      deputySearch: node.textValue,
+                      deputyId: node.key as string,
+                      deputy: node.value ?? null,
+                    });
+                  }
+                }}
+                fetchOptions={{
+                  apiPath: (query) => `/ems-fd?query=${query}`,
+                  onResponse(json: GetMyDeputiesData) {
+                    return json.deputies;
+                  },
+                }}
+              >
+                {(item) => {
+                  const formattedName = `${generateCallsign(item)} ${makeUnitName(item)}`;
 
-            <AsyncListSearchField<EmergencyVehicleValue>
-              errorMessage={errors.vehicleId}
-              isOptional
-              label={t("Ems.emergencyVehicle")}
-              localValue={values.vehicleSearch}
-              onInputChange={(value) => setFieldValue("vehicleSearch", value)}
-              onSelectionChange={(node) => {
-                if (node) {
-                  setValues({
-                    ...values,
-                    vehicleSearch: node.value?.value.value ?? node.textValue,
-                    vehicleId: node.key as string,
-                  });
-                }
-              }}
-              fetchOptions={{
-                apiPath: (query) =>
-                  `/admin/values/emergency_vehicle/search?query=${query}&department=${values.deputy?.departmentId}`,
-                filterTextRequired: true,
-              }}
-            >
-              {(item) => <Item key={item.id}>{item.value.value}</Item>}
-            </AsyncListSearchField>
+                  return (
+                    <Item key={item.id} textValue={formattedName}>
+                      {formattedName}
+                    </Item>
+                  );
+                }}
+              </AsyncListSearchField>
 
-            {canSetUserDefinedCallsign ? (
-              <TextField
+              <AsyncListSearchField<EmergencyVehicleValue>
+                errorMessage={errors.vehicleId}
                 isOptional
-                label={t("Leo.userDefinedCallsign")}
-                value={values.userDefinedCallsign}
-                onChange={(value) => setFieldValue("userDefinedCallsign", value)}
-                description={t("Leo.userDefinedCallsignDescription")}
-              />
-            ) : null}
+                label={t("Ems.emergencyVehicle")}
+                localValue={values.vehicleSearch}
+                onInputChange={(value) => setFieldValue("vehicleSearch", value)}
+                onSelectionChange={(node) => {
+                  if (node) {
+                    setValues({
+                      ...values,
+                      vehicleSearch: node.value?.value.value ?? node.textValue,
+                      vehicleId: node.key as string,
+                    });
+                  }
+                }}
+                fetchOptions={{
+                  apiPath: (query) =>
+                    `/admin/values/emergency_vehicle/search?query=${query}&department=${values.deputy?.departmentId}`,
+                  filterTextRequired: true,
+                }}
+              >
+                {(item) => <Item key={item.id}>{item.value.value}</Item>}
+              </AsyncListSearchField>
 
-            <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onPress={() => modalState.closeModal(ModalIds.SelectDeputy)}
-                variant="cancel"
-              >
-                {common("cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("save")}
-              </Button>
-            </footer>
-          </Form>
-        )}
+              {canSetUserDefinedCallsign ? (
+                <TextField
+                  isOptional
+                  label={t("Leo.userDefinedCallsign")}
+                  value={values.userDefinedCallsign}
+                  onChange={(value) => setFieldValue("userDefinedCallsign", value)}
+                  description={t("Leo.userDefinedCallsignDescription")}
+                />
+              ) : null}
+
+              <footer className="flex justify-end mt-5">
+                <Button
+                  type="reset"
+                  onPress={() => modalState.closeModal(ModalIds.SelectDeputy)}
+                  variant="cancel"
+                >
+                  {common("cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {common("save")}
+                </Button>
+              </footer>
+            </Form>
+          );
+        }}
       </Formik>
     </Modal>
   );
