@@ -136,10 +136,10 @@
     "EDIT": "编辑部门"
   },
   "CODES_10": {
-    "MANAGE": "管理10代码",
-    "ADD": "添加10代码",
-    "DELETE": "删除10代码",
-    "EDIT": "编辑10代码"
+    "MANAGE": "管理10-code",
+    "ADD": "添加10-code",
+    "DELETE": "删除10-code",
+    "EDIT": "编辑10-code"
   },
   "OFFICER_RANK": {
     "MANAGE": "管理警员级别",
@@ -214,10 +214,10 @@
     "EDIT": "编辑地址标志"
   },
   "VEHICLE_TRIM_LEVEL": {
-    "MANAGE": "管理车辆修剪级别",
-    "ADD": "添加修剪级别",
-    "DELETE": "删除修剪级别",
-    "EDIT": "编辑修剪级别"
+    "MANAGE": "管理车辆改装级别",
+    "ADD": "添加改装级别",
+    "DELETE": "删除改装级别",
+    "EDIT": "编辑改装级别"
   },
   "WEAPON_FLAG": {
     "MANAGE": "管理武器标志",
