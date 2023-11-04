@@ -200,6 +200,12 @@ export function AddUnitToCallModal({ onClose }: Props) {
                   const imageId =
                     isUnitCombined(item) || isUnitCombinedEmsFd(item) ? null : item.imageId;
 
+                  const status =
+                    item.statusId && item.status?.shouldDo !== "SET_OFF_DUTY"
+                      ? item.status?.value.value
+                      : null;
+                  const statusText = status ? `(${status})` : "";
+
                   return (
                     <Item key={item.id} textValue={nameAndCallsign}>
                       <div className="flex items-center">
@@ -215,7 +221,9 @@ export function AddUnitToCallModal({ onClose }: Props) {
                             height={30}
                           />
                         ) : null}
-                        <p>{nameAndCallsign}</p>
+                        <p>
+                          {nameAndCallsign} {statusText}
+                        </p>
                       </div>
                     </Item>
                   );
@@ -264,10 +272,18 @@ export function AddUnitToCallModal({ onClose }: Props) {
                       unit,
                     )}`;
 
+                    const status =
+                      unit.statusId && unit.status?.shouldDo !== "SET_OFF_DUTY"
+                        ? unit.status?.value.value
+                        : null;
+                    const statusText = status ? `(${status})` : "";
+
                     return (
                       <li key={unit.id} className="mb-3 flex items-center justify-between">
                         <div>
-                          <p className="font-semibold">{callsignAndName}</p>
+                          <p className="font-semibold">
+                            {callsignAndName} {statusText}
+                          </p>
                           <Infofield label={t("primaryUnit")}>
                             {common(yesOrNoText(unit.isPrimary ?? false))}
                           </Infofield>
