@@ -1,11 +1,18 @@
 import * as React from "react";
 import "../src/tailwind.css";
 import type { Preview } from "@storybook/react";
-import { withThemeByDataAttribute } from "@storybook/addon-styling";
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { NextIntlProvider } from "next-intl";
 
 const preview: Preview = {
   parameters: {
+    backgrounds: {
+      default: "dark",
+      values: [
+        { name: "light", value: "#ffffff" },
+        { name: "dark", value: "#16151a" },
+      ],
+    },
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
@@ -44,6 +51,7 @@ export const decorators = [
       light: "light",
       dark: "dark",
     },
+    parentSelector: "body",
     defaultTheme: "dark",
     attributeName: "data-theme",
   }),

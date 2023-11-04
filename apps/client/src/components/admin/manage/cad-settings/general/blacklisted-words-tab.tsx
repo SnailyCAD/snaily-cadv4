@@ -24,7 +24,12 @@ export function BlacklistedWordsTab() {
 
   const asyncTable = useAsyncTable<BlacklistedWord>({
     search,
+    sortingSchema: {
+      createdAt: "createdAt",
+      word: "word",
+    },
     fetchOptions: {
+      refetchOnWindowFocus: false,
       onResponse(data: GetBlacklistedWordsData) {
         return { totalCount: data.totalCount, data: data.blacklistedWords };
       },
@@ -32,7 +37,7 @@ export function BlacklistedWordsTab() {
     },
   });
   const [tempWord, wordState] = useTemporaryItem(asyncTable.items);
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   function onRemoveWordClick(word: BlacklistedWord) {
     wordState.setTempId(word.id);
@@ -95,7 +100,6 @@ export function BlacklistedWordsTab() {
               { header: common("createdAt"), accessorKey: "createdAt" },
               { header: common("actions"), accessorKey: "actions" },
             ]}
-            isLoading={asyncTable.isInitialLoading}
             tableState={tableState}
           />
 

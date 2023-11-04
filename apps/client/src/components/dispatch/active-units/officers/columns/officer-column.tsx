@@ -27,7 +27,7 @@ import { classNames } from "lib/classNames";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import type { PostDispatchStatusUnmergeUnitById } from "@snailycad/types/api";
 import { useDispatchState } from "state/dispatch/dispatch-state";
-import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import { darkenColor, generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { ImageWrapper } from "components/shared/image-wrapper";
 
 interface Props {
@@ -35,6 +35,7 @@ interface Props {
   nameAndCallsign: string;
   setTempUnit: React.Dispatch<React.SetStateAction<ActiveOfficer["id"] | null>>;
   textColor?: string | null;
+  useDot: boolean;
 }
 
 export function OfficerColumn({
@@ -42,6 +43,7 @@ export function OfficerColumn({
   nameAndCallsign,
   textColor: statusTextColor,
   setTempUnit,
+  useDot,
 }: Props) {
   const { activeOfficers, setActiveOfficers } = useActiveOfficers();
 
@@ -107,6 +109,7 @@ export function OfficerColumn({
   }
 
   const unitStatusColor = officer.status?.color ?? undefined;
+  const darkenedUnitStatusColor = unitStatusColor && darkenColor(unitStatusColor, 0.3);
   const textColor = statusTextColor ?? (unitStatusColor && generateContrastColor(unitStatusColor));
   const contextMenuActions = [
     {
@@ -162,7 +165,7 @@ export function OfficerColumn({
                     <div className="flex items-center">
                       <span
                         style={{
-                          backgroundColor: unitStatusColor,
+                          backgroundColor: useDot ? unitStatusColor : darkenedUnitStatusColor,
                           color: textColor,
                         }}
                         className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
@@ -182,7 +185,7 @@ export function OfficerColumn({
                   ) : (
                     <span
                       style={{
-                        backgroundColor: unitStatusColor,
+                        backgroundColor: useDot ? unitStatusColor : darkenedUnitStatusColor,
                         color: textColor,
                       }}
                       className="px-1.5 py-0.5 rounded-md dark:bg-secondary"

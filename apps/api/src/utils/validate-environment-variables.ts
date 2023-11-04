@@ -1,12 +1,17 @@
 export function parseCORSOrigin(origin: string) {
-  if (origin === "*") return origin;
+  if (origin === "*") return ["*"];
 
-  try {
-    const parsed = new URL(origin);
-    return `${parsed.protocol}//${parsed.host}`;
-  } catch {
-    return origin;
+  const domains = [];
+  for (const domain of origin.split(",")) {
+    try {
+      const parsedURL = new URL(domain);
+      domains.push(`${parsedURL.protocol}//${parsedURL.host}`);
+    } catch {
+      console.log(`[CORS] Invalid CORS origin: ${domain}`);
+    }
   }
+
+  return domains;
 }
 
 const SECURE_COOKIES_FOR_IFRAME = process.env.SECURE_COOKIES_FOR_IFRAME === "true";

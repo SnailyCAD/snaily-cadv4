@@ -15,7 +15,7 @@ export const ASSIGNED_UNIT = z.object({
 
 export const CALL_911_SCHEMA = z.object({
   location: z.string().min(2),
-  description: z.string().optional(),
+  description: z.string().nullish(),
   descriptionData: z.any().nullish(),
   name: z.string().min(2).max(255),
   postal: z.string().nullish(),

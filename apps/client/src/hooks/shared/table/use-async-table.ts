@@ -3,6 +3,7 @@ import useFetch from "lib/useFetch";
 import { useDebounce } from "react-use";
 import { useQuery, type QueryFunctionContext } from "@tanstack/react-query";
 import { useList } from "./use-list";
+import type { SortingState } from "@tanstack/react-table";
 
 interface FetchOptions {
   pageSize?: number;
@@ -16,6 +17,7 @@ interface FetchOptions {
 
 interface Options<T> {
   search?: string;
+  sortingSchema?: Record<string, string>;
 
   disabled?: boolean;
   totalCount?: number;
@@ -35,6 +37,7 @@ export function useAsyncTable<T>(options: Options<T>) {
   });
   const { state: loadingState, execute } = useFetch();
 
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [debouncedSearch, setDebouncedSearch] = React.useState(options.search);
   const [filters, setFilters] = React.useState<Record<string, any> | null>(null);
   const [paginationOptions, setPagination] = React.useState({
@@ -42,12 +45,18 @@ export function useAsyncTable<T>(options: Options<T>) {
     pageIndex: options.fetchOptions.pageIndex ?? 0,
   });
 
-  const { isInitialLoading, error, refetch } = useQuery({
+  const { isLoading, error, refetch } = useQuery({
     retry: false,
     enabled: !options.disabled,
     initialData: options.initialData ?? undefined,
     queryFn: fetchData,
-    queryKey: [paginationOptions.pageIndex, debouncedSearch, filters, options.fetchOptions.path],
+    queryKey: [
+      paginationOptions.pageIndex,
+      debouncedSearch,
+      sorting,
+      filters,
+      options.fetchOptions.path,
+    ],
     refetchOnMount: options.fetchOptions.refetchOnMount,
     refetchOnWindowFocus: options.fetchOptions.refetchOnWindowFocus,
   });
@@ -68,12 +77,24 @@ export function useAsyncTable<T>(options: Options<T>) {
   }, [options.initialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function fetchData(context: QueryFunctionContext<any>) {
-    const [pageIndex, search, _filters] = context.queryKey;
+    const [pageIndex, search, _sorting, _filters] = context.queryKey;
     const path = options.fetchOptions.path;
     const skip = Number(pageIndex * paginationOptions.pageSize) || 0;
     const filters = _filters || {};
+    const sorting = [];
 
     const searchParams = new URLSearchParams();
+
+    for (const sort of _sorting as SortingState) {
+      const key = options.sortingSchema?.[sort.id];
+      if (!key) continue;
+
+      sorting.push(`${key}:${sort.desc ? "desc" : "asc"}`);
+    }
+
+    if (sorting.length > 0) {
+      searchParams.append("sorting", sorting.join(","));
+    }
 
     filters.query = search;
     filters.skip = skip;
@@ -123,10 +144,17 @@ export function useAsyncTable<T>(options: Options<T>) {
     ...paginationOptions,
   } as const;
 
+  const sortingState = {
+    sorting,
+    setSorting,
+    sortingSchema: options.sortingSchema,
+  } as const;
+
   return {
     ...list,
-    noItemsAvailable: !isInitialLoading && !error && list.items.length <= 0,
-    isInitialLoading,
+    sorting: sortingState,
+    noItemsAvailable: !isLoading && !error && list.items.length <= 0,
+    isInitialLoading: isLoading,
     filters,
     setFilters,
     isLoading: loadingState === "loading",

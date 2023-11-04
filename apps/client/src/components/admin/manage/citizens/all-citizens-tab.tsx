@@ -40,6 +40,18 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
     search,
     initialData,
     totalCount,
+    sortingSchema: {
+      name: "name",
+      surname: "surname",
+      dateOfBirth: "dateOfBirth",
+      gender: "gender.value",
+      ethnicity: "ethnicity.value",
+      hairColor: "hairColor",
+      eyeColor: "eyeColor",
+      weight: "weight",
+      height: "height",
+      user: "user.username",
+    },
     fetchOptions: {
       path: "/admin/manage/citizens",
       onResponse: (json: GetManageCitizensData) => ({
@@ -48,7 +60,10 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       }),
     },
   });
-  const tableState = useTableState({ pagination: asyncTable.pagination });
+  const tableState = useTableState({
+    sorting: asyncTable.sorting,
+    pagination: asyncTable.pagination,
+  });
 
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
   const { hasPermissions } = usePermission();
@@ -146,7 +161,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             tableState={tableState}
             data={asyncTable.items.map((citizen) => ({
               id: citizen.id,
-              name: `${citizen.name} ${citizen.surname}`,
+              name: citizen.name,
+              surname: citizen.surname,
               dateOfBirth: (
                 <FullDate isDateOfBirth onlyDate>
                   {citizen.dateOfBirth}
@@ -193,7 +209,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
               ),
             }))}
             columns={[
-              { header: tCitizen("fullName"), accessorKey: "name" },
+              { header: tCitizen("name"), accessorKey: "name" },
+              { header: tCitizen("surname"), accessorKey: "surname" },
               { header: tCitizen("dateOfBirth"), accessorKey: "dateOfBirth" },
               { header: tCitizen("gender"), accessorKey: "gender" },
               { header: tCitizen("ethnicity"), accessorKey: "ethnicity" },

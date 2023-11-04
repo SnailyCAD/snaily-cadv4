@@ -23,8 +23,8 @@ import type { PatchUserData } from "@snailycad/types/api";
 import { useAudio } from "react-use";
 import Image from "next/image";
 
-import FullRowColorPreview from "../../../public/images/full-row-color.png";
-import RowDotColorPreview from "../../../public/images/row-dot-color.png";
+import FullRowColorPreview from "./images/full-row-color.png";
+import RowDotColorPreview from "./images/row-dot-color.png";
 import { classNames } from "lib/classNames";
 
 interface Props {

@@ -40,6 +40,13 @@ export default function ManageBusinesses({ businesses: data }: Props) {
     search,
     totalCount: data.totalCount,
     initialData: data.businesses,
+    sortingSchema: {
+      name: "name",
+      user: "user.username",
+      whitelisted: "whitelisted",
+      whitelistStatus: "whitelistStatus",
+      owners: "employees._count",
+    },
     fetchOptions: {
       path: "/admin/manage/businesses",
       onResponse: (json: GetManageBusinessesData) => ({
@@ -48,7 +55,10 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       }),
     },
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({
+    pagination: asyncTable.pagination,
+    sorting: asyncTable.sorting,
+  });
   const [tempValue, valueState] = useTemporaryItem(asyncTable.items);
 
   const TABS = [

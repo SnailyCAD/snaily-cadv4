@@ -35,6 +35,7 @@ import { isDiscordIdInUse } from "lib/discord/utils";
 import { getTranslator } from "~/utils/get-translator";
 import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
 import { type APIEmbed } from "discord-api-types/v10";
+import { getPrismaModelOrderBy } from "~/utils/order-by";
 
 const manageUsersSelect = (selectCitizens: boolean) =>
   ({
@@ -69,6 +70,7 @@ export class ManageUsersController {
     @QueryParams("query", String) query = "",
     @QueryParams("pendingOnly", Boolean) pendingOnly = false,
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetManageUsersData> {
     const where =
       query || pendingOnly
@@ -87,9 +89,10 @@ export class ManageUsersController {
           }
         : undefined;
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const [totalCount, pendingCount] = await prisma.$transaction([
       prisma.user.count({ where }),
-      prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
+      prisma.user.count({ orderBy, where: { whitelistStatus: WhitelistStatus.PENDING } }),
     ]);
 
     const shouldIncludeAll = includeAll;

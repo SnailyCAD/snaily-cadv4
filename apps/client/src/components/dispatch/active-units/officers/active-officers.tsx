@@ -151,6 +151,7 @@ function ActiveOfficers({ initialOfficers }: Props) {
               name: nameAndCallsign,
               officer: (
                 <OfficerColumn
+                  useDot={useDot}
                   textColor={textColor}
                   nameAndCallsign={nameAndCallsign}
                   setTempUnit={officerState.setTempId}

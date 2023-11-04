@@ -18,6 +18,7 @@ import { getAPIUrl } from "@snailycad/utils/api-url";
 import { AsyncListSearchFieldActions } from "./async-list-search-field/actions";
 import { cn } from "mxcn";
 import { Popover } from "..";
+import type { AriaPopoverProps } from "@react-aria/overlays";
 
 interface AsyncListFieldFetchOptions {
   filterTextRequired?: boolean;
@@ -40,6 +41,7 @@ export interface AsyncListFieldProps<T extends object>
   className?: string;
   /** className that will be appended in the results menu */
   menuClassName?: string;
+  menuPlacement?: AriaPopoverProps["placement"];
 
   fetchOptions: AsyncListFieldFetchOptions;
 
@@ -107,6 +109,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     try {
       if (props.isClearable && key === "cleared") {
         props.onSelectionChange(null);
+        props.onInputChange("");
         return;
       }
 
@@ -201,6 +204,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
             className={props.menuClassName}
             state={state}
             popoverRef={popoverRef}
+            placement={props.menuPlacement}
           >
             {state.collection.size > 0 ? (
               <AsyncListFieldListBox<T> {...listBoxProps} listBoxRef={listBoxRef} state={state} />

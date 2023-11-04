@@ -42,6 +42,7 @@ import { upsertEmsFdDeputy } from "lib/ems-fd/upsert-ems-fd-deputy";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { unitProperties, combinedEmsFdUnitProperties } from "utils/leo/includes";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { createWhere } from "../leo/create-where-obj";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -56,9 +57,21 @@ export class EmsFdController {
   @UsePermissions({
     permissions: [Permissions.EmsFd],
   })
-  async getUserDeputies(@Context("user") user: User): Promise<APITypes.GetMyDeputiesData> {
+  async getUserDeputies(
+    @Context("user") user: User,
+    @QueryParams("query") query: string,
+  ): Promise<APITypes.GetMyDeputiesData> {
+    const where = createWhere({
+      query,
+      type: "DEPUTY",
+      pendingOnly: false,
+      extraWhere: {
+        userId: user.id,
+      },
+    });
+
     const deputies = await prisma.emsFdDeputy.findMany({
-      where: { userId: user.id },
+      where,
       orderBy: { updatedAt: "desc" },
       include: {
         ...unitProperties,

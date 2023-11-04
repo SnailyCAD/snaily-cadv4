@@ -79,7 +79,12 @@
     "paymentStatus": "Payment Status",
     "createdAt": "Created At",
     "officer": "Officer",
-    "socialSecurityNumber": "Social Security Number"
+    "socialSecurityNumber": "Social Security Number",
+    "citizenRecord": "Citizen Records",
+    "exportInformation": "Export Information",
+    "dateOfExport": "Date of export",
+    "records": "Records",
+    "type": "Type"
   },
   "WhitelistStatusChange": {
     "accepted": "accepted",
@@ -89,5 +94,16 @@
     "userChangeTitle": "User Whitelist Status Change",
     "departmentChangeDescription": "Unit: {unit}'s whitelist status has been changed to {status}.",
     "departmentChangeTitle": "Unit Department Whitelist Status Change"
+  },
+  "Incidents": {
+    "createdEms": "EMS/FD Incident Created",
+    "createdLeo": "LEO Incident Created",
+    "fireArmsIncluded": "Firearm(s) included",
+    "injuriesOrFatalities": "Injuries or fatalities",
+    "arrestsMade": "Arrest(s) made",
+    "situationCode": "Situation Code",
+    "postal": "Postal",
+    "yes": "Yes",
+    "no": "No"
   }
 }

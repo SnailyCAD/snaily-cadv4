@@ -10,6 +10,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { _leoProperties, unitProperties } from "utils/leo/includes";
+import { getFirstOrderBy } from "~/utils/order-by";
 
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
 export type AcceptDeclineType = (typeof ACCEPT_DECLINE_TYPES)[number];
@@ -35,6 +36,7 @@ export class AdminManageUnitsController {
     @QueryParams("startDate", String) startDate?: string,
     @QueryParams("endDate", String) endDate?: string,
     @QueryParams("query", String) query?: string,
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetDepartmentTimeLogsUnitsData> {
     const _startDate = startDate ? new Date(startDate) : undefined;
     _startDate?.setHours(0, 0, 0, 0);
@@ -58,7 +60,6 @@ export class AdminManageUnitsController {
 
     const officerLogs = await prisma.officerLog.findMany({
       include: { officer: { include: _leoProperties }, emsFdDeputy: { include: unitProperties } },
-      orderBy: { createdAt: "desc" },
       where,
     });
 
@@ -132,7 +133,39 @@ export class AdminManageUnitsController {
     }
 
     const units = Array.from(groupedByUnit.values());
-    const sortedByHours = units.sort((a, b) => b.hours - a.hours);
+
+    const orderBy = getFirstOrderBy(sorting);
+    // we have to manually sort here since we have to sort by:
+    // firstSeen, lastSeen, department or hours
+    const sortedByHours = units.sort((a, b) => {
+      if (!orderBy) return b.hours - a.hours;
+      const [key, sortOrder] = orderBy;
+
+      switch (key) {
+        case "hours": {
+          return sortOrder === "asc" ? a.hours - b.hours : b.hours - a.hours;
+        }
+        case "firstSeen": {
+          return sortOrder === "asc"
+            ? a.firstSeen.getTime() - b.firstSeen.getTime()
+            : b.firstSeen.getTime() - a.firstSeen.getTime();
+        }
+        case "lastSeen": {
+          return sortOrder === "asc"
+            ? a.lastSeen.getTime() - b.lastSeen.getTime()
+            : b.lastSeen.getTime() - a.lastSeen.getTime();
+        }
+        case "department": {
+          return sortOrder === "asc"
+            ? a.unit.department.value.value.localeCompare(b.unit.department.value.value)
+            : b.unit.department.value.value.localeCompare(a.unit.department.value.value);
+        }
+        default: {
+          return b.hours - a.hours;
+        }
+      }
+    });
+
     const skipped = includeAll ? sortedByHours : sortedByHours.slice(skip, skip + 35);
     const totalCount = sortedByHours.length;
 
@@ -154,6 +187,7 @@ export class AdminManageUnitsController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("query", String) query = "",
+    @QueryParams("sorting") sorting = "",
   ): Promise<APITypes.GetDepartmentTimeLogsDepartmentsData> {
     const departmentInclude = {
       department: { include: { value: true } },
@@ -213,7 +247,28 @@ export class AdminManageUnitsController {
     }
 
     const departments = Array.from(groupedByDepartment.values());
-    const sortedByHours = departments.sort((a, b) => b.hours - a.hours);
+    const orderBy = getFirstOrderBy(sorting);
+    // we have to manually sort here since we have to sort by:
+    // hours or department
+    const sortedByHours = departments.sort((a, b) => {
+      if (!orderBy) return b.hours - a.hours;
+
+      const [key, sortOrder] = orderBy;
+
+      switch (key) {
+        case "hours": {
+          return sortOrder === "asc" ? a.hours - b.hours : b.hours - a.hours;
+        }
+        case "department": {
+          return sortOrder === "asc"
+            ? a.department.value.value.localeCompare(b.department.value.value)
+            : b.department.value.value.localeCompare(a.department.value.value);
+        }
+        default: {
+          return b.hours - a.hours;
+        }
+      }
+    });
 
     const skipped = includeAll ? sortedByHours : sortedByHours.slice(skip, skip + 35);
     const totalCount = sortedByHours.length;

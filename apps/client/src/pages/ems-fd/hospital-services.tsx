@@ -66,7 +66,7 @@ export default function EmsFdIncidents({ deadCitizens }: Props) {
     initialData: deadCitizens.citizens,
     totalCount: deadCitizens.totalCount,
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const [tempCitizen, tempCitizenState] = useTemporaryItem(asyncTable.items);
 
   return (

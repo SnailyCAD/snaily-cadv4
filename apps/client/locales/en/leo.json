@@ -386,7 +386,9 @@
     "all": "All",
     "ungrouped": "Ungrouped",
     "counts": "Counts",
-    "stats": "Stats"
+    "stats": "Stats",
+    "deletedPenalCode": "Deleted Penal Code",
+    "exportCriminalRecord": "Export Criminal Record"
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

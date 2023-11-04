@@ -24,6 +24,8 @@ export function PenalCodesTable({ isReadOnly, penalCodes, isWithinCardOrModal = 
     let sum = 0;
 
     for (const violation of values.violations) {
+      // skip deleted penal code
+      if (!violation.value.id) continue;
       const counts = parseInt(String(violation.value.counts.value)) || 1;
 
       if (violation.value[type].value) {
@@ -53,7 +55,7 @@ export function PenalCodesTable({ isReadOnly, penalCodes, isWithinCardOrModal = 
         tableState={tableState}
         data={penalCodes.map((penalCode) => ({
           id: penalCode.id,
-          title: penalCode.title,
+          title: penalCode.title || t("deletedPenalCode"),
           data: <TableItemForm isReadOnly={isReadOnly} penalCode={penalCode} />,
         }))}
         columns={[

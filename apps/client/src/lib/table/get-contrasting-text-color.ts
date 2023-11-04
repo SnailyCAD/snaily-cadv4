@@ -8,3 +8,13 @@ export function generateContrastColor(backgroundColor: string): string {
     return "#FFFFFF";
   }
 }
+
+export function darkenColor(color: string, amount: number): string {
+  try {
+    return new Color(color.trim()).darken(amount).hex();
+  } catch (err) {
+    console.log(err);
+
+    return color;
+  }
+}

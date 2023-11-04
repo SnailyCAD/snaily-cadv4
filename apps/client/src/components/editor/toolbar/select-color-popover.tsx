@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { ToolbarToggleItem } from "@radix-ui/react-toolbar";
-import { Button } from "@snailycad/ui";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { classNames } from "lib/classNames";
 import { isMarkActive, toggleMark } from "lib/editor/utils";
 import type { Text } from "slate";
@@ -29,20 +28,14 @@ export function SelectColorPopover({ icon, format }: SelectColorPopoverProps) {
 
   return (
     <Popover.Root onOpenChange={handleSave} open={isPopover}>
-      <Popover.Trigger asChild>
-        <span>
-          <ToolbarToggleItem asChild value={format}>
-            <Button
-              title={format}
-              type="button"
-              variant={isActive ? null : "default"}
-              className={classNames(isActive && "text-white bg-neutral-700")}
-              onPress={() => setIsPopoverOpen((v) => !v)}
-            >
-              {icon}
-            </Button>
-          </ToolbarToggleItem>
-        </span>
+      <Popover.Trigger
+        title={format}
+        className={buttonVariants({
+          variant: isActive ? "primary" : "default",
+          className: classNames(isActive && "text-white bg-neutral-700"),
+        })}
+      >
+        {icon}
       </Popover.Trigger>
 
       <Popover.Content

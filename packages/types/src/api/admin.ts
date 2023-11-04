@@ -210,10 +210,12 @@ export type GetManageCitizenByIdData =
 export type PostCitizenRecordLogsData = Prisma.Record & {
   officer?: Types.Officer | null;
   violations: (Prisma.Violation & {
-    penalCode: Prisma.PenalCode & {
-      warningApplicable: Prisma.WarningApplicable | null;
-      warningNotApplicable: Prisma.WarningNotApplicable | null;
-    };
+    penalCode?:
+      | (Prisma.PenalCode & {
+          warningApplicable: Prisma.WarningApplicable | null;
+          warningNotApplicable: Prisma.WarningNotApplicable | null;
+        })
+      | null;
   })[];
   seizedItems: Prisma.SeizedItem[];
 };
@@ -410,7 +412,7 @@ export interface GetManageExpungementRequests {
     citizen: Prisma.Citizen;
     warrants: Prisma.Warrant[];
     records: (Prisma.Record & {
-      violations: (Prisma.Violation & { penalCode: Prisma.PenalCode })[];
+      violations: (Prisma.Violation & { penalCode?: Prisma.PenalCode | null })[];
     })[];
   })[];
   totalCount: number;

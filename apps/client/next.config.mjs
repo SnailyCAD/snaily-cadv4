@@ -12,6 +12,9 @@ const json = require("./package.json");
 const nextConfig = {
   i18n,
   cleanDistDir: true,
+  experimental: {
+    webpackBuildWorker: true,
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

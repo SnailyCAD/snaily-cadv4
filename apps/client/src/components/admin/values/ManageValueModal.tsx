@@ -133,6 +133,7 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
     priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
+    isDisposition: value && isCallTypeValue(value) ? value.isDisposition ?? undefined : undefined,
 
     officerRankImageId: "",
     officerRankDepartments:
@@ -374,6 +375,17 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
                 onChange={(value) => setFieldValue("priority", value)}
                 value={values.priority}
               />
+            ) : null}
+
+            {type === ValueType.CALL_TYPE ? (
+              <SwitchField
+                name="isDisposition"
+                onChange={(value) => setFieldValue("isDisposition", value)}
+                isSelected={values.isDisposition}
+                description={tValues("isDispositionDescription")}
+              >
+                {tValues("isDisposition")}
+              </SwitchField>
             ) : null}
 
             {type === ValueType.OFFICER_RANK ? (

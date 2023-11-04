@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body[data-mode="dark"],
-body[data-mode="dark"] {
+body[data-theme="dark"] {
   background-color: theme("colors.primary");
+  color: theme("colors.white");
 }

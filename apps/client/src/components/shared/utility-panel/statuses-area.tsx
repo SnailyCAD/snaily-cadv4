@@ -213,7 +213,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   );
 }
 
-function handleWhatPagesFilter(status: StatusValue, whatPagesType: WhatPages) {
+export function handleWhatPagesFilter(status: StatusValue, whatPagesType: WhatPages) {
   if (status.whatPages.length <= 0) return true;
   return status.whatPages.includes(whatPagesType);
 }

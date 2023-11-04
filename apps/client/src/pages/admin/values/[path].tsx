@@ -84,9 +84,38 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
     valueTypes: pathsRecord[type] ? pathsRecord[type] : [],
   });
 
+  const isBaseObj = (
+    [
+      ValueType.ADDRESS_FLAG,
+      ValueType.BLOOD_GROUP,
+      ValueType.CITIZEN_FLAG,
+      ValueType.VEHICLE_FLAG,
+      ValueType.ETHNICITY,
+      ValueType.GENDER,
+      ValueType.IMPOUND_LOT,
+      ValueType.OFFICER_RANK,
+      ValueType.VEHICLE_TRIM_LEVEL,
+      ValueType.WEAPON_FLAG,
+    ] as string[]
+  ).includes(type);
   const [search, setSearch] = React.useState("");
   const asyncTable = useAsyncTable({
     search,
+    sortingSchema: {
+      value: isBaseObj ? "value" : "value.value",
+      gameHash: "hash",
+      isDisabled: isBaseObj ? "isDisabled" : "value.isDisabled",
+      createdAt: isBaseObj ? "createdAt" : "value.createdAt",
+      pairedUnitTemplate: "pairedUnitTemplate",
+      department: "department.value.value",
+      callsign: "callsign",
+      type: "type",
+      whitelisted: "whitelisted",
+      isDefaultDepartment: "isDefaultDepartment",
+      defaultOfficerRank: "defaultOfficerRank.value",
+      color: "color",
+      shouldDo: "shouldDo",
+    },
     fetchOptions: {
       onResponse(json: GetValuesData) {
         const [forType] = json;
@@ -112,6 +141,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const extraTableHeaders = useTableHeadersOfType(type);
   const extraTableData = useTableDataOfType(type);
   const tableState = useTableState({
+    sorting: asyncTable.sorting,
     pagination: asyncTable.pagination,
     dragDrop: { onListChange: setList },
   });

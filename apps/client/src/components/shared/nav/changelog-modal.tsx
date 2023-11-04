@@ -11,28 +11,28 @@ import remarkEmoji from "remark-emoji";
 import { remarkGitHubReferences } from "lib/editor/remarkGitHubReferences";
 import useFetch from "lib/useFetch";
 import remarkExternalLinks from "remark-external-links";
+import { useQuery } from "@tanstack/react-query";
 
 export function ChangelogModal() {
   const modalState = useModal();
   const { cad } = useAuth();
-  const [body, setBody] = React.useState<string | null>(null);
-  const { state, execute } = useFetch();
+  const { execute } = useFetch();
 
-  const fetchLatestChangelog = React.useCallback(async () => {
-    if (body) return;
+  const { data, error, isPending } = useQuery<string, Error, string>({
+    refetchOnWindowFocus: false,
+    queryKey: ["changelog"],
+    queryFn: async () => {
+      const { json } = await execute<string>({
+        path: "/admin/changelog",
+      });
 
-    const { json } = await execute<{ body: string }>({
-      path: "/admin/changelog",
-    });
+      if (json) {
+        return json;
+      }
 
-    if (json.body) {
-      setBody(typeof json === "string" ? json : json.body);
-    }
-  }, [cad?.version?.currentVersion, body]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  React.useEffect(() => {
-    fetchLatestChangelog();
-  }, [fetchLatestChangelog]);
+      throw new Error("unable to fetch changelog");
+    },
+  });
 
   return (
     <Modal
@@ -41,23 +41,26 @@ export function ChangelogModal() {
       isOpen={modalState.isOpen(ModalIds.Changelog)}
       onClose={() => modalState.closeModal(ModalIds.Changelog)}
     >
-      {!body || state === "loading" ? (
+      {isPending ? (
         <div className="mt-5 grid place-content-center h-40">
           <Loader className="w-7 h-7" />
         </div>
+      ) : !data || error ? (
+        error?.message ?? "Unable to fetch changelog"
       ) : (
         <ReactMarkdown
           remarkPlugins={[
             remarkGfm,
             [remarkGithub, { repository: "SnailyCAD/snaily-cadv4" }],
             remarkGitHubReferences,
+            // @ts-expect-error - remark-emoji doesn't have updated types
             remarkEmoji,
             // @ts-expect-error - remark-external-links doesn't have updated types
             remarkExternalLinks,
           ]}
           className="prose dark:prose-invert"
         >
-          {body}
+          {data}
         </ReactMarkdown>
       )}
     </Modal>

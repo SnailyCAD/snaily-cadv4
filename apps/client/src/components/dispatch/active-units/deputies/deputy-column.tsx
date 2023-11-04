@@ -26,7 +26,7 @@ import useFetch from "lib/useFetch";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { ArrowRight } from "react-bootstrap-icons";
-import { generateContrastColor } from "lib/table/get-contrasting-text-color";
+import { darkenColor, generateContrastColor } from "lib/table/get-contrasting-text-color";
 import { classNames } from "lib/classNames";
 import { ImageWrapper } from "components/shared/image-wrapper";
 
@@ -36,6 +36,7 @@ interface Props {
   deputy: EmsFdDeputy | CombinedEmsFdUnit;
   setTempUnit: React.Dispatch<React.SetStateAction<ActiveDeputy["id"] | null>>;
   textColor?: string | null;
+  useDot: boolean;
 }
 
 export function DeputyColumn({
@@ -44,6 +45,7 @@ export function DeputyColumn({
   nameAndCallsign,
   textColor: statusTextColor,
   setTempUnit,
+  useDot,
 }: Props) {
   const router = useRouter();
   const isEmsFd = router.pathname.includes("/ems-fd");
@@ -85,6 +87,7 @@ export function DeputyColumn({
 
   const canBeOpened = (isDispatch && hasActiveDispatchers) || !isCurrentDeputy || shouldShowSplit;
   const unitStatusColor = deputy.status?.color ?? undefined;
+  const darkenedUnitStatusColor = unitStatusColor && darkenColor(unitStatusColor, 0.3);
   const textColor = statusTextColor ?? (unitStatusColor && generateContrastColor(unitStatusColor));
   const canDrag = hasActiveDispatchers && isDispatch;
 
@@ -156,7 +159,7 @@ export function DeputyColumn({
                     <div className="flex items-center">
                       <span
                         style={{
-                          backgroundColor: unitStatusColor,
+                          backgroundColor: useDot ? unitStatusColor : darkenedUnitStatusColor,
                           color: textColor,
                         }}
                         className="px-1.5 py-0.5 rounded-md dark:bg-secondary"
@@ -175,7 +178,7 @@ export function DeputyColumn({
                   ) : (
                     <span
                       style={{
-                        backgroundColor: unitStatusColor,
+                        backgroundColor: useDot ? unitStatusColor : darkenedUnitStatusColor,
                         color: textColor,
                       }}
                       className="px-1.5 py-0.5 rounded-md dark:bg-secondary"

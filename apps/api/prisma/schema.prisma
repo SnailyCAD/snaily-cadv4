@@ -709,13 +709,13 @@ model WarningNotApplicable {
 }
 
 model Violation {
-  id               String    @id @default(uuid())
+  id               String     @id @default(uuid())
   fine             Int?
   jailTime         Int?
   bail             Int?
   communityService String?
-  penalCode        PenalCode @relation(fields: [penalCodeId], references: [id])
-  penalCodeId      String
+  penalCode        PenalCode? @relation(fields: [penalCodeId], references: [id], onDelete: SetNull)
+  penalCodeId      String?
   records          Record[]
   counts           Int?
 }
@@ -824,11 +824,14 @@ model WeaponValue {
 }
 
 model CallTypeValue {
-  id       String    @id @default(cuid())
-  priority String?
-  valueId  String
-  value    Value     @relation("callTypeValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  Call911  Call911[]
+  id            String  @id @default(cuid())
+  priority      String?
+  valueId       String
+  isDisposition Boolean @default(false)
+  value         Value   @relation("callTypeValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+
+  dispositionCodeToCall Call911[] @relation("dispositionCodeToCall")
+  callTypeToCall        Call911[] @relation("callTypeToCall")
 }
 
 // notifications
@@ -1310,12 +1313,14 @@ model Call911 {
   ended             Boolean?            @default(false)
   situationCode     StatusValue?        @relation(fields: [situationCodeId], references: [id])
   situationCodeId   String?
+  dispositionCode   CallTypeValue?      @relation("dispositionCodeToCall", fields: [dispositionCodeId], references: [id])
+  dispositionCodeId String?
   viaDispatch       Boolean?            @default(false)
   divisions         DivisionValue[]
   departments       DepartmentValue[]
   events            Call911Event[]
   incidents         LeoIncident[]
-  type              CallTypeValue?      @relation(fields: [typeId], references: [id])
+  type              CallTypeValue?      @relation("callTypeToCall", fields: [typeId], references: [id])
   typeId            String?
   Officer           Officer[]           @relation("activeCall")
   EmsFdDeputy       EmsFdDeputy[]       @relation("emsFdActiveCall")
@@ -1904,6 +1909,8 @@ enum DiscordWebhookType {
   CITIZEN_DECLARED_DEAD
   DEPARTMENT_WHITELIST_STATUS
   USER_WHITELIST_STATUS
+  LEO_INCIDENT_CREATED
+  EMS_FD_INCIDENT_CREATED
 }
 
 enum JailTimeScale {

@@ -144,6 +144,7 @@ export const QUALIFICATION_ARR = z.array(QUALIFICATION_SCHEMA).min(1);
  */
 export const CALL_TYPE_SCHEMA = BASE_VALUE_SCHEMA.extend({
   priority: z.string().nullish(),
+  isDisposition: z.boolean().nullish(),
 });
 
 export const CALL_TYPE_ARR = z.array(CALL_TYPE_SCHEMA).min(1);

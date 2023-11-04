@@ -73,8 +73,28 @@ export function Table<TData extends _RowData>({
       cols.unshift(createTableDragDropColumn(tableState.dragDrop));
     }
 
+    if (tableState.sorting.useServerSorting) {
+      const disabledSorting = cols.map((col) => {
+        const accessorKey = (col as { accessorKey: string }).accessorKey;
+
+        return {
+          ...col,
+          enableSorting: Boolean(tableState.sorting.sortingSchema?.[accessorKey]),
+        };
+      });
+      return disabledSorting;
+    }
+
     return cols;
-  }, [columns, tableActionsAlignment, features?.dragAndDrop, tableState.dragDrop?.disabledIndices]); // eslint-disable-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    columns,
+    tableActionsAlignment,
+    tableState.sorting.sortingSchema,
+    tableState.sorting.useServerSorting,
+    features?.dragAndDrop,
+    tableState.dragDrop?.disabledIndices,
+  ]);
 
   const table = useReactTable({
     data,
@@ -83,18 +103,19 @@ export function Table<TData extends _RowData>({
     enableRowSelection: true,
     enableSorting: true,
     manualPagination: true,
+    manualSorting: tableState.sorting.useServerSorting,
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
 
-    onSortingChange: tableState.setSorting,
+    onSortingChange: tableState.sorting.setSorting,
     onRowSelectionChange: tableState.setRowSelection,
     onPaginationChange: tableState.setPagination,
     onColumnVisibilityChange: tableState.setColumnVisibility,
 
     state: {
-      sorting: tableState.sorting,
+      sorting: tableState.sorting.sorting,
       rowSelection: tableState.rowSelection,
       pagination: tableState.pagination,
       columnVisibility: tableState.columnVisibility,

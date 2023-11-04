@@ -189,6 +189,22 @@ export function DiscordWebhooksTab() {
               label={t("userWhitelistStatusChannel")}
             />
 
+            <WebhookSettingsField
+              disabled={Boolean(fetchError)}
+              fieldName={DiscordWebhookType.LEO_INCIDENT_CREATED}
+              channels={channels}
+              description={t("leoIncidentCreatedInfo")}
+              label={t("leoIncidentCreated")}
+            />
+
+            <WebhookSettingsField
+              disabled={Boolean(fetchError)}
+              fieldName={DiscordWebhookType.EMS_FD_INCIDENT_CREATED}
+              channels={channels}
+              description={t("emsFdIncidentCreatedInfo")}
+              label={t("emsFdIncidentCreated")}
+            />
+
             <Button
               className="flex items-center float-right"
               type="submit"

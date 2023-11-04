@@ -44,6 +44,8 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
   }, [getDefaultSearchValue]);
 
   function handleSuggestionPress(node?: Node<AnyValue> | null) {
+    if (node) setSearch(node?.textValue);
+
     const fieldData = { [props.fieldName]: node?.key ?? null };
     setValues({ ...values, ...fieldData });
     props.onSelectionChange?.((node?.value as T | null) ?? null);
@@ -55,7 +57,6 @@ export function ValueSelectField<T extends AnyValue>(props: Props<T>) {
       filterFn={props.filterFn}
       placeholder="Select..."
       isClearable={props.isClearable}
-      menuClassName="min-w-[350px] right-0"
       isDisabled={props.isDisabled}
       selectedKey={values[props.fieldName]}
       allowsCustomValue

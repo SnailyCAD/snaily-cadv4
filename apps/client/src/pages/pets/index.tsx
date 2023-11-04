@@ -31,7 +31,7 @@ export default function PetsPage(props: PetsPageProps) {
     initialData: props.pets.pets,
     totalCount: props.pets.totalCount,
   });
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
 
   return (
     <Layout className="dark:text-white">

@@ -47,7 +47,7 @@ export function CallsignsTab({ units }: Props) {
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const modalState = useModal();
-  const tableState = useTableState(asyncTable);
+  const tableState = useTableState({ pagination: asyncTable.pagination });
   const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers]);
   const { department } = useValues();
 

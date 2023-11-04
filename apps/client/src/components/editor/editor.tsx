@@ -5,7 +5,13 @@ import {
   slateDataToString,
 } from "@snailycad/utils/editor";
 import * as React from "react";
-import { Editor as _Editor, Node as SlateNode, type Descendant, createEditor } from "slate";
+import {
+  Editor as _Editor,
+  Node as SlateNode,
+  type Descendant,
+  createEditor,
+  Element as SlateElement,
+} from "slate";
 import {
   Editable,
   ReactEditor,
@@ -88,12 +94,12 @@ export function Editor(props: EditorProps) {
         const { text } = SlateNode.leaf(editor, path);
         const beforeText = text.slice(0, diff.start) + diff.text.slice(0, -1);
         if (!(beforeText in SHORTCUTS)) {
-          return false;
+          return;
         }
 
         const blockEntry = _Editor.above(editor, {
           at: path,
-          match: (n) => _Editor.isBlock(editor, n as any),
+          match: (n) => SlateElement.isElement(n) && _Editor.isBlock(editor, n),
         });
         if (!blockEntry) {
           return false;
@@ -127,14 +133,8 @@ export function Editor(props: EditorProps) {
       <Slate
         editor={editor}
         initialValue={props.value as Descendant[]}
-        onChange={(value) => {
-          const isAstChange = editor.operations.some(
-            (operation) => operation.type !== "set_selection",
-          );
-
-          if (isAstChange) {
-            handleChange(value);
-          }
+        onValueChange={(value) => {
+          handleChange(value);
         }}
       >
         {props.isReadonly ? null : <Toolbar />}

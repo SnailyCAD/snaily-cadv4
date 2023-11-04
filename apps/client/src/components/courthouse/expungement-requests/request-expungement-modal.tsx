@@ -234,6 +234,6 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
 export function getTitles(
   record: GetManageExpungementRequests["pendingExpungementRequests"][number]["records"][number],
 ) {
-  const titles = record.violations.map((v) => v.penalCode.title);
+  const titles = record.violations.map((v) => v.penalCode?.title).filter(Boolean) as string[];
   return titles.join(", ");
 }

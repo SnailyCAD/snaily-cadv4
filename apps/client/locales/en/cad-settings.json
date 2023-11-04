@@ -77,7 +77,11 @@
     "departmentWhitelistStatusChannelInfo": "When a unit is pending approval or gets accepted/denied this channel will be used to send a webhook to.",
     "departmentWhitelistStatusChannel": "Department Whitelist Status Change Channel",
     "userWhitelistStatusChannelInfo": "When a user is pending approval or gets accepted/denied this channel will be used to send a webhook to.",
-    "userWhitelistStatusChannel": "User Whitelist Status Change Channel"
+    "userWhitelistStatusChannel": "User Whitelist Status Change Channel",
+    "leoIncidentCreatedInfo": "When an LEO incident is created this channel will be used to send a webhook to.",
+    "leoIncidentCreated": "LEO Incident Created",
+    "emsFdIncidentCreatedInfo": "When an EMS/FD incident is created this channel will be used to send a webhook to.",
+    "emsFdIncidentCreated": "EMS/FD Incident Created"
   },
   "RawWebhooksTab": {
     "rawWebhooks": "Raw Webhooks",

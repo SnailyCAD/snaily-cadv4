@@ -36,6 +36,7 @@ import type { MiscCadSettings } from "@snailycad/types";
 import { createFeaturesObject } from "middlewares/is-enabled";
 import { hasPermission } from "@snailycad/permissions";
 import { parseImportFile } from "~/utils/file";
+import { getPrismaModelOrderBy } from "~/utils/order-by";
 
 @Controller("/admin/manage/cad-settings")
 @ContentType("application/json")
@@ -93,6 +94,7 @@ export class CADSettingsController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
     @QueryParams("type", String) type?: string,
+    @QueryParams("sorting") sorting = "",
   ): Promise<any> {
     const OR: Prisma.Enumerable<Prisma.AuditLogWhereInput> = [];
     const _typeWhere: Prisma.Enumerable<Prisma.AuditLogWhereInput> | undefined =
@@ -111,12 +113,13 @@ export class CADSettingsController {
 
     const where = { OR: OR.length > 0 ? OR : undefined };
 
+    const orderBy = getPrismaModelOrderBy(sorting);
     const [totalCount, auditLogs] = await prisma.$transaction([
       prisma.auditLog.count({ where }),
       prisma.auditLog.findMany({
         take: 35,
         skip,
-        orderBy: { createdAt: "desc" },
+        orderBy: sorting ? orderBy : { createdAt: "desc" },
         include: { executor: { select: userProperties } },
         where,
       }),
@@ -156,7 +159,13 @@ export class CADSettingsController {
         registrationCode: data.registrationCode,
         logoId: data.image,
         timeZone: data.timeZone || null,
-        miscCadSettings: { update: { roleplayEnabled: data.roleplayEnabled } },
+        miscCadSettings: {
+          update: {
+            roleplayEnabled: data.roleplayEnabled,
+            authScreenBgImageId: data.authScreenBgImageId || null,
+            authScreenHeaderImageId: data.authScreenHeaderImageId || null,
+          },
+        },
       },
       include: { features: true, miscCadSettings: true, apiToken: true },
     });
@@ -471,7 +480,10 @@ export class CADSettingsController {
     @QueryParams("query", String) query?: string,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("sorting") sorting: string = "",
   ): Promise<APITypes.GetBlacklistedWordsData> {
+    const orderBy = getPrismaModelOrderBy(sorting);
+
     const [totalCount, blacklistedWords] = await prisma.$transaction([
       prisma.blacklistedWord.count({
         where: query ? { word: { contains: query, mode: "insensitive" } } : undefined,
@@ -480,6 +492,7 @@ export class CADSettingsController {
         where: query ? { word: { contains: query, mode: "insensitive" } } : undefined,
         take: includeAll ? undefined : 35,
         skip: includeAll ? undefined : skip,
+        orderBy,
       }),
     ]);
 
