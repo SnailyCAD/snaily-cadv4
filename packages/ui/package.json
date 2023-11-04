@@ -103,7 +103,7 @@
     "@snailycad/config": "^1.76.1",
     "@snailycad/types": "workspace:*",
     "@snailycad/utils": "^1.76.1",
-    "@types/react": "^18.2.33",
+    "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
     "class-variance-authority": "^0.7.0",
     "formik": "^2.4.5",
@@ -119,10 +119,10 @@
   "peerDependencies": {
     "date-fns": ">=2.30.0",
     "next": "*",
-    "next-intl": ">=2.21.0",
+    "next-intl": ">=2.22.1",
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0",
-    "use-intl": ">=2.21.0"
+    "use-intl": ">=2.22.1"
   },
   "sideEffects": false
 }
