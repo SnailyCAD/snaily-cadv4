@@ -19,7 +19,7 @@ import { ImageWrapper } from "components/shared/image-wrapper";
 import Link from "next/link";
 import { classNames } from "lib/classNames";
 import { usePermission } from "hooks/usePermission";
-import { defaultManagementPermissions } from "@snailycad/permissions/dist/defaults/admin";
+import { defaultPermissions } from "@snailycad/permissions";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
@@ -44,7 +44,7 @@ export default function BleetPost({ post }: Props) {
   const { makeImageUrl } = useImageUrl();
 
   const { hasPermissions } = usePermission();
-  const hasManagePermissions = hasPermissions(defaultManagementPermissions);
+  const hasManagePermissions = hasPermissions(defaultPermissions.defaultManagementPermissions);
 
   async function handleDelete() {
     const { json } = await execute<DeleteBleeterByIdData>({
