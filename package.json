@@ -21,9 +21,9 @@
     "@casperiv/eslint-config": "8.0.0",
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
-    "eslint": "8.52.0",
+    "eslint": "8.53.0",
     "eslint-plugin-deprecation": "^2.0.0",
-    "lerna": "^7.4.1",
+    "lerna": "^7.4.2",
     "lint-staged": "^15.0.2"
   },
   "lint-staged": {
