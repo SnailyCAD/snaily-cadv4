@@ -15,6 +15,7 @@ import { makeUnitName } from "lib/utils";
 import type { GetMyDeputiesData, PutDispatchStatusByUnitId } from "@snailycad/types/api";
 import type { EmergencyVehicleValue } from "@snailycad/types";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { handleWhatPagesFilter } from "components/shared/utility-panel/statuses-area";
 
 export function SelectDeputyModal() {
   const setActiveDeputy = useEmsFdState((state) => state.setActiveDeputy);
@@ -28,7 +29,7 @@ export function SelectDeputyModal() {
 
   const { codes10 } = useValues();
   const onDutyCode = codes10.values.find(
-    (v) => v.shouldDo === ShouldDoType.SET_ON_DUTY && v.whatPages.includes(WhatPages.EMS_FD),
+    (v) => v.shouldDo === ShouldDoType.SET_ON_DUTY && handleWhatPagesFilter(v, WhatPages.EMS_FD),
   );
 
   const { hasPermissions } = usePermission();

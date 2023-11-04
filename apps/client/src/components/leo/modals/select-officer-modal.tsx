@@ -22,6 +22,7 @@ import type { GetMyOfficersData, PutDispatchStatusByUnitId } from "@snailycad/ty
 import { useDispatchState } from "state/dispatch/dispatch-state";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
+import { handleWhatPagesFilter } from "components/shared/utility-panel/statuses-area";
 
 export function SelectOfficerModal() {
   const setActiveOfficer = useLeoState((state) => state.setActiveOfficer);
@@ -42,7 +43,7 @@ export function SelectOfficerModal() {
 
   const { codes10 } = useValues();
   const onDutyCode = codes10.values.find(
-    (v) => v.shouldDo === ShouldDoType.SET_ON_DUTY && v.whatPages.includes(WhatPages.LEO),
+    (v) => v.shouldDo === ShouldDoType.SET_ON_DUTY && handleWhatPagesFilter(v, WhatPages.LEO),
   );
   const { state, execute } = useFetch();
 
