@@ -18,6 +18,8 @@ import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types
 import { ImageWrapper } from "components/shared/image-wrapper";
 import Link from "next/link";
 import { classNames } from "lib/classNames";
+import { usePermission } from "hooks/usePermission";
+import { defaultManagementPermissions } from "@snailycad/permissions/dist/defaults/admin";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/manage-bleet-modal")).ManageBleetModal,
@@ -40,6 +42,9 @@ export default function BleetPost({ post }: Props) {
   const t = useTranslations("Bleeter");
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
+
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions(defaultManagementPermissions);
 
   async function handleDelete() {
     const { json } = await execute<DeleteBleeterByIdData>({
@@ -78,21 +83,22 @@ export default function BleetPost({ post }: Props) {
 
         <div>
           {user?.id === post.userId ? (
-            <>
-              <Button
-                onPress={() => modalState.openModal(ModalIds.ManageBleetModal)}
-                variant="success"
-              >
-                {common("edit")}
-              </Button>
-              <Button
-                onPress={() => modalState.openModal(ModalIds.AlertDeleteBleet)}
-                className="ml-2"
-                variant="danger"
-              >
-                {common("delete")}
-              </Button>
-            </>
+            <Button
+              onPress={() => modalState.openModal(ModalIds.ManageBleetModal)}
+              variant="success"
+            >
+              {common("edit")}
+            </Button>
+          ) : null}
+
+          {user?.id === post.userId || hasManagePermissions ? (
+            <Button
+              onPress={() => modalState.openModal(ModalIds.AlertDeleteBleet)}
+              className="ml-2"
+              variant="danger"
+            >
+              {common("delete")}
+            </Button>
           ) : null}
         </div>
       </header>
