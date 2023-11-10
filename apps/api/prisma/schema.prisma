@@ -788,6 +788,7 @@ model EmergencyVehicleValue {
   valueId     String
   departments DepartmentValue[]
   divisions   DivisionValue[]
+  extraFields Json?
 
   Officers          Officer[]           @relation("activeEmergencyVehicle_leo")
   EmsFdDeputies     EmsFdDeputy[]       @relation("activeEmergencyVehicle_emsfd")

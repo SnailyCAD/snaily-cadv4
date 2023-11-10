@@ -506,6 +506,7 @@ export const typeHandlers = {
         ...makePrismaData(ValueType.EMERGENCY_VEHICLE, {
           value: item.value,
           isDisabled: item.isDisabled,
+          extraFields: item.extraFields || undefined,
         }),
         include: valueInclude,
       });

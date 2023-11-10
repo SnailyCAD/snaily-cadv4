@@ -156,6 +156,7 @@ export const CALL_TYPE_ARR = z.array(CALL_TYPE_SCHEMA).min(1);
 export const EMERGENCY_VEHICLE_SCHEMA = BASE_VALUE_SCHEMA.extend({
   departments: z.array(z.string()).min(1),
   divisions: z.array(z.string()).nullish(),
+  extraFields: z.any().nullish(),
 });
 
 export const EMERGENCY_VEHICLE_ARR = z.array(EMERGENCY_VEHICLE_SCHEMA).min(1);
