@@ -1,11 +1,12 @@
 import type { AnyValue } from "@snailycad/types";
-import { SelectField } from "@snailycad/ui";
+import { JsonEditor, SelectField } from "@snailycad/ui";
 import { isEmergencyVehicleValue } from "@snailycad/utils";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
 import type { ManageValueFormValues } from "../ManageValueModal";
+import { FormField } from "components/form/FormField";
 
 export function useDefaultDivisions() {
   const { division } = useValues();
@@ -22,7 +23,7 @@ export function useDefaultDivisions() {
 }
 
 export function EmergencyVehicleFields() {
-  const { values, setFieldValue } = useFormikContext<ManageValueFormValues>();
+  const { values, errors, setFieldValue } = useFormikContext<ManageValueFormValues>();
   const { division, department } = useValues();
   const { DIVISIONS } = useFeatureEnabled();
   const t = useTranslations("Values");
@@ -54,6 +55,13 @@ export function EmergencyVehicleFields() {
           selectedKeys={values.divisions}
         />
       ) : null}
+
+      <FormField optional errorMessage={errors.extraFields as string} label={t("extraFields")}>
+        <JsonEditor
+          value={values.extraFields}
+          onChange={(value) => setFieldValue("extraFields", value)}
+        />
+      </FormField>
     </>
   );
 }

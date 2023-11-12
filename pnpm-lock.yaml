@@ -656,6 +656,9 @@ importers:
       "@internationalized/date":
         specifier: ^3.5.0
         version: 3.5.0
+      "@monaco-editor/react":
+        specifier: ^4.6.0
+        version: 4.6.0(monaco-editor@0.44.0)(react-dom@18.2.0)(react@18.2.0)
       "@radix-ui/react-accordion":
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.2.14)(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)
@@ -876,6 +879,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
+      monaco-editor:
+        specifier: ^0.44.0
+        version: 0.44.0
       postcss:
         specifier: ^8.4.31
         version: 8.4.31
@@ -4433,6 +4439,34 @@ packages:
       "@types/react": 18.2.34
       react: 18.2.0
     dev: true
+
+  /@monaco-editor/loader@1.4.0(monaco-editor@0.44.0):
+    resolution:
+      {
+        integrity: sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==,
+      }
+    peerDependencies:
+      monaco-editor: ">= 0.21.0 < 1"
+    dependencies:
+      monaco-editor: 0.44.0
+      state-local: 1.0.7
+    dev: false
+
+  /@monaco-editor/react@4.6.0(monaco-editor@0.44.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-RFkU9/i7cN2bsq/iTkurMWOEErmYcY6JiQI3Jn+WeR/FGISH8JbHERjpS9oRuSOPvDMJI0Z8nJeKkbOs9sBYQw==,
+      }
+    peerDependencies:
+      monaco-editor: ">= 0.25.0 < 1"
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@monaco-editor/loader": 1.4.0(monaco-editor@0.44.0)
+      monaco-editor: 0.44.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@ndelangen/get-tarball@3.0.9:
     resolution:
@@ -20872,6 +20906,12 @@ packages:
     engines: { node: ">=0.10.0" }
     dev: true
 
+  /monaco-editor@0.44.0:
+    resolution:
+      {
+        integrity: sha512-5SmjNStN6bSuSE5WPT2ZV+iYn1/yI9sd4Igtk23ChvqB7kDk9lZbB9F5frsuvpB+2njdIeGGFf2G4gbE6rCC9Q==,
+      }
+
   /mri@1.2.0:
     resolution:
       {
@@ -21139,7 +21179,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       sass: 1.69.5
-      styled-jsx: 5.1.1(@babel/core@7.22.11)(react@18.2.0)
+      styled-jsx: 5.1.1(react@18.2.0)
       watchpack: 2.4.0
     optionalDependencies:
       "@next/swc-darwin-arm64": 14.0.1
@@ -25243,6 +25283,13 @@ packages:
       type-fest: 0.7.1
     dev: false
 
+  /state-local@1.0.7:
+    resolution:
+      {
+        integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==,
+      }
+    dev: false
+
   /statuses@2.0.1:
     resolution:
       {
@@ -25597,6 +25644,26 @@ packages:
         optional: true
     dependencies:
       "@babel/core": 7.22.11
+      client-only: 0.0.1
+      react: 18.2.0
+    dev: false
+
+  /styled-jsx@5.1.1(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==,
+      }
+    engines: { node: ">= 12.0.0" }
+    peerDependencies:
+      "@babel/core": "*"
+      babel-plugin-macros: "*"
+      react: ">= 16.8.0 || 17.x.x || ^18.0.0-0"
+    peerDependenciesMeta:
+      "@babel/core":
+        optional: true
+      babel-plugin-macros:
+        optional: true
+    dependencies:
       client-only: 0.0.1
       react: 18.2.0
 
