@@ -75,7 +75,7 @@
     "test": "pnpm vitest run"
   },
   "devDependencies": {
-    "@types/node": "^20.8.7",
+    "@types/node": "^20.9.1",
     "c8": "^8.0.1",
     "tsup": "6.6.2",
     "typescript": "^5.2.2",
@@ -103,8 +103,8 @@
     "date-fns": "^2.30.0",
     "slate": "0.100.0",
     "slate-history": "^0.100.0",
-    "slate-react": "^0.100.0",
+    "slate-react": "^0.101.0",
     "tslib": "^2.6.2",
-    "undici": "5.26.4"
+    "undici": "5.27.2"
   }
 }
