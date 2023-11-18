@@ -24,6 +24,7 @@ Sentry.init({
   attachStacktrace: true,
   ignoreErrors: [/can't reach database server at/gim],
   denyUrls: [/localhost/],
+  enabled: process.env.NODE_ENV !== "development",
 });
 
 const rootDir = __dirname;
