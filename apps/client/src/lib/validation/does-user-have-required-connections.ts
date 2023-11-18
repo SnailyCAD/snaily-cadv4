@@ -1,5 +1,6 @@
 import { Feature, Rank, type User } from "@snailycad/types";
 import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
+import { canUseThirdPartyConnections } from "lib/utils";
 
 interface VerifyUserConnectionsOptions {
   user: User;
@@ -11,8 +12,13 @@ export function doesUserHaveAllRequiredConnections(options: VerifyUserConnection
   const discordId = options.user.discordId;
   const isOwner = options.user.rank === Rank.OWNER;
 
+  // Owner does not require to have all connections
   if (isOwner) {
-    // owner does not require to have all connections
+    return true;
+  }
+
+  // We cannot ask the user to connect to a third party if they're inside of an iframe.
+  if (!canUseThirdPartyConnections()) {
     return true;
   }
 
