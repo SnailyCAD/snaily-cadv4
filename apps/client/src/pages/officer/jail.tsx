@@ -135,8 +135,8 @@ export default function Jail({ data }: Props) {
             const status = !released
               ? t("arrested")
               : type === ReleaseType.BAIL_POSTED
-              ? t("bailPosted", { citizen: `${citizen?.name} ${citizen?.surname}` })
-              : t("timeOut");
+                ? t("bailPosted", { citizen: `${citizen?.name} ${citizen?.surname}` })
+                : t("timeOut");
 
             return {
               rowProps: { style: released ? { opacity: "0.5" } : undefined },

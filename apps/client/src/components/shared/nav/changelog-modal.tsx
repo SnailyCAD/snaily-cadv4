@@ -53,7 +53,6 @@ export function ChangelogModal() {
             remarkGfm,
             [remarkGithub, { repository: "SnailyCAD/snaily-cadv4" }],
             remarkGitHubReferences,
-            // @ts-expect-error - remark-emoji doesn't have updated types
             remarkEmoji,
             // @ts-expect-error - remark-external-links doesn't have updated types
             remarkExternalLinks,

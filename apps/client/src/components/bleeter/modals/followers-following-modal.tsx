@@ -78,8 +78,8 @@ export function FollowersFollowingModal(props: FollowersFollowingModalProps) {
               "followerProfile" in follower && props.type === "following"
                 ? follower.followerProfile
                 : "followingProfile" in follower && props.type === "followers"
-                ? follower.followingProfile
-                : null;
+                  ? follower.followingProfile
+                  : null;
 
             return (
               <li key={profile?.handle}>

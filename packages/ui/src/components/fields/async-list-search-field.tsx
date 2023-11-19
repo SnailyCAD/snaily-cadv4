@@ -9,6 +9,7 @@ import { ErrorMessage } from "../error-message";
 import { AsyncListFieldListBox } from "../list/async-list/async-list-list-box";
 import { useAsyncList } from "@react-stately/data";
 import { USER_API_TOKEN_HEADER } from "@snailycad/config";
+import type { Key } from "@react-types/shared";
 
 import { useDebounce } from "react-use";
 import type { Node } from "@react-types/shared";
@@ -105,7 +106,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     [props.localValue],
   );
 
-  function handleSelectionChange(key?: React.Key, value?: string) {
+  function handleSelectionChange(key?: Key, value?: string) {
     try {
       if (props.isClearable && key === "cleared") {
         props.onSelectionChange(null);
@@ -213,8 +214,8 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
                 {state.inputValue === ""
                   ? common("startTyping")
                   : list.loadingState === "filtering"
-                  ? common("searching")
-                  : common("noOptions")}
+                    ? common("searching")
+                    : common("noOptions")}
               </p>
             )}
           </Popover>

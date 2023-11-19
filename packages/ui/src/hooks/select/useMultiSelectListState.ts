@@ -1,12 +1,11 @@
-import type * as React from "react";
 import { type ListState, useListState } from "@react-stately/list";
-import type { CollectionBase, MultipleSelection, Node } from "@react-types/shared";
+import type { CollectionBase, Key, MultipleSelection, Node } from "@react-types/shared";
 
 export type MultiSelectListProps<T> = CollectionBase<T> & MultipleSelection;
 
 export interface MultiSelectListState<T> extends ListState<T> {
-  selectedKeys: Set<React.Key>;
-  setSelectedKeys(keys: Iterable<React.Key>): void;
+  selectedKeys: Set<Key>;
+  setSelectedKeys(keys: Iterable<Key>): void;
   selectedItems: Node<T>[] | null;
   selectionMode: MultipleSelection["selectionMode"];
 }
@@ -21,7 +20,7 @@ export function useMultiSelectListState<T extends {}>(
     selectionManager: { setSelectedKeys, selectedKeys, selectionMode },
   } = useListState(props);
 
-  const missingKeys: React.Key[] = [];
+  const missingKeys: Key[] = [];
 
   const selectedItems =
     selectedKeys.size !== 0

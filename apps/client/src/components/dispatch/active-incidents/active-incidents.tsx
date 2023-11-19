@@ -59,8 +59,8 @@ export function ActiveIncidents() {
     router.pathname === "/officer"
       ? activeOfficer
       : router.pathname === "/ems-fd"
-      ? activeDeputy
-      : null;
+        ? activeDeputy
+        : null;
 
   const tableState = useTableState({
     tableId: "active-incidents",
