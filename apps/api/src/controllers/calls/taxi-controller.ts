@@ -127,8 +127,8 @@ export class TaxiController {
       rawAssignedUnitId === null
         ? { disconnect: true }
         : data.assignedUnitId
-        ? { connect: { id: data.assignedUnitId } }
-        : undefined;
+          ? { connect: { id: data.assignedUnitId } }
+          : undefined;
 
     const updated = await prisma.taxiCall.update({
       where: {

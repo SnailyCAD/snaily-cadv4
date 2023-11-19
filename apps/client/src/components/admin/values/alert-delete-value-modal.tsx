@@ -63,8 +63,8 @@ export function AlertDeleteValueModal<T extends AnyValue>(props: AlertDeleteValu
           (isBaseValue(tempValue)
             ? tempValue.value
             : hasValueObj(tempValue)
-            ? tempValue.value.value
-            : tempValue.title),
+              ? tempValue.value.value
+              : tempValue.title),
       })}
       onDeleteClick={handleDelete}
       title={typeT("DELETE")}

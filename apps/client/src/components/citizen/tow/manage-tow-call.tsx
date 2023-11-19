@@ -49,8 +49,8 @@ export function ManageCallModal(props: Props) {
       ? t("editTowCall")
       : t("createTowCall")
     : props.call
-    ? t("editTaxiCall")
-    : t("createTaxiCall");
+      ? t("editTaxiCall")
+      : t("createTaxiCall");
 
   async function handleEndCall() {
     if (!props.call) return;

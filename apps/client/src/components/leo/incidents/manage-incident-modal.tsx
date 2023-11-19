@@ -105,8 +105,8 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
   const activeUnit = isOfficerIncidentsPage
     ? activeOfficer
     : isEmsFdIncidentsPage
-    ? activeDeputy
-    : null;
+      ? activeDeputy
+      : null;
   const isReadOnly = isOfficerIncidentsPage || isEmsFdIncidentsPage;
 
   const areFieldsDisabled = areFormFieldsDisabled({

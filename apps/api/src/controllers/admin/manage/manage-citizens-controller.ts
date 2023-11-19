@@ -209,8 +209,8 @@ export class AdminManageCitizensController {
           data.socialSecurityNumber && isEditableSSNEnabled
             ? data.socialSecurityNumber
             : !citizen.socialSecurityNumber
-            ? generateString(9, { type: "numbers-only" })
-            : undefined,
+              ? generateString(9, { type: "numbers-only" })
+              : undefined,
         occupation: data.occupation,
         additionalInfo: data.additionalInfo,
         imageId: validatedImageURL,

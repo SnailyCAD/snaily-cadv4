@@ -529,8 +529,8 @@ export class SearchActionsController {
           data.socialSecurityNumber && isEditableSSNEnabled
             ? data.socialSecurityNumber
             : !citizen.socialSecurityNumber
-            ? generateString(9, { type: "numbers-only" })
-            : undefined,
+              ? generateString(9, { type: "numbers-only" })
+              : undefined,
       },
       ...citizenSearchIncludeOrSelect(user, cad),
     });

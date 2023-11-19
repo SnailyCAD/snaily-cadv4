@@ -87,8 +87,8 @@ function Active911Calls({ initialData }: Props) {
     router.pathname === "/officer"
       ? activeOfficer
       : router.pathname === "/ems-fd"
-      ? activeDeputy
-      : null;
+        ? activeDeputy
+        : null;
 
   const { audio } = useActiveCalls({ calls, unit });
   const isUnitAssignedToCall = (call: Full911Call) =>

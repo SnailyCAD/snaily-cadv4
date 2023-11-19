@@ -51,8 +51,8 @@ function TableCell<TData extends RowData>(
   const bgColor = hasStyle
     ? null
     : props.rowProps?.className?.includes("bg")
-    ? props.rowProps.className
-    : props.stickyBgColor;
+      ? props.rowProps.className
+      : props.stickyBgColor;
 
   return (
     <td

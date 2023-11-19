@@ -630,8 +630,8 @@ async function createWebhookData(
   const citizen = data.citizen
     ? `${data.citizen.name} ${data.citizen.surname}`
     : data.business
-    ? data.business.name
-    : "Unknown";
+      ? data.business.name
+      : "Unknown";
 
   const description = !isWarrant ? data.notes : "";
 

@@ -98,8 +98,8 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
     name: isDisabled
       ? `${citizen.name} ${citizen.surname}`
       : weapon
-      ? `${(weapon as any).citizen?.name} ${(weapon as any).citizen?.surname}`
-      : "",
+        ? `${(weapon as any).citizen?.name} ${(weapon as any).citizen?.surname}`
+        : "",
   };
 
   return (

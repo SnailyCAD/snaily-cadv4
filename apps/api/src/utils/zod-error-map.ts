@@ -91,8 +91,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "arrayExactly"
             : issue.inclusive
-            ? "arrayAtLeast"
-            : "arrayMoreThan";
+              ? "arrayAtLeast"
+              : "arrayMoreThan";
 
           message = t(errorMessage, {
             expected: issue.minimum as number,
@@ -101,8 +101,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "stringExactlyCharacters"
             : issue.inclusive
-            ? "stringAtLeastCharacters"
-            : "stringOverCharacters";
+              ? "stringAtLeastCharacters"
+              : "stringOverCharacters";
 
           message = t(errorMessage, {
             expected: issue.minimum as number,
@@ -111,8 +111,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "numberExactly"
             : issue.inclusive
-            ? "numberGreaterThanOrEquals"
-            : "numberGreaterThan";
+              ? "numberGreaterThanOrEquals"
+              : "numberGreaterThan";
 
           message = t(errorMessage, {
             expected: issue.minimum as number,
@@ -121,8 +121,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "dateExactly"
             : issue.inclusive
-            ? "dateGreaterThanOrEquals"
-            : "dateGreaterThan";
+              ? "dateGreaterThanOrEquals"
+              : "dateGreaterThan";
 
           message = t(errorMessage, {
             expected: new Date(issue.minimum as number).toDateString(),
@@ -137,8 +137,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "arrayExactly"
             : issue.inclusive
-            ? "arrayAtMost"
-            : "arrayUnder";
+              ? "arrayAtMost"
+              : "arrayUnder";
 
           message = t(errorMessage, {
             expected: issue.maximum as number,
@@ -147,8 +147,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "stringExactlyCharacters"
             : issue.inclusive
-            ? "stringAtMostCharacters"
-            : "stringUnderCharacters";
+              ? "stringAtMostCharacters"
+              : "stringUnderCharacters";
 
           message = t(errorMessage, {
             expected: issue.maximum as number,
@@ -157,8 +157,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "numberExactly"
             : issue.inclusive
-            ? "numberSmallerThanOrEquals"
-            : "numberSmallerThan";
+              ? "numberSmallerThanOrEquals"
+              : "numberSmallerThan";
 
           message = t(errorMessage, {
             expected: issue.maximum as number,
@@ -167,8 +167,8 @@ export async function getErrorMap(locale?: string) {
           const errorMessage = issue.exact
             ? "dateExactly"
             : issue.inclusive
-            ? "dateSmallerThanOrEquals"
-            : "dateSmallerThan";
+              ? "dateSmallerThanOrEquals"
+              : "dateSmallerThan";
 
           message = t(errorMessage, {
             expected: new Date(issue.maximum as number).toLocaleString(),
