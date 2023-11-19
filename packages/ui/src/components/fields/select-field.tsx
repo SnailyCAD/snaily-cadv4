@@ -25,7 +25,7 @@ export interface SelectValue {
 
 export type SelectFieldProps<T extends SelectValue> = Omit<
   AriaSelectProps<T>,
-  "children" | "selectedKey"
+  "children" | "selectedKey" | "errorMessage"
 > & {
   label: string;
   isClearable?: boolean;
@@ -36,6 +36,7 @@ export type SelectFieldProps<T extends SelectValue> = Omit<
   className?: string;
   labelClassnames?: string;
   hiddenLabel?: boolean;
+  errorMessage?: React.ReactNode | null;
 
   onSelectionChange?: Parameters<typeof useMultiSelectState>["0"]["onSelectionChange"];
   selectedKeys?: Parameters<typeof useMultiSelectState>["0"]["selectedKeys"];

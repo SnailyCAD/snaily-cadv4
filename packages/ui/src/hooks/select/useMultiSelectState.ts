@@ -18,7 +18,7 @@ export interface MultiSelectProps<T>
   extends CollectionBase<T>,
     AsyncLoadable,
     Omit<InputBase, "isReadOnly">,
-    Validation,
+    Validation<any>,
     LabelableProps,
     TextInputBase,
     Omit<MultipleSelection, "onSelectionChange">,

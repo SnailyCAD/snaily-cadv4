@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SelectField, type SelectFieldProps } from "../../fields/select-field";
 import { within, userEvent } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
+import type { Key } from "@react-types/shared";
 
 const meta = {
   title: "Inputs/SelectField",
@@ -42,8 +43,8 @@ const LARGE_LIST = Array.from({ length: 30 })
   }));
 
 function Renderer(args: SelectFieldProps<any>) {
-  const [selectedKey, setSelectedKey] = React.useState<React.Key | null>(null);
-  const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>([]);
+  const [selectedKey, setSelectedKey] = React.useState<Key | null>(null);
+  const [selectedKeys, setSelectedKeys] = React.useState<Key[]>([]);
 
   return (
     <SelectField
