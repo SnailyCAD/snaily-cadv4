@@ -4,7 +4,7 @@ import "styles/nprogress.css";
 
 import * as React from "react";
 import type { AppProps } from "next/app";
-import { NextIntlProvider } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
@@ -81,7 +81,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
     <QueryClientProvider client={queryClient}>
       <SocketProvider uri={url}>
         <AuthProvider initialData={pageProps}>
-          <NextIntlProvider
+          <NextIntlClientProvider
             defaultTranslationValues={{
               span: (children) => <span className="font-semibold">{children}</span>,
             }}
@@ -107,7 +107,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
                 </CitizenProvider>
               </ValuesProvider>
             </DndProviderWrapper>
-          </NextIntlProvider>
+          </NextIntlClientProvider>
         </AuthProvider>
       </SocketProvider>
     </QueryClientProvider>
