@@ -297,7 +297,7 @@ importers:
         version: 5.3.2
       vite:
         specifier: ^5.0.0
-        version: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+        version: 5.0.0(@types/node@20.9.3)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(sass@1.69.5)
@@ -335,14 +335,14 @@ importers:
         specifier: ^3.22.0
         version: 3.22.0(react@18.2.0)
       "@sentry/browser":
-        specifier: ^7.81.0
-        version: 7.81.0
+        specifier: ^7.81.1
+        version: 7.81.1
       "@sentry/nextjs":
-        specifier: ^7.81.0
-        version: 7.81.0(next@14.0.3)(react@18.2.0)
+        specifier: ^7.81.1
+        version: 7.81.1(next@14.0.3)(react@18.2.0)
       "@sentry/tracing":
-        specifier: ^7.81.0
-        version: 7.81.0
+        specifier: ^7.81.1
+        version: 7.81.1
       "@snailycad/audit-logger":
         specifier: workspace:*
         version: link:../../packages/audit-logger
@@ -552,8 +552,8 @@ importers:
         specifier: ^5.3.2
         version: 5.3.2
       vite:
-        specifier: ^5.0.0
-        version: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+        specifier: ^5.0.2
+        version: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(sass@1.69.5)
@@ -575,25 +575,25 @@ importers:
     devDependencies:
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
       vite:
         specifier: ^5.0.0
-        version: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+        version: 5.0.0(@types/node@20.9.1)
 
   packages/config:
     devDependencies:
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
       vite:
         specifier: ^5.0.0
-        version: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+        version: 5.0.0(@types/node@20.9.1)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(sass@1.69.5)
@@ -602,13 +602,13 @@ importers:
     devDependencies:
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
       vite:
         specifier: ^5.0.0
-        version: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+        version: 5.0.0(@types/node@20.9.1)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(sass@1.69.5)
@@ -627,10 +627,10 @@ importers:
     devDependencies:
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
 
   packages/types:
     dependencies:
@@ -643,10 +643,10 @@ importers:
     devDependencies:
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
 
   packages/ui:
     dependencies:
@@ -810,8 +810,8 @@ importers:
         specifier: "*"
         version: 13.4.13(@babel/core@7.22.11)(react-dom@18.2.0)(react@18.2.0)
       next-intl:
-        specifier: ">=3.1.0"
-        version: 3.1.0(next@13.4.13)(react@18.2.0)
+        specifier: ^3.1.2
+        version: 3.1.2(next@13.4.13)(react@18.2.0)
       react:
         specifier: ">=18.2.0"
         version: 18.2.0
@@ -840,8 +840,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       use-intl:
-        specifier: ">=3.1.0"
-        version: 3.1.0(react@18.2.0)
+        specifier: ^3.1.2
+        version: 3.1.2(react@18.2.0)
     devDependencies:
       "@storybook/addon-a11y":
         specifier: ^7.5.3
@@ -866,13 +866,13 @@ importers:
         version: 0.2.3(jest@29.7.0)
       "@storybook/react":
         specifier: ^7.5.3
-        version: 7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        version: 7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2)
       "@storybook/react-vite":
         specifier: ^7.5.3
-        version: 7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(vite@5.0.0)
+        version: 7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2)(vite@5.0.2)
       "@storybook/test-runner":
-        specifier: ^0.15.1
-        version: 0.15.1
+        specifier: ^0.15.2
+        version: 0.15.2
       "@storybook/testing-library":
         specifier: ^0.2.2
         version: 0.2.2
@@ -896,13 +896,13 @@ importers:
         version: 3.3.5
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
       vite:
-        specifier: ^5.0.0
-        version: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+        specifier: ^5.0.2
+        version: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
 
   packages/utils:
     dependencies:
@@ -936,10 +936,10 @@ importers:
         version: 8.0.1
       tsup:
         specifier: 6.6.2
-        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2)
+        version: 6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2)
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
       vite:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@20.9.1)
@@ -4440,7 +4440,7 @@ packages:
       chalk: 4.1.2
     dev: true
 
-  /@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.2.2)(vite@5.0.0):
+  /@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.3.2)(vite@5.0.2):
     resolution:
       {
         integrity: sha512-2D6y7fNvFmsLmRt6UCOFJPvFoPMJGT0Uh1Wg0RaigUp7kdQPs6yYn8Dmx6GZkOH/NW0yMTwRz/p0SRMMRo50vA==,
@@ -4455,9 +4455,9 @@ packages:
       glob: 7.2.3
       glob-promise: 4.2.2(glob@7.2.3)
       magic-string: 0.27.0
-      react-docgen-typescript: 2.2.2(typescript@5.2.2)
-      typescript: 5.2.2
-      vite: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+      react-docgen-typescript: 2.2.2(typescript@5.3.2)
+      typescript: 5.3.2
+      vite: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
     dev: true
 
   /@jridgewell/gen-mapping@0.3.3:
@@ -7958,18 +7958,30 @@ packages:
       "@sentry/utils": 7.81.0
     dev: false
 
-  /@sentry/browser@7.81.0:
+  /@sentry-internal/tracing@7.81.1:
     resolution:
       {
-        integrity: sha512-/6xsdSeZspq7+LARg6Gt0KMUQRf6nZcuA20X9Y28uJqyZFYoXBnxG3+JJcxycxleEJRci20gjBwOtM157anUJA==,
+        integrity: sha512-E5xm27xrLXL10knH2EWDQsQYh5nb4SxxZzJ3sJwDGG9XGKzBdlp20UUhKqx00wixooVX9uCj3e4Jg8SvNB1hKg==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry-internal/tracing": 7.81.0
-      "@sentry/core": 7.81.0
-      "@sentry/replay": 7.81.0
-      "@sentry/types": 7.81.0
-      "@sentry/utils": 7.81.0
+      "@sentry/core": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
+    dev: false
+
+  /@sentry/browser@7.81.1:
+    resolution:
+      {
+        integrity: sha512-DNtS7bZEnFPKVoGazKs5wHoWC0FwsOFOOMNeDvEfouUqKKbjO7+RDHbr7H6Bo83zX4qmZWRBf8V+3n3YPIiJFw==,
+      }
+    engines: { node: ">=8" }
+    dependencies:
+      "@sentry-internal/tracing": 7.81.1
+      "@sentry/core": 7.81.1
+      "@sentry/replay": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
     dev: false
 
   /@sentry/cli@1.77.1:
@@ -8015,23 +8027,34 @@ packages:
       "@sentry/utils": 7.81.0
     dev: false
 
-  /@sentry/integrations@7.81.0:
+  /@sentry/core@7.81.1:
     resolution:
       {
-        integrity: sha512-CF2YaQC7IPai17p+i4bChWp0O1H/jrXkBlTmHjGG0fBAAQflPevglYp4qMn0V9/erX8lBo3MseimGwtAxbG7dA==,
+        integrity: sha512-tU37yAmckOGCw/moWKSwekSCWWJP15O6luIq+u7wal22hE88F3Vc5Avo8SeF3upnPR+4ejaOFH+BJTr6bgrs6Q==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry/core": 7.81.0
-      "@sentry/types": 7.81.0
-      "@sentry/utils": 7.81.0
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
+    dev: false
+
+  /@sentry/integrations@7.81.1:
+    resolution:
+      {
+        integrity: sha512-DN5ONn0/LX5HHVPf1EBGHFssIZaZmLgkqUIeMqCNYBpB4DiOrJANnGwTcWKDPphqhdPxjnPv9AGRLaU0PdvvZQ==,
+      }
+    engines: { node: ">=8" }
+    dependencies:
+      "@sentry/core": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
       localforage: 1.10.0
     dev: false
 
-  /@sentry/nextjs@7.81.0(next@14.0.3)(react@18.2.0):
+  /@sentry/nextjs@7.81.1(next@14.0.3)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-GipJFvSTeywX42QUCrw15YPp3UllvOlS+PX7/p4ZFB0lA4pywcJk5DK8as0lw4scu9AIgRoYb3AEsa/tguzmZA==,
+        integrity: sha512-Wx0QiZHttf+WJkao4UQ5szOWJVu/pmPdKZKE4FWsJuG+mUu6FviOXgh0T0Iq+NnJrgqzKzGLMN6rIWPzN9PLkg==,
       }
     engines: { node: ">=8" }
     peerDependencies:
@@ -8043,13 +8066,13 @@ packages:
         optional: true
     dependencies:
       "@rollup/plugin-commonjs": 24.0.0(rollup@2.78.0)
-      "@sentry/core": 7.81.0
-      "@sentry/integrations": 7.81.0
-      "@sentry/node": 7.81.0
-      "@sentry/react": 7.81.0(react@18.2.0)
-      "@sentry/types": 7.81.0
-      "@sentry/utils": 7.81.0
-      "@sentry/vercel-edge": 7.81.0
+      "@sentry/core": 7.81.1
+      "@sentry/integrations": 7.81.1
+      "@sentry/node": 7.81.1
+      "@sentry/react": 7.81.1(react@18.2.0)
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
+      "@sentry/vercel-edge": 7.81.1
       "@sentry/webpack-plugin": 1.21.0
       chalk: 3.0.0
       next: 14.0.3(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
@@ -8097,43 +8120,59 @@ packages:
       - supports-color
     dev: false
 
-  /@sentry/react@7.81.0(react@18.2.0):
+  /@sentry/node@7.81.1:
     resolution:
       {
-        integrity: sha512-r6MlVc9I6I3frFGvQ3DKjtt6AAZYHxShOYWoxc7vUxNHp6Tgm8d73Y19EbKCLEXzIKdCp2OR7zQJtY0kYe3Isg==,
+        integrity: sha512-bKS3Mb95bar8AUEZSLKQ/RTSfFXo5sCSPNiBr5dDFuVljDFdkLq6NE3svG5bisrbENqfi0bqWsB4GZ7NHRTPbA==,
+      }
+    engines: { node: ">=8" }
+    dependencies:
+      "@sentry-internal/tracing": 7.81.1
+      "@sentry/core": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
+      https-proxy-agent: 5.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@sentry/react@7.81.1(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-kk0plP/mf8KgVLOiImIpp1liYysmh3Un8uXcVAToomSuHZPGanelFAdP0XhY+0HlWU9KIfxTjhMte1iSwQ8pYw==,
       }
     engines: { node: ">=8" }
     peerDependencies:
       react: 15.x || 16.x || 17.x || 18.x
     dependencies:
-      "@sentry/browser": 7.81.0
-      "@sentry/types": 7.81.0
-      "@sentry/utils": 7.81.0
+      "@sentry/browser": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
     dev: false
 
-  /@sentry/replay@7.81.0:
+  /@sentry/replay@7.81.1:
     resolution:
       {
-        integrity: sha512-kJRWjEzby1015Ds5TTNNVe9EkzfwPfPcM06ycba+DIXPJ2LiaSXvH3OU0s2HEJ9Vo/+jcpFMlODXFF/wrYIn9w==,
+        integrity: sha512-4ueT0C4bYjngN/9p0fEYH10dTMLovHyk9HxJ6zSTgePvGVexhg+cSEHXisoBDwHeRZVnbIvsVM0NA7rmEDXJJw==,
       }
     engines: { node: ">=12" }
     dependencies:
-      "@sentry-internal/tracing": 7.81.0
-      "@sentry/core": 7.81.0
-      "@sentry/types": 7.81.0
-      "@sentry/utils": 7.81.0
+      "@sentry-internal/tracing": 7.81.1
+      "@sentry/core": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
     dev: false
 
-  /@sentry/tracing@7.81.0:
+  /@sentry/tracing@7.81.1:
     resolution:
       {
-        integrity: sha512-3QRusk7AZzbNWuPalqSCQCPAEJ9L167txYUkL5x3Y+YK4gZt3/bNovoVNDaQ06XmIYL9ENXVw1hbdk0DIgirpw==,
+        integrity: sha512-of9WMu0XgEBl9onTEk8SMaxj4BUadaUvHH96T1OpRMjdyuCM/3u2mjCkh3ekINr3Fu/uT2kJ/kO3goUxfcdXIQ==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry-internal/tracing": 7.81.0
+      "@sentry-internal/tracing": 7.81.1
     dev: false
 
   /@sentry/types@7.72.0:
@@ -8148,6 +8187,14 @@ packages:
     resolution:
       {
         integrity: sha512-rbYNYSSrrnwNndC7S+eVT84GRLEyCZNh9oXUQqzgSD6ngXCZ0xFJW6si75uv/XQBWIw4rkj9xfRcy8DU0Tj4fg==,
+      }
+    engines: { node: ">=8" }
+    dev: false
+
+  /@sentry/types@7.81.1:
+    resolution:
+      {
+        integrity: sha512-dvJvGyctiaPMIQqa46k56Re5IODWMDxiHJ1UjBs/WYDLrmWFPGrEbyJ8w8CYLhYA+7qqrCyIZmHbWSTRIxstHw==,
       }
     engines: { node: ">=8" }
     dev: false
@@ -8173,17 +8220,27 @@ packages:
       "@sentry/types": 7.81.0
     dev: false
 
-  /@sentry/vercel-edge@7.81.0:
+  /@sentry/utils@7.81.1:
     resolution:
       {
-        integrity: sha512-zFwgYJBYEb2Cg0ySqlKsKOIqJC4VJjLHrhJHVclntitqxNkMCzmV+H7LiohAUWdXpu+Q1pNspG07lNMmizBp+g==,
+        integrity: sha512-gq+MDXIirHKxNZ+c9/lVvCXd6y2zaZANujwlFggRH2u9SRiPaIXVilLpvMm4uJqmqBMEcY81ArujExtHvkbCqg==,
       }
     engines: { node: ">=8" }
     dependencies:
-      "@sentry-internal/tracing": 7.81.0
-      "@sentry/core": 7.81.0
-      "@sentry/types": 7.81.0
-      "@sentry/utils": 7.81.0
+      "@sentry/types": 7.81.1
+    dev: false
+
+  /@sentry/vercel-edge@7.81.1:
+    resolution:
+      {
+        integrity: sha512-fO5yV+2rz+024XKvhBSGhUdi502j3S1Vds+fIUJVgpgehpxsx4CQQUA1nQDaqDWEtPCB6LcBupD3XvkhBTS5Mw==,
+      }
+    engines: { node: ">=8" }
+    dependencies:
+      "@sentry-internal/tracing": 7.81.1
+      "@sentry/core": 7.81.1
+      "@sentry/types": 7.81.1
+      "@sentry/utils": 7.81.1
     dev: false
 
   /@sentry/webpack-plugin@1.21.0:
@@ -8841,7 +8898,7 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/builder-vite@7.5.3(typescript@5.2.2)(vite@5.0.0):
+  /@storybook/builder-vite@7.5.3(typescript@5.3.2)(vite@5.0.2):
     resolution:
       {
         integrity: sha512-c104V3O75OCVnfZj0Jr70V09g0KSbPGvQK2Zh31omXGvakG8XrhWolYxkmjOcForJmAqsXnKs/nw3F75Gp853g==,
@@ -8875,25 +8932,11 @@ packages:
       fs-extra: 11.1.1
       magic-string: 0.30.3
       rollup: 3.28.1
-      typescript: 5.2.2
-      vite: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+      typescript: 5.3.2
+      vite: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
     transitivePeerDependencies:
       - encoding
       - supports-color
-    dev: true
-
-  /@storybook/channels@7.5.2:
-    resolution:
-      {
-        integrity: sha512-3SgqWq9NS0XX1QxK3riuaOLrReHWwVhI63u6q1ryDD3SttpmAezZETibOAtzDuk2FKgsyHTmAlmcGQf4ZxhOJA==,
-      }
-    dependencies:
-      "@storybook/client-logger": 7.5.2
-      "@storybook/core-events": 7.5.2
-      "@storybook/global": 5.0.0
-      qs: 6.11.2
-      telejson: 7.2.0
-      tiny-invariant: 1.3.1
     dev: true
 
   /@storybook/channels@7.5.3:
@@ -8965,15 +9008,6 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@storybook/client-logger@7.5.2:
-    resolution:
-      {
-        integrity: sha512-7YgLItlmiYDzWYexTaRNuHhtFarh9krsI+8l7Yjn9ryoHSTJUcTWx+yPJm1II+PQR8v/x5UgsxzultjgEurfRQ==,
-      }
-    dependencies:
-      "@storybook/global": 5.0.0
-    dev: true
-
   /@storybook/client-logger@7.5.3:
     resolution:
       {
@@ -9043,40 +9077,6 @@ packages:
       "@storybook/preview-api": 7.5.3
     dev: true
 
-  /@storybook/core-common@7.5.2:
-    resolution:
-      {
-        integrity: sha512-js7fIH4wHS08dBuIVsr3JnwMtKn5O1Izc/Zor4t6PntLWkGGX4X/GxbOkasGX5SkCT1qUtB9RpdPd1sUkLhIgw==,
-      }
-    dependencies:
-      "@storybook/core-events": 7.5.2
-      "@storybook/node-logger": 7.5.2
-      "@storybook/types": 7.5.2
-      "@types/find-cache-dir": 3.2.1
-      "@types/node": 18.18.6
-      "@types/node-fetch": 2.6.4
-      "@types/pretty-hrtime": 1.0.1
-      chalk: 4.1.2
-      esbuild: 0.18.20
-      esbuild-register: 3.5.0(esbuild@0.18.20)
-      file-system-cache: 2.3.0
-      find-cache-dir: 3.3.2
-      find-up: 5.0.0
-      fs-extra: 11.1.1
-      glob: 10.3.10
-      handlebars: 4.7.8
-      lazy-universal-dotenv: 4.0.0
-      node-fetch: 2.7.0
-      picomatch: 2.3.1
-      pkg-dir: 5.0.0
-      pretty-hrtime: 1.0.3
-      resolve-from: 5.0.0
-      ts-dedent: 2.2.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: true
-
   /@storybook/core-common@7.5.3:
     resolution:
       {
@@ -9109,15 +9109,6 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
-    dev: true
-
-  /@storybook/core-events@7.5.2:
-    resolution:
-      {
-        integrity: sha512-DV8bFEFVKDEvaH87KYPXDE0YEV+Y9yjFv2xxmC9pF8l+MWCtVW72RBLhB+gU5NM1bkHrRDNb0lOJfVGKlhxOog==,
-      }
-    dependencies:
-      ts-dedent: 2.2.0
     dev: true
 
   /@storybook/core-events@7.5.3:
@@ -9191,25 +9182,6 @@ packages:
     dependencies:
       "@storybook/csf-tools": 7.5.3
       unplugin: 1.4.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@storybook/csf-tools@7.5.2:
-    resolution:
-      {
-        integrity: sha512-yXaEDREc2wvkjYkQqDMatJw23f0fEFhMIf/zBNF7YljeYw0j8jAg/7XI5WJJSN2KTxD/feD/yD+6eaLUXvrneQ==,
-      }
-    dependencies:
-      "@babel/generator": 7.23.0
-      "@babel/parser": 7.23.0
-      "@babel/traverse": 7.23.2
-      "@babel/types": 7.23.0
-      "@storybook/csf": 0.1.1
-      "@storybook/types": 7.5.2
-      fs-extra: 11.1.1
-      recast: 0.23.4
-      ts-dedent: 2.2.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9353,13 +9325,6 @@ packages:
       }
     dev: true
 
-  /@storybook/node-logger@7.5.2:
-    resolution:
-      {
-        integrity: sha512-VIBuwPJOylu8vJofk1VfmqxlhXgbBgV0pCTo/UzdQAbc3w5y+qNRemf8goWxYEY+L9p6oUXqm/i9+bNGyX7/Mw==,
-      }
-    dev: true
-
   /@storybook/node-logger@7.5.3:
     resolution:
       {
@@ -9372,28 +9337,6 @@ packages:
       {
         integrity: sha512-r+H3xGMu2A9yOSsygc3bDFhku8wpOZF3SqO19B7eAML12viHwUtYfyGL74svw4TMcKukyQ+KPn5QsSG+4bjZMg==,
       }
-    dev: true
-
-  /@storybook/preview-api@7.5.2:
-    resolution:
-      {
-        integrity: sha512-rpmHR/09UBSnorDBTcE7JgHUQjZLO146NCI+vbI7Pqfb4QX/8lhwkFr4cuHRAR16mv6DAJbDVoPETO0Z/CH9aw==,
-      }
-    dependencies:
-      "@storybook/channels": 7.5.2
-      "@storybook/client-logger": 7.5.2
-      "@storybook/core-events": 7.5.2
-      "@storybook/csf": 0.1.1
-      "@storybook/global": 5.0.0
-      "@storybook/types": 7.5.2
-      "@types/qs": 6.9.7
-      dequal: 2.0.3
-      lodash: 4.17.21
-      memoizerific: 1.11.3
-      qs: 6.11.2
-      synchronous-promise: 2.0.17
-      ts-dedent: 2.2.0
-      util-deprecate: 1.0.2
     dev: true
 
   /@storybook/preview-api@7.5.3:
@@ -9438,7 +9381,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@storybook/react-vite@7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(vite@5.0.0):
+  /@storybook/react-vite@7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2)(vite@5.0.2):
     resolution:
       {
         integrity: sha512-ArPyHgiPbT5YvcyK4xK/DfqBOpn4R4/EP3kfIGhx8QKJyOtxPEYFdkLIZ5xu3KnPX7/z7GT+4a6Rb+8sk9gliA==,
@@ -9449,16 +9392,16 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
-      "@joshwooding/vite-plugin-react-docgen-typescript": 0.3.0(typescript@5.2.2)(vite@5.0.0)
+      "@joshwooding/vite-plugin-react-docgen-typescript": 0.3.0(typescript@5.3.2)(vite@5.0.2)
       "@rollup/pluginutils": 5.0.3(rollup@2.78.0)
-      "@storybook/builder-vite": 7.5.3(typescript@5.2.2)(vite@5.0.0)
-      "@storybook/react": 7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
-      "@vitejs/plugin-react": 3.1.0(vite@5.0.0)
+      "@storybook/builder-vite": 7.5.3(typescript@5.3.2)(vite@5.0.2)
+      "@storybook/react": 7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2)
+      "@vitejs/plugin-react": 3.1.0(vite@5.0.2)
       magic-string: 0.30.3
       react: 18.2.0
       react-docgen: 6.0.4
       react-dom: 18.2.0(react@18.2.0)
-      vite: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+      vite: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
     transitivePeerDependencies:
       - "@preact/preset-vite"
       - encoding
@@ -9468,7 +9411,7 @@ packages:
       - vite-plugin-glimmerx
     dev: true
 
-  /@storybook/react@7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+  /@storybook/react@7.5.3(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2):
     resolution:
       {
         integrity: sha512-dZILdM36xMFDjdmmy421G5X+sOIncB2qF3IPTooniG1i1Z6v/dVNo57ovdID9lDTNa+AWr2fLB9hANiISMqmjQ==,
@@ -9504,7 +9447,7 @@ packages:
       react-element-to-jsx-string: 15.0.0(react-dom@18.2.0)(react@18.2.0)
       ts-dedent: 2.2.0
       type-fest: 2.19.0
-      typescript: 5.2.2
+      typescript: 5.3.2
       util-deprecate: 1.0.2
     transitivePeerDependencies:
       - encoding
@@ -9546,22 +9489,22 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/test-runner@0.15.1:
+  /@storybook/test-runner@0.15.2:
     resolution:
       {
-        integrity: sha512-VHm9E6DM4ibs132EVJnavhX8Y15WARRHaZcLMkdb1R9Wmh1X6pdojl77AERQzIOCzhfBg291G3MZzCcE9enh8A==,
+        integrity: sha512-nHwThLvxho9wNAVxtESoAcrQD7UolOAJISwcG9uz3bmtTIm7h5DMlpfX+2DKbJyq5REg8nhcauZv5iFvwBdn1Q==,
       }
-    engines: { node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0 }
+    engines: { node: ^16.10.0 || ^18.0.0 || >=20.0.0 }
     hasBin: true
     dependencies:
       "@babel/core": 7.22.11
       "@babel/generator": 7.23.0
       "@babel/template": 7.22.15
       "@babel/types": 7.23.0
-      "@storybook/core-common": 7.5.2
+      "@storybook/core-common": 7.5.3
       "@storybook/csf": 0.1.1
-      "@storybook/csf-tools": 7.5.2
-      "@storybook/preview-api": 7.5.2
+      "@storybook/csf-tools": 7.5.3
+      "@storybook/preview-api": 7.5.3
       "@swc/core": 1.3.99(@swc/helpers@0.5.3)
       "@swc/jest": 0.2.29(@swc/core@1.3.99)
       can-bind-to-host: 1.1.2
@@ -9618,18 +9561,6 @@ packages:
       memoizerific: 1.11.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: true
-
-  /@storybook/types@7.5.2:
-    resolution:
-      {
-        integrity: sha512-RDKHo6WUES+4nt7uZMfankjxdpYX2EI2GpJ2n2RPcnhzmb/ub1huNTjbzDEYMqY24SppljZeIN57m3Ar6L6f9A==,
-      }
-    dependencies:
-      "@storybook/channels": 7.5.2
-      "@types/babel__core": 7.20.1
-      "@types/express": 4.17.21
-      file-system-cache: 2.3.0
     dev: true
 
   /@storybook/types@7.5.3:
@@ -11407,7 +11338,7 @@ packages:
         integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==,
       }
 
-  /@vitejs/plugin-react@3.1.0(vite@5.0.0):
+  /@vitejs/plugin-react@3.1.0(vite@5.0.2):
     resolution:
       {
         integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==,
@@ -11421,7 +11352,7 @@ packages:
       "@babel/plugin-transform-react-jsx-source": 7.22.5(@babel/core@7.22.11)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+      vite: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12237,7 +12168,7 @@ packages:
     engines: { node: ^10 || ^12 || >=14 }
     hasBin: true
     peerDependencies:
-      postcss: ^8.1.0
+      postcss: ">=8.4.31"
     dependencies:
       browserslist: 4.21.10
       caniuse-lite: 1.0.30001538
@@ -21737,10 +21668,10 @@ packages:
     engines: { node: ">=10" }
     dev: false
 
-  /next-intl@3.1.0(next@13.4.13)(react@18.2.0):
+  /next-intl@3.1.2(next@13.4.13)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-ZbQeJO0RcORFljtNjQmbXRnyS4KwiI0DCMemdIl0OmwoI3PWSpJojE/0hmy6RRZJHEtrWQnpS+afCBpvqgii+A==,
+        integrity: sha512-uVCklsWiYVHklIjhAn152cdmNW+nLll0nhbR4or47sj6t8I2Kd2JOsgoNuJi3XuTOoitdIdNFE+Vwyh56VzGOw==,
       }
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
@@ -23386,7 +23317,7 @@ packages:
       }
     engines: { node: ">=14.0.0" }
     peerDependencies:
-      postcss: ^8.0.0
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
       postcss-value-parser: 4.2.0
@@ -23400,7 +23331,7 @@ packages:
       }
     engines: { node: ^12 || ^14 || >= 16 }
     peerDependencies:
-      postcss: ^8.4.21
+      postcss: ">=8.4.31"
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.4.31
@@ -23412,7 +23343,7 @@ packages:
       }
     engines: { node: ">= 10" }
     peerDependencies:
-      postcss: ">=8.0.9"
+      postcss: ">=8.4.31"
       ts-node: ">=9.0.0"
     peerDependenciesMeta:
       postcss:
@@ -23432,7 +23363,7 @@ packages:
       }
     engines: { node: ">= 14" }
     peerDependencies:
-      postcss: ">=8.0.9"
+      postcss: ">=8.4.31"
       ts-node: ">=9.0.0"
     peerDependenciesMeta:
       postcss:
@@ -23451,7 +23382,7 @@ packages:
       }
     engines: { node: ">=12.0" }
     peerDependencies:
-      postcss: ^8.2.14
+      postcss: ">=8.4.31"
     dependencies:
       postcss: 8.4.31
       postcss-selector-parser: 6.0.13
@@ -24086,7 +24017,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-docgen-typescript@2.2.2(typescript@5.2.2):
+  /react-docgen-typescript@2.2.2(typescript@5.3.2):
     resolution:
       {
         integrity: sha512-tvg2ZtOpOi6QDwsb3GZhOjDkkX0h8Z2gipvTg6OVMUyoYoURhEiRNePT8NZItTVCDh39JJHnLdfCOkzoLbFnTg==,
@@ -24094,7 +24025,7 @@ packages:
     peerDependencies:
       typescript: ">= 4.3.x"
     dependencies:
-      typescript: 5.2.2
+      typescript: 5.3.2
     dev: true
 
   /react-docgen@6.0.4:
@@ -27225,7 +27156,7 @@ packages:
         integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==,
       }
 
-  /tsup@6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.2.2):
+  /tsup@6.6.2(@swc/core@1.3.99)(postcss@8.4.31)(typescript@5.3.2):
     resolution:
       {
         integrity: sha512-+yQ6SI4rVtp1+YpcYOePumJLEVQ896CDNRt9dJ2L/DeMnLf1+FTOCVw5eioLBH0xLdHgogO9NQ6vPNF5MfkSJw==,
@@ -27234,7 +27165,7 @@ packages:
     hasBin: true
     peerDependencies:
       "@swc/core": ^1
-      postcss: ^8.4.12
+      postcss: ">=8.4.31"
       typescript: ^4.1.0
     peerDependenciesMeta:
       "@swc/core":
@@ -27260,7 +27191,7 @@ packages:
       source-map: 0.8.0-beta.0
       sucrase: 3.34.0
       tree-kill: 1.2.2
-      typescript: 5.2.2
+      typescript: 5.3.2
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -27275,7 +27206,7 @@ packages:
     hasBin: true
     peerDependencies:
       "@swc/core": ^1
-      postcss: ^8.4.12
+      postcss: ">=8.4.31"
       typescript: ">=4.1.0"
     peerDependenciesMeta:
       "@swc/core":
@@ -27593,15 +27524,6 @@ packages:
       {
         integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==,
       }
-
-  /typescript@5.2.2:
-    resolution:
-      {
-        integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==,
-      }
-    engines: { node: ">=14.17" }
-    hasBin: true
-    dev: true
 
   /typescript@5.3.2:
     resolution:
@@ -28033,19 +27955,6 @@ packages:
       react: 18.2.0
       tslib: 2.6.2
 
-  /use-intl@3.1.0(react@18.2.0):
-    resolution:
-      {
-        integrity: sha512-PT6g2BISl93vzkUlbEPG6WN6ztOe75F+d3flxCzn4MpHEDdiDwlc6WpNcoOnlIfxEQvYKr66zDA0QrJAEB8yAQ==,
-      }
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      "@formatjs/ecma402-abstract": 1.17.0
-      intl-messageformat: 9.13.0
-      react: 18.2.0
-    dev: false
-
   /use-intl@3.1.2(react@18.2.0):
     resolution:
       {
@@ -28295,7 +28204,7 @@ packages:
       mlly: 1.4.0
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.0.0(@types/node@20.9.3)(sass@1.69.5)
+      vite: 5.0.2(@types/node@20.9.3)(sass@1.69.5)
     transitivePeerDependencies:
       - "@types/node"
       - less
@@ -28386,10 +28295,49 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@5.0.0(@types/node@20.9.3)(sass@1.69.5):
+  /vite@5.0.0(@types/node@20.9.3):
     resolution:
       {
         integrity: sha512-ESJVM59mdyGpsiNAeHQOR/0fqNoOyWPYesFto8FFZugfmhdHx8Fzd8sF3Q/xkVhZsyOxHfdM7ieiVAorI9RjFw==,
+      }
+    engines: { node: ^18.0.0 || >=20.0.0 }
+    hasBin: true
+    peerDependencies:
+      "@types/node": ^18.0.0 || >=20.0.0
+      less: "*"
+      lightningcss: ^1.21.0
+      sass: "*"
+      stylus: "*"
+      sugarss: "*"
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      "@types/node":
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      "@types/node": 20.9.3
+      esbuild: 0.19.5
+      postcss: 8.4.31
+      rollup: 4.5.0
+    optionalDependencies:
+      fsevents: 2.3.3
+    dev: true
+
+  /vite@5.0.2(@types/node@20.9.3)(sass@1.69.5):
+    resolution:
+      {
+        integrity: sha512-6CCq1CAJCNM1ya2ZZA7+jS2KgnhbzvxakmlIjN24cF/PXhRMzpM/z8QgsVJA/Dm5fWUWnVEsmtBoMhmerPxT0g==,
       }
     engines: { node: ^18.0.0 || >=20.0.0 }
     hasBin: true

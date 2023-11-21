@@ -2,7 +2,7 @@ import * as React from "react";
 import "../src/tailwind.css";
 import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
-import { NextIntlProvider } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 
 const preview: Preview = {
   parameters: {
@@ -56,9 +56,9 @@ export const decorators = [
     attributeName: "data-theme",
   }),
   (Story) => (
-    <NextIntlProvider messages={MESSAGES_REQUIRED_IN_COMPONENTS} locale="en">
+    <NextIntlClientProvider messages={MESSAGES_REQUIRED_IN_COMPONENTS} locale="en">
       <Story />
-    </NextIntlProvider>
+    </NextIntlClientProvider>
   ),
 ];
 

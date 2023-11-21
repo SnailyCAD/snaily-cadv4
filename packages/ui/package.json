@@ -28,7 +28,7 @@
     "@storybook/jest": "^0.2.3",
     "@storybook/react": "^7.5.3",
     "@storybook/react-vite": "^7.5.3",
-    "@storybook/test-runner": "^0.15.1",
+    "@storybook/test-runner": "^0.15.2",
     "@storybook/testing-library": "^0.2.2",
     "autoprefixer": "^10.4.16",
     "monaco-editor": "^0.44.0",
@@ -37,8 +37,8 @@
     "storybook": "^7.5.3",
     "tailwindcss": "^3.3.5",
     "tsup": "6.6.2",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.0"
+    "typescript": "^5.3.2",
+    "vite": "^5.0.2"
   },
   "tsup": {
     "entry": [
@@ -59,6 +59,8 @@
     ]
   },
   "dependencies": {
+    "next-intl": "^3.1.2",
+    "use-intl": "^3.1.2",
     "@casperiv/useful": "^3.0.0",
     "@internationalized/date": "^3.5.0",
     "@monaco-editor/react": "^4.6.0",
@@ -121,10 +123,10 @@
   "peerDependencies": {
     "date-fns": ">=2.30.0",
     "next": "*",
-    "next-intl": ">=3.1.0",
+    "next-intl": ">=3.1.2",
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0",
-    "use-intl": ">=3.1.0"
+    "use-intl": ">=3.1.2"
   },
   "sideEffects": false
 }

@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "tsup": "6.6.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "dependencies": {
     "@snailycad/types": "workspace:*",
