@@ -44,6 +44,7 @@ jobs:
       - uses: chromaui/action@v1
         with:
           onlyChanged: true
+          exitOnceUploaded: true
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
           workingDir: packages/ui
