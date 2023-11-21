@@ -223,8 +223,8 @@ importers:
         specifier: ^5.27.2
         version: 5.27.2
       use-intl:
-        specifier: ^3.1.2
-        version: 3.1.2(react@18.2.0)
+        specifier: 2.22.1
+        version: 2.22.1(react@18.2.0)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -437,8 +437,8 @@ importers:
         specifier: 14.0.3
         version: 14.0.3(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
       next-intl:
-        specifier: 3.1.2
-        version: 3.1.2(next@14.0.3)(react@18.2.0)
+        specifier: 2.22.1
+        version: 2.22.1(next@14.0.3)(react@18.2.0)
       nookies:
         specifier: ^2.5.2
         version: 2.5.2
@@ -524,8 +524,8 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1
       use-intl:
-        specifier: ^3.1.2
-        version: 3.1.2(react@18.2.0)
+        specifier: 2.22.1
+        version: 2.22.1(react@18.2.0)
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -810,8 +810,8 @@ importers:
         specifier: "*"
         version: 13.4.13(@babel/core@7.22.11)(react-dom@18.2.0)(react@18.2.0)
       next-intl:
-        specifier: ^3.1.2
-        version: 3.1.2(next@13.4.13)(react@18.2.0)
+        specifier: 2.22.1
+        version: 2.22.1(next@13.4.13)(react@18.2.0)
       react:
         specifier: ">=18.2.0"
         version: 18.2.0
@@ -840,8 +840,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       use-intl:
-        specifier: ^3.1.2
-        version: 3.1.2(react@18.2.0)
+        specifier: 2.22.1
+        version: 2.22.1(react@18.2.0)
     devDependencies:
       "@storybook/addon-a11y":
         specifier: ^7.5.3
@@ -21668,11 +21668,12 @@ packages:
     engines: { node: ">=10" }
     dev: false
 
-  /next-intl@3.1.2(next@13.4.13)(react@18.2.0):
+  /next-intl@2.22.1(next@13.4.13)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-uVCklsWiYVHklIjhAn152cdmNW+nLll0nhbR4or47sj6t8I2Kd2JOsgoNuJi3XuTOoitdIdNFE+Vwyh56VzGOw==,
+        integrity: sha512-mg3CXfQRtG0lTS2zyRyTsYIl6ujQi2mAN0Xdmprce9ecUVKNOmHaMMsXOIPgFv1l+O80CavWo7m9rUfj7Zbr8w==,
       }
+    engines: { node: ">=10" }
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -21681,14 +21682,15 @@ packages:
       negotiator: 0.6.3
       next: 13.4.13(@babel/core@7.22.11)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
-      use-intl: 3.1.2(react@18.2.0)
+      use-intl: 2.22.1(react@18.2.0)
     dev: false
 
-  /next-intl@3.1.2(next@14.0.3)(react@18.2.0):
+  /next-intl@2.22.1(next@14.0.3)(react@18.2.0):
     resolution:
       {
-        integrity: sha512-uVCklsWiYVHklIjhAn152cdmNW+nLll0nhbR4or47sj6t8I2Kd2JOsgoNuJi3XuTOoitdIdNFE+Vwyh56VzGOw==,
+        integrity: sha512-mg3CXfQRtG0lTS2zyRyTsYIl6ujQi2mAN0Xdmprce9ecUVKNOmHaMMsXOIPgFv1l+O80CavWo7m9rUfj7Zbr8w==,
       }
+    engines: { node: ">=10" }
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -21697,7 +21699,7 @@ packages:
       negotiator: 0.6.3
       next: 14.0.3(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)
       react: 18.2.0
-      use-intl: 3.1.2(react@18.2.0)
+      use-intl: 2.22.1(react@18.2.0)
     dev: false
 
   /next@13.4.13(@babel/core@7.22.11)(react-dom@18.2.0)(react@18.2.0):
@@ -27955,11 +27957,12 @@ packages:
       react: 18.2.0
       tslib: 2.6.2
 
-  /use-intl@3.1.2(react@18.2.0):
+  /use-intl@2.22.1(react@18.2.0):
     resolution:
       {
-        integrity: sha512-kUmAiYi/ZB2jk/CeRY/IVzp+DRzBkLk2SmeN3DqMf2N9h/oRTm6qlrYzlOCYWdYPpPOJ7rUM7JERiaWox9mIIQ==,
+        integrity: sha512-vTMJZrqVjErn421Ry4mxS2GuVUTWkY5zyIwu+3XvrAXH3PsPDAfWBMvVhip3kx914/IRs/4QnZ2ZaOehiZSXng==,
       }
+    engines: { node: ">=10" }
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:

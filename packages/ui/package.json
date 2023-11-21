@@ -59,8 +59,8 @@
     ]
   },
   "dependencies": {
-    "next-intl": "^3.1.2",
-    "use-intl": "^3.1.2",
+    "next-intl": "2.22.1",
+    "use-intl": "2.22.1",
     "@casperiv/useful": "^3.0.0",
     "@internationalized/date": "^3.5.0",
     "@monaco-editor/react": "^4.6.0",
@@ -123,10 +123,10 @@
   "peerDependencies": {
     "date-fns": ">=2.30.0",
     "next": "*",
-    "next-intl": ">=3.1.2",
+    "next-intl": "2.22.1",
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0",
-    "use-intl": ">=3.1.2"
+    "use-intl": "2.22.1"
   },
   "sideEffects": false
 }
