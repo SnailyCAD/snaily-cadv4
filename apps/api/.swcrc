@@ -4,10 +4,11 @@
     "type": "commonjs",
     "strictMode": false
   },
+  "sourceMaps": true,
   "jsc": {
     "externalHelpers": true,
     "keepClassNames": true,
-    "target": "es2020",
+    "target": "es2022",
     "transform": {
       "decoratorMetadata": true
     },
