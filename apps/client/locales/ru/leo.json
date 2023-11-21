@@ -386,7 +386,9 @@
     "all": "Все",
     "ungrouped": "Разгруппировано",
     "counts": "Рассчитывает",
-    "stats": "Статистика"
+    "stats": "Статистика",
+    "deletedPenalCode": "Удален Уголовный кодекс",
+    "exportCriminalRecord": "Экспорт судимости"
   },
   "Bolos": {
     "activeBolos": "Активные BOLO",

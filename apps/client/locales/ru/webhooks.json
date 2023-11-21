@@ -79,7 +79,12 @@
     "paymentStatus": "Статус платежа",
     "createdAt": "Создан",
     "officer": "Офицер",
-    "socialSecurityNumber": "Номер социального страхования"
+    "socialSecurityNumber": "Номер социального страхования",
+    "citizenRecord": "Записи о гражданах",
+    "exportInformation": "Экспорт информации",
+    "dateOfExport": "Дата экспорта",
+    "records": "Записи",
+    "type": "Тип"
   },
   "WhitelistStatusChange": {
     "accepted": "принят",
@@ -89,5 +94,16 @@
     "userChangeTitle": "Изменение статуса вайтлиста для пользвателя",
     "departmentChangeDescription": "Юнит: статус вайтлиста для {unit} изменен на {status}.",
     "departmentChangeTitle": "Изменение статуса вайтлиста для юнита"
+  },
+  "Incidents": {
+    "createdEms": "Создан инцидент EMS/FD",
+    "createdLeo": "Созданный инцидент LEO",
+    "fireArmsIncluded": "Наличие огнестрельного оружия",
+    "injuriesOrFatalities": "Травмы или смертельные исходы",
+    "arrestsMade": "Произведен арест (аресты)",
+    "situationCode": "Код ситуации",
+    "postal": "Блок",
+    "yes": "Да",
+    "no": "Нет"
   }
 }
