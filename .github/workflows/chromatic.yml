@@ -1,6 +1,6 @@
 name: "Chromatic Publish (Storybook)"
 
-on: [push]
+# on: [push]
 
 jobs:
   test:
