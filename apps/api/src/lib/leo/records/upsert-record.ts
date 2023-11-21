@@ -12,8 +12,8 @@ import { isFeatureEnabled } from "lib/upsert-cad";
 import { leoProperties } from "utils/leo/includes";
 
 import { prisma } from "lib/data/prisma";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
-import { ExtendedNotFound } from "src/exceptions/extended-not-found";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
+import { ExtendedNotFound } from "~/exceptions/extended-not-found";
 import type { z } from "zod";
 import { validateRecordData } from "./validate-record-data";
 import { captureException } from "@sentry/node";

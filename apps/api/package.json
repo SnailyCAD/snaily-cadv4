@@ -12,6 +12,7 @@
     "test": "pnpm vitest run"
   },
   "devDependencies": {
+    "@swc/cli": "^0.1.63",
     "@swc/core": "^1.3.82",
     "@swc/helpers": "^0.5.1",
     "@types/bcrypt": "^5.0.2",

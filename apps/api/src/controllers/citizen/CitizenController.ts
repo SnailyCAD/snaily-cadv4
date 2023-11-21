@@ -17,7 +17,7 @@ import {
   type MiscCadSettings,
   Prisma,
 } from "@prisma/client";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/data/validate-schema";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses/update-citizen-license-categories";

@@ -1,5 +1,5 @@
 import { IMAGES_REGEX } from "@snailycad/config";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 
 export function validateImageURL(image: unknown) {
   if (image === null) return null;

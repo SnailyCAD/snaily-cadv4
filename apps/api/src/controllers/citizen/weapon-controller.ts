@@ -13,7 +13,7 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { generateString } from "utils/generate-string";
 import { citizenInclude } from "./CitizenController";
 import type * as APITypes from "@snailycad/types/api";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import type { Weapon } from "@snailycad/types";
 import { IsFeatureEnabled } from "middlewares/is-enabled";
 

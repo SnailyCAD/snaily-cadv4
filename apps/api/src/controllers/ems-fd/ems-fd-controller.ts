@@ -26,7 +26,7 @@ import { IsAuth } from "middlewares/auth/is-auth";
 import { ActiveDeputy } from "middlewares/active-deputy";
 import fs from "node:fs/promises";
 import { validateSchema } from "lib/data/validate-schema";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { getInactivityFilter } from "lib/leo/utils";
 import { Socket } from "services/socket-service";
