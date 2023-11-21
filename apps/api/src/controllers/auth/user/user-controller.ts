@@ -22,7 +22,7 @@ import {
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/data/validate-schema";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { Socket } from "services/socket-service";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";

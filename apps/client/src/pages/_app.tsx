@@ -38,7 +38,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
   const user = pageProps.session as User | null;
   const locale = user?.locale ?? router.locale ?? "en";
   const cad = pageProps.cad ?? pageProps.session?.cad ?? null;
-  const timeZone = cad?.timeZone || undefined;
+  const timeZone = cad?.timeZone || "UTC";
 
   React.useEffect(() => {
     const handleRouteStart = async () => {
@@ -90,6 +90,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
             locale={locale}
             messages={pageProps.messages}
             now={new Date()}
+            getMessageFallback={(key) => key.key}
           >
             <DndProviderWrapper>
               <ValuesProvider router={router} initialData={pageProps}>

@@ -16,7 +16,7 @@ import { IsValidPath, validValuePaths } from "middlewares/valid-path";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { typeHandlers } from "./import-values-controller";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import {
   type ValuesSelect,
   getTypeFromPath,

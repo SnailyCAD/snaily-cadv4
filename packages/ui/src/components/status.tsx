@@ -32,13 +32,12 @@ enum Colors {
 }
 
 export const colors = {
-  [WhitelistStatus.ACCEPTED]: Colors.GREEN,
-  [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
+  ACCEPTED: Colors.GREEN,
+  PENDING: Colors.ORANGE,
+
   [LicenseExamStatus.PASSED]: Colors.GREEN,
   [PaymentStatus.PAID]: Colors.GREEN,
   [ConnectionStatus.CONNECTED]: Colors.GREEN,
-  [WhitelistStatus.PENDING]: Colors.ORANGE,
-  [ExpungementRequestStatus.PENDING]: Colors.ORANGE,
   [LicenseExamStatus.IN_PROGRESS]: Colors.ORANGE,
   [ConnectionStatus.CONNECTING]: Colors.ORANGE,
   [WhitelistStatus.DECLINED]: Colors.RED,

@@ -1,6 +1,6 @@
 import type { PlatformMulterFile } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 
 export function parseImportFile(file: PlatformMulterFile | undefined) {
   if (!file) {

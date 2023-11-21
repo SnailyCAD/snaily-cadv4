@@ -20,7 +20,7 @@ import { hasPermission } from "@snailycad/permissions";
 import { type User } from "@snailycad/types";
 import { getActiveOfficer } from "lib/leo/activeOfficer";
 import { getActiveDeputy } from "lib/get-active-ems-fd-deputy";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { validateSchema } from "lib/data/validate-schema";
 import { PRIVATE_MESSAGE_SCHEMA } from "@snailycad/schemas";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";

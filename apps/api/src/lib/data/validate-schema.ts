@@ -1,5 +1,5 @@
 import { BadRequest } from "@tsed/exceptions";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { type z } from "zod";
 
 export function validateSchema<Schema extends z.ZodTypeAny>(

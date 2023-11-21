@@ -10,7 +10,7 @@ import {
 } from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import type { DisconnectOrConnect } from "lib/data/many-to-many";
 
 interface MaxDepartmentOptions {

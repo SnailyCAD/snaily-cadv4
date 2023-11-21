@@ -5,8 +5,8 @@ import { prisma } from "lib/data/prisma";
 import { findOrCreateCAD, isFeatureEnabled } from "lib/upsert-cad";
 import { REGISTER_SCHEMA, AUTH_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/data/validate-schema";
-import { ExtendedNotFound } from "src/exceptions/extended-not-found";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedNotFound } from "~/exceptions/extended-not-found";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { validateUser2FA } from "lib/auth/2fa";
 import { ContentType, Description, Returns } from "@tsed/schema";
 import {

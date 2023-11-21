@@ -10,7 +10,7 @@ import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { leoProperties } from "utils/leo/includes";
 
 import { type AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import type * as APITypes from "@snailycad/types/api";
 import { upsertOfficer } from "./upsert-officer";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";

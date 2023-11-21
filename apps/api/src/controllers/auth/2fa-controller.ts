@@ -8,7 +8,7 @@ import { ContentType, Delete, Description, Post } from "@tsed/schema";
 import { compareSync } from "bcrypt";
 import qrcode from "qrcode";
 import { prisma } from "lib/data/prisma";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { encryptValue } from "lib/auth/crypto";
 import { validateUser2FA } from "lib/auth/2fa";

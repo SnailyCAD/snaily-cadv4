@@ -17,7 +17,7 @@ import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";

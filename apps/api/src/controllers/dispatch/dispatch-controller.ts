@@ -10,7 +10,7 @@ import { type cad, Feature, type MiscCadSettings, ShouldDoType, type User } from
 import { validateSchema } from "lib/data/validate-schema";
 import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { getActiveOfficer } from "lib/leo/activeOfficer";
-import { ExtendedNotFound } from "src/exceptions/extended-not-found";
+import { ExtendedNotFound } from "~/exceptions/extended-not-found";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
