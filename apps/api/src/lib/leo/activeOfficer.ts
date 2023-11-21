@@ -90,7 +90,7 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
 
   const activeOfficerOrCombinedUnit = combinedUnit ?? officer;
 
-  if (!activeOfficerOrCombinedUnit) {
+  if (!combinedUnit && !officer) {
     options.ctx.delete("activeOfficer");
     throw new BadRequest("noActiveOfficer");
   }
