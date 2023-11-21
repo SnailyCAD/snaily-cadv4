@@ -4,6 +4,7 @@
     "values": "Значения",
     "shouldDo": "Выполнить действие",
     "color": "Цвет",
+    "textColor": "Цвет текста (#HEX)",
     "callsign": "Позывной",
     "department": "Департамент",
     "gameHash": "Хэш",
@@ -73,7 +74,10 @@
     "FELONY": "Преступление (Felony)",
     "warningApplicable": "Предупреждение применимо",
     "warningNotApplicable": "Предупреждение не применимо",
-    "isPrimary": "Первично"
+    "isPrimary": "Первично",
+    "isDispositionDescription": "При закрытии вызова может быть использован код диспозиции. По нему можно определить исход вызова.",
+    "isDisposition": "Есть диспозиция",
+    "mustBeValidJson": "Должен быть корректный JSON"
   },
   "PENAL_CODE_GROUP": {
     "MANAGE": "Управлять группами кодекса",
