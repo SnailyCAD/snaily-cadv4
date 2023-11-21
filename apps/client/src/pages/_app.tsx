@@ -90,6 +90,7 @@ export default function App({ Component, router, pageProps, ...rest }: AppProps)
             locale={locale}
             messages={pageProps.messages}
             now={new Date()}
+            getMessageFallback={(key) => key.key}
           >
             <DndProviderWrapper>
               <ValuesProvider router={router} initialData={pageProps}>

@@ -4,7 +4,7 @@
   "scripts": {
     "watch": "pnpm prisma generate && pnpm nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/main.ts",
     "build": "swc src -d dist",
-    "start": "pnpm prisma migrate deploy && pnpm prisma generate && node dist/main.js",
+    "start": "pnpm prisma migrate deploy && pnpm prisma generate && node --inspect dist/main.js",
     "format": "pnpm prisma format",
     "generate": "pnpm prisma generate",
     "typecheck": "pnpm generate && tsc --noEmit",
