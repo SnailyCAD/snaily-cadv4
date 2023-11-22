@@ -132,7 +132,7 @@ export class AdminManageUnitsController {
     @QueryParams("days", Number) days = 2,
   ) {
     const where = {
-      lastStatusChangeTimestamp: {
+      updatedAt: {
         not: null,
         lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
       },
@@ -143,12 +143,12 @@ export class AdminManageUnitsController {
       prisma.officer.findMany({
         where,
         include: _leoProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
       }),
       prisma.emsFdDeputy.findMany({
         where,
         include: unitProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
       }),
     ]);
 
@@ -206,7 +206,7 @@ export class AdminManageUnitsController {
         return prisma[prismaName].deleteMany({
           where: {
             id: unitId,
-            lastStatusChangeTimestamp: {
+            updatedAt: {
               lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
             },
           },

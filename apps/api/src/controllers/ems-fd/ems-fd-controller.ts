@@ -212,11 +212,7 @@ export class EmsFdController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetEmsFdActiveDeputies> {
-    const unitsInactivityFilter = getInactivityFilter(
-      cad,
-      "unitInactivityTimeout",
-      "lastStatusChangeTimestamp",
-    );
+    const unitsInactivityFilter = getInactivityFilter(cad, "unitInactivityTimeout");
 
     const activeDispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
@@ -239,7 +235,7 @@ export class EmsFdController {
       }),
       prisma.combinedEmsFdUnit.findMany({
         include: combinedEmsFdUnitProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
         where: {
           ...unitsInactivityFilter?.filter,
           departmentId: activeDispatcher?.departmentId || undefined,

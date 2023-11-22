@@ -153,10 +153,10 @@ export function PruneUnitsModal() {
                       <p className="font-semibold">
                         {callsign} {unitName}
                       </p>
-                      {unit.lastStatusChangeTimestamp ? (
+                      {unit.updatedAt ? (
                         <p className="text-base">
                           <span className="font-semibold">{t("Management.lastSeen")}:</span>{" "}
-                          <FullDate onlyDate>{unit.lastStatusChangeTimestamp}</FullDate>
+                          <FullDate onlyDate>{unit.updatedAt}</FullDate>
                         </p>
                       ) : null}
                     </div>

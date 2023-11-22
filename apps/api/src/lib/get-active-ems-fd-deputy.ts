@@ -63,11 +63,7 @@ export async function getActiveDeputy(options: GetActiveDeputyOptions) {
   });
 
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
-  const unitsInactivityFilter = getInactivityFilter(
-    cad!,
-    "unitInactivityTimeout",
-    "lastStatusChangeTimestamp",
-  );
+  const unitsInactivityFilter = getInactivityFilter(cad!, "unitInactivityTimeout");
 
   const filters: Prisma.Enumerable<Prisma.EmsFdDeputyWhereInput> = [
     { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
@@ -76,7 +72,7 @@ export async function getActiveDeputy(options: GetActiveDeputyOptions) {
 
   if (unitsInactivityFilter) {
     filters.push({
-      lastStatusChangeTimestamp: { lte: unitsInactivityFilter.lastStatusChangeTimestamp },
+      updatedAt: { lte: unitsInactivityFilter.updatedAt },
     });
   }
 

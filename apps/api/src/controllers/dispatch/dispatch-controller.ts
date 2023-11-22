@@ -118,7 +118,7 @@ export class DispatchController {
       }),
       include: combinedUnitProperties,
       take: 25,
-      orderBy: { lastStatusChangeTimestamp: "desc" },
+      orderBy: { updatedAt: "desc" },
     });
 
     const combinedEmsFdDeputies = await prisma.combinedEmsFdUnit.findMany({
@@ -129,7 +129,7 @@ export class DispatchController {
       }),
       include: combinedEmsFdUnitProperties,
       take: 25,
-      orderBy: { lastStatusChangeTimestamp: "desc" },
+      orderBy: { updatedAt: "desc" },
     });
 
     return [...officers, ...deputies, ...combinedOfficers, ...combinedEmsFdDeputies];

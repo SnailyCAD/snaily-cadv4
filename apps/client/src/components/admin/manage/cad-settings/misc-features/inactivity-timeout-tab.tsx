@@ -67,6 +67,7 @@ export function InactivityTimeoutTab() {
                 value={values.call911InactivityTimeout}
                 onChange={handleChange}
                 placeholder="120"
+                min={10}
               />
             </SettingsFormField>
 
@@ -83,6 +84,7 @@ export function InactivityTimeoutTab() {
                 value={values.incidentInactivityTimeout}
                 onChange={handleChange}
                 placeholder="120"
+                min={10}
               />
             </SettingsFormField>
 
@@ -99,6 +101,7 @@ export function InactivityTimeoutTab() {
                 value={values.unitInactivityTimeout}
                 onChange={handleChange}
                 placeholder="120"
+                min={10}
               />
             </SettingsFormField>
 
@@ -115,6 +118,7 @@ export function InactivityTimeoutTab() {
                 value={values.activeDispatchersInactivityTimeout}
                 onChange={handleChange}
                 placeholder="120"
+                min={10}
               />
             </SettingsFormField>
 
@@ -131,6 +135,7 @@ export function InactivityTimeoutTab() {
                 value={values.boloInactivityTimeout}
                 onChange={handleChange}
                 placeholder="120"
+                min={10}
               />
             </SettingsFormField>
 
@@ -147,6 +152,7 @@ export function InactivityTimeoutTab() {
                 value={values.activeWarrantsInactivityTimeout}
                 onChange={handleChange}
                 placeholder="120"
+                min={10}
               />
             </SettingsFormField>
 

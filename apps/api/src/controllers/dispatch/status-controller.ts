@@ -265,7 +265,6 @@ export class StatusController {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           incremental,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: leoProperties,
       });
@@ -277,7 +276,6 @@ export class StatusController {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           incremental,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: unitProperties,
       });
@@ -288,7 +286,6 @@ export class StatusController {
           userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: combinedUnitProperties,
       });
@@ -299,7 +296,6 @@ export class StatusController {
           userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: combinedEmsFdUnitProperties,
       });
