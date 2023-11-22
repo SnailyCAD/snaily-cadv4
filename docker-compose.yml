@@ -11,3 +11,11 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - ./.dev-data:/var/lib/postgresql/data
+
+  redis:
+    container_name: "snaily-cad-redis"
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./.dev-data:/var/lib/redis/data
