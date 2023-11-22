@@ -133,7 +133,6 @@ export class AdminManageUnitsController {
   ) {
     const where = {
       updatedAt: {
-        not: null,
         lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
       },
       departmentId,
