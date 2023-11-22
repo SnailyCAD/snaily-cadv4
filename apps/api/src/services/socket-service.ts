@@ -112,7 +112,7 @@ export class Socket {
         include: leoProperties,
       }),
       prisma.combinedLeoUnit.findMany({
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
         include: combinedUnitProperties,
       }),
     ]);
@@ -136,7 +136,7 @@ export class Socket {
         include: unitProperties,
       }),
       prisma.combinedEmsFdUnit.findMany({
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
         include: combinedEmsFdUnitProperties,
       }),
     ]);

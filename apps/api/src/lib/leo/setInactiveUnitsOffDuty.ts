@@ -4,11 +4,11 @@ import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
 import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 
-export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, socket: Socket) {
+export async function setInactiveUnitsOffDuty(updatedAt: Date, socket: Socket) {
   try {
     const where = {
       status: { shouldDo: { not: ShouldDoType.SET_OFF_DUTY } },
-      lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
+      updatedAt: { not: { gte: updatedAt } },
     };
 
     const [officers, deputies] = await prisma.$transaction([
@@ -68,14 +68,11 @@ export function filterInactiveUnits<Unit extends Officer | EmsFdDeputy | Combine
   unit: Unit;
   unitsInactivityFilter: any;
 }) {
-  if (!unit.lastStatusChangeTimestamp || !unitsInactivityFilter?.lastStatusChangeTimestamp) {
+  if (!unit.updatedAt || !unitsInactivityFilter?.updatedAt) {
     return unit;
   }
 
-  if (
-    unit.lastStatusChangeTimestamp.getTime() <=
-    unitsInactivityFilter?.lastStatusChangeTimestamp.getTime()
-  ) {
+  if (unit.updatedAt.getTime() <= unitsInactivityFilter?.updatedAt.getTime()) {
     return {
       ...unit,
       statusId: null,

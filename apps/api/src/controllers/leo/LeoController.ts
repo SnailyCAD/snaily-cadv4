@@ -59,11 +59,7 @@ export class LeoController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetActiveOfficersData> {
-    const unitsInactivityFilter = getInactivityFilter(
-      cad,
-      "unitInactivityTimeout",
-      "lastStatusChangeTimestamp",
-    );
+    const unitsInactivityFilter = getInactivityFilter(cad, "unitInactivityTimeout");
 
     const activeDispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
@@ -86,13 +82,21 @@ export class LeoController {
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
         where: {
-          ...unitsInactivityFilter?.filter,
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ...(unitsInactivityFilter?.filter ?? {}),
+
           departmentId: activeDispatcher?.departmentId || undefined,
         },
       }),
     ]);
+
+    console.log({
+      fl: unitsInactivityFilter?.filter,
+      officers,
+      combinedUnits,
+    });
 
     return [...combinedUnits, ...officers];
   }

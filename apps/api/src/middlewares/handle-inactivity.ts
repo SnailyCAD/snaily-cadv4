@@ -65,16 +65,10 @@ export class HandleInactivity implements MiddlewareMethods {
       });
     }
 
-    const unitsInactivityFilter = getInactivityFilter(
-      cad,
-      "unitInactivityTimeout",
-      "lastStatusChangeTimestamp",
-    );
-
+    const unitsInactivityFilter = getInactivityFilter(cad, "unitInactivityTimeout");
     const dispatcherInactivityTimeout = getInactivityFilter(
       cad,
       "activeDispatchersInactivityTimeout",
-      "updatedAt",
     );
 
     const incidentInactivityFilter = getInactivityFilter(cad, "incidentInactivityTimeout");
@@ -92,7 +86,7 @@ export class HandleInactivity implements MiddlewareMethods {
     }
 
     if (unitsInactivityFilter) {
-      await setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp, this.socket);
+      await setInactiveUnitsOffDuty(unitsInactivityFilter.updatedAt, this.socket);
     }
 
     const boloInactivityTimeout = getInactivityFilter(cad, "boloInactivityTimeout");

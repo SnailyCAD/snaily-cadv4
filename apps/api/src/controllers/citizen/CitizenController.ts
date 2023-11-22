@@ -42,7 +42,7 @@ export const citizenInclude = Prisma.validator<Prisma.CitizenInclude>()({
   suspendedLicenses: true,
   licensePoints: true,
   vehicles: {
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: Prisma.SortOrder.desc },
     include: {
       trimLevels: true,
       flags: true,
@@ -60,7 +60,7 @@ export const citizenInclude = Prisma.validator<Prisma.CitizenInclude>()({
     skip: 0,
   },
   weapons: {
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: Prisma.SortOrder.desc },
     take: 12,
     skip: 0,
     include: {
@@ -68,7 +68,7 @@ export const citizenInclude = Prisma.validator<Prisma.CitizenInclude>()({
       registrationStatus: true,
     },
   },
-  medicalRecords: { include: { bloodGroup: true }, orderBy: { createdAt: "desc" } },
+  medicalRecords: { include: { bloodGroup: true }, orderBy: { createdAt: Prisma.SortOrder.desc } },
   ethnicity: true,
   gender: true,
   weaponLicense: true,
