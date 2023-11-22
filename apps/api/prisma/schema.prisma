@@ -78,7 +78,6 @@ model MiscCadSettings {
   roleplayEnabled           Boolean?       @default(true)
   authScreenBgImageId       String?
   authScreenHeaderImageId   String?
-  inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
   // How many times a signal 100 should be repeated.
   signal100RepeatAmount     Int?           @default(1)
