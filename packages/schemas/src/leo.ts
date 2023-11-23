@@ -156,3 +156,13 @@ export const LICENSE_POINTS_SCHEMA = z.object({
   huntingLicensePoints: z.number().finite().min(0),
   fishingLicensePoints: z.number().finite().min(0),
 });
+
+export const PANIC_BUTTON_SCHEMA = z.object({
+  isEnabled: z.boolean().nullish(),
+});
+export const LEO_PANIC_BUTTON_SCHEMA = PANIC_BUTTON_SCHEMA.extend({
+  officerId: z.string().min(2),
+});
+export const EMS_FD_PANIC_BUTTON_SCHEMA = PANIC_BUTTON_SCHEMA.extend({
+  deputyId: z.string().min(2),
+});
