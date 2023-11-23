@@ -114,6 +114,7 @@ export class LeoController {
   ): Promise<APITypes.PostLeoTogglePanicButtonData> {
     const data = validateSchema(LEO_PANIC_BUTTON_SCHEMA, body);
     let type: "officer" | "combinedLeoUnit" = "officer";
+    let panicType: "ON" | "OFF" = "ON";
 
     let officer: CombinedLeoUnit | Officer | null = await prisma.officer.findFirst({
       where: {
@@ -145,7 +146,7 @@ export class LeoController {
     });
 
     if (!code) {
-      throw new Error("panicButtonCodeNotFound");
+      throw new BadRequest("panicButtonCodeNotFound");
     }
 
     if (data.isEnabled) {
@@ -160,45 +161,44 @@ export class LeoController {
         data: { statusId: code.id },
         include: type === "officer" ? leoProperties : combinedUnitProperties,
       });
-    }
-
-    let panicType: "ON" | "OFF" = "ON";
-    /**
-     * officer is already in panic-mode -> set status back to `ON_DUTY`
-     */
-    if (officer?.statusId === code?.id) {
-      const onDutyCode = await prisma.statusValue.findFirst({
-        where: {
-          shouldDo: ShouldDoType.SET_ON_DUTY,
-          OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.LEO } }],
-        },
-      });
-
-      if (!onDutyCode) {
-        throw new BadRequest("mustHaveOnDutyCode");
-      }
-
-      panicType = "OFF";
-      // @ts-expect-error the properties used are the same.
-      officer = await prisma[type].update({
-        where: {
-          id: officer?.id,
-        },
-        data: {
-          statusId: onDutyCode?.id,
-        },
-        include: type === "officer" ? leoProperties : combinedUnitProperties,
-      });
     } else {
       /**
-       * officer is not yet in panic-mode -> set status to panic button status
+       * officer is already in panic-mode -> set status back to `ON_DUTY`
        */
-      // @ts-expect-error the properties used are the same.
-      officer = await prisma[type].update({
-        where: { id: officer?.id },
-        data: { statusId: code.id },
-        include: type === "officer" ? leoProperties : combinedUnitProperties,
-      });
+      if (officer?.statusId === code?.id) {
+        const onDutyCode = await prisma.statusValue.findFirst({
+          where: {
+            shouldDo: ShouldDoType.SET_ON_DUTY,
+            OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.LEO } }],
+          },
+        });
+
+        if (!onDutyCode) {
+          throw new BadRequest("mustHaveOnDutyCode");
+        }
+
+        panicType = "OFF";
+        // @ts-expect-error the properties used are the same.
+        officer = await prisma[type].update({
+          where: {
+            id: officer?.id,
+          },
+          data: {
+            statusId: onDutyCode?.id,
+          },
+          include: type === "officer" ? leoProperties : combinedUnitProperties,
+        });
+      } else {
+        /**
+         * officer is not yet in panic-mode -> set status to panic button status
+         */
+        // @ts-expect-error the properties used are the same.
+        officer = await prisma[type].update({
+          where: { id: officer?.id },
+          data: { statusId: code.id },
+          include: type === "officer" ? leoProperties : combinedUnitProperties,
+        });
+      }
     }
 
     if (!officer) {
