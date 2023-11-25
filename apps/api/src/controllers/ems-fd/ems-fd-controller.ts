@@ -7,7 +7,11 @@ import {
   UseAfter,
 } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { DOCTOR_VISIT_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import {
+  DOCTOR_VISIT_SCHEMA,
+  EMS_FD_PANIC_BUTTON_SCHEMA,
+  MEDICAL_RECORD_SCHEMA,
+} from "@snailycad/schemas";
 import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -461,11 +465,15 @@ export class EmsFdController {
   async panicButton(
     @Context("user") user: User,
     @Context("cad") cad: DBCad & { miscCadSettings: MiscCadSettings },
-    @BodyParams("deputyId") deputyId: string,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostEmsFdTogglePanicButtonData> {
+    const data = validateSchema(EMS_FD_PANIC_BUTTON_SCHEMA, body);
+    let panicType: "ON" | "OFF" =
+      typeof data.isEnabled === "boolean" ? (data.isEnabled ? "ON" : "OFF") : "ON";
+
     let deputy = await prisma.emsFdDeputy.findFirst({
       where: {
-        id: deputyId,
+        id: data.deputyId,
         // @ts-expect-error `API_TOKEN` is a rank that gets appended in `IsAuth`
         userId: user.rank === "API_TOKEN" ? undefined : user.id,
       },
@@ -482,39 +490,60 @@ export class EmsFdController {
       },
     });
 
-    let panicType: "ON" | "OFF" = "ON";
-    if (code) {
-      /**
-       * deputy is already in panic-mode -> set status back to `ON_DUTY`
-       */
-      if (deputy.statusId === code?.id) {
-        const onDutyCode = await prisma.statusValue.findFirst({
-          where: {
-            shouldDo: ShouldDoType.SET_ON_DUTY,
-            OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.EMS_FD } }],
-          },
-        });
+    if (!code) {
+      throw new BadRequest("panicButtonCodeNotFound");
+    }
 
-        if (!onDutyCode) {
-          throw new BadRequest("mustHaveOnDutyCode");
-        }
-
-        panicType = "OFF";
-        deputy = await prisma.emsFdDeputy.update({
-          where: { id: deputy.id },
-          data: { statusId: onDutyCode?.id },
-          include: unitProperties,
-        });
-      } else {
-        /**
-         * deputy is not yet in panic-mode -> set status to panic button status
-         */
-        deputy = await prisma.emsFdDeputy.update({
-          where: { id: deputy.id },
-          data: { statusId: code.id },
-          include: unitProperties,
-        });
+    if (data.isEnabled) {
+      // Panic button is already enabled, simply return the officer
+      if (code?.id === deputy.statusId) {
+        return deputy;
       }
+
+      // @ts-expect-error the properties used are the same.
+      deputy = await prisma[type].update({
+        where: { id: deputy.id },
+        data: { statusId: code.id },
+        include: unitProperties,
+      });
+    } else {
+      if (code) {
+        /**
+         * deputy is already in panic-mode -> set status back to `ON_DUTY`
+         */
+        if (deputy.statusId === code?.id) {
+          const onDutyCode = await prisma.statusValue.findFirst({
+            where: {
+              shouldDo: ShouldDoType.SET_ON_DUTY,
+              OR: [{ whatPages: { isEmpty: true } }, { whatPages: { has: WhatPages.EMS_FD } }],
+            },
+          });
+
+          if (!onDutyCode) {
+            throw new BadRequest("mustHaveOnDutyCode");
+          }
+
+          panicType = "OFF";
+          deputy = await prisma.emsFdDeputy.update({
+            where: { id: deputy.id },
+            data: { statusId: onDutyCode?.id },
+            include: unitProperties,
+          });
+        } else {
+          /**
+           * deputy is not yet in panic-mode -> set status to panic button status
+           */
+          deputy = await prisma.emsFdDeputy.update({
+            where: { id: deputy.id },
+            data: { statusId: code.id },
+            include: unitProperties,
+          });
+        }
+      }
+    }
+
+    if (!deputy) {
+      throw new NotFound("deputyNotFound");
     }
 
     await this.socket.emitUpdateDeputyStatus();
