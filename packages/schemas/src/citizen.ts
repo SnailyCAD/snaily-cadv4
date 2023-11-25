@@ -2,8 +2,8 @@ import { z } from "zod";
 import { CREATE_TICKET_SCHEMA } from "./records";
 
 export const CREATE_CITIZEN_SCHEMA = z.object({
-  name: z.string().min(2).max(255),
-  surname: z.string().min(3).max(255),
+  name: z.string().min(1).max(255),
+  surname: z.string().min(1).max(255),
   gender: z.string().min(2).max(255),
   ethnicity: z.string().min(2).max(255),
   dateOfBirth: z
