@@ -18,6 +18,7 @@ export async function setInactiveUnitsOffDuty(updatedAt: Date, socket: Socket) {
       prisma.combinedEmsFdUnit.deleteMany({ where }),
     ]);
 
+    // First set all units off-duty
     await Promise.allSettled([
       ...officers.map(async (officer) =>
         handleStartEndOfficerLog({
@@ -37,6 +38,9 @@ export async function setInactiveUnitsOffDuty(updatedAt: Date, socket: Socket) {
           userId: deputy.userId,
         }),
       ),
+    ]);
+
+    await Promise.allSettled([
       prisma.officer.updateMany({
         where,
         data: { statusId: null, activeCallId: null, activeIncidentId: null },
