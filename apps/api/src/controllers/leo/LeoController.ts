@@ -92,12 +92,6 @@ export class LeoController {
       }),
     ]);
 
-    console.log({
-      fl: unitsInactivityFilter?.filter,
-      officers,
-      combinedUnits,
-    });
-
     return [...combinedUnits, ...officers];
   }
 

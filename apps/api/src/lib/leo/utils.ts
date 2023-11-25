@@ -77,12 +77,6 @@ export function getInactivityFilter<Prop extends string = "updatedAt">(
   const milliseconds = inactivityTimeoutInMinutes * (1000 * 60);
   const updatedAt = new Date(new Date().getTime() - milliseconds);
 
-  console.log({
-    updatedAt,
-    milliseconds,
-    inactivityTimeoutInMinutes,
-  });
-
   const filter = {
     [_prop]: { gte: updatedAt },
   };
