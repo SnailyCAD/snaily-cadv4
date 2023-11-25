@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/api",
-  "version": "1.78.1",
+  "version": "1.78.2",
   "scripts": {
     "watch": "pnpm prisma generate && pnpm nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/main.ts",
     "build": "swc src -d dist",
@@ -44,13 +44,13 @@
     "@prisma/client": "^5.6.0",
     "@sentry/node": "^7.81.0",
     "@snailycad/audit-logger": "workspace:*",
-    "@snailycad/config": "^1.78.1",
+    "@snailycad/config": "^1.78.2",
     "@snailycad/image-data-uri": "^3.2.0",
     "@snailycad/permissions": "workspace:*",
     "@snailycad/prisma-generator-redundant-types": "^2.0.2",
     "@snailycad/schemas": "workspace:*",
     "@snailycad/types": "workspace:*",
-    "@snailycad/utils": "^1.78.1",
+    "@snailycad/utils": "^1.78.2",
     "@tsed/common": "^7.48.0",
     "@tsed/components-scan": "^7.48.0",
     "@tsed/core": "^7.48.0",
