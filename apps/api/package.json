@@ -3,7 +3,7 @@
   "version": "1.78.2",
   "scripts": {
     "watch": "pnpm prisma generate && pnpm nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/main.ts",
-    "build": "swc src -d dist",
+    "build": "swc src -d dist && node scripts/postbuild.mjs",
     "start": "pnpm prisma migrate deploy && pnpm prisma generate && node --inspect dist/main.js",
     "format": "pnpm prisma format",
     "generate": "pnpm prisma generate",
