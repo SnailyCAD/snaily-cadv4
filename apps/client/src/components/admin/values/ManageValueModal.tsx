@@ -152,7 +152,8 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     image: "",
 
     extraFields:
-      value && (isDivisionValue(value) || isDepartmentValue(value))
+      value &&
+      (isDivisionValue(value) || isDepartmentValue(value) || isEmergencyVehicleValue(value))
         ? safelyStringifyJSON(value.extraFields)
         : "null",
 
