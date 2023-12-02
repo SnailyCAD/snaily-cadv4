@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Button } from "@snailycad/ui";
+import { Button, HoverCard, HoverCardContent, HoverCardTrigger } from "@snailycad/ui";
 import { ManageUnitModal } from "../modals/manage-unit-modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/modal-ids";
@@ -152,7 +152,15 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   {deputy.status?.value?.value}
                 </span>
               ),
-              vehicle: deputy.activeVehicle?.value.value ?? common("none"),
+              vehicle: deputy.activeVehicle?.value.value ? (
+                <HoverCard>
+                  <HoverCardTrigger asChild>{deputy.activeVehicle.value.value}</HoverCardTrigger>
+
+                  <HoverCardContent>{deputy.activeVehicle.description}</HoverCardContent>
+                </HoverCard>
+              ) : (
+                common("none")
+              ),
               incident: (
                 <ActiveIncidentColumn
                   unitId={deputy.id}

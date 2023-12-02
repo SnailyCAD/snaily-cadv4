@@ -188,7 +188,15 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   {officer.status?.value?.value}
                 </span>
               ),
-              vehicle: officer.activeVehicle?.value.value ?? common("none"),
+              vehicle: officer.activeVehicle?.value.value ? (
+                <HoverCard>
+                  <HoverCardTrigger asChild>{officer.activeVehicle.value.value}</HoverCardTrigger>
+
+                  <HoverCardContent>{officer.activeVehicle.description}</HoverCardContent>
+                </HoverCard>
+              ) : (
+                common("none")
+              ),
               incident: (
                 <ActiveIncidentColumn
                   unitId={officer.id}

@@ -788,6 +788,7 @@ model EmergencyVehicleValue {
   departments DepartmentValue[]
   divisions   DivisionValue[]
   extraFields Json?
+  description String?
 
   Officers          Officer[]           @relation("activeEmergencyVehicle_leo")
   EmsFdDeputies     EmsFdDeputy[]       @relation("activeEmergencyVehicle_emsfd")
@@ -1563,50 +1564,50 @@ model CourtDate {
 
 // ems-fd
 model EmsFdDeputy {
-  id                        String                 @id @default(cuid())
-  department                DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId              String?
-  callsign                  String                 @db.VarChar(255)
-  callsign2                 String                 @db.VarChar(255)
-  incremental               Int?
-  userDefinedCallsign       String?
-  division                  DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId                String?
-  position                  String?                @db.Text
-  rank                      Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
-  rankId                    String?
-  status                    StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
-  statusId                  String?
-  suspended                 Boolean                @default(false)
-  badgeNumber               Int?
-  badgeNumberString         String?
-  imageId                   String?                @db.VarChar(255)
-  imageBlurData             String?                @db.Text
-  citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId                 String
-  user                      User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                    String?
-  createdAt                 DateTime               @default(now())
-  updatedAt                 DateTime               @default(now()) @updatedAt
-  radioChannelId            String?
-  activeCall                Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
-  activeCallId              String?
-  activeIncident            LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
-  activeIncidentId          String?
-  whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
-  whitelistStatusId         String?
-  logs                      OfficerLog[]
-  AssignedUnit              AssignedUnit[]
-  qualifications            UnitQualification[]
-  IncidentInvolvedUnit      IncidentInvolvedUnit[]
-  activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
-  activeVehicleId           String?
-  isTemporary               Boolean                @default(false)
-  identifiers               String[]
-  CombinedEmsFdUnit         CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
-  combinedEmsFdUnitId       String?
-  EmsFdIncident             EmsFdIncident[]        @relation("emsFdIncidentCreator")
-  ChatCreator               ChatCreator[]
+  id                   String                 @id @default(cuid())
+  department           DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId         String?
+  callsign             String                 @db.VarChar(255)
+  callsign2            String                 @db.VarChar(255)
+  incremental          Int?
+  userDefinedCallsign  String?
+  division             DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId           String?
+  position             String?                @db.Text
+  rank                 Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId               String?
+  status               StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId             String?
+  suspended            Boolean                @default(false)
+  badgeNumber          Int?
+  badgeNumberString    String?
+  imageId              String?                @db.VarChar(255)
+  imageBlurData        String?                @db.Text
+  citizen              Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  user                 User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  radioChannelId       String?
+  activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
+  activeIncident       LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId     String?
+  whitelistStatus      LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId    String?
+  logs                 OfficerLog[]
+  AssignedUnit         AssignedUnit[]
+  qualifications       UnitQualification[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  activeVehicle        EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId      String?
+  isTemporary          Boolean                @default(false)
+  identifiers          String[]
+  CombinedEmsFdUnit    CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
+  combinedEmsFdUnitId  String?
+  EmsFdIncident        EmsFdIncident[]        @relation("emsFdIncidentCreator")
+  ChatCreator          ChatCreator[]
 
   @@index([callsign, callsign2, statusId])
 }

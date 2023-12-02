@@ -97,7 +97,8 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     value: value ? getValueStrFromValue(value) : "",
 
     description:
-      value && (isUnitQualification(value) || isDLCategoryValue(value))
+      value &&
+      (isUnitQualification(value) || isDLCategoryValue(value) || isEmergencyVehicleValue(value))
         ? value.description ?? ""
         : "",
     qualificationType:
@@ -151,7 +152,8 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     image: "",
 
     extraFields:
-      value && (isDivisionValue(value) || isDepartmentValue(value))
+      value &&
+      (isDivisionValue(value) || isDepartmentValue(value) || isEmergencyVehicleValue(value))
         ? safelyStringifyJSON(value.extraFields)
         : "null",
 
