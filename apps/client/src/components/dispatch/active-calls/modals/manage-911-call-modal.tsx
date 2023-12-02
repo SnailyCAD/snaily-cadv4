@@ -139,7 +139,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
       isOpen={forceOpen ?? modalState.isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={call ? t("manage911Call") : t("create911Call")}
-      className={call ? "!max-w-[100rem] w-full" : "w-[650px]"}
+      className={call ? "!max-w-[100rem] w-full" : "w-[750px]"}
     >
       {/* todo: custom component for expanded view */}
       {call ? (
