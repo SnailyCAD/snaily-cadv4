@@ -97,7 +97,8 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     value: value ? getValueStrFromValue(value) : "",
 
     description:
-      value && (isUnitQualification(value) || isDLCategoryValue(value))
+      value &&
+      (isUnitQualification(value) || isDLCategoryValue(value) || isEmergencyVehicleValue(value))
         ? value.description ?? ""
         : "",
     qualificationType:

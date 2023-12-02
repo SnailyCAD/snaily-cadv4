@@ -1,5 +1,5 @@
 import type { AnyValue } from "@snailycad/types";
-import { JsonEditor, SelectField } from "@snailycad/ui";
+import { JsonEditor, SelectField, TextField } from "@snailycad/ui";
 import { isEmergencyVehicleValue } from "@snailycad/utils";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
@@ -55,6 +55,13 @@ export function EmergencyVehicleFields() {
           selectedKeys={values.divisions}
         />
       ) : null}
+
+      <TextField
+        isTextarea
+        value={values.description}
+        onChange={(value) => setFieldValue("description", value)}
+        label={t("description")}
+      />
 
       <FormField optional errorMessage={errors.extraFields as string} label={t("extraFields")}>
         <JsonEditor
