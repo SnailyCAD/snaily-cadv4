@@ -41,7 +41,7 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
-      - uses: chromaui/action@v1
+      - uses: chromaui/action@v10
         with:
           onlyChanged: true
           exitOnceUploaded: true
