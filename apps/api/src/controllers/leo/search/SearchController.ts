@@ -301,7 +301,7 @@ export class LeoSearchController {
   ): Promise<APITypes.PostLeoSearchVehicleData> {
     const trimmedPlateOrVin = _plateOrVin?.trim();
 
-    if (!trimmedPlateOrVin || trimmedPlateOrVin.length < 3) {
+    if (!trimmedPlateOrVin || trimmedPlateOrVin.length <= 0) {
       return null;
     }
 
