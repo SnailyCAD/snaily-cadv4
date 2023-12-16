@@ -21,10 +21,10 @@
     "@casperiv/eslint-config": "8.0.0",
     "@casperiv/eslint-config-next": "8.0.0",
     "@casperiv/eslint-config-react": "8.0.0",
-    "eslint": "8.54.0",
+    "eslint": "8.56.0",
     "eslint-plugin-deprecation": "^2.0.0",
-    "lerna": "^7.4.2",
-    "lint-staged": "^15.1.0"
+    "lerna": "^8.0.1",
+    "lint-staged": "^15.2.0"
   },
   "lint-staged": {
     "*.{js,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,sass}\"": "prettier --write --ignore-path .prettierignore"
@@ -39,7 +39,7 @@
     "copy": "^0.3.2",
     "dotenv": "^16.3.1",
     "husky": "^8.0.3",
-    "prettier": "3.1.0",
+    "prettier": "3.1.1",
     "turbo": "1.10.16"
   },
   "pnpm": {
