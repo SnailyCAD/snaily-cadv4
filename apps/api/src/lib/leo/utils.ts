@@ -86,7 +86,7 @@ export function getInactivityFilter<Prop extends string = "updatedAt">(
 
 export function convertToJailTimeScale(total: number, scale: JailTimeScale) {
   if (scale === JailTimeScale.HOURS) {
-    return total * 60 * 60 * 1000 * 24;
+    return total * 60 * 60 * 1000;
   }
 
   if (scale === JailTimeScale.MINUTES) {
