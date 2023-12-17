@@ -4,7 +4,7 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "../CallsignPreview";
-import type { Officer } from "@snailycad/types";
+import { ValueType, type Officer } from "@snailycad/types";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 import { useFormikContext } from "formik";
@@ -14,6 +14,7 @@ import { useTranslations } from "use-intl";
 import { makeDivisionsObjectMap } from "../modals/ManageOfficerModal";
 import { useValues } from "context/ValuesContext";
 import { AdvancedSettings } from "../modals/AdvancedSettings";
+import { ValueSelectField } from "components/form/inputs/value-select-field";
 
 interface ManageOfficerFieldsProps {
   hideCitizenField?: boolean;
@@ -77,19 +78,13 @@ export function ManageOfficerFields({
         />
       </FormRow>
 
-      <FormField errorMessage={errors.department as string} label={t("department")}>
-        <Select
-          value={values.department}
-          name="department"
-          onChange={handleChange}
-          values={department.values
-            .filter((v) => v.type === "LEO")
-            .map((value) => ({
-              label: value.value.value,
-              value: value.id,
-            }))}
-        />
-      </FormField>
+      <ValueSelectField
+        values={department.values}
+        label={t("department")}
+        fieldName="department"
+        valueType={ValueType.DEPARTMENT}
+        filterFn={(value) => value.type === "LEO"}
+      />
 
       {DIVISIONS ? (
         <FormField errorMessage={errors.divisions as string} label={t("division")}>

@@ -152,11 +152,12 @@ function ActiveDeputies({ initialDeputies }: Props) {
                   {deputy.status?.value?.value}
                 </span>
               ),
-              vehicle: deputy.activeVehicle?.value.value ? (
+              vehicle: deputy.activeVehicle ? (
                 <HoverCard>
-                  <HoverCardTrigger asChild>{deputy.activeVehicle.value.value}</HoverCardTrigger>
-
-                  <HoverCardContent>{deputy.activeVehicle.description}</HoverCardContent>
+                  <HoverCardTrigger>{deputy.activeVehicle.value.value}</HoverCardTrigger>
+                  <HoverCardContent>
+                    {deputy.activeVehicle.description ?? deputy.activeVehicle.value.value}
+                  </HoverCardContent>
                 </HoverCard>
               ) : (
                 common("none")

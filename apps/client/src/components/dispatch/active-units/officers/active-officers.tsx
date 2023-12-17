@@ -188,11 +188,12 @@ function ActiveOfficers({ initialOfficers }: Props) {
                   {officer.status?.value?.value}
                 </span>
               ),
-              vehicle: officer.activeVehicle?.value.value ? (
+              vehicle: officer.activeVehicle ? (
                 <HoverCard>
-                  <HoverCardTrigger asChild>{officer.activeVehicle.value.value}</HoverCardTrigger>
-
-                  <HoverCardContent>{officer.activeVehicle.description}</HoverCardContent>
+                  <HoverCardTrigger>{officer.activeVehicle.value.value}</HoverCardTrigger>
+                  <HoverCardContent>
+                    {officer.activeVehicle.description ?? officer.activeVehicle.value.value}
+                  </HoverCardContent>
                 </HoverCard>
               ) : (
                 common("none")
