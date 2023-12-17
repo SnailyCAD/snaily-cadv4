@@ -47,10 +47,16 @@ export function EmergencyVehicleFields() {
           isClearable
           label={t("divisions")}
           selectionMode="multiple"
-          options={division.values.map((v) => ({
-            label: v.value.value,
-            value: v.id,
-          }))}
+          options={division.values
+            .filter((value) =>
+              values.departments?.length && value.departmentId
+                ? values.departments.includes(value.departmentId)
+                : true,
+            )
+            .map((v) => ({
+              label: v.value.value,
+              value: v.id,
+            }))}
           onSelectionChange={(keys) => setFieldValue("divisions", keys)}
           selectedKeys={values.divisions}
         />
