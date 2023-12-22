@@ -30,3 +30,4 @@ export * from "./form-row";
 export * from "./full-date";
 export * from "./infofield";
 export * from "./status";
+export * from "./editors/json-editor";

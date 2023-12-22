@@ -207,8 +207,8 @@ export function Manage2FAModal() {
                 {shouldDisable
                   ? t("disable")
                   : currentStep === Steps.VerifyCode
-                  ? t("verify")
-                  : t("next")}
+                    ? t("verify")
+                    : t("next")}
               </Button>
             </footer>
           </Form>

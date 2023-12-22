@@ -168,8 +168,8 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     name: isDisabled
       ? `${citizen.name} ${citizen.surname}`
       : vehicle?.citizen
-      ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
-      : "",
+        ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
+        : "",
     plate: vehicle?.plate ?? "",
     vinNumber: vehicle?.vinNumber ?? "",
     reportedStolen: vehicle?.reportedStolen ?? false,

@@ -63,8 +63,8 @@ export function ActiveBolos({ initialBolos }: Props) {
   const isDisabled = isAdmin
     ? false
     : isDispatchRoute
-    ? !hasActiveDispatchers
-    : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
+      ? !hasActiveDispatchers
+      : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
   const asyncTable = useAsyncTable({
     search,

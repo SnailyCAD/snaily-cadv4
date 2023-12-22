@@ -40,7 +40,7 @@ model cad {
   autoSetUserPropertiesId String?
   discordRoles            DiscordRoles?          @relation(fields: [discordRolesId], references: [id])
   discordRolesId          String?
-  timeZone                String?
+  timeZone                String?                @default("UTC")
 }
 
 model CadFeature {
@@ -78,7 +78,6 @@ model MiscCadSettings {
   roleplayEnabled           Boolean?       @default(true)
   authScreenBgImageId       String?
   authScreenHeaderImageId   String?
-  inactivityTimeout         Int?
   jailTimeScale             JailTimeScale?
   // How many times a signal 100 should be repeated.
   signal100RepeatAmount     Int?           @default(1)
@@ -788,6 +787,8 @@ model EmergencyVehicleValue {
   valueId     String
   departments DepartmentValue[]
   divisions   DivisionValue[]
+  extraFields Json?
+  description String?
 
   Officers          Officer[]           @relation("activeEmergencyVehicle_leo")
   EmsFdDeputies     EmsFdDeputy[]       @relation("activeEmergencyVehicle_emsfd")
@@ -1041,7 +1042,6 @@ model Officer {
   LeoIncidentInvolvedOfficers LeoIncident[]                @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?             @relation(fields: [combinedLeoUnitId], references: [id])
   combinedLeoUnitId           String?
-  lastStatusChangeTimestamp   DateTime?
   qualifications              UnitQualification[]
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
   Note                        Note[]
@@ -1195,57 +1195,59 @@ model IncidentEvent {
 }
 
 model CombinedLeoUnit {
-  id                        String                   @id @default(uuid())
-  officers                  Officer[]
-  userDefinedCallsign       String?
-  callsign                  String
-  callsign2                 String?
-  department                DepartmentValue?         @relation(fields: [departmentId], references: [id])
-  departmentId              String?
-  incremental               Int?
-  radioChannelId            String?
-  status                    StatusValue?             @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
-  statusId                  String?
-  pairedUnitTemplate        String?
-  activeCall                Call911?                 @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
-  activeCallId              String?
-  activeIncident            LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
-  activeIncidentId          String?
-  lastStatusChangeTimestamp DateTime?
-  activeVehicle             EmergencyVehicleValue?   @relation("activeEmergencyVehicle_combined_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
-  activeVehicleId           String?
-  AssignedUnit              AssignedUnit[]
-  IncidentInvolvedUnit      IncidentInvolvedUnit[]
-  AssignedWarrantOfficer    AssignedWarrantOfficer[]
-  EmsFdIncident             EmsFdIncident?           @relation(fields: [emsFdIncidentId], references: [id])
-  emsFdIncidentId           String?
-  ChatCreator               ChatCreator[]
+  id                     String                   @id @default(uuid())
+  officers               Officer[]
+  userDefinedCallsign    String?
+  callsign               String
+  callsign2              String?
+  department             DepartmentValue?         @relation(fields: [departmentId], references: [id])
+  departmentId           String?
+  incremental            Int?
+  radioChannelId         String?
+  status                 StatusValue?             @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId               String?
+  pairedUnitTemplate     String?
+  activeCall             Call911?                 @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId           String?
+  activeIncident         LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId       String?
+  activeVehicle          EmergencyVehicleValue?   @relation("activeEmergencyVehicle_combined_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId        String?
+  AssignedUnit           AssignedUnit[]
+  IncidentInvolvedUnit   IncidentInvolvedUnit[]
+  AssignedWarrantOfficer AssignedWarrantOfficer[]
+  EmsFdIncident          EmsFdIncident?           @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId        String?
+  ChatCreator            ChatCreator[]
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @default(now()) @updatedAt
 
   @@index([statusId])
 }
 
 model CombinedEmsFdUnit {
-  id                        String                 @id @default(uuid())
-  deputies                  EmsFdDeputy[]
-  callsign                  String
-  userDefinedCallsign       String?
-  callsign2                 String?
-  department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
-  departmentId              String?
-  incremental               Int?
-  radioChannelId            String?
-  status                    StatusValue?           @relation("combinedEmsFdUnitStatusToValue", fields: [statusId], references: [id])
-  statusId                  String?
-  pairedUnitTemplate        String?
-  activeCall                Call911?               @relation("CombinedEmsFdUnitActiveCall", fields: [activeCallId], references: [id])
-  activeCallId              String?
-  activeIncident            LeoIncident?           @relation("combinedEmsFdActiveIncident", fields: [activeIncidentId], references: [id])
-  activeIncidentId          String?
-  lastStatusChangeTimestamp DateTime?
-  activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_combined_emsfd_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
-  activeVehicleId           String?
-  EmsFdIncident             EmsFdIncident?         @relation(fields: [emsFdIncidentId], references: [id])
-  emsFdIncidentId           String?
+  id                  String                 @id @default(uuid())
+  deputies            EmsFdDeputy[]
+  callsign            String
+  userDefinedCallsign String?
+  callsign2           String?
+  department          DepartmentValue?       @relation(fields: [departmentId], references: [id])
+  departmentId        String?
+  incremental         Int?
+  radioChannelId      String?
+  status              StatusValue?           @relation("combinedEmsFdUnitStatusToValue", fields: [statusId], references: [id])
+  statusId            String?
+  pairedUnitTemplate  String?
+  activeCall          Call911?               @relation("CombinedEmsFdUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId        String?
+  activeIncident      LeoIncident?           @relation("combinedEmsFdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId    String?
+  activeVehicle       EmergencyVehicleValue? @relation("activeEmergencyVehicle_combined_emsfd_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId     String?
+  EmsFdIncident       EmsFdIncident?         @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId     String?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @default(now()) @updatedAt
 
   AssignedUnit         AssignedUnit[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
@@ -1562,51 +1564,50 @@ model CourtDate {
 
 // ems-fd
 model EmsFdDeputy {
-  id                        String                 @id @default(cuid())
-  department                DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId              String?
-  callsign                  String                 @db.VarChar(255)
-  callsign2                 String                 @db.VarChar(255)
-  incremental               Int?
-  userDefinedCallsign       String?
-  division                  DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId                String?
-  position                  String?                @db.Text
-  rank                      Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
-  rankId                    String?
-  status                    StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
-  statusId                  String?
-  suspended                 Boolean                @default(false)
-  badgeNumber               Int?
-  badgeNumberString         String?
-  imageId                   String?                @db.VarChar(255)
-  imageBlurData             String?                @db.Text
-  citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId                 String
-  user                      User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                    String?
-  createdAt                 DateTime               @default(now())
-  updatedAt                 DateTime               @default(now()) @updatedAt
-  radioChannelId            String?
-  activeCall                Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
-  activeCallId              String?
-  activeIncident            LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
-  activeIncidentId          String?
-  whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
-  whitelistStatusId         String?
-  logs                      OfficerLog[]
-  AssignedUnit              AssignedUnit[]
-  lastStatusChangeTimestamp DateTime?
-  qualifications            UnitQualification[]
-  IncidentInvolvedUnit      IncidentInvolvedUnit[]
-  activeVehicle             EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
-  activeVehicleId           String?
-  isTemporary               Boolean                @default(false)
-  identifiers               String[]
-  CombinedEmsFdUnit         CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
-  combinedEmsFdUnitId       String?
-  EmsFdIncident             EmsFdIncident[]        @relation("emsFdIncidentCreator")
-  ChatCreator               ChatCreator[]
+  id                   String                 @id @default(cuid())
+  department           DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId         String?
+  callsign             String                 @db.VarChar(255)
+  callsign2            String                 @db.VarChar(255)
+  incremental          Int?
+  userDefinedCallsign  String?
+  division             DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId           String?
+  position             String?                @db.Text
+  rank                 Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId               String?
+  status               StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId             String?
+  suspended            Boolean                @default(false)
+  badgeNumber          Int?
+  badgeNumberString    String?
+  imageId              String?                @db.VarChar(255)
+  imageBlurData        String?                @db.Text
+  citizen              Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  user                 User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  radioChannelId       String?
+  activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
+  activeIncident       LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId     String?
+  whitelistStatus      LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId    String?
+  logs                 OfficerLog[]
+  AssignedUnit         AssignedUnit[]
+  qualifications       UnitQualification[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  activeVehicle        EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId      String?
+  isTemporary          Boolean                @default(false)
+  identifiers          String[]
+  CombinedEmsFdUnit    CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
+  combinedEmsFdUnitId  String?
+  EmsFdIncident        EmsFdIncident[]        @relation("emsFdIncidentCreator")
+  ChatCreator          ChatCreator[]
 
   @@index([callsign, callsign2, statusId])
 }

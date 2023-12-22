@@ -24,6 +24,7 @@ const SIGNAL_100_SRC = "/sounds/signal100.mp3";
 export function useSignal100() {
   const { cad, user } = useAuth();
   const { playCount, setPlayCount } = useSignal100Store();
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const miscCadSettings = cad?.miscCadSettings ?? {
     signal100Enabled: false,
@@ -45,7 +46,7 @@ export function useSignal100() {
 
       if (playCount <= signal100RepeatAmount) {
         // wait for the possible interval ms
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
           controls.seek(0);
           controls.play();
         }, signal100RepeatIntervalMs);
@@ -65,6 +66,7 @@ export function useSignal100() {
         shouldPlaySignal100 && controls.play();
       } else {
         controls.pause();
+        timeoutRef.current && clearTimeout(timeoutRef.current);
       }
     },
     [shouldPlaySignal100, controls],

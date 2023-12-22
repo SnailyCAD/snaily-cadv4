@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.76.1",
+  "version": "1.78.5",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -37,12 +37,12 @@
     "prepublish": "pnpm build"
   },
   "dependencies": {
-    "@snailycad/permissions": "^1.76.1",
+    "@snailycad/permissions": "^1.78.5",
     "discord-api-types": "0.37.58"
   },
   "devDependencies": {
     "tsup": "6.6.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "tsup": {
     "entry": [

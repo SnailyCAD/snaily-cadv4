@@ -6,7 +6,7 @@ import {
   type DepartmentValue,
 } from "@prisma/client";
 import { prisma } from "lib/data/prisma";
-import { ExtendedNotFound } from "src/exceptions/extended-not-found";
+import { ExtendedNotFound } from "~/exceptions/extended-not-found";
 
 /**
  * this function handles the addition of the `whitelistStatus` to an officer

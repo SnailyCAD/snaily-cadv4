@@ -1,31 +1,31 @@
 {
-    "CadSettings": {
-      "generalSettings": "常规设置",
-      "cadName": "CAD名称",
-      "cadNameDescription": "您的 SnailyCAD 实例的名称。这可以是您社区或服务器的名称等。",
-      "cadLogo": "CAD标志",
-      "cadLogoDescription": "您的 SnailyCAD 实例的标志。这可以是您社区或服务器的标志等。 <span>注意：</span>可能需要重新加载页面。",
-      "authScreenHeaderImage": "认证屏幕标题图像",
-      "authScreenBackgroundImage": "认证屏幕背景图像",
-      "cadOpenGraphDescription": "CAD开放图描述",
-      "cadOpenGraphDescriptionInfo": "在社交媒体上分享CAD时将显示在嵌入式中。最好保持简短明了。",
-      "areaOfPlay": "游玩区域",
-      "areaOfPlayDescription": "目前角色扮演活跃的区域",
-      "registrationCode": "邀请码",
-      "registrationCodeDescription": "用户在创建新账户时需要输入此代码。",
-      "roleplayEnabled": "启用角色扮演",
-      "roleplayEnabledDescription": "当禁用时，将显示一个横幅，显示目前暂时停止角色扮演。",
-      "whitelisting": "白名单",
-      "cadWhitelist": "CAD白名单",
-      "cadWhitelistDescription": "CAD将被列入白名单。任何新用户都需要审核，然后才能获得批准或拒绝。",
-      "towWhitelist": "拖车白名单",
-      "towWhitelistDescription": "拖车系统将被列入白名单。在用户可以使用拖车系统之前，必须授予其拖车权限。",
-      "taxiWhitelist": "出租车白名单",
-      "taxiWhitelistDescription": "出租车系统将被列入白名单。在用户可以使用出租车系统之前，必须授予其出租车权限。",
-      "businessWhitelist": "企业白名单",
-      "businessWhitelistDescription": "企业系统将被列入白名单。任何新企业都必须首先经过审核，然后才能获得批准或拒绝，然后才能使用。",
-      "timeZone": "时区",
-      "timeZoneDescription": "将在 SnailyCAD 实例中使用的时区。这将适用于所有用户。"
+  "CadSettings": {
+    "generalSettings": "常规设置",
+    "cadName": "CAD名称",
+    "cadNameDescription": "您的 SnailyCAD 实例的名称。这可以是您社区或服务器的名称等。",
+    "cadLogo": "CAD标志",
+    "cadLogoDescription": "您的 SnailyCAD 实例的标志。这可以是您社区或服务器的标志等。 <span>注意：</span>可能需要重新加载页面。",
+    "authScreenHeaderImage": "认证屏幕标题图像",
+    "authScreenBackgroundImage": "认证屏幕背景图像",
+    "cadOpenGraphDescription": "CAD开放图描述",
+    "cadOpenGraphDescriptionInfo": "在社交媒体上分享CAD时将显示在嵌入式中。最好保持简短明了。",
+    "areaOfPlay": "游玩区域",
+    "areaOfPlayDescription": "目前角色扮演活跃的区域",
+    "registrationCode": "邀请码",
+    "registrationCodeDescription": "用户在创建新账户时需要输入此代码。",
+    "roleplayEnabled": "启用角色扮演",
+    "roleplayEnabledDescription": "当禁用时，将显示一个横幅，显示目前暂时停止角色扮演。",
+    "whitelisting": "白名单",
+    "cadWhitelist": "CAD白名单",
+    "cadWhitelistDescription": "CAD将被列入白名单。任何新用户都需要审核，然后才能获得批准或拒绝。",
+    "towWhitelist": "拖车白名单",
+    "towWhitelistDescription": "拖车系统将被列入白名单。在用户可以使用拖车系统之前，必须授予其拖车权限。",
+    "taxiWhitelist": "出租车白名单",
+    "taxiWhitelistDescription": "出租车系统将被列入白名单。在用户可以使用出租车系统之前，必须授予其出租车权限。",
+    "businessWhitelist": "企业白名单",
+    "businessWhitelistDescription": "企业系统将被列入白名单。任何新企业都必须首先经过审核，然后才能获得批准或拒绝，然后才能使用。",
+    "timeZone": "时区",
+    "timeZoneDescription": "将在 SnailyCAD 实例中使用的时区。这将适用于所有用户。"
   },
   "DiscordRolesTab": {
     "discordRoles": "Discor身份组",
@@ -50,7 +50,7 @@
     "courthouseRoleInfo": "在CAD中代表设置法院权限的Discord身份组。",
     "whitelistedRole": "白名单身份组",
     "whitelistedRoleInfo": "在CAD中代表白名单访问的Discord身份组。"
-  },  
+  },
   "DiscordWebhooksTab": {
     "discordWebhooks": "Discord Webhooks",
     "refreshChannels": "刷新频道",
@@ -82,7 +82,7 @@
     "leoIncidentCreatedInfo": "当创建LEO事件时，将使用此频道发送Webhook。",
     "emsFdIncidentCreated": "EMS/FD事件已创建",
     "emsFdIncidentCreatedInfo": "当创建EMS/FD事件时，将使用此频道发送Webhook。"
-  },  
+  },
   "RawWebhooksTab": {
     "rawWebhooks": "原始 Webhooks",
     "rawWebhooksInfo": "为每种 Webhook 类型设置自定义 URL。这将以原始 CAD 数据发送相应事件类型的 Webhook。",
@@ -95,7 +95,7 @@
     "warrantsWebhookURL": "逮捕令 Webhook URL",
     "departmentWhitelistStatusChannelURL": "部门白名单状态更改 Webhook URL",
     "userWhitelistStatusChannelURL": "用户白名单状态更改 Webhook URL"
-  },  
+  },
   "LiveMapTab": {
     "liveMapSettings": "实时地图设置",
     "liveMapUrl": "实时地图 URL",
@@ -120,7 +120,7 @@
     "discordBotCommand": "Discord 机器人集成命令",
     "discordBotCommandDescription": "此命令可与 <a>Discord 机器人集成</a> 一起使用。",
     "readMorePublicAPI": "了解有关 <a>公共 API 的更多信息。</a>"
-  },  
+  },
   "MiscSettingsTab": {
     "templateSection": "模板",
     "callsignTemplate": "呼号模板",
@@ -214,7 +214,7 @@
     "signal100RepeatAmount": "Signal 100 重复次数",
     "signal100RepeatIntervalMsDescription": "每个 Signal 100 消息之间的时间间隔，以毫秒为单位。（默认：1000）",
     "signal100RepeatIntervalMs": "Signal 100 重复间隔（毫秒）",
-    "limits": "限制"  
+    "limits": "限制"
   },
   "BlacklistedWords": {
     "blacklistedWords": "黑名单词汇",
@@ -226,7 +226,7 @@
     "remove": "移除",
     "removeBlacklistedWord": "移除黑名单词汇",
     "removeBlacklistedWordDescription": "您确定要移除此黑名单词汇吗？"
-  },  
+  },
   "Features": {
     "enableOrDisableFeatures": "启用或禁用功能",
     "searchFeatures": "搜索功能...",
@@ -355,7 +355,7 @@
     "OPEN_LAW_BOOK": "打开法典",
     "OPEN_LAW_BOOK-description": "启用后，将允许每个用户查看 CAD 的刑法（法典）。",
     "CITIZEN_RECORD_PAYMENTS": "市民记录付款",
-    "CITIZEN_RECORD_PAYMENTS-description": "启用后，将允许市民将自己的记录标记为已付款。"    
+    "CITIZEN_RECORD_PAYMENTS-description": "启用后，将允许市民将自己的记录标记为已付款。"
   },
   "Permissions": {
     "defaultPermissions": "默认权限",
@@ -466,6 +466,6 @@
     "SetUserDefinedCallsignOnEmsFd": "在EMS/FD副上设置用户定义的呼号",
     "LeoManageCitizenProfile": "管理市民档案（非管理员）",
     "ManageSmartSigns": "管理智能标志",
-    "ManageSmartMotorwaySigns": "管理智能高速公路标志"    
+    "ManageSmartMotorwaySigns": "管理智能高速公路标志"
   }
 }

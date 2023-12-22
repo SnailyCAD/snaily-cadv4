@@ -63,8 +63,8 @@ export class IncidentController {
       activeType === "active"
         ? { isActive: true, ...incidentInactivityFilter?.filter }
         : activeType === "inactive"
-        ? { isActive: false }
-        : {};
+          ? { isActive: false }
+          : {};
 
     const assignedUnitsObj = assignedUnit
       ? {

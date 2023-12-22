@@ -97,7 +97,8 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     value: value ? getValueStrFromValue(value) : "",
 
     description:
-      value && (isUnitQualification(value) || isDLCategoryValue(value))
+      value &&
+      (isUnitQualification(value) || isDLCategoryValue(value) || isEmergencyVehicleValue(value))
         ? value.description ?? ""
         : "",
     qualificationType:
@@ -151,8 +152,9 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     image: "",
 
     extraFields:
-      value && (isDivisionValue(value) || isDepartmentValue(value))
-        ? JSON.stringify(value.extraFields)
+      value &&
+      (isDivisionValue(value) || isDepartmentValue(value) || isEmergencyVehicleValue(value))
+        ? safelyStringifyJSON(value.extraFields)
         : "null",
 
     departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
@@ -194,6 +196,11 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    if (safelyParseJSON(values.extraFields) === false) {
+      helpers.setFieldError("extraFields", tValues("mustBeValidJson"));
+      return;
+    }
+
     const data = {
       ...values,
       whatPages: values.whatPages,
@@ -201,7 +208,7 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
       divisions: values.divisions,
       officerRankDepartments: values.officerRankDepartments,
       trimLevels: values.trimLevels,
-      extraFields: JSON.parse(values.extraFields),
+      extraFields: safelyParseJSON(values.extraFields),
     };
 
     if (value) {
@@ -449,4 +456,24 @@ export function ManageValueModal({ onCreate, onUpdate, type, value }: Props) {
       </Formik>
     </Modal>
   );
+}
+
+function safelyParseJSON(json: string) {
+  if (!json) return null;
+
+  try {
+    return JSON.parse(json);
+  } catch {
+    return false;
+  }
+}
+
+function safelyStringifyJSON(json: string | null) {
+  if (!json) return "null";
+
+  try {
+    return JSON.stringify(json, null, 4);
+  } catch {
+    return "null";
+  }
 }

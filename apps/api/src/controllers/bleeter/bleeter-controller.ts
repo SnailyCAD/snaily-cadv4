@@ -12,12 +12,12 @@ import {
   type PlatformMulterFile,
   MultipartFile,
 } from "@tsed/common";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { ContentType, Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { validateSchema } from "lib/data/validate-schema";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { User } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
@@ -27,6 +27,7 @@ import { type BleeterPost, type BleeterProfile } from "@snailycad/types";
 import { type Descendant, slateDataToString } from "@snailycad/utils/editor";
 import { getAPIUrl } from "@snailycad/utils/api-url";
 import { sendDiscordWebhook } from "~/lib/discord/webhooks";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -204,8 +205,17 @@ export class BleeterController {
       },
     });
 
-    if (!post || post.userId !== user.id) {
+    const hasAdminPermissions = hasPermission({
+      userToCheck: user,
+      permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
+    });
+
+    if (!post) {
       throw new NotFound("notFound");
+    }
+
+    if (post.userId !== user.id || !hasAdminPermissions) {
+      throw new Forbidden("notAllowedToDelete");
     }
 
     await prisma.bleeterPost.delete({

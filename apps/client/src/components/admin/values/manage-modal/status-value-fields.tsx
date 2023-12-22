@@ -66,8 +66,8 @@ export function useDefaultDepartments() {
       (isOfficerRankValue(value)
         ? value.officerRankDepartments
         : "departments" in value
-        ? value.departments
-        : []) ?? [];
+          ? value.departments
+          : []) ?? [];
 
     return departments;
   }

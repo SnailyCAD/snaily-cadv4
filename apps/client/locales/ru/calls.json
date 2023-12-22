@@ -69,7 +69,8 @@
     "id": "id",
     "towLogsDescription": "Здесь вы можете видеть все архивированные логи. Это дает возможность просматривать логи эвакуации, что были созданы в прошлом.",
     "addAllUnits": "Добавить все юниты",
-    "openCallModalAfterCreation": "Открыть модальное окно вызова после создания?"
+    "openCallModalAfterCreation": "Открыть модальное окно вызова после создания?",
+    "dispositionCode": "Код диспозиции"
   },
   "Events": {
     "unitAssignedToCall": "<span>{unit}</span> был прикреплен к вызову.",

@@ -1,0 +1,15 @@
+{
+  "TruckLogs": {
+    "truckLogs": "Lastbilloggar",
+    "createTruckLog": "Skapa lastbillogg",
+    "editTruckLog": "Redigera lastbillogg",
+    "deleteTruckLog": "Radera lastbillogg",
+    "driver": "Förare",
+    "vehicle": "Fordon",
+    "startedAt": "Startade kl",
+    "endedAt": "Avslutades kl",
+    "noTruckLogs": "Du har inga lastbilloggar ännu.",
+    "notes": "Anteckningar",
+    "alert_deleteTruckLog": "Är du säker på att du vill radera denna lastbillogg? Denna åtgärd kan inte ångras."
+  }
+}

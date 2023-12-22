@@ -113,6 +113,10 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   return getUnitDepartment(unit)?.value.value ?? null;
 }
 
+/**
+ * Check if a user can use third party connections. It will check if the user is inside of an iframe.
+ * @returns {boolean}
+ */
 export function canUseThirdPartyConnections() {
   if (typeof window === "undefined") return true;
   return window.location === window.parent.location;

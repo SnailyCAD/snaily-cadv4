@@ -28,7 +28,12 @@ export default function ManageCitizens({ citizen }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
   useLoadValuesClientSide({
-    valueTypes: [ValueType.GENDER, ValueType.ETHNICITY, ValueType.LICENSE],
+    valueTypes: [
+      ValueType.GENDER,
+      ValueType.ETHNICITY,
+      ValueType.LICENSE,
+      ValueType.DRIVERSLICENSE_CATEGORY,
+    ],
   });
 
   async function handleSubmit({

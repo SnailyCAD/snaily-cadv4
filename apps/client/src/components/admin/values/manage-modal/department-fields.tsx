@@ -1,4 +1,4 @@
-import { SelectField, SwitchField, TextField } from "@snailycad/ui";
+import { JsonEditor, SelectField, SwitchField, TextField } from "@snailycad/ui";
 import { useFormikContext } from "formik";
 import { DepartmentType, ValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
@@ -7,6 +7,7 @@ import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { CALLSIGN_TEMPLATE_VARIABLES } from "components/admin/manage/cad-settings/misc-features/template-tab";
 import { DepartmentLinksSection } from "./department-links-section";
 import type { ManageValueFormValues } from "../ManageValueModal";
+import { FormField } from "components/form/FormField";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
@@ -96,17 +97,12 @@ export function DepartmentFields() {
         </SwitchField>
       ) : null}
 
-      <TextField
-        description={t("extraFieldsDescription")}
-        isTextarea
-        isOptional
-        errorMessage={errors.extraFields as string}
-        label={t("extraFields")}
-        name="extraFields"
-        onChange={(value) => setFieldValue("extraFields", value)}
-        value={values.extraFields}
-        placeholder="JSON"
-      />
+      <FormField optional errorMessage={errors.extraFields as string} label={t("extraFields")}>
+        <JsonEditor
+          value={values.extraFields}
+          onChange={(value) => setFieldValue("extraFields", value)}
+        />
+      </FormField>
 
       <DepartmentLinksSection />
     </>

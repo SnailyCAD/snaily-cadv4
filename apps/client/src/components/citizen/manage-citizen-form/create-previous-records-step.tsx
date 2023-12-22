@@ -34,8 +34,8 @@ export function CreatePreviousRecordsStep() {
       type === RecordType.WRITTEN_WARNING
         ? ModalIds.CreateWrittenWarning
         : type === RecordType.ARREST_REPORT
-        ? ModalIds.CreateArrestReport
-        : ModalIds.CreateTicket;
+          ? ModalIds.CreateArrestReport
+          : ModalIds.CreateTicket;
 
     setType(type);
 

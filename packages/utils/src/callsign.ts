@@ -38,6 +38,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
 
   const replacers = {
     department: unit.department?.callsign,
+    callsign: unit.callsign,
     callsign1: unit.callsign,
     callsign2: unit.callsign2,
     division: division?.callsign,

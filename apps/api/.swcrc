@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "module": {
+    "type": "commonjs",
+    "strictMode": false
+  },
+  "sourceMaps": true,
+  "jsc": {
+    "externalHelpers": true,
+    "keepClassNames": true,
+    "target": "es2022",
+    "transform": {
+      "decoratorMetadata": true
+    },
+    "parser": {
+      "syntax": "typescript",
+      "dts": false,
+      "dynamicImport": true,
+      "decorators": true
+    },
+    "paths": {
+      "~/*": ["./*"],
+      "utils/*": ["./utils/*"],
+      "lib/*": ["./lib/*"],
+      "middlewares/*": ["./middlewares/*"],
+      "services/*": ["./services/*"],
+      "controllers/*": ["./controllers/*"],
+      "migrations/*": ["./migrations/*"]
+    },
+    "baseUrl": "./src"
+  },
+  "minify": false
+}

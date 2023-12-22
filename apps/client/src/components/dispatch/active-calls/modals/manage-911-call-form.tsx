@@ -247,17 +247,6 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                 />
               </FormRow>
 
-              <ValueSelectField
-                isOptional
-                isDisabled={isDisabled}
-                isClearable
-                label={t("situationCode")}
-                fieldName="situationCode"
-                values={codes10.values}
-                valueType={ValueType.CODES_10}
-                filterFn={(value) => value.type === StatusValueType.SITUATION_CODE}
-              />
-
               <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor
                   value={values.descriptionData}

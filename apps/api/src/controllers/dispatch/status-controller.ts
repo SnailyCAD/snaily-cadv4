@@ -30,7 +30,7 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import type * as APITypes from "@snailycad/types/api";
 import { createWebhookData } from "lib/dispatch/webhooks";
 import { createCallEventOnStatusChange } from "lib/dispatch/createCallEventOnStatusChange";
-import { ExtendedNotFound } from "src/exceptions/extended-not-found";
+import { ExtendedNotFound } from "~/exceptions/extended-not-found";
 import { isFeatureEnabled } from "lib/upsert-cad";
 import { handlePanicButtonPressed } from "lib/leo/send-panic-button-webhook";
 import {
@@ -265,7 +265,6 @@ export class StatusController {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           incremental,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: leoProperties,
       });
@@ -277,7 +276,6 @@ export class StatusController {
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
           incremental,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: unitProperties,
       });
@@ -288,7 +286,6 @@ export class StatusController {
           userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: combinedUnitProperties,
       });
@@ -299,7 +296,6 @@ export class StatusController {
           userDefinedCallsign,
           activeVehicleId: activeEmergencyVehicleId,
           statusId,
-          lastStatusChangeTimestamp: new Date(),
         },
         include: combinedEmsFdUnitProperties,
       });

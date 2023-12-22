@@ -77,7 +77,11 @@
     "departmentWhitelistStatusChannelInfo": "Когда объект ожидает одобрения или принимается/отклоняется, этот канал будет использоваться для отправки вебхука.",
     "departmentWhitelistStatusChannel": "Канал изменения статуса вайтлиста департамента",
     "userWhitelistStatusChannelInfo": "Когда пользователь ожидает одобрения или получает одобрение или отказ, этот канал будет использоваться для отправки вебхука.",
-    "userWhitelistStatusChannel": "Канал изменения статуса белого вайтлиста пользователей"
+    "userWhitelistStatusChannel": "Канал изменения статуса белого вайтлиста пользователей",
+    "leoIncidentCreatedInfo": "При создании инцидента LEO этот канал будет использоваться для отправки webhook.",
+    "leoIncidentCreated": "Создан инцидент LEO",
+    "emsFdIncidentCreatedInfo": "При создании инцидента EMS/FD этот канал будет использоваться для отправки webhook.",
+    "emsFdIncidentCreated": "Создан инцидент EMS/FD"
   },
   "RawWebhooksTab": {
     "rawWebhooks": "Raw вебхуки",

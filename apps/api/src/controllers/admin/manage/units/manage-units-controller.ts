@@ -29,7 +29,7 @@ import { validateSchema } from "lib/data/validate-schema";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import { Socket } from "services/socket-service";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { manyToManyHelper } from "lib/data/many-to-many";
 import type * as APITypes from "@snailycad/types/api";
 import { isFeatureEnabled } from "lib/upsert-cad";
@@ -132,8 +132,7 @@ export class AdminManageUnitsController {
     @QueryParams("days", Number) days = 2,
   ) {
     const where = {
-      lastStatusChangeTimestamp: {
-        not: null,
+      updatedAt: {
         lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
       },
       departmentId,
@@ -143,12 +142,12 @@ export class AdminManageUnitsController {
       prisma.officer.findMany({
         where,
         include: _leoProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
       }),
       prisma.emsFdDeputy.findMany({
         where,
         include: unitProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
       }),
     ]);
 
@@ -206,7 +205,7 @@ export class AdminManageUnitsController {
         return prisma[prismaName].deleteMany({
           where: {
             id: unitId,
-            lastStatusChangeTimestamp: {
+            updatedAt: {
               lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * days),
             },
           },

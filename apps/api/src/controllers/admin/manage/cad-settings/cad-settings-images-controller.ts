@@ -10,7 +10,7 @@ import fs from "node:fs/promises";
 import { type cad, type Feature, type MiscCadSettings } from "@prisma/client";
 import { Permissions, hasPermission } from "@snailycad/permissions";
 import { UsePermissions } from "middlewares/use-permissions";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { getImageWebPPath } from "lib/images/get-image-webp-path";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 import { User } from "@snailycad/types";

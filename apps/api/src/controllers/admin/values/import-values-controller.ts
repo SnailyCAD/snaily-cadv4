@@ -48,7 +48,7 @@ import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/use-permissions";
 import { validateImageURL } from "lib/images/validate-image-url";
 import type * as APITypes from "@snailycad/types/api";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 
 @Controller("/admin/values/import/:path")
@@ -506,6 +506,7 @@ export const typeHandlers = {
         ...makePrismaData(ValueType.EMERGENCY_VEHICLE, {
           value: item.value,
           isDisabled: item.isDisabled,
+          extraFields: item.extraFields || undefined,
         }),
         include: valueInclude,
       });

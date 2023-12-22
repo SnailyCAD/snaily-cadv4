@@ -63,11 +63,7 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
   });
 
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
-  const unitsInactivityFilter = getInactivityFilter(
-    cad!,
-    "unitInactivityTimeout",
-    "lastStatusChangeTimestamp",
-  );
+  const unitsInactivityFilter = getInactivityFilter(cad!, "unitInactivityTimeout");
 
   const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
     { status: { shouldDo: "SET_OFF_DUTY" } },
@@ -76,7 +72,7 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
 
   if (unitsInactivityFilter) {
     filters.push({
-      lastStatusChangeTimestamp: { lte: unitsInactivityFilter.lastStatusChangeTimestamp },
+      updatedAt: { lte: unitsInactivityFilter.updatedAt },
     });
   }
 
@@ -90,7 +86,7 @@ export async function getActiveOfficer(options: GetActiveOfficerOptions) {
 
   const activeOfficerOrCombinedUnit = combinedUnit ?? officer;
 
-  if (!activeOfficerOrCombinedUnit) {
+  if (!combinedUnit && !officer) {
     options.ctx.delete("activeOfficer");
     throw new BadRequest("noActiveOfficer");
   }

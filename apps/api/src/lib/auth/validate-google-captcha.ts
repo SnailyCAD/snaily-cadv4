@@ -1,6 +1,6 @@
 import type { REGISTER_SCHEMA } from "@snailycad/schemas";
 import process from "node:process";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { request } from "undici";
 import type { z } from "zod";
 

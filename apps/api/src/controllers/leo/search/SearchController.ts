@@ -24,7 +24,7 @@ import { isFeatureEnabled } from "lib/upsert-cad";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/has-citizen-access";
 import type * as APITypes from "@snailycad/types/api";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { setEndedSuspendedLicenses } from "lib/citizen/licenses/set-ended-suspended-licenses";
 import { incidentInclude } from "../incidents/IncidentController";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
@@ -301,7 +301,7 @@ export class LeoSearchController {
   ): Promise<APITypes.PostLeoSearchVehicleData> {
     const trimmedPlateOrVin = _plateOrVin?.trim();
 
-    if (!trimmedPlateOrVin || trimmedPlateOrVin.length < 3) {
+    if (!trimmedPlateOrVin || trimmedPlateOrVin.length <= 0) {
       return null;
     }
 

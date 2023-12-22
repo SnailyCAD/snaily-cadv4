@@ -4,11 +4,11 @@ import { prisma } from "lib/data/prisma";
 import type { Socket } from "services/socket-service";
 import { handleStartEndOfficerLog } from "./handleStartEndOfficerLog";
 
-export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, socket: Socket) {
+export async function setInactiveUnitsOffDuty(updatedAt: Date, socket: Socket) {
   try {
     const where = {
       status: { shouldDo: { not: ShouldDoType.SET_OFF_DUTY } },
-      lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
+      updatedAt: { not: { gte: updatedAt } },
     };
 
     const [officers, deputies] = await prisma.$transaction([
@@ -18,6 +18,7 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
       prisma.combinedEmsFdUnit.deleteMany({ where }),
     ]);
 
+    // First set all units off-duty
     await Promise.allSettled([
       ...officers.map(async (officer) =>
         handleStartEndOfficerLog({
@@ -37,6 +38,9 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date, s
           userId: deputy.userId,
         }),
       ),
+    ]);
+
+    await Promise.allSettled([
       prisma.officer.updateMany({
         where,
         data: { statusId: null, activeCallId: null, activeIncidentId: null },
@@ -68,14 +72,11 @@ export function filterInactiveUnits<Unit extends Officer | EmsFdDeputy | Combine
   unit: Unit;
   unitsInactivityFilter: any;
 }) {
-  if (!unit.lastStatusChangeTimestamp || !unitsInactivityFilter?.lastStatusChangeTimestamp) {
+  if (!unit.updatedAt || !unitsInactivityFilter?.updatedAt) {
     return unit;
   }
 
-  if (
-    unit.lastStatusChangeTimestamp.getTime() <=
-    unitsInactivityFilter?.lastStatusChangeTimestamp.getTime()
-  ) {
+  if (unit.updatedAt.getTime() <= unitsInactivityFilter?.updatedAt.getTime()) {
     return {
       ...unit,
       statusId: null,

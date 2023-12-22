@@ -45,8 +45,8 @@ export function useTableDataOfType(type: ValueType) {
     const valueType = isBaseValue(value)
       ? value.type
       : hasValueObj(value)
-      ? value.value.type
-      : ("PENAL_CODE" as const);
+        ? value.value.type
+        : ("PENAL_CODE" as const);
 
     if (valueType !== type) return;
 

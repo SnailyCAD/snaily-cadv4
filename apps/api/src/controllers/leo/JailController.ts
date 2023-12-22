@@ -9,7 +9,7 @@ import { leoProperties } from "utils/leo/includes";
 import { type MiscCadSettings, ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
-import { ExtendedBadRequest } from "src/exceptions/extended-bad-request";
+import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import { Permissions, UsePermissions } from "middlewares/use-permissions";
 import { convertToJailTimeScale } from "lib/leo/utils";
 import type * as APITypes from "@snailycad/types/api";

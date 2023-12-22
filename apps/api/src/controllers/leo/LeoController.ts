@@ -1,6 +1,6 @@
 import { QueryParams, Controller, UseBeforeEach, UseBefore, UseAfter } from "@tsed/common";
 import { ContentType, Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
+import { LEO_PANIC_BUTTON_SCHEMA, SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
@@ -59,11 +59,7 @@ export class LeoController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetActiveOfficersData> {
-    const unitsInactivityFilter = getInactivityFilter(
-      cad,
-      "unitInactivityTimeout",
-      "lastStatusChangeTimestamp",
-    );
+    const unitsInactivityFilter = getInactivityFilter(cad, "unitInactivityTimeout");
 
     const activeDispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
@@ -86,9 +82,11 @@ export class LeoController {
       }),
       prisma.combinedLeoUnit.findMany({
         include: combinedUnitProperties,
-        orderBy: { lastStatusChangeTimestamp: "desc" },
+        orderBy: { updatedAt: "desc" },
         where: {
-          ...unitsInactivityFilter?.filter,
+          status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          ...(unitsInactivityFilter?.filter ?? {}),
+
           departmentId: activeDispatcher?.departmentId || undefined,
         },
       }),
@@ -106,13 +104,15 @@ export class LeoController {
   async panicButton(
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
-    @BodyParams("officerId") officerId: string,
+    @BodyParams() body: unknown,
   ): Promise<APITypes.PostLeoTogglePanicButtonData> {
+    const data = validateSchema(LEO_PANIC_BUTTON_SCHEMA, body);
     let type: "officer" | "combinedLeoUnit" = "officer";
+    let panicType: "ON" | "OFF" = "ON";
 
     let officer: CombinedLeoUnit | Officer | null = await prisma.officer.findFirst({
       where: {
-        id: officerId,
+        id: data.officerId,
         // @ts-expect-error `API_TOKEN` is a rank that gets appended in `IsAuth`
         userId: user.rank === "API_TOKEN" ? undefined : user.id,
       },
@@ -121,12 +121,16 @@ export class LeoController {
 
     if (!officer) {
       officer = (await prisma.combinedLeoUnit.findFirst({
-        where: { id: officerId },
+        where: { id: data.officerId },
         include: combinedUnitProperties,
       })) as CombinedLeoUnit | null;
       if (officer) {
         type = "combinedLeoUnit";
       }
+    }
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
     }
 
     const code = await prisma.statusValue.findFirst({
@@ -135,12 +139,27 @@ export class LeoController {
       },
     });
 
-    let panicType: "ON" | "OFF" = "ON";
-    if (code && officer) {
+    if (!code) {
+      throw new BadRequest("panicButtonCodeNotFound");
+    }
+
+    if (data.isEnabled) {
+      // Panic button is already enabled, simply return the officer
+      if (code?.id === officer.statusId) {
+        return officer;
+      }
+
+      // @ts-expect-error the properties used are the same.
+      officer = await prisma[type].update({
+        where: { id: officer.id },
+        data: { statusId: code.id },
+        include: type === "officer" ? leoProperties : combinedUnitProperties,
+      });
+    } else {
       /**
        * officer is already in panic-mode -> set status back to `ON_DUTY`
        */
-      if (officer.statusId === code?.id) {
+      if (officer?.statusId === code?.id) {
         const onDutyCode = await prisma.statusValue.findFirst({
           where: {
             shouldDo: ShouldDoType.SET_ON_DUTY,
@@ -156,7 +175,7 @@ export class LeoController {
         // @ts-expect-error the properties used are the same.
         officer = await prisma[type].update({
           where: {
-            id: officer.id,
+            id: officer?.id,
           },
           data: {
             statusId: onDutyCode?.id,
@@ -169,7 +188,7 @@ export class LeoController {
          */
         // @ts-expect-error the properties used are the same.
         officer = await prisma[type].update({
-          where: { id: officer.id },
+          where: { id: officer?.id },
           data: { statusId: code.id },
           include: type === "officer" ? leoProperties : combinedUnitProperties,
         });

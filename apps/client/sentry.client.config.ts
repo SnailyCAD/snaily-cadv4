@@ -8,6 +8,7 @@ init({
   denyUrls: [/localhost/],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 0.4,
+  enabled: process.env.NODE_ENV !== "development",
   ignoreErrors: [
     /loading chunk/i,
     /hydration failed because the initial UI does not match what was rendered on the server/i,

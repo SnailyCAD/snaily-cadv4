@@ -129,8 +129,8 @@ export function styles({
         background: option.isDisabled
           ? "none"
           : backgroundColor === "white"
-          ? "#D4D4D4"
-          : "#1f1e26",
+            ? "#D4D4D4"
+            : "#1f1e26",
       },
     }),
     menu: (prov) => ({
@@ -205,8 +205,8 @@ export function styles({
       border: hasError
         ? "1.5px solid #EF4444"
         : state.isFocused
-        ? "1.5px solid rgb(107, 114, 128)"
-        : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
+          ? "1.5px solid rgb(107, 114, 128)"
+          : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
       boxShadow: "none",
       ":hover": {
         boxShadow: "none",

@@ -1,10 +1,11 @@
-import { TextField } from "@snailycad/ui";
+import { JsonEditor, TextField } from "@snailycad/ui";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
 import { useTranslations } from "use-intl";
 import { ValueSelectField } from "components/form/inputs/value-select-field";
 import { ValueType } from "@snailycad/types";
 import type { ManageValueFormValues } from "../ManageValueModal";
+import { FormField } from "components/form/FormField";
 
 export function DivisionFields() {
   const { values, errors, setFieldValue } = useFormikContext<ManageValueFormValues>();
@@ -46,17 +47,12 @@ export function DivisionFields() {
         value={values.pairedUnitTemplate}
       />
 
-      <TextField
-        description={t("extraFieldsDescription")}
-        isTextarea
-        isOptional
-        errorMessage={errors.extraFields as string}
-        label={t("extraFields")}
-        name="extraFields"
-        onChange={(value) => setFieldValue("extraFields", value)}
-        value={values.extraFields}
-        placeholder="JSON"
-      />
+      <FormField optional errorMessage={errors.extraFields as string} label={t("extraFields")}>
+        <JsonEditor
+          value={values.extraFields}
+          onChange={(value) => setFieldValue("extraFields", value)}
+        />
+      </FormField>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Full911Call } from "state/dispatch/dispatch-state";
 import type { FormikHelpers } from "formik";
 import compareDesc from "date-fns/compareDesc";
@@ -15,10 +16,15 @@ interface Props {
 }
 
 export function CallEventsArea({ disabled, call, handleStateUpdate }: Props) {
+  const callEvents = React.useMemo(() => {
+    const events = Array.isArray(call.events) ? call.events : [];
+    return events.sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)));
+  }, [call.events]);
+
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const [tempEvent, eventState] = useTemporaryItem(call.events);
+  const [tempEvent, eventState] = useTemporaryItem(callEvents);
 
   async function onEventSubmit(
     values: { description: string },
@@ -55,21 +61,19 @@ export function CallEventsArea({ disabled, call, handleStateUpdate }: Props) {
       <h4 className="text-xl font-semibold">{common("events")}</h4>
 
       <ul className="overflow-auto max-h-[350px] md:max-h-[65%] md:h-[65%]">
-        {call.events.length <= 0 ? (
+        {callEvents.length <= 0 ? (
           <p className="mt-2">{t("noEvents")}</p>
         ) : (
-          call.events
-            .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
-            .map((event) => (
-              <EventItem
-                disabled={disabled}
-                key={event.id}
-                setTempEvent={eventState.setTempId}
-                event={event}
-                isEditing={tempEvent?.id === event.id}
-                onEventDelete={handleStateUpdate}
-              />
-            ))
+          callEvents.map((event) => (
+            <EventItem
+              disabled={disabled}
+              key={event.id}
+              setTempEvent={eventState.setTempId}
+              event={event}
+              isEditing={tempEvent?.id === event.id}
+              onEventDelete={handleStateUpdate}
+            />
+          ))
         )}
       </ul>
 

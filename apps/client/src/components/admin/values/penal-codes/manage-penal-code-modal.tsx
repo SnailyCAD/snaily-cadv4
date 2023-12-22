@@ -208,8 +208,8 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
   const label = keyValue.startsWith("fines")
     ? "Fines"
     : keyValue === "bail"
-    ? "Bail "
-    : "Prison Term";
+      ? "Bail "
+      : "Prison Term";
 
   // bail cannot be enabled when prisonTerm isn't enabled.
   const isBailDisabled = keyValue === "bail" ? !values.prisonTerm.enabled : false;

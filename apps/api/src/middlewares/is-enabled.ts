@@ -5,7 +5,7 @@ import { type CadFeature, Feature as DatabaseFeature, Feature } from "@prisma/cl
 import type { CadFeatureOptions, Feature as TypesFeature } from "@snailycad/types";
 import { setCADFeatures } from "./auth/is-auth";
 import { prisma } from "lib/data/prisma";
-import { FeatureNotEnabled } from "src/exceptions/feature-not-enabled";
+import { FeatureNotEnabled } from "~/exceptions/feature-not-enabled";
 
 export interface IsFeatureEnabledOptions {
   feature: TypesFeature | DatabaseFeature | (TypesFeature | DatabaseFeature)[];

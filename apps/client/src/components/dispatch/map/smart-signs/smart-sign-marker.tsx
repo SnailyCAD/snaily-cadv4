@@ -9,6 +9,7 @@ import { generateMarkerTypes } from "../render-map-blips";
 import { Button, Input } from "@snailycad/ui";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { toastMessage } from "lib/toastMessage";
+import { z } from "zod";
 
 interface Props {
   marker: SmartSignMarker;
@@ -19,7 +20,7 @@ export function SmartSignsMarker({ marker }: Props) {
   const socket = useSocketStore((state) => state.socket);
   const [markerText, setMarkerText] = React.useState<
     SmartSignMarker["defaultText"] & { editing?: boolean }
-  >(marker.defaultText);
+  >(safeParseSmartSignText(marker.defaultText));
 
   const t = useTranslations("Leo");
   const hiddenItems = useDispatchMapState((state) => state.hiddenItems);
@@ -41,7 +42,7 @@ export function SmartSignsMarker({ marker }: Props) {
   }, [markerTypes]);
 
   React.useEffect(() => {
-    if (!markerText.editing) setMarkerText(marker.defaultText);
+    if (!markerText.editing) setMarkerText(safeParseSmartSignText(marker.defaultText));
   }, [marker.defaultText, markerText.editing]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -123,4 +124,21 @@ export function SmartSignsMarker({ marker }: Props) {
       </Popup>
     </Marker>
   );
+}
+
+const smartSignTextSchema = z.object({
+  firstLine: z.string(),
+  secondLine: z.string(),
+  thirdLine: z.string(),
+});
+
+function safeParseSmartSignText(obj: unknown) {
+  const data = smartSignTextSchema.safeParse(obj);
+  return data.success
+    ? data.data
+    : {
+        firstLine: "",
+        secondLine: "",
+        thirdLine: "",
+      };
 }

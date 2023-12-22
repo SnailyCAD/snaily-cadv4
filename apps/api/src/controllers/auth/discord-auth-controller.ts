@@ -269,7 +269,8 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
 }
 
 export function findRedirectURL() {
-  const url = process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
+  const url =
+    process.env.NEXT_PUBLIC_CLIENT_URL ?? process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
 
   if (url.includes("*") && process.env.NEXT_PUBLIC_CLIENT_URL) {
     return process.env.NEXT_PUBLIC_CLIENT_URL;

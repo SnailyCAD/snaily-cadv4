@@ -12,15 +12,15 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "dist",
 
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "~/*": ["./src/*"],
-      "utils/*": ["./src/utils/*"],
-      "lib/*": ["./src/lib/*"],
-      "middlewares/*": ["./src/middlewares/*"],
-      "services/*": ["./src/services/*"],
-      "controllers/*": ["./src/controllers/*"],
-      "migrations/*": ["./src/migrations/*"]
+      "~/*": ["./*"],
+      "utils/*": ["./utils/*"],
+      "lib/*": ["./lib/*"],
+      "middlewares/*": ["./middlewares/*"],
+      "services/*": ["./services/*"],
+      "controllers/*": ["./controllers/*"],
+      "migrations/*": ["./migrations/*"]
     },
 
     "sourceMap": true,

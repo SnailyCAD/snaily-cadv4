@@ -246,8 +246,8 @@ export class TowController {
       rawAssignedUnitId === null
         ? { disconnect: true }
         : data.assignedUnitId
-        ? { connect: { id: data.assignedUnitId } }
-        : undefined;
+          ? { connect: { id: data.assignedUnitId } }
+          : undefined;
 
     const updated = await prisma.towCall.update({
       where: { id: callId },

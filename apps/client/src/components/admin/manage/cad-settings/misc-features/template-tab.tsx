@@ -13,7 +13,7 @@ import type { MiscCadSettings } from "@snailycad/types";
 
 export const CALLSIGN_TEMPLATE_VARIABLES = (
   <span key="CALLSIGN_TEMPLATE_VARIABLES">
-    <code>{"{department}"}</code>,<code>{"{division}"}</code>, <code>{"{callsign}"}</code>,{" "}
+    <code>{"{department}"}</code>,<code>{"{division}"}</code>, <code>{"{callsign1}"}</code>,{" "}
     <code>{"{callsign2}"}</code>
   </span>
 );
