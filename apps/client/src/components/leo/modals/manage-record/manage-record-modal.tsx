@@ -10,17 +10,24 @@ import {
   SwitchField,
   FormRow,
   FullDate,
+  Alert,
 } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik, type FormikHelpers } from "formik";
+import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/modal-ids";
 import { useTranslations } from "use-intl";
-import { RecordType, type PenalCode, type Record, PaymentStatus } from "@snailycad/types";
+import {
+  RecordType,
+  type PenalCode,
+  type Record,
+  PaymentStatus,
+  PublishStatus,
+} from "@snailycad/types";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { PostRecordsData, PutRecordsByIdData } from "@snailycad/types/api";
@@ -30,6 +37,9 @@ import dynamic from "next/dynamic";
 import type { BusinessSearchResult } from "state/search/business-search-state";
 import { Editor, dataToSlate } from "components/editor/editor";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { useMutation } from "@tanstack/react-query";
+import { useDebounce } from "react-use";
+import { InfoCircleFill } from "react-bootstrap-icons";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -90,6 +100,8 @@ interface CreateInitialRecordValuesOptions {
 
 export function createInitialRecordValues(options: CreateInitialRecordValuesOptions) {
   return {
+    id: options.record?.id ?? null,
+    publishStatus: options.record?.publishStatus,
     type: options.type,
     citizenId: options.record?.citizenId ?? options.payload?.citizenId ?? "",
     citizenName: options.payload?.citizenName ?? "",
@@ -142,7 +154,37 @@ export function createInitialRecordValues(options: CreateInitialRecordValuesOpti
   };
 }
 
+interface GetRequestDataOptions {
+  values: ReturnType<typeof createInitialRecordValues>;
+  features: ReturnType<typeof useFeatureEnabled>;
+  props: Props;
+  publishStatus: PublishStatus;
+}
+
+function getRequestData(options: GetRequestDataOptions) {
+  return {
+    ...options.values,
+    type: options.props.type,
+    publishStatus: options.publishStatus,
+    violations: options.values.violations.map(({ value }: { value: any }) => ({
+      penalCodeId: value.id,
+      bail: options.features.LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
+      jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
+      fine: value.fine?.enabled ? value.fine?.value : null,
+      counts: value.counts?.value ?? null,
+      communityService: value.communityService?.enabled ? value.communityService?.value : null,
+    })),
+  };
+}
+
+interface MutationState {
+  isPending?: boolean;
+  data?: PostRecordsData | PutRecordsByIdData | null;
+}
+
 export function ManageRecordModal(props: Props) {
+  const [mutationState, setMutationState] = React.useState<MutationState | null>(null);
+
   const [isBusinessRecord, setIsBusinessRecord] = React.useState(
     Boolean(props.record?.businessId && !props.record.citizenId),
   );
@@ -150,7 +192,7 @@ export function ManageRecordModal(props: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const tCourt = useTranslations("Courthouse");
-  const { LEO_BAIL } = useFeatureEnabled();
+  const features = useFeatureEnabled();
   const { invalidateQuery } = useInvalidateQuery(["officer", "notifications"]);
 
   React.useEffect(() => {
@@ -196,19 +238,12 @@ export function ManageRecordModal(props: Props) {
   ) {
     if (props.isReadOnly) return;
 
-    const requestData = {
-      ...values,
-      type: props.type,
-      violations: values.violations.map(({ value }: { value: any }) => ({
-        penalCodeId: value.id,
-        bail: LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
-        jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
-        fine: value.fine?.enabled ? value.fine?.value : null,
-        counts: value.counts?.value ?? null,
-        communityService: value.communityService?.enabled ? value.communityService?.value : null,
-      })),
-    };
-
+    const requestData = getRequestData({
+      props,
+      features,
+      values,
+      publishStatus: PublishStatus.PUBLISHED,
+    });
     validateRecords(values.violations, helpers);
 
     if (props.customSubmitHandler) {
@@ -219,9 +254,9 @@ export function ManageRecordModal(props: Props) {
       return;
     }
 
-    if (props.record) {
+    if (values.id) {
       const { json } = await execute<PutRecordsByIdData, typeof INITIAL_VALUES>({
-        path: `/records/record/${props.record.id}`,
+        path: `/records/record/${values.id}`,
         method: "PUT",
         data: requestData,
         helpers,
@@ -269,7 +304,7 @@ export function ManageRecordModal(props: Props) {
     type: props.type,
     record: props.record,
     penalCodes,
-    isLeoBailEnabled: LEO_BAIL,
+    isLeoBailEnabled: features.LEO_BAIL,
     payload,
   });
 
@@ -288,6 +323,8 @@ export function ManageRecordModal(props: Props) {
       >
         {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
+            <AutoSaveDraft {...props} setMutationState={setMutationState} />
+
             <TabList
               defaultValue="general-information-tab"
               queryState={false}
@@ -412,8 +449,10 @@ export function ManageRecordModal(props: Props) {
                   disabled={!isValid || state === "loading"}
                   type="submit"
                 >
-                  {state === "loading" ? <Loader className="mr-2" /> : null}
-                  {props.record ? common("save") : common("create")}
+                  {state === "loading" || mutationState?.isPending ? (
+                    <Loader className="mr-2" />
+                  ) : null}
+                  {props.record || mutationState?.data ? common("save") : common("create")}
                 </Button>
               )}
             </footer>
@@ -430,6 +469,82 @@ export function ManageRecordModal(props: Props) {
       </Formik>
     </Modal>
   );
+}
+
+function AutoSaveDraft(
+  props: Props & { setMutationState: React.Dispatch<React.SetStateAction<MutationState | null>> },
+) {
+  const form = useFormikContext<ReturnType<typeof createInitialRecordValues>>();
+  const { execute } = useFetch();
+  const features = useFeatureEnabled();
+  const t = useTranslations("Leo");
+
+  const mutation = useMutation({
+    mutationKey: ["save-draft-record", form.values],
+    mutationFn: async () => {
+      const requestData = getRequestData({
+        props,
+        features,
+        values: form.values,
+        publishStatus: PublishStatus.DRAFT,
+      });
+
+      const isValid = form.isValid;
+      if (!isValid || form.values.publishStatus === PublishStatus.PUBLISHED) return null;
+
+      if (form.values.id) {
+        // Update the existing draft record
+        const { json } = await execute<PutRecordsByIdData>({
+          path: `/records/record/${form.values.id}`,
+          method: "PUT",
+          data: requestData,
+        });
+
+        if (json.id) {
+          return json;
+        }
+      } else {
+        // Save as a new draft
+        const { json } = await execute<PostRecordsData>({
+          path: "/records",
+          method: "POST",
+          data: requestData,
+        });
+
+        if (json.id) {
+          form.setFieldValue("id", json.id);
+          return json;
+        }
+      }
+
+      return null;
+    },
+  });
+
+  useDebounce(() => mutation.mutate(), 1000, [form.values]);
+
+  React.useEffect(() => {
+    props.setMutationState((prev) => ({
+      ...prev,
+      data: mutation.data,
+    }));
+  }, [mutation.data]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    props.setMutationState((prev) => ({
+      ...prev,
+      isPending: mutation.isPending,
+    }));
+  }, [mutation.isPending]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return mutation.isSuccess ? (
+    <Alert
+      className="mb-4 mt-2"
+      icon={<InfoCircleFill />}
+      type="info"
+      message={t("savedAsDraft")}
+    />
+  ) : null;
 }
 
 function validateRecords(data: any[], helpers: FormikHelpers<any>) {

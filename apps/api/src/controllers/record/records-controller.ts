@@ -68,6 +68,29 @@ export class RecordsController {
     this.socket = socket;
   }
 
+  @Get("/draft-records")
+  @Description("Get draft records that a user created")
+  async getUserDraftRecords(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features: Record<Feature, boolean> },
+  ) {
+    const isEnabled = isFeatureEnabled({
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    const draftRecords = await prisma.record.findMany({
+      where: {
+        publishStatus: "DRAFT",
+        officer: { userId: user.id },
+      },
+      include: recordsInclude(isEnabled).include,
+    });
+
+    return draftRecords;
+  }
+
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })

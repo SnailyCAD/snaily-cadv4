@@ -388,7 +388,8 @@
     "counts": "Counts",
     "stats": "Stats",
     "deletedPenalCode": "Deleted Penal Code",
-    "exportCriminalRecord": "Export Criminal Record"
+    "exportCriminalRecord": "Export Criminal Record",
+    "savedAsDraft": "Successfully saved this record as a draft."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

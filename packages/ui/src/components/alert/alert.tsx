@@ -9,6 +9,7 @@ interface AlertProps extends AlertVariantsProps {
   message?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 const alertVariants = cva("flex flex-col p-2 px-4 text-black rounded-md shadow border", {
@@ -17,6 +18,7 @@ const alertVariants = cva("flex flex-col p-2 px-4 text-black rounded-md shadow b
       warning: "bg-orange-400 border-orange-500/80",
       error: "bg-red-400 border-red-500/80",
       success: "bg-green-400 border-green-500/80",
+      info: "bg-slate-900 border-slate-500 text-white",
     },
   },
 });
@@ -32,13 +34,13 @@ export function Alert(props: AlertProps) {
     >
       {props.title ? (
         <header className="flex items-center gap-2 mb-2">
-          <ExclamationCircleFill />
+          {props.icon ?? <ExclamationCircleFill />}
           <h5 className="font-semibold text-lg">{props.title}</h5>
         </header>
       ) : null}
       {props.message ? (
         <div className="flex items-center gap-2">
-          {!props.title ? <ExclamationCircleFill /> : null}
+          {!props.title ? props.icon ?? <ExclamationCircleFill /> : null}
           <p>{props.message}</p>
         </div>
       ) : null}
