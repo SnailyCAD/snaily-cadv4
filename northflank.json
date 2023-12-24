@@ -133,6 +133,29 @@
               }
             ]
           }
+        },
+        {
+          "kind": "Pipeline",
+          "spec": {
+            "name": "SnailyCAD pipeline",
+            "nfObjects": [
+              {
+                "id": "snailycad-database",
+                "type": "addon",
+                "stage": "Production"
+              },
+              {
+                "id": "snailycad-api",
+                "type": "service",
+                "stage": "Production"
+              },
+              {
+                "id": "snailycad-client",
+                "type": "service",
+                "stage": "Production"
+              }
+            ]
+          }
         }
       ]
     }
