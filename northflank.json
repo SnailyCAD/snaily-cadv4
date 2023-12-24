@@ -162,5 +162,12 @@
   },
   "name": "SnailyCADv4",
   "description": "The template that manages SnailyCADv4's Northflank services",
-  "$schema": "https://api.northflank.com/v1/schemas/template"
+  "$schema": "https://api.northflank.com/v1/schemas/template",
+  "project": {
+    "spec": {
+      "name": "SnailyCAD Northflank",
+      "region": "europe-west",
+      "description": ""
+    }
+  }
 }
