@@ -116,11 +116,6 @@
                 "id": "snailycad-api",
                 "type": "service",
                 "stage": "Production"
-              },
-              {
-                "id": "snailycad-client",
-                "type": "service",
-                "stage": "Production"
               }
             ]
           }
