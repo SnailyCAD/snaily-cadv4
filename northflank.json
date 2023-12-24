@@ -1,0 +1,16 @@
+{
+  "apiVersion": "v1",
+  "spec": {
+    "kind": "Workflow",
+    "spec": {
+      "type": "sequential",
+      "steps": []
+    }
+  },
+  "name": "SnailyCADv4",
+  "description": "The template that manages SnailyCADv4's Northflank services",
+  "project": {
+    "id": "snailycad"
+  },
+  "$schema": "https://api.northflank.com/v1/schemas/template"
+}
