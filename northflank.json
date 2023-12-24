@@ -92,38 +92,6 @@
                               ],
                               "runtimeEnvironment": {}
                             }
-                          },
-                          {
-                            "kind": "DeploymentService",
-                            "spec": {
-                              "name": "snailycad-client",
-                              "billing": {
-                                "deploymentPlan": "nf-compute-10"
-                              },
-                              "deployment": {
-                                "instances": 1,
-                                "docker": {
-                                  "configType": "customCommand",
-                                  "customCommand": "pnpm --filter \"@snailycad/client\" start"
-                                },
-                                "releaseFlowControlled": false
-                              },
-                              "ports": [
-                                {
-                                  "name": "p0client",
-                                  "internalPort": 3000,
-                                  "public": true,
-                                  "protocol": "HTTP",
-                                  "security": {
-                                    "credentials": [],
-                                    "policies": []
-                                  },
-                                  "domains": [],
-                                  "disableNfDomain": false
-                                }
-                              ],
-                              "runtimeEnvironment": {}
-                            }
                           }
                         ]
                       }
