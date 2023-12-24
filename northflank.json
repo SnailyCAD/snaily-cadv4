@@ -4,7 +4,135 @@
     "kind": "Workflow",
     "spec": {
       "type": "sequential",
-      "steps": []
+      "steps": [
+        {
+          "kind": "BuildService",
+          "spec": {
+            "name": "build-snailycad",
+            "billing": {
+              "deploymentPlan": "nf-compute-10"
+            },
+            "vcsData": {
+              "projectUrl": "https://github.com/snailycad/snaily-cadv4",
+              "projectType": "github"
+            },
+            "buildSettings": {
+              "dockerfile": {
+                "buildEngine": "kaniko",
+                "dockerFilePath": "/Dockerfile",
+                "dockerWorkDir": "/",
+                "useCache": false
+              }
+            }
+          }
+        },
+        {
+          "kind": "Workflow",
+          "spec": {
+            "type": "parallel",
+            "steps": [
+              {
+                "kind": "Workflow",
+                "spec": {
+                  "type": "sequential",
+                  "steps": [
+                    {
+                      "kind": "Addon",
+                      "spec": {
+                        "name": "snailycad-database",
+                        "type": "postgres",
+                        "version": "latest",
+                        "billing": {
+                          "deploymentPlan": "nf-compute-10",
+                          "storageClass": "ssd",
+                          "storage": 4096,
+                          "replicas": 1
+                        },
+                        "tlsEnabled": false,
+                        "externalAccessEnabled": false,
+                        "ipPolicies": [],
+                        "pitrEnabled": false
+                      }
+                    },
+                    {
+                      "kind": "Workflow",
+                      "spec": {
+                        "type": "parallel",
+                        "steps": [
+                          {
+                            "kind": "DeploymentService",
+                            "spec": {
+                              "name": "snailycad-api",
+                              "billing": {
+                                "deploymentPlan": "nf-compute-10"
+                              },
+                              "deployment": {
+                                "instances": 1,
+                                "docker": {
+                                  "configType": "customCommand",
+                                  "customCommand": "pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/api\" start"
+                                },
+                                "releaseFlowControlled": false
+                              },
+                              "ports": [
+                                {
+                                  "name": "p0api",
+                                  "internalPort": 8080,
+                                  "public": true,
+                                  "protocol": "HTTP",
+                                  "security": {
+                                    "credentials": [],
+                                    "policies": []
+                                  },
+                                  "domains": [],
+                                  "disableNfDomain": false
+                                }
+                              ],
+                              "runtimeEnvironment": {}
+                            }
+                          },
+                          {
+                            "kind": "DeploymentService",
+                            "spec": {
+                              "name": "snailycad-client",
+                              "billing": {
+                                "deploymentPlan": "nf-compute-10"
+                              },
+                              "deployment": {
+                                "instances": 1,
+                                "docker": {
+                                  "configType": "customCommand",
+                                  "customCommand": "pnpm --filter \"@snailycad/client\" start"
+                                },
+                                "releaseFlowControlled": false
+                              },
+                              "ports": [
+                                {
+                                  "name": "p0client",
+                                  "internalPort": 3000,
+                                  "public": true,
+                                  "protocol": "HTTP",
+                                  "security": {
+                                    "credentials": [],
+                                    "policies": []
+                                  },
+                                  "domains": [],
+                                  "disableNfDomain": false
+                                }
+                              ],
+                              "runtimeEnvironment": {}
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   },
   "name": "SnailyCADv4",
