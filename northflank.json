@@ -143,7 +143,10 @@
     "spec": {
       "name": "SnailyCAD",
       "region": "europe-west",
-      "description": ""
+      "description": "",
+      "networking": {
+        "allowedIngressProjects": []
+      }
     }
   },
   "$schema": "https://api.northflank.com/v1/schemas/template"
