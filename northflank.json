@@ -23,7 +23,9 @@
                 "dockerWorkDir": "/",
                 "useCache": false
               }
-            }
+            },
+            "disabledCI": false,
+            "buildArguments": {}
           }
         },
         {
@@ -138,7 +140,11 @@
   "name": "SnailyCADv4",
   "description": "The template that manages SnailyCADv4's Northflank services",
   "project": {
-    "id": "snailycad"
+    "spec": {
+      "name": "SnailyCAD",
+      "region": "europe-west",
+      "description": ""
+    }
   },
   "$schema": "https://api.northflank.com/v1/schemas/template"
 }
