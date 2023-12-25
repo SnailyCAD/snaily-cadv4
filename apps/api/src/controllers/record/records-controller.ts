@@ -25,6 +25,7 @@ import {
   type User,
   type Business,
   PaymentStatus,
+  type RecordType,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
@@ -68,11 +69,12 @@ export class RecordsController {
     this.socket = socket;
   }
 
-  @Get("/draft-records")
+  @Get("/drafts")
   @Description("Get draft records that a user created")
   async getUserDraftRecords(
     @Context("user") user: User,
     @Context("cad") cad: cad & { features: Record<Feature, boolean> },
+    @QueryParams("type") type: string,
   ) {
     const isEnabled = isFeatureEnabled({
       feature: Feature.CITIZEN_RECORD_APPROVAL,
@@ -81,14 +83,17 @@ export class RecordsController {
     });
 
     const draftRecords = await prisma.record.findMany({
+      // todo: visualize in the FE
+      take: 12,
       where: {
         publishStatus: "DRAFT",
         officer: { userId: user.id },
+        type: type as RecordType,
       },
       include: recordsInclude(isEnabled).include,
     });
 
-    return draftRecords;
+    return draftRecords as APITypes.GetCitizenByIdRecordsData;
   }
 
   @Get("/active-warrants")

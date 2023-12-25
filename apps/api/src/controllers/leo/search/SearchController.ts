@@ -44,6 +44,8 @@ export const vehicleSearchInclude = {
 export const recordsInclude = (isRecordApprovalEnabled: boolean) => ({
   where: isRecordApprovalEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
   include: {
+    citizen: true,
+    business: { select: { name: true, id: true } },
     officer: { include: leoProperties },
     seizedItems: true,
     courtEntry: { include: { dates: true } },

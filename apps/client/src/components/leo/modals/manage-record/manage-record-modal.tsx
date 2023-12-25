@@ -40,6 +40,7 @@ import { useInvalidateQuery } from "hooks/use-invalidate-query";
 import { useMutation } from "@tanstack/react-query";
 import { useDebounce } from "react-use";
 import { InfoCircleFill } from "react-bootstrap-icons";
+import { DraftsTab } from "./tabs/drafts-tab/drafts-tab";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -184,6 +185,7 @@ interface MutationState {
 
 export function ManageRecordModal(props: Props) {
   const [mutationState, setMutationState] = React.useState<MutationState | null>(null);
+  const [activeTab, setActiveTab] = React.useState<string>("general-information-tab");
 
   const [isBusinessRecord, setIsBusinessRecord] = React.useState(
     Boolean(props.record?.businessId && !props.record.citizenId),
@@ -326,9 +328,12 @@ export function ManageRecordModal(props: Props) {
             <AutoSaveDraft {...props} setMutationState={setMutationState} />
 
             <TabList
+              activeTab={activeTab}
+              onValueChange={setActiveTab}
               defaultValue="general-information-tab"
               queryState={false}
               tabs={[
+                { name: t("drafts"), value: "drafts-tab" },
                 { name: t("generalInformation"), value: "general-information-tab" },
                 { name: t("violations"), value: "violations-tab" },
                 { name: t("seizedItems"), value: "seized-items-tab" },
@@ -336,6 +341,12 @@ export function ManageRecordModal(props: Props) {
                 { name: t("connections"), value: "connections-tab" },
               ]}
             >
+              <DraftsTab
+                setActiveTab={setActiveTab}
+                penalCodes={penalCodes}
+                payload={payload}
+                type={props.type}
+              />
               <TabsContent value="general-information-tab">
                 {props.hideCitizenField ? null : (
                   <FormRow useFlex>
@@ -537,7 +548,7 @@ function AutoSaveDraft(
     }));
   }, [mutation.isPending]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return mutation.isSuccess ? (
+  return form.values.id && mutation.data ? (
     <Alert
       className="mb-4 mt-2"
       icon={<InfoCircleFill />}

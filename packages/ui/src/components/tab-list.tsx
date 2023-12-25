@@ -27,6 +27,7 @@ interface Props<Tabs extends Tab[]> {
   children: React.ReactNode;
   queryState?: boolean;
   onValueChange?(value: string): void;
+  activeTab?: string;
 }
 
 export function TabList<Tabs extends Tab[]>({
@@ -35,10 +36,11 @@ export function TabList<Tabs extends Tab[]>({
   defaultValue = tabs[0]?.value,
   onValueChange,
   queryState = true,
+  activeTab: _activeTab,
 }: Props<Tabs>) {
   const [titles, setTitles] = React.useState<Record<string, string>>({});
   const router = useRouter();
-  const activeTab = router.query.activeTab as string | undefined;
+  const activeTab = queryState ? (router.query.activeTab as string | undefined) : _activeTab;
 
   function upsertTabTitle(value: string, name?: string) {
     if (!name) return;
@@ -62,6 +64,7 @@ export function TabList<Tabs extends Tab[]>({
   return (
     <TabListContext.Provider value={{ upsertTabTitle }}>
       <Tabs.Root
+        value={_activeTab ? activeTab : undefined}
         onValueChange={handleValueChange}
         defaultValue={activeTab || defaultValue}
         className="w-full px-2 sm:px-0"
