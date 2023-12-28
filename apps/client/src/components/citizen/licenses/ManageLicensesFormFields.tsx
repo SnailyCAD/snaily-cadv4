@@ -3,6 +3,7 @@ import {
   DriversLicenseCategoryType,
   ValueLicenseType,
   ValueType,
+  LicenseExamType,
 } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { useFormikContext } from "formik";
@@ -77,11 +78,24 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
 
   const { license, driverslicenseCategory } = useValues();
   const t = useTranslations();
-  const { WEAPON_REGISTRATION, LICENSE_EXAMS } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, LICENSE_EXAMS, options } = useFeatureEnabled();
+
+  const driversLicenseExamEnabled =
+    LICENSE_EXAMS && options.LICENSE_EXAMS.includes(LicenseExamType.DRIVER);
+  const pilotLicenseExamEnabled =
+    LICENSE_EXAMS && options.LICENSE_EXAMS.includes(LicenseExamType.PILOT);
+  const waterLicenseExamEnabled =
+    LICENSE_EXAMS && options.LICENSE_EXAMS.includes(LicenseExamType.WATER);
+  const fishingLicenseExamEnabled =
+    LICENSE_EXAMS && options.LICENSE_EXAMS.includes(LicenseExamType.FISHING);
+  const huntingLicenseExamEnabled =
+    LICENSE_EXAMS && options.LICENSE_EXAMS.includes(LicenseExamType.HUNTING);
+  const firearmsLicenseExamEnabled =
+    LICENSE_EXAMS && options.LICENSE_EXAMS.includes(LicenseExamType.FIREARM);
 
   return (
     <>
-      {LICENSE_EXAMS && !isLeo ? null : (
+      {driversLicenseExamEnabled && !isLeo ? null : (
         <section className="w-full mt-3">
           {isLeo ? (
             <FormRow>
@@ -153,279 +167,295 @@ export function ManageLicensesFormFields({ isLeo, allowRemoval }: Props) {
         </section>
       )}
 
-      <section className="w-full">
-        {isLeo ? (
+      {pilotLicenseExamEnabled && !isLeo ? null : (
+        <section className="w-full">
+          {isLeo ? (
+            <FormRow>
+              <SwitchField
+                isSelected={values.suspended.pilotLicense}
+                onChange={(isSelected) => setFieldValue("suspended.pilotLicense", isSelected)}
+              >
+                {t("Leo.suspendPilotLicense")}
+              </SwitchField>
+
+              {values.suspended.pilotLicense ? (
+                <DatePickerField
+                  errorMessage={errors.suspended?.pilotLicenseTimeEnd}
+                  isOptional
+                  label={t("Leo.endDate")}
+                  value={
+                    values.suspended.pilotLicenseTimeEnd
+                      ? values.suspended.pilotLicenseTimeEnd
+                      : undefined
+                  }
+                  onChange={(value) =>
+                    setFieldValue("suspended.pilotLicenseTimeEnd", value?.toDate("UTC"))
+                  }
+                />
+              ) : null}
+            </FormRow>
+          ) : null}
+
           <FormRow>
-            <SwitchField
-              isSelected={values.suspended.pilotLicense}
-              onChange={(isSelected) => setFieldValue("suspended.pilotLicense", isSelected)}
-            >
-              {t("Leo.suspendPilotLicense")}
-            </SwitchField>
+            <ValueSelectField
+              isDisabled={values.suspended.pilotLicense}
+              isOptional
+              isClearable={allowRemoval}
+              fieldName="pilotLicense"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              label={t("Citizen.pilotLicense")}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
+            />
 
-            {values.suspended.pilotLicense ? (
-              <DatePickerField
-                errorMessage={errors.suspended?.pilotLicenseTimeEnd}
-                isOptional
-                label={t("Leo.endDate")}
-                value={
-                  values.suspended.pilotLicenseTimeEnd
-                    ? values.suspended.pilotLicenseTimeEnd
-                    : undefined
-                }
-                onChange={(value) =>
-                  setFieldValue("suspended.pilotLicenseTimeEnd", value?.toDate("UTC"))
-                }
-              />
-            ) : null}
+            <SelectField
+              label={t("Citizen.pilotLicenseCategory")}
+              errorMessage={errors.pilotLicenseCategory}
+              isDisabled={values.suspended.pilotLicense}
+              selectionMode="multiple"
+              selectedKeys={values.pilotLicenseCategory}
+              isOptional
+              isClearable={allowRemoval}
+              onSelectionChange={(keys) => setFieldValue("pilotLicenseCategory", keys)}
+              options={driverslicenseCategory.values
+                .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
+                .map((value) => ({
+                  label: value.value.value,
+                  value: value.id,
+                  description: value.description,
+                }))}
+            />
           </FormRow>
-        ) : null}
 
-        <FormRow>
-          <ValueSelectField
-            isDisabled={values.suspended.pilotLicense}
-            isOptional
-            isClearable={allowRemoval}
-            fieldName="pilotLicense"
-            valueType={ValueType.LICENSE}
-            values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
-            label={t("Citizen.pilotLicense")}
-            filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
-          />
+          {!isLeo && values.suspended.pilotLicense ? (
+            <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+              {t("Citizen.licenseSuspendedInfo")}
+            </p>
+          ) : null}
 
-          <SelectField
-            label={t("Citizen.pilotLicenseCategory")}
-            errorMessage={errors.pilotLicenseCategory}
-            isDisabled={values.suspended.pilotLicense}
-            selectionMode="multiple"
-            selectedKeys={values.pilotLicenseCategory}
-            isOptional
-            isClearable={allowRemoval}
-            onSelectionChange={(keys) => setFieldValue("pilotLicenseCategory", keys)}
-            options={driverslicenseCategory.values
-              .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
-              .map((value) => ({
-                label: value.value.value,
-                value: value.id,
-                description: value.description,
-              }))}
-          />
-        </FormRow>
+          {isLeo ? (
+            <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" />
+          ) : null}
+        </section>
+      )}
 
-        {!isLeo && values.suspended.pilotLicense ? (
-          <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-            {t("Citizen.licenseSuspendedInfo")}
-          </p>
-        ) : null}
+      {waterLicenseExamEnabled && !isLeo ? null : (
+        <section className="w-full">
+          {isLeo ? (
+            <FormRow>
+              <SwitchField
+                isSelected={values.suspended.waterLicense}
+                onChange={(isSelected) => setFieldValue("suspended.waterLicense", isSelected)}
+              >
+                {t("Leo.suspendWaterLicense")}
+              </SwitchField>
 
-        {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
-      </section>
+              {values.suspended.waterLicense ? (
+                <DatePickerField
+                  isOptional
+                  errorMessage={errors.suspended?.waterLicenseTimeEnd}
+                  label={t("Leo.endDate")}
+                  value={
+                    values.suspended.waterLicenseTimeEnd
+                      ? values.suspended.waterLicenseTimeEnd
+                      : undefined
+                  }
+                  onChange={(value) =>
+                    setFieldValue("suspended.waterLicenseTimeEnd", value?.toDate("UTC"))
+                  }
+                />
+              ) : null}
+            </FormRow>
+          ) : null}
 
-      <section className="w-full">
-        {isLeo ? (
           <FormRow>
-            <SwitchField
-              isSelected={values.suspended.waterLicense}
-              onChange={(isSelected) => setFieldValue("suspended.waterLicense", isSelected)}
-            >
-              {t("Leo.suspendWaterLicense")}
-            </SwitchField>
+            <ValueSelectField
+              isOptional
+              isClearable={allowRemoval}
+              fieldName="waterLicense"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
+              isDisabled={values.suspended.waterLicense}
+              label={t("Citizen.waterLicense")}
+            />
 
-            {values.suspended.waterLicense ? (
-              <DatePickerField
-                isOptional
-                errorMessage={errors.suspended?.waterLicenseTimeEnd}
-                label={t("Leo.endDate")}
-                value={
-                  values.suspended.waterLicenseTimeEnd
-                    ? values.suspended.waterLicenseTimeEnd
-                    : undefined
-                }
-                onChange={(value) =>
-                  setFieldValue("suspended.waterLicenseTimeEnd", value?.toDate("UTC"))
-                }
-              />
-            ) : null}
+            <SelectField
+              label={t("Citizen.waterLicenseCategory")}
+              errorMessage={errors.waterLicenseCategory}
+              isDisabled={values.suspended.waterLicense}
+              selectionMode="multiple"
+              selectedKeys={values.waterLicenseCategory}
+              isOptional
+              isClearable={allowRemoval}
+              onSelectionChange={(keys) => setFieldValue("waterLicenseCategory", keys)}
+              options={driverslicenseCategory.values
+                .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+                .map((value) => ({
+                  label: value.value.value,
+                  value: value.id,
+                  description: value.description,
+                }))}
+            />
           </FormRow>
-        ) : null}
 
-        <FormRow>
-          <ValueSelectField
-            isOptional
-            isClearable={allowRemoval}
-            fieldName="waterLicense"
-            valueType={ValueType.LICENSE}
-            values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
-            filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
-            isDisabled={values.suspended.waterLicense}
-            label={t("Citizen.waterLicense")}
-          />
+          {!isLeo && values.suspended.waterLicense ? (
+            <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+              {t("Citizen.licenseSuspendedInfo")}
+            </p>
+          ) : null}
 
-          <SelectField
-            label={t("Citizen.waterLicenseCategory")}
-            errorMessage={errors.waterLicenseCategory}
-            isDisabled={values.suspended.waterLicense}
-            selectionMode="multiple"
-            selectedKeys={values.waterLicenseCategory}
-            isOptional
-            isClearable={allowRemoval}
-            onSelectionChange={(keys) => setFieldValue("waterLicenseCategory", keys)}
-            options={driverslicenseCategory.values
-              .filter((v) => v.type === DriversLicenseCategoryType.WATER)
-              .map((value) => ({
-                label: value.value.value,
-                value: value.id,
-                description: value.description,
-              }))}
-          />
-        </FormRow>
+          {isLeo ? (
+            <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" />
+          ) : null}
+        </section>
+      )}
 
-        {!isLeo && values.suspended.waterLicense ? (
-          <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-            {t("Citizen.licenseSuspendedInfo")}
-          </p>
-        ) : null}
+      {fishingLicenseExamEnabled && !isLeo ? null : (
+        <section className="w-full">
+          {isLeo ? (
+            <FormRow>
+              <SwitchField
+                isSelected={values.suspended.fishingLicense}
+                onChange={(isSelected) => setFieldValue("suspended.fishingLicense", isSelected)}
+              >
+                {t("Leo.suspendFishingLicense")}
+              </SwitchField>
 
-        {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
-      </section>
+              {values.suspended.fishingLicense ? (
+                <DatePickerField
+                  isOptional
+                  errorMessage={errors.suspended?.fishingLicenseTimeEnd}
+                  label={t("Leo.endDate")}
+                  value={
+                    values.suspended.fishingLicenseTimeEnd
+                      ? values.suspended.fishingLicenseTimeEnd
+                      : undefined
+                  }
+                  onChange={(value) =>
+                    setFieldValue("suspended.fishingLicenseTimeEnd", value?.toDate("UTC"))
+                  }
+                />
+              ) : null}
+            </FormRow>
+          ) : null}
 
-      <section className="w-full">
-        {isLeo ? (
           <FormRow>
-            <SwitchField
-              isSelected={values.suspended.fishingLicense}
-              onChange={(isSelected) => setFieldValue("suspended.fishingLicense", isSelected)}
-            >
-              {t("Leo.suspendFishingLicense")}
-            </SwitchField>
+            <ValueSelectField
+              isOptional
+              isClearable={allowRemoval}
+              fieldName="fishingLicense"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
+              isDisabled={values.suspended.fishingLicense}
+              label={t("Citizen.fishingLicense")}
+            />
 
-            {values.suspended.fishingLicense ? (
-              <DatePickerField
-                isOptional
-                errorMessage={errors.suspended?.fishingLicenseTimeEnd}
-                label={t("Leo.endDate")}
-                value={
-                  values.suspended.fishingLicenseTimeEnd
-                    ? values.suspended.fishingLicenseTimeEnd
-                    : undefined
-                }
-                onChange={(value) =>
-                  setFieldValue("suspended.fishingLicenseTimeEnd", value?.toDate("UTC"))
-                }
-              />
-            ) : null}
+            <SelectField
+              label={t("Citizen.fishingLicenseCategory")}
+              errorMessage={errors.fishingLicenseCategory}
+              isDisabled={values.suspended.fishingLicense}
+              selectionMode="multiple"
+              selectedKeys={values.fishingLicenseCategory}
+              isOptional
+              isClearable={allowRemoval}
+              onSelectionChange={(keys) => setFieldValue("fishingLicenseCategory", keys)}
+              options={driverslicenseCategory.values
+                .filter((v) => v.type === DriversLicenseCategoryType.FISHING)
+                .map((value) => ({
+                  label: value.value.value,
+                  value: value.id,
+                  description: value.description,
+                }))}
+            />
           </FormRow>
-        ) : null}
 
-        <FormRow>
-          <ValueSelectField
-            isOptional
-            isClearable={allowRemoval}
-            fieldName="fishingLicense"
-            valueType={ValueType.LICENSE}
-            values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
-            filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
-            isDisabled={values.suspended.fishingLicense}
-            label={t("Citizen.fishingLicense")}
-          />
+          {!isLeo && values.suspended.fishingLicense ? (
+            <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+              {t("Citizen.licenseSuspendedInfo")}
+            </p>
+          ) : null}
 
-          <SelectField
-            label={t("Citizen.fishingLicenseCategory")}
-            errorMessage={errors.fishingLicenseCategory}
-            isDisabled={values.suspended.fishingLicense}
-            selectionMode="multiple"
-            selectedKeys={values.fishingLicenseCategory}
-            isOptional
-            isClearable={allowRemoval}
-            onSelectionChange={(keys) => setFieldValue("fishingLicenseCategory", keys)}
-            options={driverslicenseCategory.values
-              .filter((v) => v.type === DriversLicenseCategoryType.FISHING)
-              .map((value) => ({
-                label: value.value.value,
-                value: value.id,
-                description: value.description,
-              }))}
-          />
-        </FormRow>
+          {isLeo ? (
+            <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" />
+          ) : null}
+        </section>
+      )}
 
-        {!isLeo && values.suspended.fishingLicense ? (
-          <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-            {t("Citizen.licenseSuspendedInfo")}
-          </p>
-        ) : null}
+      {huntingLicenseExamEnabled && !isLeo ? null : (
+        <section className="w-full">
+          {isLeo ? (
+            <FormRow>
+              <SwitchField
+                isSelected={values.suspended.huntingLicense}
+                onChange={(isSelected) => setFieldValue("suspended.huntingLicense", isSelected)}
+              >
+                {t("Leo.suspendHuntingLicense")}
+              </SwitchField>
 
-        {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
-      </section>
+              {values.suspended.huntingLicense ? (
+                <DatePickerField
+                  isOptional
+                  errorMessage={errors.suspended?.huntingLicenseTimeEnd}
+                  label={t("Leo.endDate")}
+                  value={
+                    values.suspended.huntingLicenseTimeEnd
+                      ? values.suspended.huntingLicenseTimeEnd
+                      : undefined
+                  }
+                  onChange={(value) =>
+                    setFieldValue("suspended.huntingLicenseTimeEnd", value?.toDate("UTC"))
+                  }
+                />
+              ) : null}
+            </FormRow>
+          ) : null}
 
-      <section className="w-full">
-        {isLeo ? (
           <FormRow>
-            <SwitchField
-              isSelected={values.suspended.huntingLicense}
-              onChange={(isSelected) => setFieldValue("suspended.huntingLicense", isSelected)}
-            >
-              {t("Leo.suspendHuntingLicense")}
-            </SwitchField>
+            <ValueSelectField
+              isOptional
+              isClearable={allowRemoval}
+              fieldName="huntingLicense"
+              valueType={ValueType.LICENSE}
+              values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
+              filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
+              isDisabled={values.suspended.huntingLicense}
+              label={t("Citizen.huntingLicense")}
+            />
 
-            {values.suspended.huntingLicense ? (
-              <DatePickerField
-                isOptional
-                errorMessage={errors.suspended?.huntingLicenseTimeEnd}
-                label={t("Leo.endDate")}
-                value={
-                  values.suspended.huntingLicenseTimeEnd
-                    ? values.suspended.huntingLicenseTimeEnd
-                    : undefined
-                }
-                onChange={(value) =>
-                  setFieldValue("suspended.huntingLicenseTimeEnd", value?.toDate("UTC"))
-                }
-              />
-            ) : null}
+            <SelectField
+              label={t("Citizen.huntingLicenseCategory")}
+              errorMessage={errors.huntingLicenseCategory}
+              isDisabled={values.suspended.huntingLicense}
+              selectionMode="multiple"
+              selectedKeys={values.huntingLicenseCategory}
+              isOptional
+              isClearable={allowRemoval}
+              onSelectionChange={(keys) => setFieldValue("huntingLicenseCategory", keys)}
+              options={driverslicenseCategory.values
+                .filter((v) => v.type === DriversLicenseCategoryType.HUNTING)
+                .map((value) => ({
+                  label: value.value.value,
+                  value: value.id,
+                  description: value.description,
+                }))}
+            />
           </FormRow>
-        ) : null}
 
-        <FormRow>
-          <ValueSelectField
-            isOptional
-            isClearable={allowRemoval}
-            fieldName="huntingLicense"
-            valueType={ValueType.LICENSE}
-            values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE)}
-            filterFn={(v) => filterLicenseType(v, ValueLicenseType.LICENSE)}
-            isDisabled={values.suspended.huntingLicense}
-            label={t("Citizen.huntingLicense")}
-          />
+          {!isLeo && values.suspended.huntingLicense ? (
+            <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
+              {t("Citizen.licenseSuspendedInfo")}
+            </p>
+          ) : null}
 
-          <SelectField
-            label={t("Citizen.huntingLicenseCategory")}
-            errorMessage={errors.huntingLicenseCategory}
-            isDisabled={values.suspended.huntingLicense}
-            selectionMode="multiple"
-            selectedKeys={values.huntingLicenseCategory}
-            isOptional
-            isClearable={allowRemoval}
-            onSelectionChange={(keys) => setFieldValue("huntingLicenseCategory", keys)}
-            options={driverslicenseCategory.values
-              .filter((v) => v.type === DriversLicenseCategoryType.HUNTING)
-              .map((value) => ({
-                label: value.value.value,
-                value: value.id,
-                description: value.description,
-              }))}
-          />
-        </FormRow>
+          {isLeo ? (
+            <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" />
+          ) : null}
+        </section>
+      )}
 
-        {!isLeo && values.suspended.huntingLicense ? (
-          <p className="-mt-2 text-base mb-3 text-neutral-700 dark:text-gray-400">
-            {t("Citizen.licenseSuspendedInfo")}
-          </p>
-        ) : null}
-
-        {isLeo ? <hr className="my-2 mb-3 border-t border-secondary dark:border-quinary" /> : null}
-      </section>
-
-      {!WEAPON_REGISTRATION ? null : LICENSE_EXAMS && !isLeo ? null : (
+      {!WEAPON_REGISTRATION ? null : firearmsLicenseExamEnabled && !isLeo ? null : (
         <section className="w-full">
           {isLeo ? (
             <FormRow>
