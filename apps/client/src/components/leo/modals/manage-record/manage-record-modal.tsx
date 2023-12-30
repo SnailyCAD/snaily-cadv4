@@ -248,6 +248,10 @@ export function ManageRecordModal(props: Props) {
     });
     validateRecords(values.violations, helpers);
 
+    console.log({
+      requestData,
+    });
+
     if (props.customSubmitHandler) {
       const closable = await props.customSubmitHandler({ ...requestData, id: props.record?.id });
       if (closable) {
@@ -325,8 +329,6 @@ export function ManageRecordModal(props: Props) {
       >
         {({ setFieldValue, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
-            <AutoSaveDraft {...props} setMutationState={setMutationState} />
-
             <TabList
               activeTab={activeTab}
               onValueChange={setActiveTab}
@@ -475,6 +477,7 @@ export function ManageRecordModal(props: Props) {
               }}
               courtEntry={values.courtEntry}
             />
+            <AutoSaveDraft {...props} setMutationState={setMutationState} />
           </Form>
         )}
       </Formik>
@@ -509,6 +512,7 @@ function AutoSaveDraft(
           path: `/records/record/${form.values.id}`,
           method: "PUT",
           data: requestData,
+          noToast: true,
         });
 
         if (json.id) {
@@ -520,6 +524,7 @@ function AutoSaveDraft(
           path: "/records",
           method: "POST",
           data: requestData,
+          noToast: true,
         });
 
         if (json.id) {
@@ -548,14 +553,13 @@ function AutoSaveDraft(
     }));
   }, [mutation.isPending]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return form.values.id && mutation.data ? (
-    <Alert
-      className="mb-4 mt-2"
-      icon={<InfoCircleFill />}
-      type="info"
-      message={t("savedAsDraft")}
-    />
-  ) : null;
+  return (
+    <div className="h-10 mt-4">
+      {form.values.id && mutation.data ? (
+        <Alert icon={<InfoCircleFill />} type="info" message={t("savedAsDraft")} />
+      ) : null}
+    </div>
+  );
 }
 
 function validateRecords(data: any[], helpers: FormikHelpers<any>) {

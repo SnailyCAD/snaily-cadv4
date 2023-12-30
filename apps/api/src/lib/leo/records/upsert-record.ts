@@ -28,18 +28,6 @@ interface UpsertRecordOptions {
 }
 
 export async function upsertRecord(options: UpsertRecordOptions) {
-  if (options.recordId) {
-    const record = await prisma.record.findUnique({
-      where: { id: options.recordId },
-      include: { violations: true, seizedItems: true },
-    });
-
-    if (!record) {
-      throw new NotFound("notFound");
-    }
-
-    await Promise.all([unlinkViolations(record.violations), unlinkSeizedItems(record.seizedItems)]);
-  }
   let citizen;
   let business;
 
@@ -194,6 +182,19 @@ export async function upsertRecord(options: UpsertRecordOptions) {
   if (Object.keys(errors).length >= 1) {
     await prisma.record.delete({ where: { id: ticket.id } });
     throw new ExtendedBadRequest(errors);
+  }
+
+  if (options.recordId) {
+    const record = await prisma.record.findUnique({
+      where: { id: options.recordId },
+      include: { violations: true, seizedItems: true },
+    });
+
+    if (!record) {
+      throw new NotFound("notFound");
+    }
+
+    await Promise.all([unlinkViolations(record.violations), unlinkSeizedItems(record.seizedItems)]);
   }
 
   const violations = await prisma.$transaction(

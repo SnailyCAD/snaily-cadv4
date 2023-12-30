@@ -96,6 +96,20 @@ export class RecordsController {
     return draftRecords as APITypes.GetCitizenByIdRecordsData;
   }
 
+  @Delete("/drafts/:id")
+  async deleteDraftRecordById(@Context("user") user: User, @PathParams("id") id: string) {
+    const record = await prisma.record
+      .delete({
+        where: {
+          id,
+          officer: { userId: user.id },
+        },
+      })
+      .catch(() => null);
+
+    return !!record;
+  }
+
   @Get("/active-warrants")
   @Description("Get all active warrants (ACTIVE_WARRANTS must be enabled)")
   @IsFeatureEnabled({ feature: Feature.ACTIVE_WARRANTS })

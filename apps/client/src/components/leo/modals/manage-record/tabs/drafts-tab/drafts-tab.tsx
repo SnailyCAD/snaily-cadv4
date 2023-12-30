@@ -1,8 +1,7 @@
 import type { PenalCode, RecordType } from "@snailycad/types";
 import type { GetCitizenByIdRecordsData } from "@snailycad/types/api";
 import { Button, FullDate, TabsContent } from "@snailycad/ui";
-import { useQuery } from "@tanstack/react-query";
-import { Table, useTableState } from "components/shared/Table";
+import { Table, useAsyncTable, useTableState } from "components/shared/Table";
 import { useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
@@ -23,29 +22,28 @@ interface DraftsTabProps {
 
 export function DraftsTab(props: DraftsTabProps) {
   const t = useTranslations("Leo");
-  const { execute } = useFetch();
-  const tableState = useTableState();
+  const { state, execute } = useFetch();
   const form = useFormikContext<ReturnType<typeof createInitialRecordValues>>();
   const features = useFeatureEnabled();
 
-  const draftRecordsQuery = useQuery<GetCitizenByIdRecordsData>({
-    queryKey: ["draft-records", props.type],
-    queryFn: async () => {
-      const { json } = await execute<GetCitizenByIdRecordsData>({
-        path: `/records/drafts?type=${props.type}`,
-        method: "GET",
-      });
-
-      return json;
+  const asyncTable = useAsyncTable<GetCitizenByIdRecordsData[number]>({
+    totalCount: 12,
+    fetchOptions: {
+      pageSize: 12,
+      path: `/records/drafts?type=${props.type}`,
+      onResponse(json: GetCitizenByIdRecordsData) {
+        return { data: json, totalCount: json.length };
+      },
     },
   });
+  const tableState = useTableState(asyncTable);
 
   function onContinueClick(record: GetCitizenByIdRecordsData[number]) {
     form.setValues(
       createInitialRecordValues({
         record: {
           ...record,
-          publishStatus: "PUBLISHED",
+          publishStatus: "DRAFT",
         },
         type: props.type,
         t,
@@ -64,8 +62,15 @@ export function DraftsTab(props: DraftsTabProps) {
     props.setActiveTab("general-information-tab");
   }
 
-  function onDeleteClick(recordId: string) {
-    void 0;
+  async function onDeleteClick(recordId: string) {
+    const { json } = await execute<boolean>({
+      path: `/records/drafts/${recordId}`,
+      method: "DELETE",
+    });
+
+    if (typeof json === "boolean" && json) {
+      asyncTable.remove(recordId);
+    }
   }
 
   return (
@@ -73,9 +78,10 @@ export function DraftsTab(props: DraftsTabProps) {
       <h3 className="text-xl font-semibold">{t("drafts")}</h3>
 
       <Table
+        isLoading={asyncTable.isLoading}
         features={{ isWithinCardOrModal: true }}
         tableState={tableState}
-        data={(draftRecordsQuery.data ?? [])?.map((record) => ({
+        data={asyncTable.items.map((record) => ({
           id: record.id,
           name: `${record.citizen?.name} ${record.citizen?.surname}`,
           updatedAt: <FullDate>{new Date(record.updatedAt)}</FullDate>,
@@ -90,6 +96,7 @@ export function DraftsTab(props: DraftsTabProps) {
                 size="xs"
                 type="button"
                 onClick={() => onDeleteClick(record.id)}
+                isDisabled={state === "loading"}
               >
                 Delete
               </Button>
