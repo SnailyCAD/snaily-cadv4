@@ -248,10 +248,6 @@ export function ManageRecordModal(props: Props) {
     });
     validateRecords(values.violations, helpers);
 
-    console.log({
-      requestData,
-    });
-
     if (props.customSubmitHandler) {
       const closable = await props.customSubmitHandler({ ...requestData, id: props.record?.id });
       if (closable) {
