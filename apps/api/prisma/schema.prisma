@@ -1434,6 +1434,7 @@ model Bolo {
 // tickets, arrest reports, warrants, written warnings
 model Record {
   id                   String              @id @default(uuid())
+  publishStatus        PublishStatus       @default(DRAFT)
   caseNumber           Int                 @default(autoincrement())
   type                 RecordType
   citizen              Citizen?            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
@@ -1722,6 +1723,11 @@ model ActiveTone {
   createdAt   DateTime       @default(now())
   createdBy   User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
 }
 
 enum ActiveToneType {
