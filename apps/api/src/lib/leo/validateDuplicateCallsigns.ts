@@ -6,6 +6,7 @@ interface Options {
   unitId?: string;
   userId?: string;
   type: "leo" | "ems-fd" | "combined-leo" | "combined-ems-fd";
+  departmentId: string;
   callsign1: string;
   callsign2: string;
 }
@@ -31,6 +32,7 @@ export async function validateDuplicateCallsigns(options: Options) {
   // @ts-expect-error properties for this function are the same.
   const existing = await prisma[t].count({
     where: {
+      departmentId: options.departmentId,
       callsign: options.callsign1,
       callsign2: options.callsign2,
       NOT,

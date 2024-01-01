@@ -84,6 +84,7 @@ export async function upsertEmsFdDeputy(options: UpsertEmsFdDeputyOptions) {
   });
 
   await validateDuplicateCallsigns({
+    departmentId: data.department,
     callsign1: data.callsign,
     callsign2: data.callsign2,
     type: "ems-fd",

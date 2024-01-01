@@ -396,7 +396,7 @@ export class AdminManageUnitsController {
     } as const;
     const t = prismaNames[type];
 
-    if (data.callsign && data.callsign2) {
+    if (data.callsign && data.callsign2 && unit.departmentId) {
       const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
         feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
         defaultReturn: false,
@@ -404,6 +404,7 @@ export class AdminManageUnitsController {
       });
 
       await validateDuplicateCallsigns({
+        departmentId: unit.departmentId,
         callsign1: data.callsign,
         callsign2: data.callsign2,
         unitId: unit.id,
