@@ -6,7 +6,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { leoProperties } from "utils/leo/includes";
 
-import { type MiscCadSettings, ReleaseType } from "@prisma/client";
+import { type MiscCadSettings, ReleaseType, type Prisma } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
@@ -49,11 +49,11 @@ export class JailController {
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("activeOnly", Boolean) activeOnly = false,
   ): Promise<APITypes.GetJailedCitizensData> {
-    const name = activeOnly ? "AND" : "OR";
-
-    const where = {
-      [name]: [{ arrested: true }, { Record: { some: { release: { is: null } } } }],
-    };
+    const where: Prisma.CitizenWhereInput = activeOnly
+      ? { AND: [{ arrested: true }] }
+      : {
+          OR: [{ arrested: true }, { Record: { some: { release: { is: null } } } }],
+        };
 
     const [totalCount, citizens] = await prisma.$transaction([
       prisma.citizen.count({ where }),

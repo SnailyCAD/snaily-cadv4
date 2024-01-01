@@ -4,6 +4,7 @@ import {
   type CourtEntry,
   type SeizedItem,
   type Violation,
+  PublishStatus,
 } from "@prisma/client";
 import type { CREATE_TICKET_SCHEMA, CREATE_TICKET_SCHEMA_BUSINESS } from "@snailycad/schemas";
 import { type PaymentStatus, type RecordType, WhitelistStatus } from "@snailycad/types";
@@ -27,19 +28,6 @@ interface UpsertRecordOptions {
 }
 
 export async function upsertRecord(options: UpsertRecordOptions) {
-  if (options.recordId) {
-    const record = await prisma.record.findUnique({
-      where: { id: options.recordId },
-      include: { violations: true, seizedItems: true },
-    });
-
-    if (!record) {
-      throw new NotFound("notFound");
-    }
-
-    await Promise.all([unlinkViolations(record.violations), unlinkSeizedItems(record.seizedItems)]);
-  }
-
   let citizen;
   let business;
 
@@ -104,6 +92,8 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       call911Id: options.data.call911Id || null,
       incidentId: options.data.incidentId || null,
       descriptionData: options.data.descriptionData || undefined,
+      publishStatus:
+        (options.data.publishStatus as PublishStatus | null) ?? PublishStatus.PUBLISHED,
     },
     update: {
       notes: options.data.notes,
@@ -120,6 +110,8 @@ export async function upsertRecord(options: UpsertRecordOptions) {
       vehicleSpeed: options.data.vehicleSpeed || null,
       vehiclePaceType: options.data.vehiclePaceType || null,
       speedLimit: options.data.speedLimit || null,
+      publishStatus:
+        (options.data.publishStatus as PublishStatus | null) ?? PublishStatus.PUBLISHED,
     },
     include: {
       officer: { include: leoProperties },
@@ -190,6 +182,19 @@ export async function upsertRecord(options: UpsertRecordOptions) {
   if (Object.keys(errors).length >= 1) {
     await prisma.record.delete({ where: { id: ticket.id } });
     throw new ExtendedBadRequest(errors);
+  }
+
+  if (options.recordId) {
+    const record = await prisma.record.findUnique({
+      where: { id: options.recordId },
+      include: { violations: true, seizedItems: true },
+    });
+
+    if (!record) {
+      throw new NotFound("notFound");
+    }
+
+    await Promise.all([unlinkViolations(record.violations), unlinkSeizedItems(record.seizedItems)]);
   }
 
   const violations = await prisma.$transaction(

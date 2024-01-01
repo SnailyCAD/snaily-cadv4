@@ -356,3 +356,10 @@ export const VehiclePaceType = {
 } as const;
 
 export type VehiclePaceType = (typeof VehiclePaceType)[keyof typeof VehiclePaceType];
+
+export const PublishStatus = {
+  DRAFT: "DRAFT",
+  PUBLISHED: "PUBLISHED",
+} as const;
+
+export type PublishStatus = (typeof PublishStatus)[keyof typeof PublishStatus];

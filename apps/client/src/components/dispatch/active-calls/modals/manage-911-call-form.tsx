@@ -227,7 +227,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   isDisabled={isDisabled}
                   isClearable
                   label={t("dispositionCode")}
-                  fieldName="dispositionCode"
+                  fieldName="dispositionCodeId"
                   values={callType.values}
                   valueType={ValueType.CALL_TYPE}
                   filterFn={(value) => value.isDisposition}
@@ -242,7 +242,6 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
                   fieldName="type"
                   values={callType.values}
                   valueType={ValueType.CALL_TYPE}
-                  filterFn={(value) => !value.isDisposition}
                   className="w-full"
                 />
               </FormRow>
@@ -262,7 +261,7 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
           <footer
             className={classNames(
               "mt-5 flex",
-              isDisabled && "justify-end",
+              (isDisabled || !call) && "justify-end",
               !isDisabled && call && "justify-between",
             )}
           >

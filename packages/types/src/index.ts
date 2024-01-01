@@ -395,6 +395,8 @@ export type Bolo = Prisma.Bolo & {
 
 type _Record = Prisma.Record & {
   officer?: Officer | null;
+  citizen?: BaseCitizen | null;
+  business?: Pick<Business, "name" | "id"> | null;
   violations: Violation[];
   seizedItems?: Prisma.SeizedItem[];
   courtEntry?: CourtEntry | null;
