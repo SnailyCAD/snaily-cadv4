@@ -388,7 +388,10 @@
     "counts": "Рассчитывает",
     "stats": "Статистика",
     "deletedPenalCode": "Удален Уголовный кодекс",
-    "exportCriminalRecord": "Экспорт судимости"
+    "exportCriminalRecord": "Экспорт записи о судимости",
+    "savedAsDraft": "Эта запись успешно сохранена, как черновик.",
+    "drafts": "Черновики",
+    "publishDraft": "Опубликовать черновик"
   },
   "Bolos": {
     "activeBolos": "Активные BOLO",
