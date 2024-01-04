@@ -17,6 +17,7 @@ import {
   type Officer,
   WhitelistStatus,
   type User,
+  PublishStatus,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
@@ -42,7 +43,9 @@ export const vehicleSearchInclude = {
 };
 
 export const recordsInclude = (isRecordApprovalEnabled: boolean) => ({
-  where: isRecordApprovalEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
+  where: isRecordApprovalEnabled
+    ? { status: WhitelistStatus.ACCEPTED, publishStatus: PublishStatus.PUBLISHED }
+    : { publishStatus: PublishStatus.PUBLISHED },
   include: {
     citizen: true,
     business: { select: { name: true, id: true } },

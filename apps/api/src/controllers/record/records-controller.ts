@@ -26,6 +26,7 @@ import {
   type Business,
   PaymentStatus,
   type RecordType,
+  PublishStatus,
 } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { combinedUnitProperties, leoProperties } from "utils/leo/includes";
@@ -351,7 +352,7 @@ export class RecordsController {
     }
 
     const records = await prisma.record.findMany({
-      where: { citizenId: citizen.id },
+      where: { citizenId: citizen.id, publishStatus: PublishStatus.PUBLISHED },
       include: recordsInclude(isEnabled).include,
     });
 
@@ -550,7 +551,7 @@ export class RecordsController {
       throw new NotFound("citizenNotFound");
     }
 
-    const record = await prisma.record.findFirst({
+    const record = await prisma.record.findUnique({
       where: { id: recordId },
     });
 

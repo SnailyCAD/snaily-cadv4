@@ -6,7 +6,7 @@ import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { leoProperties } from "utils/leo/includes";
 
-import { type MiscCadSettings, ReleaseType, type Prisma } from "@prisma/client";
+import { type MiscCadSettings, ReleaseType, type Prisma, PublishStatus } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
@@ -145,6 +145,7 @@ export class JailController {
       where: {
         id: recordId,
         citizenId: citizen.id,
+        publishStatus: PublishStatus.PUBLISHED,
       },
     });
 
