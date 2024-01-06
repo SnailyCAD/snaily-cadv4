@@ -69,7 +69,7 @@ export function PendingCitizenRecordsTab({ pendingCitizenRecords }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const tableState = useTableState();
+  const tableState = useTableState(asyncTable);
 
   function handleEditClick(item: GetManagePendingCitizenRecords["pendingCitizenRecords"][number]) {
     setTempRecord(item.records!);
