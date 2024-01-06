@@ -14,6 +14,7 @@ import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/ap
 import { Permissions, usePermission } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { CallDescription } from "components/dispatch/active-calls/CallDescription";
+import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 const values = [
   { label: "Inactive", value: WarrantStatus.INACTIVE },
@@ -108,6 +109,7 @@ export function NameSearchWarrantsTab() {
               .map((warrant) => {
                 return {
                   id: warrant.id,
+                  caseNumber: <RecordsCaseNumberColumn record={warrant} />,
                   officer: warrant.officer
                     ? `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`
                     : "—",
@@ -139,6 +141,7 @@ export function NameSearchWarrantsTab() {
                 };
               })}
             columns={[
+              { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
               { header: t("Leo.officer"), accessorKey: "officer" },
               { header: common("description"), accessorKey: "description" },
               { header: common("createdAt"), accessorKey: "createdAt" },

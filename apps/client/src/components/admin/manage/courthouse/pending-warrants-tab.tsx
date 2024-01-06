@@ -12,6 +12,7 @@ import { CallDescription } from "components/dispatch/active-calls/CallDescriptio
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useInvalidateQuery } from "hooks/use-invalidate-query";
+import { RecordsCaseNumberColumn } from "components/leo/records-case-number-column";
 
 type PendingWarrant = GetManagePendingWarrants["pendingWarrants"][number];
 
@@ -77,6 +78,7 @@ export function PendingWarrantsTab() {
 
             return {
               id: warrant.id,
+              caseNumber: <RecordsCaseNumberColumn record={warrant} />,
               description: <CallDescription nonCard data={warrant} />,
               officer: nameAndCallsign,
               createdAt: <FullDate>{warrant.createdAt}</FullDate>,
@@ -108,6 +110,7 @@ export function PendingWarrantsTab() {
             };
           })}
           columns={[
+            { header: t("Leo.caseNumber"), accessorKey: "caseNumber" },
             { header: common("description"), accessorKey: "description" },
             { header: t("Courthouse.createdBy"), accessorKey: "officer" },
             { header: common("createdAt"), accessorKey: "createdAt" },
