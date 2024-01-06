@@ -76,7 +76,7 @@ export default function MyOfficersLogs({ reports: data }: Props) {
                   paymentStatus: <Status fallback="—">{item.records.paymentStatus}</Status>,
                 }
               : {
-                  caseNumber: "—",
+                  caseNumber: <RecordsCaseNumberColumn record={item.warrant!} />,
                   status: item.warrant?.status,
                   postal: "—",
                   notes: "—",

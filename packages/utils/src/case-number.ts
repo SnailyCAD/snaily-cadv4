@@ -1,11 +1,11 @@
-import type { Record } from "@snailycad/types";
+import type { Record, Warrant } from "@snailycad/types";
 import format from "date-fns/format";
 import { prefixNumber } from "./utils/prefix-number";
 import { replaceTemplateVariables } from "./utils/replace-template-variables";
 
 type RecordPick = "caseNumber" | "createdAt" | "officer";
 
-export type _Record = Pick<Record, RecordPick>;
+export type _Record = Pick<Record, RecordPick> | Warrant;
 
 /**
  * given a record and a template, format a case number for it

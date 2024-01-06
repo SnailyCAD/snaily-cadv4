@@ -1486,6 +1486,7 @@ model RecordRelease {
 
 model Warrant {
   id                   String                   @id @default(uuid())
+  caseNumber           Int                      @default(autoincrement())
   citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
   officer              Officer?                 @relation(fields: [officerId], references: [id], onDelete: SetNull)
