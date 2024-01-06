@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fullscreen, FullscreenExit, X } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
 import { classNames } from "lib/classNames";
+import { cn } from "mxcn";
 
 export interface ModalProps {
   title: string;
@@ -36,7 +37,7 @@ export function Modal({
       <Dialog
         open={isOpen}
         as="div"
-        className={classNames(
+        className={cn(
           "fixed inset-0 overflow-y-auto",
           isAlert ? "z-[999]" : "z-50",
           dialogClassName,
@@ -85,7 +86,7 @@ export function Modal({
                     }
                   : {}
               }
-              className={classNames(
+              className={cn(
                 "max-w-[100%] inline-block text-left transition-all transform bg-white border border-secondary dark:bg-tertiary dark:text-white shadow-xl rounded-lg",
                 isFullscreen ? "p-2" : "align-middle p-4 px-6 my-8",
                 isAlert ? "z-[998]" : "z-30",

@@ -61,6 +61,7 @@
     "is-hotkey": "^0.2.0",
     "leaflet": "^1.9.4",
     "mdast-util-find-and-replace": "^3.0.1",
+    "mxcn": "^2.0.0",
     "next": "14.0.3",
     "next-intl": "2.22.1",
     "nookies": "^2.5.2",

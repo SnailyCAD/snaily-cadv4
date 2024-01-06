@@ -433,6 +433,9 @@ importers:
       mdast-util-find-and-replace:
         specifier: ^3.0.1
         version: 3.0.1
+      mxcn:
+        specifier: ^2.0.0
+        version: 2.0.0
       next:
         specifier: 14.0.3
         version: 14.0.3(react-dom@18.2.0)(react@18.2.0)(sass@1.69.5)

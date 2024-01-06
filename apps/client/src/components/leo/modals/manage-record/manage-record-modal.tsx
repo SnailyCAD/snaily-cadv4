@@ -310,6 +310,22 @@ export function ManageRecordModal(props: Props) {
     payload,
   });
 
+  const tabs = React.useMemo(() => {
+    const _tabs = [
+      { name: t("generalInformation"), value: "general-information-tab" },
+      { name: t("violations"), value: "violations-tab" },
+      { name: t("seizedItems"), value: "seized-items-tab" },
+      { name: t("vehicleInformation"), value: "vehicle-tab" },
+      { name: t("connections"), value: "connections-tab" },
+    ];
+
+    if (!props.isEdit) {
+      _tabs.unshift({ name: t("drafts"), value: "drafts-tab" });
+    }
+
+    return _tabs;
+  }, [t, props.isEdit]);
+
   return (
     <Modal
       title={t(data[props.type].title)}
@@ -330,14 +346,7 @@ export function ManageRecordModal(props: Props) {
               onValueChange={setActiveTab}
               defaultValue="general-information-tab"
               queryState={false}
-              tabs={[
-                { name: t("drafts"), value: "drafts-tab" },
-                { name: t("generalInformation"), value: "general-information-tab" },
-                { name: t("violations"), value: "violations-tab" },
-                { name: t("seizedItems"), value: "seized-items-tab" },
-                { name: t("vehicleInformation"), value: "vehicle-tab" },
-                { name: t("connections"), value: "connections-tab" },
-              ]}
+              tabs={tabs}
             >
               <DraftsTab
                 setActiveTab={setActiveTab}
