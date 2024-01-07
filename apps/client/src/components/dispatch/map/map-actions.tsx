@@ -37,7 +37,7 @@ export function MapActions() {
       <div className="grid grid-cols-2 gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild key="trigger">
-            <Button>{t("Leo.toggle")}</Button>
+            <Button size="xs">{t("Leo.toggle")}</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="min-w-[175px]" align="start" key="content">
             {hasManageSmartSignsPermissions ? (
@@ -71,10 +71,10 @@ export function MapActions() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button onPress={() => modalState.openModal(ModalIds.Manage911Call)}>
+        <Button size="xs" onPress={() => modalState.openModal(ModalIds.Manage911Call)}>
           {t("Calls.create911Call")}
         </Button>
-        <Button onPress={() => modalState.openModal(ModalIds.SelectMapServer)}>
+        <Button size="xs" onPress={() => modalState.openModal(ModalIds.SelectMapServer)}>
           {t("Leo.selectMapServer")}
         </Button>
       </div>

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import type { Call911 } from "@snailycad/types";
-import { Manage911CallModal } from "components/dispatch/active-calls/modals/manage-911-call-modal";
 import { useListener } from "@casperiv/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { CallItem } from "./call-item";
@@ -75,11 +74,6 @@ export function ActiveMapCalls() {
           })}
         </Accordion>
       )}
-
-      <Manage911CallModal
-        onClose={() => calls911State.setCurrentlySelectedCall(null)}
-        call={calls911State.currentlySelectedCall}
-      />
     </div>
   );
 }
