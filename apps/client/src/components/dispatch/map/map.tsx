@@ -4,7 +4,6 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import { getMapBounds } from "lib/map/utils";
 import { RenderMapBlips } from "./render-map-blips";
 import { RenderActiveCalls } from "./calls/render-active-map-calls";
-import { MapActions } from "./map-actions";
 import { RenderMapPlayers } from "./units/render-map-players";
 import { SelectMapServerModal } from "./modals/select-map-server-modal";
 import { RenderMapSmartSigns } from "./smart-signs/render-map-smart-signs";
@@ -59,7 +58,6 @@ export function Map() {
         <RenderMapPlayers />
         <RenderMapBlips />
         <RenderActiveCalls />
-        <MapActions />
         <RenderMapSmartSigns />
         <RenderMapSmartMotorwaySigns />
 

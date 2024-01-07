@@ -2,6 +2,7 @@ import { TabList, TabsContent } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { ActiveMapCalls } from "../calls/active-map-calls";
 import { ActiveMapUnits } from "../units/active-map-units";
+import { MapActions } from "../map-actions";
 
 export function MapSidebar() {
   const t = useTranslations();
@@ -16,6 +17,7 @@ export function MapSidebar() {
 
   return (
     <aside className="col-span-1 p-3">
+      <MapActions />
       <TabList tabs={tabs}>
         <TabsContent value="active-calls">
           <ActiveMapCalls />
