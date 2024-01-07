@@ -9,51 +9,62 @@ import { RenderMapPlayers } from "./units/render-map-players";
 import { SelectMapServerModal } from "./modals/select-map-server-modal";
 import { RenderMapSmartSigns } from "./smart-signs/render-map-smart-signs";
 import { RenderMapSmartMotorwaySigns } from "./smart-motorway-signs/render-map-smart-motorway-signs";
+import { MapSidebar } from "./sidebar/map-sidebar";
+import { useMapStore } from "state/mapState";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.webp" as const;
 
 export function Map() {
-  const [map, setMap] = React.useState<L.Map | undefined>();
-  const bounds = React.useMemo(() => (map ? getMapBounds(map) : undefined), [map]);
+  const mapStore = useMapStore();
+
+  const bounds = React.useMemo(
+    () => (mapStore.map ? getMapBounds(mapStore.map) : undefined),
+    [mapStore.map],
+  );
 
   React.useEffect(() => {
     if (bounds) {
-      map?.setMaxBounds(bounds);
-      map?.fitBounds(bounds);
-      map?.setZoom(-2);
-      map?.getBounds();
+      mapStore.map?.setMaxBounds(bounds);
+      mapStore.map?.fitBounds(bounds);
+      mapStore.map?.setZoom(-2);
+      mapStore.map?.getBounds();
     }
   }, [bounds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <MapContainer
-      ref={(map) => {
-        map && setMap(map);
-      }}
-      style={{ zIndex: 1, height: "calc(100vh - 3.5rem)", width: "100%" }}
-      crs={CRS.Simple}
-      center={[0, 0]}
-      zoom={-2}
-      bounds={bounds}
-      zoomControl={false}
-    >
-      <TileLayer
-        url={TILES_URL}
-        minZoom={-2}
-        maxZoom={2}
-        tileSize={1024}
-        maxNativeZoom={0}
-        minNativeZoom={0}
-      />
+    <>
+      <MapSidebar />
 
-      <RenderMapPlayers />
-      <RenderMapBlips />
-      <RenderActiveCalls />
-      <MapActions />
-      <RenderMapSmartSigns />
-      <RenderMapSmartMotorwaySigns />
+      <MapContainer
+        className="col-span-2"
+        ref={(map) => {
+          map && mapStore.setMap(map);
+        }}
+        style={{ zIndex: 1, height: "calc(100vh - 3.5rem)", width: "100%" }}
+        crs={CRS.Simple}
+        center={[0, 0]}
+        zoom={-2}
+        bounds={bounds}
+        zoomControl={false}
+      >
+        <TileLayer
+          url={TILES_URL}
+          minZoom={-2}
+          maxZoom={2}
+          tileSize={1024}
+          maxNativeZoom={0}
+          minNativeZoom={0}
+        />
 
-      <SelectMapServerModal />
-    </MapContainer>
+        <RenderMapPlayers />
+        <RenderMapBlips />
+        <RenderActiveCalls />
+        <MapActions />
+        <RenderMapSmartSigns />
+        <RenderMapSmartMotorwaySigns />
+
+        <SelectMapServerModal />
+      </MapContainer>
+    </>
   );
 }

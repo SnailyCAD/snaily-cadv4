@@ -1,35 +1,25 @@
 import * as React from "react";
-import { ActiveMapUnits } from "./active-map-units";
 import { PlayerMarker } from "./player-marker";
 import { useMapPlayers } from "hooks/realtime/use-map-players";
+import { useDispatchMapState } from "state/mapState";
 
 export function RenderMapPlayers() {
-  const [openItems, setOpenItems] = React.useState<string[]>([]);
+  const { openUnits, setOpenUnits } = useDispatchMapState((state) => ({
+    openUnits: state.openUnits,
+    setOpenUnits: state.setOpenUnits,
+  }));
   const { players } = useMapPlayers();
 
   function handleToggle(name: string) {
-    setOpenItems((p) => {
-      if (p.includes(name)) {
-        return p.filter((v) => v !== name);
-      }
-
-      return [...p, name];
-    });
+    const newOpenUnits = openUnits.includes(name)
+      ? openUnits.filter((v) => v !== name)
+      : [...openUnits, name];
+    setOpenUnits(newOpenUnits);
   }
 
   const playerValues = React.useMemo(() => [...players.values()], [players]);
 
-  return (
-    <>
-      {playerValues.map((player, idx) => (
-        <PlayerMarker
-          key={`${player.identifier}-${idx}`}
-          handleToggle={handleToggle}
-          player={player}
-        />
-      ))}
-
-      <ActiveMapUnits setOpenItems={setOpenItems} openItems={openItems} players={playerValues} />
-    </>
-  );
+  return playerValues.map((player, idx) => (
+    <PlayerMarker handleToggle={handleToggle} key={`${player.identifier}-${idx}`} player={player} />
+  ));
 }

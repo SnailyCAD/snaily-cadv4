@@ -25,6 +25,12 @@ interface DispatchMapState {
 
   currentMapServerURL: string | null;
   setCurrentMapServerURL(url: string): void;
+
+  openUnits: string[];
+  setOpenUnits(units: string[]): void;
+
+  openCalls: string[];
+  setOpenCalls(calls: string[]): void;
 }
 
 interface SocketStore {
@@ -35,9 +41,24 @@ interface SocketStore {
   setStatus(status: ConnectionStatus): void;
 }
 
+interface MapStore {
+  map: L.Map | null;
+  setMap(map: L.Map): void;
+}
+
 export const useDispatchMapState = createWithEqualityFn<DispatchMapState>()(
   persist(
     (set) => ({
+      openCalls: [],
+      setOpenCalls(calls) {
+        set({ openCalls: calls });
+      },
+
+      openUnits: [],
+      setOpenUnits(units) {
+        set({ openUnits: units });
+      },
+
       smartSigns: [],
       setSmartSigns(signs) {
         set({ smartSigns: signs });
@@ -85,6 +106,16 @@ export const useSocketStore = createWithEqualityFn<SocketStore>()(
     socket: null,
     setSocket(socket) {
       set({ socket });
+    },
+  }),
+  shallow,
+);
+
+export const useMapStore = createWithEqualityFn<MapStore>()(
+  (set) => ({
+    map: null,
+    setMap(map) {
+      set({ map });
     },
   }),
   shallow,

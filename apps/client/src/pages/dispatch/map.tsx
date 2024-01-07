@@ -65,7 +65,7 @@ export default function MapPage(props: Props) {
       <Layout
         permissions={{ permissions: [Permissions.LiveMap] }}
         navMaxWidth="none"
-        className="relative !px-0 !pb-0 !mt-0 !max-w-none"
+        className="relative !px-0 !pb-0 !mt-0 !max-w-none grid grid-cols-3"
       >
         <Map />
       </Layout>
