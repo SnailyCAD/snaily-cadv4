@@ -161,6 +161,7 @@ export class CADSettingsController {
         timeZone: data.timeZone || null,
         miscCadSettings: {
           update: {
+            cadOGDescription: data.cadOGDescription || null,
             roleplayEnabled: data.roleplayEnabled,
             authScreenBgImageId: data.authScreenBgImageId || null,
             authScreenHeaderImageId: data.authScreenHeaderImageId || null,

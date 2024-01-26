@@ -14,6 +14,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   timeZone: z.string().nullish(),
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
+  cadOGDescription: z.string().nullish(),
 });
 
 export const LIVE_MAP_SETTINGS = z.object({
