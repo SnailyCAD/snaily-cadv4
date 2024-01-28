@@ -16,6 +16,10 @@ import { makeSocketConnection } from "components/dispatch/map/modals/select-map-
 import { ConnectionStatus } from "@snailycad/ui";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
+import { useMutation } from "@tanstack/react-query";
+import type { EmsFdDeputy, Officer } from "@snailycad/types";
+import { useListener } from "@casperiv/use-socket.io";
+import { SocketEvents } from "@snailycad/config";
 
 export const useMapPlayersStore = createWithEqualityFn<{
   players: Map<string, MapPlayer | PlayerDataEventPayload>;
@@ -32,6 +36,7 @@ export function useMapPlayers() {
   const { players, setPlayers } = useMapPlayersStore();
 
   const currentMapServerURL = useDispatchMapState((state) => state.currentMapServerURL);
+  const setActiveMapUnits = useDispatchMapState((state) => state.setActiveMapUnits);
   const modalState = useModal();
   const { state, execute } = useFetch();
   const { socket, setStatus, setSocket } = useSocketStore((state) => ({
@@ -40,11 +45,16 @@ export function useMapPlayers() {
     setSocket: state.setSocket,
   }));
 
-  const getCADUsers = React.useCallback(
-    async (options: {
+  const getCadUsersQuery = useMutation<
+    unknown,
+    Error,
+    {
       map: Map<string, MapPlayer | PlayerDataEventPayload>;
       fetchMore?: boolean;
-    }) => {
+    }
+  >({
+    mutationKey: ["get-cad-users", "live-map"],
+    mutationFn: async (options) => {
       if (state === "loading") return;
 
       const availablePlayersArray = Array.from(options.map.values());
@@ -65,6 +75,7 @@ export function useMapPlayers() {
         });
 
         const json = Array.isArray(rawJson) ? rawJson : [];
+        const units = new Map<string, EmsFdDeputy | Officer>();
 
         for (const user of json) {
           const player = availablePlayersArray.find(
@@ -72,16 +83,21 @@ export function useMapPlayers() {
               player.discordId === user.discordId || player.convertedSteamId === user.steamId,
           );
 
+          if (user.unit) {
+            units.set(user.unit.id, user.unit);
+          }
+
           if (player) {
             newPlayers.set(player.identifier, { ...player, ...user });
           }
         }
+
+        setActiveMapUnits(Array.from(units.values()));
       }
 
       setPlayers(options.map);
     },
-    [state], // eslint-disable-line
-  );
+  });
 
   const onPlayerData = React.useCallback(
     async (data: PlayerDataEvent) => {
@@ -114,9 +130,12 @@ export function useMapPlayers() {
         });
       }
 
-      await getCADUsers({ map: newMap, fetchMore: data.payload.length !== players.size });
+      await getCadUsersQuery.mutateAsync({
+        map: newMap,
+        fetchMore: data.payload.length !== players.size,
+      });
     },
-    [players, getCADUsers],
+    [players, getCadUsersQuery],
   );
 
   const onPlayerLeft = React.useCallback(
@@ -175,6 +194,22 @@ export function useMapPlayers() {
     },
     [currentMapServerURL], // eslint-disable-line react-hooks/exhaustive-deps
   );
+
+  useListener(SocketEvents.UpdateOfficerStatus, () => {
+    getCadUsersQuery.mutate({
+      map: new Map(players),
+      // We have to fetch more to get the latest unit information
+      fetchMore: true,
+    });
+  });
+
+  useListener(SocketEvents.UpdateEmsFdStatus, () => {
+    getCadUsersQuery.mutate({
+      map: new Map(players),
+      // We have to fetch more to get the latest unit information
+      fetchMore: true,
+    });
+  });
 
   const onConnect = React.useCallback(() => {
     setStatus(ConnectionStatus.CONNECTED);

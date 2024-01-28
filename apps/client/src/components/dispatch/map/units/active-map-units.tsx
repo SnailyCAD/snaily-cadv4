@@ -1,7 +1,5 @@
 import * as React from "react";
 import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
-import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
-import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { useTranslations } from "next-intl";
 import { UnitItem } from "./unit-item";
 import { ManageUnitModal } from "components/dispatch/active-units/modals/manage-unit-modal";
@@ -15,18 +13,16 @@ export function ActiveMapUnits() {
     null | Officer | EmsFdDeputy | CombinedEmsFdUnit | CombinedLeoUnit
   >(null);
   const players = useMapPlayersStore((state) => state.players);
-  const { openUnits, setOpenUnits } = useDispatchMapState((state) => ({
+  const { openUnits, activeMapUnits, setOpenUnits } = useDispatchMapState((state) => ({
+    activeMapUnits: state.activeUnits,
     openUnits: state.openUnits,
     setOpenUnits: state.setOpenUnits,
   }));
   const t = useTranslations("Leo");
 
-  const { activeOfficers } = useActiveOfficers();
-  const { activeDeputies } = useActiveDeputies();
   const units = createMapUnitsFromActiveUnits({
     players: Array.from(players.values()),
-    activeOfficers,
-    activeDeputies,
+    activeUnits: activeMapUnits,
   });
 
   return (

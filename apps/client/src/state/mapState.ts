@@ -1,3 +1,4 @@
+import type { CombinedEmsFdUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { type ConnectionStatus } from "@snailycad/ui";
 import { type Socket } from "socket.io-client";
 import type { SmartMotorwaySignMarker, SmartSignMarker } from "types/map";
@@ -14,6 +15,9 @@ export enum MapItem {
 }
 
 interface DispatchMapState {
+  activeUnits: (EmsFdDeputy | Officer | CombinedLeoUnit | CombinedEmsFdUnit)[];
+  setActiveMapUnits(units: (EmsFdDeputy | Officer | CombinedLeoUnit | CombinedEmsFdUnit)[]): void;
+
   smartSigns: SmartSignMarker[];
   setSmartSigns(signs: SmartSignMarker[]): void;
 
@@ -49,6 +53,11 @@ interface MapStore {
 export const useDispatchMapState = createWithEqualityFn<DispatchMapState>()(
   persist(
     (set) => ({
+      activeUnits: [],
+      setActiveMapUnits(activeUnits) {
+        set({ activeUnits });
+      },
+
       openCalls: [],
       setOpenCalls(calls) {
         set({ openCalls: calls });
