@@ -345,22 +345,24 @@ function ManageURLPopover(props: ManageURLPopoverProps) {
       </Popover.Trigger>
 
       <Popover.Content className="z-[999] p-4 bg-gray-200 rounded-md shadow-md dropdown-fade w-96 dark:bg-primary dark:border dark:border-secondary text-base font-normal">
-        <h3 className="text-xl font-semibold mb-3">{props.url ? t("editURL") : t("addURL")}</h3>
+        <form onSubmit={handleSubmit}>
+          <h3 className="text-xl font-semibold mb-3">{props.url ? t("editURL") : t("addURL")}</h3>
 
-        <div>
-          <TextField label={common("name")} value={name} onChange={(value) => setName(value)} />
-          <TextField
-            placeholder="http://my-host:my-port"
-            type="url"
-            label={common("url")}
-            value={url}
-            onChange={(value) => setUrl(value)}
-          />
+          <div>
+            <TextField label={common("name")} value={name} onChange={(value) => setName(value)} />
+            <TextField
+              placeholder="http://my-host:my-port"
+              type="url"
+              label={common("url")}
+              value={url}
+              onChange={(value) => setUrl(value)}
+            />
 
-          <Button type="button" onPress={handleSubmit} size="xs">
-            {props.url ? common("save") : t("addURL")}
-          </Button>
-        </div>
+            <Button type="submit" onPress={handleSubmit} size="xs">
+              {props.url ? common("save") : t("addURL")}
+            </Button>
+          </div>
+        </form>
 
         <Popover.Arrow className="fill-primary" />
       </Popover.Content>

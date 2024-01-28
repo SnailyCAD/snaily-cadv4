@@ -15,12 +15,18 @@ export function useActiveDispatchers() {
 
   const router = useRouter();
   const isCitizen = router.pathname.includes("/citizen");
-  const activeDispatcherState = useActiveDispatcherState();
+  const activeDispatcherState = useActiveDispatcherState((state) => ({
+    activeDispatchersCount: state.activeDispatchersCount,
+    userActiveDispatcher: state.userActiveDispatcher,
+    setActiveDispatchersCount: state.setActiveDispatchersCount,
+    setUserActiveDispatcher: state.setUserActiveDispatcher,
+  }));
 
   useQuery({
     queryKey: ["/dispatch"],
     enabled: !isCitizen,
     queryFn: getActiveDispatchers,
+    refetchOnMount: false,
   });
 
   async function getActiveDispatchers() {
@@ -48,6 +54,7 @@ export function useActiveDispatchers() {
     async () => {
       await queryClient.resetQueries({ queryKey: ["/dispatch"] });
     },
+    [queryClient.resetQueries],
   );
 
   return {

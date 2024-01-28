@@ -10,20 +10,13 @@ import type { MapPlayer, PlayerDataEventPayload } from "types/map";
 
 interface ActiveUnitsOptions {
   players: (MapPlayer | PlayerDataEventPayload)[];
-  activeOfficers: (Officer | CombinedLeoUnit)[];
-  activeDeputies: (EmsFdDeputy | CombinedEmsFdUnit)[];
+  activeUnits: (Officer | CombinedLeoUnit | EmsFdDeputy | CombinedEmsFdUnit)[];
 }
 
-export function createMapUnitsFromActiveUnits({
-  players,
-  activeOfficers,
-  activeDeputies,
-}: ActiveUnitsOptions) {
-  const activeUnits: MapPlayer[] = [];
-  const _activeOfficers = activeOfficers;
-  const _activeDeputies = activeDeputies;
+export function createMapUnitsFromActiveUnits({ players, activeUnits }: ActiveUnitsOptions) {
+  const transformedActiveUnits: MapPlayer[] = [];
 
-  for (const activeUnit of [..._activeOfficers, ..._activeDeputies]) {
+  for (const activeUnit of activeUnits) {
     if (!activeUnit.status || activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY) continue;
 
     if (isUnitCombined(activeUnit) || isUnitCombinedEmsFd(activeUnit)) {
@@ -31,10 +24,12 @@ export function createMapUnitsFromActiveUnits({
 
       if (!player || !("steamId" in player) || !("discordId" in player)) continue;
 
-      const existing = activeUnits.some((player) => findPlayerFromCombinedUnit(player, activeUnit));
+      const existing = transformedActiveUnits.some((player) =>
+        findPlayerFromCombinedUnit(player, activeUnit),
+      );
 
       if (!existing) {
-        activeUnits.push({ ...player, unit: activeUnit });
+        transformedActiveUnits.push({ ...player, unit: activeUnit });
       }
 
       continue;
@@ -45,18 +40,20 @@ export function createMapUnitsFromActiveUnits({
     const player = players.find((player) => findPlayerFromSingleUnit(player, activeUnit));
     if (!player || !("steamId" in player) || !("discordId" in player)) continue;
 
-    const existing = activeUnits.some((player) => findPlayerFromSingleUnit(player, activeUnit));
+    const existing = transformedActiveUnits.some((player) =>
+      findPlayerFromSingleUnit(player, activeUnit),
+    );
     if (!existing) {
-      activeUnits.push({ ...player, unit: activeUnit });
+      transformedActiveUnits.push({ ...player, unit: activeUnit });
     }
   }
 
-  return activeUnits;
+  return transformedActiveUnits;
 }
 
 export function findPlayerFromUnit(
   player: MapPlayer | PlayerDataEventPayload,
-  activeUnit: Officer | EmsFdDeputy | CombinedLeoUnit | CombinedEmsFdUnit,
+  activeUnit: Officer | CombinedLeoUnit | EmsFdDeputy | CombinedEmsFdUnit,
 ) {
   if (isUnitCombined(activeUnit) || isUnitCombinedEmsFd(activeUnit)) {
     return findPlayerFromCombinedUnit(player, activeUnit);
