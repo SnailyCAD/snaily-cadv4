@@ -26,7 +26,7 @@ export function ActiveMapUnits() {
   });
 
   return (
-    <div className="text-white">
+    <div className="text-white overflow-y-auto max-h-[78vh]">
       {units.length <= 0 ? (
         <p className="text-base mt-2 text-neutral-700 dark:text-gray-300">{t("noActiveUnits")}</p>
       ) : (
