@@ -20,10 +20,12 @@ export function ActiveMapUnits() {
   }));
   const t = useTranslations("Leo");
 
-  const units = createMapUnitsFromActiveUnits({
-    players: Array.from(players.values()),
-    activeUnits: activeMapUnits,
-  });
+  const units = React.useMemo(() => {
+    return createMapUnitsFromActiveUnits({
+      players: Array.from(players.values()),
+      activeUnits: activeMapUnits,
+    });
+  }, [players, activeMapUnits]);
 
   return (
     <div className="text-white overflow-y-auto max-h-[78vh]">
