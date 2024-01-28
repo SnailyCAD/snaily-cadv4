@@ -133,7 +133,7 @@ export class StatusController {
       userDefinedCallsign = data.userDefinedCallsign;
     }
 
-    let activeEmergencyVehicleId: string | undefined;
+    let activeEmergencyVehicleId: string | undefined | null;
     if (data.vehicleId && code?.shouldDo === ShouldDoType.SET_ON_DUTY) {
       const divisionIds = getDivisionsFromUnit(unit, isDivisionsEnabled);
 
@@ -152,6 +152,8 @@ export class StatusController {
       }
 
       activeEmergencyVehicleId = _emergencyVehicle.id;
+    } else if (code?.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+      activeEmergencyVehicleId = null;
     }
 
     /**
