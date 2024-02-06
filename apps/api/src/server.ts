@@ -23,9 +23,6 @@ import { checkForUpdates } from "utils/check-for-updates";
 import { getCADVersion } from "@snailycad/utils/version";
 import * as Sentry from "@sentry/node";
 import { parseCORSOrigin } from "utils/validate-environment-variables";
-import { prisma } from "./lib/data/prisma";
-import { request } from "undici";
-import { z } from "zod";
 
 const rootDir = __dirname;
 const processEnvPort = process.env.PORT || process.env.PORT_API;
@@ -103,8 +100,6 @@ export class Server {
   @Configuration()
   settings!: Configuration;
 
-  private versions!: Awaited<ReturnType<typeof getCADVersion>>;
-
   public $beforeRoutesInit() {
     this.app.get("/", this.versionHandler());
     this.app.get("/v1", this.versionHandler());
@@ -112,57 +107,11 @@ export class Server {
 
   public async $afterInit() {
     await checkForUpdates();
-    await this.handleUseUpload();
-  }
-
-  // upload API & client URL for analytic purposes
-  // only uploads the absolute minimum data
-  protected async handleUseUpload() {
-    if (process.env.NODE_ENV === "development") return;
-
-    const URL = "https://uses.snailycad.org/register";
-    const id = `${process.env.NEXT_PUBLIC_PROD_ORIGIN}_${process.env.NEXT_PUBLIC_CLIENT_URL}`;
-
-    const versionObj = {
-      currentVersion: this.versions?.currentVersion,
-      commitHash: this.versions?.currentCommitHash,
-    };
-
-    const cad = await prisma.cad.findFirst({ select: { name: true } }).catch(() => null);
-
-    const body = {
-      id,
-      name: cad?.name || null,
-      version: JSON.stringify(versionObj),
-      NEXT_PUBLIC_PROD_ORIGIN: process.env.NEXT_PUBLIC_PROD_ORIGIN,
-      NEXT_PUBLIC_CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL,
-    };
-
-    const s = z.object({
-      id: z.string(),
-      name: z.string().nullable(),
-      NEXT_PUBLIC_PROD_ORIGIN: z.string().url(),
-      NEXT_PUBLIC_CLIENT_URL: z.string().url(),
-      version: z.string().optional(),
-    });
-
-    const data = await s.safeParseAsync(body);
-
-    if (!data.success) return;
-
-    await request(URL, {
-      method: "POST",
-      body: JSON.stringify(data.data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
   }
 
   protected versionHandler() {
     return async (_: Request, res: Response) => {
       const versions = await getCADVersion();
-      this.versions = versions;
 
       res.setHeader("content-type", "text/html");
       return res
