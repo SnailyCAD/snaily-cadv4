@@ -1,7 +1,6 @@
 name: Bug Report
 description: Create a report to help improve SnailyCAD
 labels: "bug"
-assignees: "casperiv0"
 body:
   - type: input
     attributes:
