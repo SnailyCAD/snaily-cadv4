@@ -36,8 +36,8 @@ importers:
         specifier: 3.2.5
         version: 3.2.5
       turbo:
-        specifier: 1.10.16
-        version: 1.10.16
+        specifier: 1.12.3
+        version: 1.12.3
     devDependencies:
       "@casperiv/eslint-config":
         specifier: 8.0.0
@@ -27488,7 +27488,7 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /turbo-darwin-64@1.10.16:
+  /turbo-darwin-64@1.12.3:
     resolution:
       {
         integrity: sha512-+Jk91FNcp9e9NCLYlvDDlp2HwEDp14F9N42IoW3dmHI5ZkGSXzalbhVcrx3DOox3QfiNUHxzWg4d7CnVNCuuMg==,
@@ -27499,7 +27499,7 @@ packages:
     dev: false
     optional: true
 
-  /turbo-darwin-arm64@1.10.16:
+  /turbo-darwin-arm64@1.12.3:
     resolution:
       {
         integrity: sha512-jqGpFZipIivkRp/i+jnL8npX0VssE6IAVNKtu573LXtssZdV/S+fRGYA16tI46xJGxSAivrZ/IcgZrV6Jk80bw==,
@@ -27510,7 +27510,7 @@ packages:
     dev: false
     optional: true
 
-  /turbo-linux-64@1.10.16:
+  /turbo-linux-64@1.12.3:
     resolution:
       {
         integrity: sha512-PpqEZHwLoizQ6sTUvmImcRmACyRk9EWLXGlqceogPZsJ1jTRK3sfcF9fC2W56zkSIzuLEP07k5kl+ZxJd8JMcg==,
@@ -27521,7 +27521,7 @@ packages:
     dev: false
     optional: true
 
-  /turbo-linux-arm64@1.10.16:
+  /turbo-linux-arm64@1.12.3:
     resolution:
       {
         integrity: sha512-TMjFYz8to1QE0fKVXCIvG/4giyfnmqcQIwjdNfJvKjBxn22PpbjeuFuQ5kNXshUTRaTJihFbuuCcb5OYFNx4uw==,
@@ -27532,7 +27532,7 @@ packages:
     dev: false
     optional: true
 
-  /turbo-windows-64@1.10.16:
+  /turbo-windows-64@1.12.3:
     resolution:
       {
         integrity: sha512-+jsf68krs0N66FfC4/zZvioUap/Tq3sPFumnMV+EBo8jFdqs4yehd6+MxIwYTjSQLIcpH8KoNMB0gQYhJRLZzw==,
@@ -27543,7 +27543,7 @@ packages:
     dev: false
     optional: true
 
-  /turbo-windows-arm64@1.10.16:
+  /turbo-windows-arm64@1.12.3:
     resolution:
       {
         integrity: sha512-sKm3hcMM1bl0B3PLG4ifidicOGfoJmOEacM5JtgBkYM48ncMHjkHfFY7HrJHZHUnXM4l05RQTpLFoOl/uIo2HQ==,
@@ -27554,19 +27554,19 @@ packages:
     dev: false
     optional: true
 
-  /turbo@1.10.16:
+  /turbo@1.12.3:
     resolution:
       {
         integrity: sha512-2CEaK4FIuSZiP83iFa9GqMTQhroW2QryckVqUydmg4tx78baftTOS0O+oDAhvo9r9Nit4xUEtC1RAHoqs6ZEtg==,
       }
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.16
-      turbo-darwin-arm64: 1.10.16
-      turbo-linux-64: 1.10.16
-      turbo-linux-arm64: 1.10.16
-      turbo-windows-64: 1.10.16
-      turbo-windows-arm64: 1.10.16
+      turbo-darwin-64: 1.12.3
+      turbo-darwin-arm64: 1.12.3
+      turbo-linux-64: 1.12.3
+      turbo-linux-arm64: 1.12.3
+      turbo-windows-64: 1.12.3
+      turbo-windows-arm64: 1.12.3
     dev: false
 
   /type-check@0.4.0:
