@@ -70,8 +70,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       "@prisma/client":
-        specifier: ^5.9.1
-        version: 5.9.1(prisma@5.9.1)
+        specifier: ^5.6.0
+        version:5.6.0(prisma@5.6.0)
       "@sentry/node":
         specifier: ^7.81.0
         version: 7.81.0
@@ -196,8 +196,8 @@ importers:
         specifier: ^12.0.1
         version: 12.0.1
       prisma:
-        specifier: ^5.9.1
-        version: 5.9.1
+        specifier: ^5.6.0
+        version:5.6.0
       puppeteer:
         specifier: ^21.5.2
         version: 21.5.2(typescript@5.3.2)
@@ -5480,7 +5480,7 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@prisma/client@5.9.1(prisma@5.9.1):
+  /@prisma/client@5.6.0(prisma@5.6.0):
     resolution:
       {
         integrity: sha512-mUDefQFa1wWqk4+JhKPYq8BdVoFk9NFMBXUI8jAkBfQTtgx8WPx02U2HB/XbAz3GSUJpeJOKJQtNvaAIDs6sug==,
@@ -5493,8 +5493,8 @@ packages:
       prisma:
         optional: true
     dependencies:
-      "@prisma/engines-version": 5.9.1-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee
-      prisma: 5.9.1
+      "@prisma/engines-version":5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee
+      prisma:5.6.0
     dev: false
 
   /@prisma/debug@5.2.0:
@@ -5510,7 +5510,7 @@ packages:
       - supports-color
     dev: false
 
-  /@prisma/engines-version@5.9.1-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee:
+  /@prisma/engines-version@5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee:
     resolution:
       {
         integrity: sha512-UoFgbV1awGL/3wXuUK3GDaX2SolqczeeJ5b4FVec9tzeGbSWJboPSbT0psSrmgYAKiKnkOPFSLlH6+b+IyOwAw==,
@@ -5525,7 +5525,7 @@ packages:
     requiresBuild: true
     dev: false
 
-  /@prisma/engines@5.9.1:
+  /@prisma/engines@5.6.0:
     resolution:
       {
         integrity: sha512-Mt2q+GNJpU2vFn6kif24oRSBQv1KOkYaterQsi0k2/lA+dLvhRX6Lm26gon6PYHwUM8/h8KRgXIUMU0PCLB6bw==,
@@ -23685,7 +23685,7 @@ packages:
     engines: { node: ">= 0.8" }
     dev: true
 
-  /prisma@5.9.1:
+  /prisma@5.6.0:
     resolution:
       {
         integrity: sha512-EEaccku4ZGshdr2cthYHhf7iyvCcXqwJDvnoQRAJg5ge2Tzpv0e2BaMCp+CbbDUwoVTzwgOap9Zp+d4jFa2O9A==,
@@ -23694,7 +23694,7 @@ packages:
     hasBin: true
     requiresBuild: true
     dependencies:
-      "@prisma/engines": 5.9.1
+      "@prisma/engines": 5.6.0
     dev: false
 
   /proc-log@3.0.0:
