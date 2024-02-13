@@ -60,6 +60,7 @@
     "createWarrant": "Criar Mandado",
     "citizenDead": "AVISO: Este cidadão morreu em {date}",
     "hasWarrants": "AVISO: Este cidadão tem mandados ativos!",
+    "isArrested": "AVISO: Este cidadão está atualmente detido!",
     "rank": "classificação",
     "position": "Posição",
     "officerLogs": "Registros do Oficial",

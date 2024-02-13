@@ -60,6 +60,7 @@
     "createWarrant": "Créer un mandat",
     "citizenDead": "ATTENTION : Ce citoyen est décédé le {date}",
     "hasWarrants": "ATTENTION : Ce citoyen a des mandats actifs !",
+    "isArrested": "ATTENTION : Ce citoyen est actuellement arrêté !",
     "rank": "Rang",
     "position": "Position",
     "officerLogs": "Journaux des officiers",

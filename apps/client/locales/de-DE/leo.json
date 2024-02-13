@@ -60,6 +60,7 @@
     "createWarrant": "Haftbefehl erstellen",
     "citizenDead": "WARNUNG: Dieser Bürger starb am {date}",
     "hasWarrants": "WARNUNG: Gegen diesen Bürger liegt ein Haftbefehl vor!",
+    "isArrested": "WARNUNG: Dieser Bürger ist derzeit verhaftet!",
     "rank": "Rang",
     "position": "Position",
     "officerLogs": "Officer Logs",

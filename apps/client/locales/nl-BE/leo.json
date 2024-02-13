@@ -60,6 +60,7 @@
     "createWarrant": "Arrestatiebevel maken",
     "citizenDead": "WAARSCHUWING: Deze persoon is {date} overleden",
     "hasWarrants": "WAARSCHUWING: Deze persoon heeft een actief arrestatiebevel!",
+    "isArrested": "WAARSCHUWING: Deze burger is momenteel gearresteerd!",
     "rank": "Rang",
     "position": "Positie",
     "officerLogs": "Agenten Logs",

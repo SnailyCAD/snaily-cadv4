@@ -154,7 +154,10 @@ export function NameSearchModal() {
 
   const warrants =
     !currentResult || currentResult.isConfidential ? [] : currentResult.warrants ?? [];
+
   const hasActiveWarrants = warrants.filter((v) => v.status === "ACTIVE").length > 0;
+  const isArrested =
+    !currentResult || currentResult.isConfidential ? false : currentResult.arrested;
 
   const INITIAL_VALUES = {
     searchValue: payloadCitizen?.name ?? "",
@@ -333,6 +336,14 @@ export function NameSearchModal() {
                     <SpeechAlert text={t("hasWarrants")}>
                       <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
                         {t("hasWarrants")}
+                      </div>
+                    </SpeechAlert>
+                  ) : null}
+
+                  {isArrested ? (
+                    <SpeechAlert text={t("isArrested")}>
+                      <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
+                        {t("isArrested")}
                       </div>
                     </SpeechAlert>
                   ) : null}
