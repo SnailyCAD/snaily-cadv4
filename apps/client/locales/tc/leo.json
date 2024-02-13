@@ -60,6 +60,7 @@
     "createWarrant": "創建認股權證",
     "citizenDead": "警告：該公民死於{data}",
     "hasWarrants": "警告：這個公民有有效的逮捕令！",
+    "isArrested": "警告：這位公民目前被拘留！",
     "rank": "等級",
     "position": "位置",
     "officerLogs": "警員日誌",

@@ -60,6 +60,7 @@
     "createWarrant": "创建逮捕令",
     "citizenDead": "警告：该市民于 {date} 去世",
     "hasWarrants": "警告：该市民有有效的逮捕令！",
+    "isArrested": "警告：这位公民目前被拘留！",
     "rank": "等级",
     "position": "职位",
     "officerLogs": "警员日志",

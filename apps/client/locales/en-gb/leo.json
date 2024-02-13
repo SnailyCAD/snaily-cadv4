@@ -60,6 +60,7 @@
     "createWarrant": "Create Warrant",
     "citizenDead": "WARNING: This civilian was marked deceased on {date}",
     "hasWarrants": "WARNING: This civilian has active warrants!",
+    "isArrested": "WARNING: This citizen is currently arrested!",
     "rank": "Rank",
     "position": "Position",
     "officerLogs": "Officer Logs",

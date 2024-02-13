@@ -60,6 +60,7 @@
     "createWarrant": "Skapa Arresteringsorder",
     "citizenDead": "VARNING: Denna medborgare dog den {date}",
     "hasWarrants": "VARNING: Denna medborgare har aktiva arresteringsordrar!",
+    "isArrested": "VARNING: Denna medborgare är för närvarande gripen!",
     "rank": "Grad",
     "position": "Position",
     "officerLogs": "Officer-Loggar",

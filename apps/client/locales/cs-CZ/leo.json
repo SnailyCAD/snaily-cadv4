@@ -60,6 +60,7 @@
     "createWarrant": "Vytvořit zatykač",
     "citizenDead": "UPOZORNĚNÍ: tato osoba zemřela {date}.",
     "hasWarrants": "UPOZORNĚNÍ: na osobu je vypsaný zatykač!",
+    "isArrested": "VAROVÁNÍ: Tento občan je v současné době zatčený!",
     "rank": "Hodnost",
     "position": "Pozice",
     "officerLogs": "Záznamy policistů",
