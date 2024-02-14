@@ -143,6 +143,24 @@ export class ManageUsersController {
     @BodyParams("userIds", String) userIds: string[],
     @BodyParams("days", Number) days = 30,
   ) {
+    await prisma.petMedicalRecord.deleteMany({
+      where: {
+        pet: {
+          citizen: {
+            userId: { in: userIds },
+          },
+        },
+      },
+    });
+
+    await prisma.pet.deleteMany({
+      where: {
+        citizen: {
+          userId: { in: userIds },
+        },
+      },
+    });
+
     const arr = await prisma.$transaction(
       userIds.map((id) =>
         prisma.user.deleteMany({
@@ -471,6 +489,24 @@ export class ManageUsersController {
     if (!user) {
       throw new NotFound("notFound");
     }
+
+    await prisma.petMedicalRecord.deleteMany({
+      where: {
+        pet: {
+          citizen: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+
+    await prisma.pet.deleteMany({
+      where: {
+        citizen: {
+          userId: user.id,
+        },
+      },
+    });
 
     await prisma.user.delete({
       where: {
