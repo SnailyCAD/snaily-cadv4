@@ -12,6 +12,7 @@ export const i18n = {
     "nl-BE",
     "zh-CN",
     "sv",
+    "jp-JP",
   ],
   defaultLocale: "en",
 };
