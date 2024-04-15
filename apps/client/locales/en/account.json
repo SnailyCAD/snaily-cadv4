@@ -17,7 +17,7 @@
     "2fa": "Two Factor Authentication",
     "confirmNewPassword": "Confirm new password",
     "scanQRCode": "Scan this QR code to add it to your authenticator app",
-    "verifyCode": " Verify by entering a code from your authenticator app",
+    "verifyCode": "Verify by entering a code from your authenticator app",
     "disable": "Disable",
     "enable2FA": "Enable Two-Factor Authentication",
     "disable2FA": "Disable Two-Factor Authentication",
