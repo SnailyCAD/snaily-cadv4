@@ -84,7 +84,6 @@ export class RecordsController {
     });
 
     const draftRecords = await prisma.record.findMany({
-      // todo: visualize in the FE
       take: 12,
       where: {
         publishStatus: "DRAFT",
@@ -501,7 +500,10 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook(recordItem as any);
+    // Only send a Discord webhook if the record is published
+    if (recordItem.publishStatus === PublishStatus.PUBLISHED) {
+      await this.handleDiscordWebhook(recordItem as any);
+    }
 
     return recordItem;
   }
