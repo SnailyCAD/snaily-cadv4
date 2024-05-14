@@ -25,7 +25,7 @@ const DOB_2 = "1953-10-21";
 
 describe("calculateAge", () => {
   test("Should correctly calculate age", () => {
-    expect(calculateAge(DOB_1)).toMatchInlineSnapshot('"24"');
+    expect(calculateAge(DOB_1)).toMatchInlineSnapshot('"25"');
   });
 
   test("Should correctly calculate age", () => {
