@@ -214,7 +214,7 @@ export class BleeterController {
       throw new NotFound("notFound");
     }
 
-    if (post.userId !== user.id || !hasAdminPermissions) {
+    if (post.userId !== user.id && !hasAdminPermissions) {
       throw new Forbidden("notAllowedToDelete");
     }
 
