@@ -258,7 +258,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
             />
 
             <SelectField
-			  isOptional
+              isOptional
               label={tVehicle("trimLevels")}
               selectionMode="multiple"
               selectedKeys={values.trimLevels}
