@@ -154,9 +154,9 @@ export function MergeUnitModal({
               }}
               fetchOptions={{
                 apiPath: (query) =>
-                  `/admin/values/emergency_vehicle/search?query=${query}&department=${(
-                    activeUnit ?? unit
-                  )?.departmentId}`,
+                  `/admin/values/emergency_vehicle/search?query=${query}&department=${
+                    (activeUnit ?? unit)?.departmentId
+                  }`,
                 filterTextRequired: true,
               }}
             >
