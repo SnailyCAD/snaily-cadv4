@@ -99,7 +99,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@snailycad/types": "^1.79.1",
+    "@snailycad/types": "workspace:*",
     "date-fns": "^2.30.0",
     "slate": "0.100.0",
     "slate-history": "^0.100.0",
