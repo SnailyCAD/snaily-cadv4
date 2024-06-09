@@ -109,7 +109,7 @@ export function ManageBleetModal({ post, onCreate, onUpdate }: Props) {
     title: post?.title ?? "",
     body: post?.body ?? "",
     bodyData: dataToSlate(post),
-    image: null as unknown as File,
+    image: null as unknown as File | null,
   };
 
   return (

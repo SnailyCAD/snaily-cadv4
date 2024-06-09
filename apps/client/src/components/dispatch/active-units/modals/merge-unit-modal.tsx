@@ -153,10 +153,18 @@ export function MergeUnitModal({
                 }
               }}
               fetchOptions={{
-                apiPath: (query) =>
-                  `/admin/values/emergency_vehicle/search?query=${query}&department=${(
-                    activeUnit ?? unit
-                  )?.departmentId}`,
+                apiPath: (query) => {
+                  const basePath = "/admin/values/emergency_vehicle/search?query";
+                  const queryParams = new URLSearchParams();
+                  const departmentId = activeUnit?.departmentId || unit.departmentId;
+
+                  if (query) queryParams.set("query", query);
+                  if (departmentId) {
+                    queryParams.set("department", departmentId);
+                  }
+
+                  return `${basePath}${queryParams.toString()}`;
+                },
                 filterTextRequired: true,
               }}
             >
