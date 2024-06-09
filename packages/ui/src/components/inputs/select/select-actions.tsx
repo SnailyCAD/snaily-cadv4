@@ -44,7 +44,7 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
             "px-2 !rounded-none -mx-[1.5px]",
             "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
             props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
-            props.errorMessage &&
+            !!props.errorMessage &&
               "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
           )}
           type="button"
@@ -63,7 +63,8 @@ export function SelectActions<T extends SelectValue>(props: Props<T>) {
           !showClearableButton && "-ml-[1.5px]",
           "group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
           props.state.isOpen && "!border-gray-800 dark:!border-gray-500",
-          props.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
+          !!props.errorMessage &&
+            "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700",
         )}
       >
         <ChevronDown className="w-5 h-5 dark:fill-white" />

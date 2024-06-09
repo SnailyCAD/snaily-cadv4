@@ -9,17 +9,27 @@ import type {
   MultiSelectState,
 } from "./useMultiSelectState";
 import type { AriaSelectProps } from "@react-types/select";
+import type { AriaButtonOptions } from "@react-aria/button";
+import type { DOMAttributes, FocusableElement } from "@react-types/shared";
 
 interface MultiSelectProps<T> extends Omit<AriaSelectProps<T>, "onSelectionChange"> {
   disallowEmptySelection?: boolean;
   onSelectionChange?: MultiSelectStateProps<T>["onSelectionChange"];
 }
 
+interface UseMultiSelect {
+  triggerProps: AriaButtonOptions<"button">;
+  labelProps: Record<string, unknown>;
+  errorMessageProps: DOMAttributes<FocusableElement>;
+  valueProps: Record<string, unknown>;
+  menuProps: Record<string, unknown>;
+}
+
 export function useMultiSelect<T>(
   props: MultiSelectProps<T>,
   state: MultiSelectState<T>,
   ref: React.RefObject<HTMLElement>,
-) {
+): UseMultiSelect {
   const { disallowEmptySelection, isDisabled } = props;
 
   const { menuTriggerProps, menuProps } = useMenuTrigger(

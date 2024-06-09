@@ -23,6 +23,7 @@ export function Droppable<Item>(props: Props<Item>) {
   const isActive = isOver && _canDrop;
 
   return (
+    // @ts-expect-error - React versions are different
     <div className={cn(isActive && "outline outline-2 outline-offset-[5px] rounded-sm")} ref={drop}>
       {props.children}
     </div>

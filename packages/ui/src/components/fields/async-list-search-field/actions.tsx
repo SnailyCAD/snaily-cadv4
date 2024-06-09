@@ -16,7 +16,7 @@ export function AsyncListSearchFieldActions<T>(props: AsyncListSearchFieldAction
     ? "border-gray-800 dark:border-gray-500"
     : "border-gray-200 dark:border-quinary";
   const errorMessageClassName =
-    props.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700";
+    !!props.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700";
 
   const enabledHoverClassName =
     !props.isDisabled && "group-hover:dark:!border-gray-500 group-hover:!border-gray-500";

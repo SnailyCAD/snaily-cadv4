@@ -71,6 +71,7 @@ export function Editor(props: EditorProps) {
   );
   const renderLeaf = React.useCallback((props: RenderLeafProps) => <EditorLeaf {...props} />, []);
   const editor = React.useMemo(
+    // @ts-expect-error - Missing types in Slate
     () => withChecklists(withShortcuts(withHistory(withReact(createEditor())))),
     [],
   );
@@ -131,6 +132,7 @@ export function Editor(props: EditorProps) {
       )}
     >
       <Slate
+        // @ts-expect-error - Missing types in Slate
         editor={editor}
         initialValue={props.value as Descendant[]}
         onValueChange={(value) => {
