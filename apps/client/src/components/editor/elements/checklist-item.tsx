@@ -11,6 +11,7 @@ export function CheckListItemElement({ attributes, children, element }: Props) {
   const readOnly = useReadOnly();
 
   function handleSelectionChange(isSelected: boolean) {
+    // @ts-expect-error - Missing types in Slate
     const path = ReactEditor.findPath(editor, element);
 
     Transforms.setNodes(editor, { checked: isSelected }, { at: path });

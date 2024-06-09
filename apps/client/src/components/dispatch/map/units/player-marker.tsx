@@ -122,6 +122,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
   return (
     <Marker
+      // @ts-expect-error incompatible types with React
       ref={(ref) => (player.ref = ref)}
       icon={playerIcon}
       key={player.identifier}
