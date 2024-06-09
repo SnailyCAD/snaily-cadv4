@@ -50,5 +50,6 @@
       "undici@<5.26.2": ">=5.26.2",
       "@babel/traverse@<7.23.2": ">=7.23.2"
     }
-  }
+  },
+  "packageManager": "pnpm@9.0.4"
 }
