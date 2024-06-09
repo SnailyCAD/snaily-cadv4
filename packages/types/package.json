@@ -37,7 +37,7 @@
     "prepublish": "pnpm build"
   },
   "dependencies": {
-    "@snailycad/permissions": "^1.79.1",
+    "@snailycad/permissions": "workspace:*",
     "discord-api-types": "0.37.58"
   },
   "devDependencies": {
