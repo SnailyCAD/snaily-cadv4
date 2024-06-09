@@ -44,7 +44,7 @@ jobs:
         run: pnpm install
 
       - name: Build packages
-        run: pnpm turbo run build --filter="{packages/**/**}"
+        run: pnpm turbo run build --filter="{packages/*}"
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
@@ -52,7 +52,7 @@ jobs:
         run: pnpm turbo run typecheck
 
       - name: Build apps
-        run: pnpm turbo run build --filter="{apps/**/**}"
+        run: pnpm turbo run build --filter="{apps/*}"
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
