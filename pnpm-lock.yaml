@@ -220,8 +220,8 @@ importers:
         specifier: ^2.6.3
         version: 2.6.3
       undici:
-        specifier: ^5.27.2
-        version: 5.27.2
+        specifier: ^6.18.2
+        version: 6.18.2
       use-intl:
         specifier: 2.22.1
         version: 2.22.1(react@18.2.0)
@@ -928,8 +928,8 @@ importers:
         specifier: ^2.6.3
         version: 2.6.3
       undici:
-        specifier: 5.27.2
-        version: 5.27.2
+        specifier: 6.18.2
+        version: 6.18.2
     devDependencies:
       "@types/node":
         specifier: ^20.14.2
@@ -3061,13 +3061,6 @@ packages:
       {
         integrity: sha512-cEee/Z+I12mZcFJshKcCqC8tuX5hG3s+d+9nZ3LabqKF1vKdF41B92pJVCBggjAGORAeOzyyDDKrZwIkLffeOQ==,
       }
-
-  "@fastify/busboy@2.0.0":
-    resolution:
-      {
-        integrity: sha512-JUFJad5lv7jxj926GPgymrWQxxjPYuJNiNjNMzqT+HiuP6Vl3dk5xzG+8sTX96np0ZAluvaMzPsjhHZ5rNuNQQ==,
-      }
-    engines: { node: ">=14" }
 
   "@floating-ui/core@1.4.1":
     resolution:
@@ -18509,19 +18502,19 @@ packages:
         integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==,
       }
 
-  undici@5.27.2:
-    resolution:
-      {
-        integrity: sha512-iS857PdOEy/y3wlM3yRp+6SNQQ6xU0mmZcwRSriqk+et/cwWAtwmIGf6WkoDN2EK/AMdCO/dfXzIwi+rFMrjjQ==,
-      }
-    engines: { node: ">=14.0" }
-
   undici@6.13.0:
     resolution:
       {
         integrity: sha512-Q2rtqmZWrbP8nePMq7mOJIN98M0fYvSgV89vwl/BQRT4mDOeY2GXZngfGpcBBhtky3woM7G24wZV3Q304Bv6cw==,
       }
     engines: { node: ">=18.0" }
+
+  undici@6.18.2:
+    resolution:
+      {
+        integrity: sha512-o/MQLTwRm9IVhOqhZ0NQ9oXax1ygPjw6Vs+Vq/4QRjbOAC3B1GCHy7TYxxbExKlb7bzDRzt9vBWU6BDz0RFfYg==,
+      }
+    engines: { node: ">=18.17" }
 
   unicode-canonical-property-names-ecmascript@2.0.0:
     resolution:
@@ -20831,8 +20824,6 @@ snapshots:
   "@faker-js/faker@8.4.1": {}
 
   "@fal-works/esbuild-plugin-global-externals@2.1.2": {}
-
-  "@fastify/busboy@2.0.0": {}
 
   "@floating-ui/core@1.4.1":
     dependencies:
@@ -23223,7 +23214,7 @@ snapshots:
     dependencies:
       fs-extra: 10.1.0
       mime-types: 2.1.35
-      undici: 5.27.2
+      undici: 6.18.2
 
   "@snailycad/prisma-generator-redundant-types@2.0.2(encoding@0.1.13)":
     dependencies:
@@ -32675,11 +32666,9 @@ snapshots:
 
   undici-types@5.26.5: {}
 
-  undici@5.27.2:
-    dependencies:
-      "@fastify/busboy": 2.0.0
-
   undici@6.13.0: {}
+
+  undici@6.18.2: {}
 
   unicode-canonical-property-names-ecmascript@2.0.0: {}
 
