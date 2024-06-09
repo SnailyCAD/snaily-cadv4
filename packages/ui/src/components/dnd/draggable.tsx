@@ -28,6 +28,7 @@ export function Draggable(props: Props) {
   }, [isDragging]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
+    // @ts-expect-error - React versions are different
     <div ref={drag} style={{ opacity }}>
       {props.children({ isDragging })}
     </div>

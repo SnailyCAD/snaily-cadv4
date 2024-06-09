@@ -106,7 +106,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     [props.localValue],
   );
 
-  function handleSelectionChange(key?: Key, value?: string) {
+  function handleSelectionChange(key?: Key | null, value?: string) {
     try {
       if (props.isClearable && key === "cleared") {
         props.onSelectionChange(null);
@@ -222,7 +222,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         ) : null}
       </div>
 
-      {props.errorMessage && (
+      {!!props.errorMessage && (
         <ErrorMessage errorMessage={props.errorMessage} errorMessageProps={errorMessageProps} />
       )}
     </div>

@@ -60,7 +60,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
   } = useDatePicker({ ...rest }, state, triggerRef);
 
   const errorMessageClassName =
-    rest.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700";
+    !!rest.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700";
 
   return (
     <ModalProvider>

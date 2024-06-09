@@ -104,7 +104,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
                   size: "sm",
                   className: cn(
                     "px-2 cursor-default !rounded-r-none w-full min-h-[39px] h-auto flex items-center justify-between border !bg-white dark:!bg-secondary hover:dark:!bg-secondary hover:dark:!brightness-100 group-hover:dark:!border-gray-500 group-hover:!border-gray-500",
-                    props.errorMessage &&
+                    !!props.errorMessage &&
                       "!border-red-500 focus:!border-red-700 dark:focus:!border-red-700",
                     state.isOpen && "dark:!border-gray-500 !border-gray-500",
                     props.isDisabled && "!cursor-not-allowed opacity-60",
