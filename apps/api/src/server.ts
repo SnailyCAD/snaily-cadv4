@@ -62,11 +62,7 @@ if (process.env.NODE_ENV === "development") {
       origin: allowedCorsOrigins,
       credentials: true,
     }),
-    Sentry.Handlers.requestHandler({
-      request: true,
-      serverName: true,
-    }),
-    Sentry.Handlers.tracingHandler(),
+    Sentry.expressErrorHandler(),
   ],
   swagger: [
     {
