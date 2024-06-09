@@ -194,9 +194,30 @@ export class ManageUsersController {
   async getUserById(
     @PathParams("id") id: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
-  ): Promise<APITypes.GetManageUserByIdData> {
+    @QueryParams("steamId", String) steamId?: string,
+    @QueryParams("discordId", String) discordId?: string,
+  ): Promise<APITypes.GetManageUserByIdData | APITypes.GetManageUserByIdData[]> {
+    if (steamId || discordId) {
+      const users = await prisma.user.findMany({
+        where: { OR: [{ discordId }, { steamId }] },
+        select: manageUsersSelect(selectCitizens),
+      });
+
+      if (users.length <= 0) {
+        throw new NotFound("userNotFound");
+      }
+
+      return users.map((user) => {
+        const { User2FA, ...rest } = user;
+        return {
+          twoFactorEnabled: User2FA.length >= 1,
+          ...rest,
+        };
+      });
+    }
+
     const user = await prisma.user.findFirst({
-      where: { OR: [{ id }, { discordId: id }, { steamId: id }] },
+      where: { OR: [{ id }, { discordId }, { steamId }] },
       select: manageUsersSelect(selectCitizens),
     });
 
