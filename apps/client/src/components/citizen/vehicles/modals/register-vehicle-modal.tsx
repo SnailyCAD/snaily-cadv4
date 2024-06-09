@@ -212,6 +212,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 if (CUSTOM_TEXTFIELD_VALUES && node) {
                   setValues({
                     ...values,
+                    modelValue: node.value,
                     modelName: node.textValue,
                     model: node.textValue,
                   });
@@ -221,6 +222,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
                 if (node) {
                   setValues({
                     ...values,
+                    modelValue: node.value,
                     modelName: node.value?.value.value ?? node.textValue,
                     model: node.key as string,
                   });
