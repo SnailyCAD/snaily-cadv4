@@ -497,6 +497,7 @@ export class VehiclesController {
       const updatedVehicle = await prisma.registeredVehicle.update({
         where: { id: vehicle.id },
         data: {
+          citizen: vehicle.citizenId ? { disconnect: { id: vehicle.citizenId } } : undefined,
           Business: { connect: { id: data.businessId } },
         },
       });
