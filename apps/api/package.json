@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/api",
-  "version": "1.80.1",
+  "version": "1.80.2",
   "scripts": {
     "watch": "pnpm prisma generate && pnpm nodemon --watch \"./src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/main.ts",
     "build": "swc src -d dist && node scripts/postbuild.mjs",
