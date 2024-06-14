@@ -15,7 +15,10 @@ export function isRouteDisabled(options: Pick<Options, "req">) {
   const url = options.req.originalUrl.toLowerCase();
   const requestMethod = options.req.method as Method;
 
-  const route = DISABLED_API_TOKEN_ROUTES.find(([r]) => url.endsWith(r));
+  const route = DISABLED_API_TOKEN_ROUTES.find(([pathname]) => {
+    const urlPathname = new URL(url, "https://example.com").pathname.toLowerCase();
+    return urlPathname.endsWith(pathname.toLowerCase());
+  });
 
   if (route) {
     const [, methods] = route;
