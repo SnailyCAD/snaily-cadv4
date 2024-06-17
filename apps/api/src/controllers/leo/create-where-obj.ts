@@ -1,4 +1,4 @@
-import { type Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface CreateWhereObjOptions<Type extends "OFFICER" | "DEPUTY"> {
@@ -70,6 +70,7 @@ export function createWhere<Type extends "OFFICER" | "DEPUTY">({
           ],
         },
       },
+      { user: { username: { contains: query, mode: Prisma.QueryMode.insensitive } } },
       type === "OFFICER"
         ? {
             divisions: { some: { value: { value: { contains: query, mode: "insensitive" } } } },
