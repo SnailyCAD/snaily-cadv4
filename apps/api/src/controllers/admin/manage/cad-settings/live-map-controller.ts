@@ -71,14 +71,7 @@ export class CADSettingsLiveMapController {
     permissions: [Permissions.ManageCADSettings],
   })
   async updateLiveMapTiles(@MultipartFile("tiles") files: PlatformMulterFile[]) {
-    const allowedNames = [
-      "minimap_sea_0_0",
-      "minimap_sea_0_1",
-      "minimap_sea_1_0",
-      "minimap_sea_1_1",
-      "minimap_sea_2_0",
-      "minimap_sea_2_1",
-    ];
+    const allowedName = /minimap_sea_-?\d*(\.\d+)?_-?\d*(\.\d+)?/;
 
     if (!Array.isArray(files)) {
       throw new ExtendedBadRequest({ tiles: "Invalid files" });
@@ -90,7 +83,7 @@ export class CADSettingsLiveMapController {
         throw new ExtendedBadRequest({ tiles: "Invalid file type" });
       }
 
-      if (!allowedNames.includes(file.originalname)) {
+      if (!allowedName.test(file.originalname)) {
         throw new ExtendedBadRequest({ tiles: "Invalid file name" });
       }
 
