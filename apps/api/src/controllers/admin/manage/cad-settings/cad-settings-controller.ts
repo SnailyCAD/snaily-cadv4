@@ -163,8 +163,12 @@ export class CADSettingsController {
           update: {
             cadOGDescription: data.cadOGDescription || null,
             roleplayEnabled: data.roleplayEnabled,
-            authScreenBgImageId: data.authScreenBgImageId || null,
-            authScreenHeaderImageId: data.authScreenHeaderImageId || null,
+            authScreenBgImageId:
+              data.authScreenBgImageId === null ? null : data.authScreenBgImageId || undefined,
+            authScreenHeaderImageId:
+              data.authScreenHeaderImageId === null
+                ? null
+                : data.authScreenHeaderImageId || undefined,
           },
         },
       },
