@@ -27,6 +27,8 @@
     "leoRoleInfo": "Die Discord-Rolle, die die gesetzten PD-Berechtigungen im CAD repräsentiert.",
     "leoSupervisorRole": "PD-Supervisor-Rolle",
     "leoSupervisorRoleInfo": "Die Discord-Rolle, die die gesetzten LEO-Supervisor-Berechtigungen im CAD repräsentieren wird.",
+    "sergeantRole": "Sergeant-Rolle",
+    "sergeantRoleInfo": "Die Discord-Rolle, die die gesetzten Sergeant-Berechtigungen im CAD repräsentiert.",
     "emsFdRole": "EMS/FD-Rolle",
     "emsFdRoleInfo": "Die Discord-Rolle, die die eingestellten EMS/FD-Berechtigungen im CAD darstellt",
     "dispatchRole": "Dispatch Role",

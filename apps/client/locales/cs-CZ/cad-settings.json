@@ -27,6 +27,8 @@
     "leoRoleInfo": "The Discord Role that will represent set LEO permissions in the CAD.",
     "leoSupervisorRole": "LEO Supervisor Role",
     "leoSupervisorRoleInfo": "The Discord Role that will represent set LEO Supervisor permissions in the CAD.",
+    "sergeantRole": "Sergeant Role",
+    "sergeantRoleInfo": "The Discord Role that will represent set Sergeant permissions in the CAD.",
     "emsFdRole": "EMS/FD Role",
     "emsFdRoleInfo": "The Discord Role that will represent set EMS/FD permissions in the CAD.",
     "dispatchRole": "Dispatch Role",

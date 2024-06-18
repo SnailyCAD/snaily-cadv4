@@ -38,6 +38,8 @@
     "leoRoleInfo": "Le rôle Discord qui représentera les autorisations LEO définies dans le CAD.",
     "leoSupervisorRole": "Rôle superviseur LEO",
     "leoSupervisorRoleInfo": "Le rôle Discord qui représentera les autorisations définies du superviseur LEO dans le CAD.",
+    "sergeantRole": "Rôle de sergent",
+    "sergeantRoleInfo": "Le rôle Discord qui représentera les permissions du sergent dans le CAO.",
     "emsFdRole": "Rôle EMS/FD",
     "emsFdRoleInfo": "Le rôle Discord qui représentera les autorisations EMS/FD définies dans le CAD.",
     "dispatchRole": "Rôle de répartition",

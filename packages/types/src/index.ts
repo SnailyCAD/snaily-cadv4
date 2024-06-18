@@ -74,6 +74,7 @@ export type DiscordRoles = Prisma.DiscordRoles & {
   emsFdRoles?: DiscordRole[];
   dispatchRoles?: DiscordRole[];
   leoSupervisorRoles?: DiscordRole[];
+  sergeantRoles?: DiscordRole[];
   towRoles?: DiscordRole[];
   taxiRoles?: DiscordRole[];
   courthouseRoles?: DiscordRole[];
@@ -83,6 +84,7 @@ export type DiscordRoles = Prisma.DiscordRoles & {
   adminRolePermissions: Permissions[];
   leoRolePermissions: Permissions[];
   leoSupervisorRolePermissions: Permissions[];
+  sergeantRolePermissions: Permissions[];
   emsFdRolePermissions: Permissions[];
   dispatchRolePermissions: Permissions[];
   towRolePermissions: Permissions[];

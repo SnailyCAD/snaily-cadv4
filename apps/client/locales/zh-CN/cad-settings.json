@@ -38,6 +38,8 @@
     "leoRoleInfo": "在CAD中代表设置执法权限的Discord身份组。",
     "leoSupervisorRole": "执法人员主管身份组",
     "leoSupervisorRoleInfo": "在CAD中代表设置执法监管权限的Discord身份组。",
+    "sergeantRole": "中士角色",
+    "sergeantRoleInfo": "代表 CAD 中士官权限设置的 Discord 角色",
     "emsFdRole": "EMS/FD身份组",
     "emsFdRoleInfo": "在CAD中代表设置EMS/FD权限的Discord身份组。",
     "dispatchRole": "调度身份组",

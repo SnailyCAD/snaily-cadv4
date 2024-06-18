@@ -61,6 +61,7 @@ export async function updateMemberRolesLogin<
         towRoles: true,
         taxiRoles: true,
         leoSupervisorRoles: true,
+        sergeantRoles: true,
         courthouseRoles: true,
       },
     });
@@ -83,6 +84,7 @@ export async function updateMemberRolesLogin<
     const isTow = doesDiscordMemberHaveCADRole(discordRoles.towRoles, memberObj);
     const isTaxi = doesDiscordMemberHaveCADRole(discordRoles.taxiRoles, memberObj);
     const isSupervisor = doesDiscordMemberHaveCADRole(discordRoles.leoSupervisorRoles, memberObj);
+    const isSergeant = doesDiscordMemberHaveCADRole(discordRoles.sergeantRoles, memberObj);
     const isCourthouse = doesDiscordMemberHaveCADRole(discordRoles.courthouseRoles, memberObj);
     const isAdmin = doesDiscordMemberHaveCADRole(discordRoles.adminRoles, memberObj);
     const hasWhitelistAccess = doesDiscordMemberHaveCADRole(
@@ -93,6 +95,7 @@ export async function updateMemberRolesLogin<
     const grantablePermissions = {
       leo: { permissions: discordRoles.leoRolePermissions, value: isLeo },
       supervisor: { permissions: discordRoles.leoSupervisorRolePermissions, value: isSupervisor },
+      sergeant: { permissions: discordRoles.sergeantRolePermissions, value: isSergeant },
       emsFd: { permissions: discordRoles.emsFdRolePermissions, value: isEmsFd },
       dispatch: { permissions: discordRoles.dispatchRolePermissions, value: isDispatch },
       tow: { permissions: discordRoles.towRolePermissions, value: isTow },

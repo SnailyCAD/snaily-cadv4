@@ -158,6 +158,7 @@ export function CAD_SELECT(options: CadSelectOptions) {
             leoRoles: true,
             emsFdRoles: true,
             leoSupervisorRoles: true,
+            sergeantRoles: true,
             towRoles: true,
             taxiRoles: true,
             dispatchRoles: true,
