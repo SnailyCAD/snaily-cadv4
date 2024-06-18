@@ -27,6 +27,8 @@
     "leoRoleInfo": "De Discord Rol die de ingestelde LEO rechten in de CAD weergeeft.",
     "leoSupervisorRole": "Rol van LEO Supervisor",
     "leoSupervisorRoleInfo": "De Discord Rol die staat voor ingestelde LEO Supervisor permissies in de CAD.",
+    "sergeantRole": "Sergeant Rol",
+    "sergeantRoleInfo": "De Discord-rol die staat voor ingestelde sergeant-rechten in de CAD.",
     "emsFdRole": "EMS/FD Rol",
     "emsFdRoleInfo": "De Discord Rol die staat voor ingestelde EMS/FD rechten in de CAD.",
     "dispatchRole": "Dispatch Rol",

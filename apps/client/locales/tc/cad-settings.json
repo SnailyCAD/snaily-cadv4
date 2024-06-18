@@ -19,6 +19,8 @@
     "leoRoleInfo": "Роль Discord, которая будет устанавливать права LEO в CAD.",
     "leoSupervisorRole": "Роль супервайзера LEO",
     "leoSupervisorRoleInfo": "Роль Discord, которая будет устанавливать права супервайзера LEO в CAD.",
+    "sergeantRole": "Çavuş Rolü",
+    "sergeantRoleInfo": "CAD'de ayarlanmış Çavuş izinlerini temsil edecek Discord Rolü.",
     "emsFdRole": "Роль EMS/FD",
     "emsFdRoleInfo": "Роль Discord, которая будет устанавливать права EMS/FD в CAD.",
     "dispatchRole": "Роль диспетчера",

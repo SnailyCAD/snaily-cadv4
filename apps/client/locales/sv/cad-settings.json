@@ -38,6 +38,8 @@
     "leoRoleInfo": "The Discord Role that will represent set LEO permissions in the CAD.",
     "leoSupervisorRole": "LEO Supervisor Role",
     "leoSupervisorRoleInfo": "The Discord Role that will represent set LEO Supervisor permissions in the CAD.",
+    "sergeantRole": "Sergeantroll",
+    "sergeantRoleInfo": "Den Discord-roll som kommer att representera fastställda Sergeant-behörigheter i CAD.",
     "emsFdRole": "EMS/FD Role",
     "emsFdRoleInfo": "The Discord Role that will represent set EMS/FD permissions in the CAD.",
     "dispatchRole": "Dispatch Role",

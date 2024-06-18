@@ -19,6 +19,8 @@
     "leoRoleInfo": "O Cargo do Discord que representará as permissões policiais definidas no CAD.",
     "leoSupervisorRole": "Cargo de Supervisor Policial",
     "leoSupervisorRoleInfo": "O Cargo do Discord que representará as permissões do Supervisor policial definidas no CAD.",
+    "sergeantRole": "Função de Sargento",
+    "sergeantRoleInfo": "A função do Discord que representará as permissões definidas do Sargento no CAD.",
     "emsFdRole": "Cargo Médico/Bombeiro",
     "emsFdRoleInfo": "O Cargo do Discord que representará o conjunto de permissões Médico/Bombeiro no CAD.",
     "dispatchRole": "Cargo da Central",
