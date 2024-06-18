@@ -192,6 +192,7 @@ model DiscordRoles {
 
   leoRoles           DiscordRole[] @relation("leoRoles")
   leoSupervisorRoles DiscordRole[] @relation("leoSupervisorRoles")
+  sergeantRoles      DiscordRole[] @relation("sergeantRoles")
   emsFdRoles         DiscordRole[] @relation("emsFdRoles")
   dispatchRoles      DiscordRole[] @relation("dispatchRoles")
   towRoles           DiscordRole[] @relation("towRoles")
@@ -204,6 +205,7 @@ model DiscordRoles {
   adminRolePermissions         String[]
   leoRolePermissions           String[]
   leoSupervisorRolePermissions String[]
+  sergeantRolePermissions      String[]
   emsFdRolePermissions         String[]
   dispatchRolePermissions      String[]
   towRolePermissions           String[]
@@ -227,6 +229,7 @@ model DiscordRole {
   whitelistedRoles      DiscordRoles[] @relation("whitelistedRole")
   dispatchRolesArr      DiscordRoles[] @relation("dispatchRoles")
   leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
+  sergeantRolesArr      DiscordRoles[] @relation("sergeantRoles")
   taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
   towRolesArr           DiscordRoles[] @relation("towRoles")
   courthouseRoles       DiscordRoles[] @relation("courthouseRoles")

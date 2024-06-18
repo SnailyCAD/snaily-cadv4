@@ -26,6 +26,11 @@ export const defaultLeoPermissions = [
   Permissions.LeoManageCitizenProfile,
 ];
 
+export const defaultSergeantRoles = [
+  Permissions.ManageValueOfficerRank,
+  Permissions.ManageUnitCallsigns,
+];
+
 export const defaultDispatchPermissions = [Permissions.Dispatch, Permissions.LiveMap];
 
 export const defaultEmsFdPermissions = [

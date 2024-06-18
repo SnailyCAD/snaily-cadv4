@@ -63,6 +63,7 @@ export type PostCADDiscordRolesData = Prisma.DiscordRoles & {
   adminRoles?: Prisma.DiscordRole[];
   leoRoles?: Prisma.DiscordRole[];
   leoSupervisorRoles?: Prisma.DiscordRole[];
+  sergeantRoles?: Prisma.DiscordRole[];
   emsFdRoles?: Prisma.DiscordRole[];
   dispatchRoles?: Prisma.DiscordRole[];
   towRoles?: Prisma.DiscordRole[];

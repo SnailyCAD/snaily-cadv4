@@ -49,6 +49,7 @@ export function DiscordRolesTab() {
     emsFdRoles: makeRoleValues(discordRoles.emsFdRoles),
     dispatchRoles: makeRoleValues(discordRoles.dispatchRoles),
     leoSupervisorRoles: makeRoleValues(discordRoles.leoSupervisorRoles),
+    sergeantRoles: makeRoleValues(discordRoles.sergeantRoles),
     towRoles: makeRoleValues(discordRoles.towRoles),
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     courthouseRoles: makeRoleValues(discordRoles.courthouseRoles),
@@ -56,6 +57,7 @@ export function DiscordRolesTab() {
     adminRolePermissions: makeValue(discordRoles.adminRolePermissions, tPermission),
     leoRolePermissions: makeValue(discordRoles.leoRolePermissions, tPermission),
     leoSupervisorRolePermissions: makeValue(discordRoles.leoSupervisorRolePermissions, tPermission),
+    sergeantRolePermissions: makeValue(discordRoles.sergeantRolePermissions, tPermission),
     emsFdRolePermissions: makeValue(discordRoles.emsFdRolePermissions, tPermission),
     dispatchRolePermissions: makeValue(discordRoles.dispatchRolePermissions, tPermission),
     towRolePermissions: makeValue(discordRoles.towRolePermissions, tPermission),
@@ -97,9 +99,11 @@ export function DiscordRolesTab() {
         taxiRoles: toValue(values.taxiRoles),
         courthouseRoles: toValue(values.courthouseRoles),
         leoSupervisorRoles: toValue(values.leoSupervisorRoles),
+        sergeantRoles: toValue(values.sergeantRoles),
         adminRolePermissions: toValue(values.adminRolePermissions),
         leoRolePermissions: toValue(values.leoRolePermissions),
         leoSupervisorRolePermissions: toValue(values.leoSupervisorRolePermissions),
+        sergeantRolePermissions: toValue(values.sergeantRolePermissions),
         emsFdRolePermissions: toValue(values.emsFdRolePermissions),
         dispatchRolePermissions: toValue(values.dispatchRolePermissions),
         towRolePermissions: toValue(values.towRolePermissions),
@@ -228,6 +232,31 @@ export function DiscordRolesTab() {
                 disabled={Boolean(fetchError)}
                 name="leoSupervisorRolePermissions"
                 permissions={defaultPermissions.defaultLeoPermissions}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description={t("sergeantRoleInfo")}
+              errorMessage={errors.sergeantRoles as string}
+              label={t("sergeantRole")}
+            >
+              <Select
+                isClearable
+                disabled={Boolean(fetchError)}
+                isMulti
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.sergeantRoles}
+                name="sergeantRoles"
+                onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                disabled={Boolean(fetchError)}
+                name="sergeantRolePermissions"
+                permissions={defaultPermissions.defaultSergeantRoles}
               />
             </SettingsFormField>
 

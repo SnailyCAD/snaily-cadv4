@@ -111,6 +111,7 @@ export class DiscordSettingsController {
       leoRoles: data.leoRoles,
       emsFdRoles: data.emsFdRoles,
       leoSupervisorRoles: data.leoSupervisorRoles,
+      sergeantRoles: data.sergeantRoles,
       dispatchRoles: data.dispatchRoles,
       courthouseRoles: data.courthouseRoles,
       towRoles: data.towRoles,
@@ -132,6 +133,7 @@ export class DiscordSettingsController {
       adminRolePermissions: data.adminRolePermissions ?? [],
       leoRolePermissions: data.leoRolePermissions ?? [],
       leoSupervisorRolePermissions: data.leoSupervisorRolePermissions ?? [],
+      sergeantRolePermissions: data.sergeantRolePermissions ?? [],
       emsFdRolePermissions: data.emsFdRolePermissions ?? [],
       dispatchRolePermissions: data.dispatchRolePermissions ?? [],
       towRolePermissions: data.towRolePermissions ?? [],
@@ -148,6 +150,7 @@ export class DiscordSettingsController {
         leoRoles: true,
         emsFdRoles: true,
         leoSupervisorRoles: true,
+        sergeantRoles: true,
         towRoles: true,
         taxiRoles: true,
         dispatchRoles: true,
@@ -179,6 +182,12 @@ export class DiscordSettingsController {
         discordRoles: discordRoles.leoSupervisorRoles,
         newRoles: (data.leoSupervisorRoles as string[] | null) ?? [],
         type: "leoSupervisorRoles",
+      }),
+      ...this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.sergeantRoles,
+        newRoles: (data.sergeantRoles as string[] | null) ?? [],
+        type: "sergeantRoles",
       }),
       ...this.updateRoles({
         discordRoleId: discordRoles.id,
@@ -217,6 +226,7 @@ export class DiscordSettingsController {
             leoRoles: true,
             emsFdRoles: true,
             leoSupervisorRoles: true,
+            sergeantRoles: true,
             towRoles: true,
             taxiRoles: true,
             dispatchRoles: true,
@@ -269,6 +279,7 @@ interface UpdateRolesOptions {
     | "leoRoles"
     | "emsFdRoles"
     | "leoSupervisorRoles"
+    | "sergeantRoles"
     | "dispatchRoles"
     | "towRoles"
     | "taxiRoles"
