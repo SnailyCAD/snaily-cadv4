@@ -68,6 +68,7 @@ export enum Permissions {
   ManageUnits = "ManageUnits",
   DeleteUnits = "DeleteUnits",
   ManageUnitCallsigns = "ManageUnitCallsigns",
+  ManageUnitRank = "ManageUnitRank",
 
   ViewBusinesses = "ViewBusinesses",
   ManageBusinesses = "ManageBusinesses",

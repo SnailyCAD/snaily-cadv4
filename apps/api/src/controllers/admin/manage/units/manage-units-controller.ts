@@ -50,8 +50,9 @@ import {
 import { getTranslator } from "~/utils/get-translator";
 import { type APIEmbed } from "discord-api-types/v10";
 import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
-import { type Citizen, type EmsFdDeputy, type LeoWhitelistStatus } from "@snailycad/types";
+import { type Citizen, type EmsFdDeputy, type LeoWhitelistStatus, User } from "@snailycad/types";
 import { generateCallsign } from "@snailycad/utils";
+import { hasPermission } from "@snailycad/permissions";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = (typeof ACTIONS)[number];
@@ -370,11 +371,16 @@ export class AdminManageUnitsController {
 
   @Put("/callsign/:unitId")
   @UsePermissions({
-    permissions: [Permissions.ManageUnitCallsigns, Permissions.ManageUnits],
+    permissions: [
+      Permissions.ManageUnitCallsigns,
+      Permissions.ManageUnits,
+      Permissions.ManageUnitRank,
+    ],
   })
   @Description("Update a unit's callsign by its id")
   async updateCallsignUnit(
     @Context("sessionUserId") sessionUserId: string,
+    @Context("user") user: User,
     @PathParams("unitId") unitId: string,
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { features?: Record<Feature, boolean> },
@@ -396,38 +402,66 @@ export class AdminManageUnitsController {
     } as const;
     const t = prismaNames[type];
 
-    if (data.callsign && data.callsign2 && unit.departmentId) {
-      const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
-        feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
-        defaultReturn: false,
-        features: cad.features,
-      });
+    const hasManageUnitCallsignPermission = hasPermission({
+      permissionsToCheck: [Permissions.ManageUnitCallsigns],
+      userToCheck: user,
+    });
+    const hasManageRankPermission = hasPermission({
+      permissionsToCheck: [Permissions.ManageUnitRank],
+      userToCheck: user,
+    });
 
-      await validateDuplicateCallsigns({
-        departmentId: unit.departmentId,
-        callsign1: data.callsign,
-        callsign2: data.callsign2,
-        unitId: unit.id,
-        type,
-        userId: allowMultipleOfficersWithSameDeptPerUser && unit.userId ? unit.userId : undefined,
-      });
+    const dataSubmit: {
+      callsign: string | undefined;
+      callsign2: string | undefined;
+      rankId: string | null | undefined;
+      position: string | null | undefined;
+    } = {
+      callsign2: undefined,
+      callsign: undefined,
+      rankId: undefined,
+      position: undefined,
+    };
+
+    if (hasManageUnitCallsignPermission) {
+      if (data.callsign && data.callsign2 && unit.departmentId) {
+        const allowMultipleOfficersWithSameDeptPerUser = isFeatureEnabled({
+          feature: Feature.ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER,
+          defaultReturn: false,
+          features: cad.features,
+        });
+
+        await validateDuplicateCallsigns({
+          departmentId: unit.departmentId,
+          callsign1: data.callsign,
+          callsign2: data.callsign2,
+          unitId: unit.id,
+          type,
+          userId: allowMultipleOfficersWithSameDeptPerUser && unit.userId ? unit.userId : undefined,
+        });
+      }
+
+      if (type === "leo") {
+        await updateOfficerDivisionsCallsigns({
+          officerId: unit.id,
+          disconnectConnectArr: [],
+          callsigns: data.callsigns,
+        });
+      }
+
+      dataSubmit.callsign2 = data.callsign2;
+      dataSubmit.callsign = data.callsign;
     }
 
-    if (type === "leo") {
-      await updateOfficerDivisionsCallsigns({
-        officerId: unit.id,
-        disconnectConnectArr: [],
-        callsigns: data.callsigns,
-      });
+    if (hasManageRankPermission) {
+      dataSubmit.rankId = data.rank;
+      dataSubmit.position = data.position;
     }
 
     // @ts-expect-error ignore
     const updated = await prisma[t].update({
       where: { id: unit.id },
-      data: {
-        callsign2: data.callsign2,
-        callsign: data.callsign,
-      },
+      data: dataSubmit,
       include: type === "leo" ? leoProperties : unitProperties,
     });
 

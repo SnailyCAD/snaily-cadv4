@@ -60,6 +60,7 @@ export default function SupervisorPanelPage(props: Props) {
   ]);
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits]);
   const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns]);
+  const hasManageRankPermissions = hasPermissions([Permissions.ManageUnitRank]);
 
   const TABS = [];
 
@@ -67,7 +68,7 @@ export default function SupervisorPanelPage(props: Props) {
     TABS.push({ name: t("Management.allUnits"), value: "allUnits" });
   }
 
-  if (hasManageCallsignPermissions) {
+  if (hasManageCallsignPermissions || hasManageRankPermissions) {
     TABS.push({
       name: t("Management.callsignManagement"),
       value: "callsignManagement",
@@ -104,7 +105,9 @@ export default function SupervisorPanelPage(props: Props) {
 
       <TabList tabs={TABS}>
         <AllUnitsTab units={props.units} />
-        {hasManageCallsignPermissions ? <CallsignsTab units={props.units} /> : null}
+        {hasManageCallsignPermissions || hasManageRankPermissions ? (
+          <CallsignsTab units={props.units} />
+        ) : null}
         {props.pendingUnits.totalCount > 0 && hasManagePermissions ? (
           <DepartmentWhitelistingTab pendingUnits={props.pendingUnits} />
         ) : null}

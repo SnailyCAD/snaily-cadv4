@@ -312,7 +312,7 @@ export class LeoController {
   @Put("/callsign/:officerId")
   @Description("Update the officer's activeDivisionCallsign")
   @UsePermissions({
-    permissions: [Permissions.Leo, Permissions.ManageUnitCallsigns],
+    permissions: [Permissions.Leo, Permissions.ManageUnitCallsigns, Permissions.ManageUnitRank],
   })
   async updateOfficerDivisionCallsign(
     @BodyParams() body: unknown,
