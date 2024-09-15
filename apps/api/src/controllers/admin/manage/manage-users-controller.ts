@@ -36,11 +36,18 @@ import { getTranslator } from "~/utils/get-translator";
 import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
 import { type APIEmbed } from "discord-api-types/v10";
 import { getPrismaModelOrderBy } from "~/utils/order-by";
+import { leoProperties, unitProperties } from "utils/leo/includes";
 
-const manageUsersSelect = (selectCitizens: boolean) =>
+const manageUsersSelect = (
+  selectCitizens: boolean = false,
+  selectOfficers: boolean = false,
+  selectDeputies: boolean = false,
+) =>
   ({
     ...userProperties,
     ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
+    ...(selectOfficers ? { officers: { include: leoProperties } } : {}),
+    ...(selectDeputies ? { emsFdDeputies: { include: unitProperties } } : {}),
     apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
     roles: true,
     User2FA: true,
@@ -194,13 +201,15 @@ export class ManageUsersController {
   async getUserById(
     @PathParams("id") id: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
+    @QueryParams("select-officers") selectOfficers: boolean,
+    @QueryParams("select-ems") selectDeputies: boolean,
     @QueryParams("steamId", String) steamId?: string,
     @QueryParams("discordId", String) discordId?: string,
   ): Promise<APITypes.GetManageUserByIdData | APITypes.GetManageUserByIdData[]> {
     if (steamId || discordId) {
       const users = await prisma.user.findMany({
         where: { OR: [{ discordId }, { steamId }] },
-        select: manageUsersSelect(selectCitizens),
+        select: manageUsersSelect(selectCitizens, selectOfficers, selectDeputies),
       });
 
       if (users.length <= 0) {
@@ -218,7 +227,7 @@ export class ManageUsersController {
 
     const user = await prisma.user.findFirst({
       where: { OR: [{ id }, { discordId }, { steamId }] },
-      select: manageUsersSelect(selectCitizens),
+      select: manageUsersSelect(selectCitizens, selectOfficers, selectDeputies),
     });
 
     if (!user) {
