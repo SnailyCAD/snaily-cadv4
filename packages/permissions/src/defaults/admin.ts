@@ -24,6 +24,7 @@ export const defaultManagementPermissions = [
   Permissions.ManageCustomFields,
   Permissions.ManageCustomRoles,
   Permissions.ViewCustomRoles,
+  Permissions.ManageUnitRank,
 ];
 
 export const defaultImportPermissions = [
