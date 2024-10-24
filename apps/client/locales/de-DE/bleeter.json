@@ -9,6 +9,17 @@
     "headerImage": "Kopfzeilenbild",
     "bleetTitle": "Bleet-Titel",
     "bleetBody": "Bleet Körper",
+    "followers": "Follower",
+    "following": "Folgt",
+    "follow": "Folgen",
+    "unfollow": "Entfolgen",
+    "editProfile": "Profil bearbeiten",
+    "posts": "Beiträge",
+    "myProfile": "Mein Profil",
+    "save": "Speichern",
+    "getStarted": "Loslegen",
+    "unVerifyProfile": "Profil nicht verifizieren",
+    "verifyProfile": "Profil verifizieren",
     "alert_deleteBleet": "Bist Du sicher, dass Du \"<span>{title}</span>\" löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
   }
 }

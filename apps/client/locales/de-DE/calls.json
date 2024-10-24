@@ -61,10 +61,16 @@
     "pendingApproval": "Dieser Aufruf wurde noch nicht genehmigt.",
     "approvalMessage": "Diese Aufforderung muss zunächst angenommen werden, bevor aktive Beamte die Aufforderung einsehen können. Um den Aufruf anzunehmen, klicke auf die Schaltfläche \"Aufruf speichern und annehmen\" unten.",
     "saveAndAccept": "Speichern und akzeptieren",
+    "noUnitsAdded": "Es wurden keine Einheiten zu diesem Anruf hinzugefügt.",
     "alert_purgeSelectedCalls": "Bist du sicher, dass Du {length} Elemente bereinigen möchtest? Dadurch werden {length} Elemente aus der Datenbank gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_deleteCallEvent": "Bist Du sicher, dass Du dieses Ereignis löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_end911Call": "Bist du sicher, dass Du diesen Dispatch beenden möchtest?",
-    "alert_endTowCall": "Bist du sicher, dass Du diesen Dispatch beenden möchtest?"
+    "alert_endTowCall": "Bist du sicher, dass Du diesen Dispatch beenden möchtest?",
+    "id": "ID",
+    "towLogsDescription": "Hier können Sie alle archivierten Abschleppprotokolle einsehen. Dies ermöglicht Ihnen, alle beendeten/archivierten Abschleppprotokolle anzuzeigen.",
+    "addAllUnits": "Alle aktiven Einheiten hinzufügen",
+    "openCallModalAfterCreation": "911-Anruf-Verwaltungsfenster nach Erstellung öffnen?",
+    "dispositionCode": "Disposition-Code"
   },
   "Events": {
     "unitAssignedToCall": "Die Einheit <span>{unit}</span> wurde zu diesem Dispatch zugewiesen.",
@@ -74,6 +80,7 @@
     "unitArrivedOnScene": "Die Einheit <span>{unit}</span> ist am Standort des Dispatches angekommen.",
     "unitPressedPanicButton": "Die Einheit <span>{unit}</span> hat den Panik Knopf betätigt",
     "unitEnRoute": "Die Einheit <span>{unit}</span> ist auf dem Weg dorthin..",
-    "unitOnScene": "Die Einheit <span>{unit}</span> befindet sich am Standort des Dispatches."
+    "unitOnScene": "Die Einheit <span>{unit}</span> befindet sich am Standort des Dispatches.",
+    "unitSituationCodeChange": "<span>{unit}</span> hat den Situationscode auf <span>{situationCode}</span> geändert."
   }
 }
