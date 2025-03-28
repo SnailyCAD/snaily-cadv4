@@ -111,7 +111,6 @@ export default function EmsFDDashboard({
     setActiveDeputy(activeDeputy);
     set911Calls(calls.calls);
     dispatchState.setActiveDeputies(activeDeputies);
-    dispatchState.setActiveOfficers(activeOfficers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeDeputies, activeDeputy, calls]);
 
@@ -125,11 +124,6 @@ export default function EmsFDDashboard({
       type: DashboardLayoutCardType.ACTIVE_DEPUTIES,
       isEnabled: true,
       children: <ActiveDeputies initialDeputies={activeDeputies} />,
-    },
-    {
-      type: DashboardLayoutCardType.ACTIVE_OFFICERS,
-      isEnabled: true,
-      children: <ActiveOfficers initialOfficers={activeOfficers} />,
     },
   ];
 
@@ -217,12 +211,11 @@ function EmsFdModals() {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [values, calls, activeDeputies, activeDeputy, activeOfficers] = await requestAll(req, [
+  const [values, calls, activeDeputies, activeDeputy] = await requestAll(req, [
     ["/admin/values/codes_10", []],
     ["/911-calls", { calls: [], totalCount: 0 }],
     ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],
-    ["/leo/active-officers", []],
   ]);
 
   return {
@@ -230,7 +223,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       session: user,
       activeDeputy,
       activeDeputies,
-      activeOfficers,
       calls,
       values,
       messages: {

@@ -167,9 +167,6 @@ function DispatchHeader(props: Pick<DispatchPageProps, "userActiveDispatcher">) 
 
   return (
     <>
-      <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
-      <panic.Component audio={panic.audio} unit={panic.unit} />
-
       <UtilityPanel isDispatch>
         {activeDepartment ? (
           <Infofield className="px-4 py-2" label={t("activeDepartment")}>

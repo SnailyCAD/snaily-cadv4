@@ -20,7 +20,7 @@ import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/active-bolos";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/active-units/officers/active-officers";
-import { ActiveDeputies } from "components/dispatch/active-units/deputies/active-deputies";
+import { Activeies } from "components/dispatch/active-units/ies/active-ies";
 import { ActiveWarrants } from "components/leo/active-warrants/active-warrants";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
@@ -38,7 +38,7 @@ import type {
   GetActiveOfficerData,
   GetActiveOfficersData,
   GetBolosData,
-  GetEmsFdActiveDeputies,
+  GetEmsFdActiveies,
   GetUserData,
 } from "@snailycad/types/api";
 import { CreateWarrantModal } from "components/leo/modals/CreateWarrantModal";
@@ -120,7 +120,6 @@ interface Props {
   activeOfficers: GetActiveOfficersData;
   calls: Get911CallsData;
   bolos: GetBolosData;
-  activeDeputies: GetEmsFdActiveDeputies;
   session: GetUserData | null;
 }
 
@@ -129,7 +128,6 @@ export default function OfficerDashboard({
   calls,
   activeOfficer,
   activeOfficers,
-  activeDeputies,
   session: _session,
 }: Props) {
   useLoadValuesClientSide({
@@ -151,7 +149,6 @@ export default function OfficerDashboard({
   const dispatchState = useDispatchState((state) => ({
     setBolos: state.setBolos,
     setActiveOfficers: state.setActiveOfficers,
-    setActiveDeputies: state.setActiveDeputies,
   }));
   const set911Calls = useCall911State((state) => state.setCalls);
   const t = useTranslations("Leo");
@@ -165,22 +162,16 @@ export default function OfficerDashboard({
     set911Calls(calls.calls);
     dispatchState.setBolos(bolos.bolos);
 
-    dispatchState.setActiveDeputies(activeDeputies);
     dispatchState.setActiveOfficers(activeOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
+  }, [bolos, calls, activeOfficers, activeOfficer]);
 
   const cards = [
     {
       type: DashboardLayoutCardType.ACTIVE_OFFICERS,
       isEnabled: true,
       children: <ActiveOfficers initialOfficers={activeOfficers} />,
-    },
-    {
-      type: DashboardLayoutCardType.ACTIVE_DEPUTIES,
-      isEnabled: true,
-      children: <ActiveDeputies initialDeputies={activeDeputies} />,
     },
     {
       type: DashboardLayoutCardType.ACTIVE_CALLS,
@@ -218,7 +209,6 @@ export default function OfficerDashboard({
       {sortedCards.map((card) =>
         card.isEnabled ? <React.Fragment key={card.type}>{card.children}</React.Fragment> : null,
       )}
-
       <Modals.SelectOfficerModal />
       <OfficerModals />
     </Layout>
@@ -317,23 +307,19 @@ function OfficerModals() {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [activeOfficer, values, calls, bolos, activeOfficers, activeDeputies] = await requestAll(
-    req,
-    [
-      ["/leo/active-officer", null],
-      ["/admin/values/codes_10", []],
-      ["/911-calls", { calls: [], totalCount: 0 }],
-      ["/bolos", { bolos: [], totalCount: 0 }],
-      ["/leo/active-officers", []],
-      ["/ems-fd/active-deputies", []],
-    ],
-  );
+  const [activeOfficer, values, calls, bolos, activeOfficers] = await requestAll(req, [
+    ["/leo/active-officer", null],
+    ["/admin/values/codes_10", []],
+    ["/911-calls", { calls: [], totalCount: 0 }],
+    ["/bolos", { bolos: [], totalCount: 0 }],
+    ["/leo/active-officers", []],
+    ["/ems-fd/active-ies", []],
+  ]);
 
   return {
     props: {
       session: user,
       activeOfficers,
-      activeDeputies,
       activeOfficer,
       calls,
       bolos,
