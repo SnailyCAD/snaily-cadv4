@@ -1,15 +1,15 @@
 {
   "TruckLogs": {
-    "truckLogs": "LKW-Protokolle",
-    "createTruckLog": "LKW-Protokoll erstellen",
-    "editTruckLog": "LKW-Protokoll bearbeiten",
-    "deleteTruckLog": "LKW-Protokoll löschen",
+    "truckLogs": "Transport Protokolle",
+    "createTruckLog": "Transport Protokoll erstellen",
+    "editTruckLog": "Transport Protokoll bearbeiten",
+    "deleteTruckLog": "Transport Protokoll löschen",
     "driver": "Fahrer",
     "vehicle": "Fahrzeug",
     "startedAt": "Angefangen am",
     "endedAt": "Beendet am",
-    "noTruckLogs": "Du hast noch keinen Lkw-Protokoll.",
+    "noTruckLogs": "Du hast noch keinen Transport Bericht.",
     "notes": "Notizen",
-    "alert_deleteTruckLog": "Bist du sicher, dass Du dieses LKW-Protokoll löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
+    "alert_deleteTruckLog": "Bist du sicher, dass Du diesen Transport Bericht löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
   }
 }
