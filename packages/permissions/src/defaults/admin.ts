@@ -56,8 +56,6 @@ export const defaultValuePermissions = [
   Permissions.ManageValueEmergencyVehicle,
   Permissions.ManageValueAddressFlag,
   Permissions.ManageValueVehicleTrimLevel,
-  Permissions.ViewFireDepartmentProtocols, // Neue Berechtigung: Protokoll Betrachter (Feuerwehr)
-  Permissions.ManageFireDepartmentProtocols, // Neue Berechtigung: Protokoll Bearbeiter (Feuerwehr)
 ];
 
 export const defaultCourthousePermissions = [
