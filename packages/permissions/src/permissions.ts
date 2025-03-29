@@ -41,9 +41,6 @@ export enum Permissions {
   ViewDeadCitizens = "ViewDeadCitizens",
   ManageDeadCitizens = "ManageDeadCitizens",
   SetUserDefinedCallsignOnEmsFd = "SetUserDefinedCallsignOnEmsFd",
-  ViewFireDepartmentProtocols = "ViewFireDepartmentProtocols",
-  ManageFireDepartmentProtocols = "ManageFireDepartmentProtocols", // Neue Berechtigung: Protokoll Bearbeiter (Feuerwehr)
-
 
   //  citizen related
   ViewTaxiCalls = "ViewTaxiCalls",
