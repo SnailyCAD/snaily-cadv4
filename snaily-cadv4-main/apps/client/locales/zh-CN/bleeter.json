@@ -1,0 +1,25 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "目前还没有 Bleeter 帖子。请稍后再查看。",
+    "createBleet": "创建 Bleet",
+    "editBleet": "编辑 Bleet",
+    "deleteBleet": "删除 Bleet",
+    "viewBleet": "查看 Bleet",
+    "headerImage": "标题图像",
+    "bleetTitle": "Bleet 标题",
+    "bleetBody": "Bleet 正文",
+    "followers": "关注者",
+    "following": "正在关注",
+    "follow": "关注",
+    "unfollow": "取消关注",
+    "editProfile": "编辑个人资料",
+    "posts": "帖子",
+    "myProfile": "我的个人资料",
+    "save": "保存",
+    "getStarted": "开始使用",
+    "unVerifyProfile": "取消验证个人资料",
+    "verifyProfile": "验证个人资料",
+    "alert_deleteBleet": "您确定要删除 \"<span>{title}</span>\" 吗？此操作无法撤消。"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Создать медицинскую запись",
+    "searchMedicalRecord": "Найти медицинскую запись",
+    "activeDeputies": "Активные сотрудники",
+    "selectDeputy": "Выбрать сотрудника",
+    "deputy": "Сотрудник",
+    "myDeputies": "Сотрудники",
+    "createDeputy": "Создать",
+    "editDeputy": "Редактировать",
+    "deputyName": "Имя",
+    "deleteDeputy": "Удалить",
+    "noDeputies": "У вас нет ни одного сотрудника",
+    "noActiveDeputies": "Нет активных сотрудников",
+    "citizenNoMedicalRecords": "У гражданина нет медицинских записей.",
+    "activeDeputy": "Активный сотрудник",
+    "declareDead": "Объявить мёртвым",
+    "declareAlive": "Объявить живым",
+    "myDeputyLogs": "Журнал сотрудников",
+    "emergencyVehicle": "Транспорт экстренной службы",
+    "alert_deleteDeputy": "Вы уверены, что хотите удалить <span>{deputy}</span>? Это действие необратимо.",
+    "assignedToCall#": "{activeVehicle}, отправляйтесь на {location}",
+    "assignedToCall#WithType": "{activeVehicle}, отправляйтесь на {location}, {callType}",
+    "emsFdIncidents": "EMS/FD Инциденты",
+    "createDoctorVisit": "Создать визит к врачу",
+    "doctorVisits": "Визиты к врачу",
+    "medicalRecords": "Медицинские записи",
+    "medications": "Лекарства",
+    "diagnosis": "Диагноз",
+    "conditions": "Состояние",
+    "add": "Добавить",
+    "noDoctorVisits": "У гражданина нет визитов к врачу."
+  },
+  "HospitalServices": {
+    "hospitalServices": "Услуги госпиталя",
+    "declareAlive": "Объявить живым",
+    "noDeadCitizens": "Нет граждан, объявленных мёртвыми",
+    "alert_declareAlive": "Вы уверены, что хотите объявить <span>{citizen}</span> живым? Только пользователи с доступом или владелец могут объявить гражданина живым.",
+    "citizenDeclaredAlive": "Гражданин объявлен живым",
+    "citizenDeclaredAliveMessage": "гражданин успешно объявлен живым."
+  }
+}

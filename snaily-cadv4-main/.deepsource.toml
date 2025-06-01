@@ -1,0 +1,15 @@
+version = 1
+
+test_patterns = ["**/tests/*.test.*"]
+
+[[analyzers]]
+name = "test-coverage"
+
+[[analyzers]]
+name = "docker"
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = ["react"]

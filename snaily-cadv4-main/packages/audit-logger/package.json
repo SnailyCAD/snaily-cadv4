@@ -1,0 +1,63 @@
+{
+  "name": "@snailycad/audit-logger",
+  "version": "1.80.2",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "require": "./dist/server.js",
+      "import": "./dist/server.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npx rimraf ./dist && pnpm --filter \"@snailycad/api\" generate && pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "6.6.2",
+    "typescript": "^5.3.2",
+    "vite": "^5.2.13"
+  },
+  "peerDependencies": {
+    "@sentry/node": ">=7.72.0"
+  },
+  "tsup": {
+    "entry": [
+      "src/**/*.ts"
+    ],
+    "dts": true,
+    "bundle": false,
+    "platform": "node",
+    "treeshake": true,
+    "target": "node18",
+    "silent": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "dependencies": {
+    "@snailycad/types": "workspace:*",
+    "rimraf": "^5.0.7",
+    "superjson": "^1.13.3"
+  },
+  "typesVersions": {
+    "*": {
+      "server": [
+        "dist/server.d.ts"
+      ]
+    }
+  }
+}

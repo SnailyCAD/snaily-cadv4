@@ -1,0 +1,45 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": ["**/.env"],
+  "ui": "stream",
+  "tasks": {
+    "@snailycad/client#build": {
+      "dependsOn": ["copy-env", "^build"],
+      "outputs": [".next/**"]
+    },
+    "@snailycad/api#build": {
+      "dependsOn": ["copy-env", "^build"]
+    },
+    "copy-env": {
+      "cache": false,
+      "dependsOn": ["^copy-env"],
+      "outputs": [".env"]
+    },
+    "create-images-domain": {
+      "cache": false,
+      "dependsOn": ["^create-images-domain"],
+      "outputs": ["next.config.mjs"]
+    },
+    "validate-locales": {
+      "dependsOn": ["^validate-locales"]
+    },
+    "build": {
+      "dependsOn": ["copy-env", "create-images-domain", "validate-locales", "^build"],
+      "outputs": [".next/**", "dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "tests/**/*.test.ts"],
+      "outputs": []
+    },
+    "watch": {
+      "persistent": true,
+      "cache": false,
+      "outputs": [".next/*", "dist/*"]
+    }
+  }
+}

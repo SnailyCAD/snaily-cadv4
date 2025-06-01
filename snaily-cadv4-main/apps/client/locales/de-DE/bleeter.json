@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "Es gibt noch keine Bleeter-Beiträge. Später zurückschauen",
+    "createBleet": "Bleet erstellen",
+    "editBleet": "Bearbeiten bleet",
+    "deleteBleet": "Bleet löschen",
+    "viewBleet": "Ansicht bleet",
+    "headerImage": "Kopfzeilenbild",
+    "bleetTitle": "Bleet-Titel",
+    "bleetBody": "Bleet Körper",
+    "alert_deleteBleet": "Bist Du sicher, dass Du \"<span>{title}</span>\" löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+  }
+}

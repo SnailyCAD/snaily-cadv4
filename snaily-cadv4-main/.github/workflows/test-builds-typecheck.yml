@@ -1,0 +1,60 @@
+name: Typecheck & test builds in workspaces/*
+
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    name: Build & Typecheck
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [18.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm turbo run build --filter="{packages/*}"
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Run turbo typecheck
+        run: pnpm turbo run typecheck
+
+      - name: Build apps
+        run: pnpm turbo run build --filter="{apps/*}"
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Run turbo test
+        run: pnpm turbo run test --parallel

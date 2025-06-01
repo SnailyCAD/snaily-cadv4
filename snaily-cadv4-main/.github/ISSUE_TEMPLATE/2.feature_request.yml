@@ -1,0 +1,16 @@
+name: Feature Request
+description: Request a feature or a change to improve SnailyCAD
+labels: "enhancement"
+body:
+  - type: textarea
+    attributes:
+      label: Describe the feature
+      description: Describe the feature you'd like to get added.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Images, videos, etc.
+    validations:
+      required: false

@@ -1,0 +1,132 @@
+{
+  "Values": {
+    "totalItems": "总项目数",
+    "values": "价值观",
+    "shouldDo": "应该做",
+    "color": "颜色",
+    "callsign": "呼号",
+    "department": "部门",
+    "gameHash": "游戏哈希",
+    "file": "文件",
+    "importValues": "通过文件导入",
+    "exportValues": "出口值",
+    "addPenalCodeGroup": "添加组",
+    "deleteGroup": "删除组",
+    "ungrouped": "未分组",
+    "licenseType": "许可证类型",
+    "whitelisted": "白名单",
+    "whatPages": "什么页面",
+    "departments": "部门",
+    "isDefaultDepartment": "默认部门",
+    "deleteSelectedValues": "删除所选值",
+    "isDefault": "是默认的",
+    "defaultOfficerRank": "默认军官军衔",
+    "pairedUnitTemplate": "配对单元模板",
+    "isConfidential": "Is Confidential",
+    "alert_deletePenalCodeGroup": "是否确实要删除 <span>{group}</span>？此操作无法撤消。",
+    "alert_deleteValue": "是否确实要删除<span>{value}</span>？此操作无法撤消！",
+    "alert_deleteSelectedValues": "是否确实要删除 {length} 项目？此操作无法撤消"
+  },
+  "GENDER": {
+    "MANAGE": "管理性别",
+    "ADD": "添加性别",
+    "DELETE": "删除性别",
+    "EDIT": "编辑性别"
+  },
+  "WEAPON": {
+    "MANAGE": "管理武器",
+    "ADD": "添加武器",
+    "DELETE": "删除武器",
+    "EDIT": "编辑武器"
+  },
+  "VEHICLE": {
+    "MANAGE": "管理车辆",
+    "ADD": "添加车辆",
+    "DELETE": "删除车辆",
+    "EDIT": "编辑车辆"
+  },
+  "ETHNICITY": {
+    "MANAGE": "管理种族",
+    "ADD": "添加种族",
+    "DELETE": "删除种族",
+    "EDIT": "编辑种族"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "管理血型",
+    "ADD": "添加血型",
+    "DELETE": "删除血型",
+    "EDIT": "编辑血型"
+  },
+  "LICENSE": {
+    "MANAGE": "管理许可证",
+    "ADD": "添加许可证",
+    "DELETE": "删除许可证",
+    "EDIT": "编辑许可证"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "管理业务角色",
+    "ADD": "添加业务角色",
+    "DELETE": "删除业务角色",
+    "EDIT": "编辑业务角色"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "管理部门",
+    "ADD": "添加部门",
+    "DELETE": "删除部门",
+    "EDIT": "编辑部"
+  },
+  "CODES_10": {
+    "MANAGE": "管理 10code代码",
+    "ADD": "添加 10code代码",
+    "DELETE": "删除 10code代码",
+    "EDIT": "编辑10code代码"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "管理警官警衔",
+    "ADD": "添加警官警衔",
+    "DELETE": "删除警官警衔",
+    "EDIT": "编辑警官警衔"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "管理刑法典",
+    "ADD": "增加《刑法典》",
+    "DELETE": "删除刑法典",
+    "EDIT": "编辑刑法典"
+  },
+  "DIVISION": {
+    "MANAGE": "管理部门",
+    "ADD": "添加除法",
+    "DELETE": "删除除法",
+    "EDIT": "编辑部门"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "管理深度学习类别",
+    "ADD": "添加类别",
+    "DELETE": "删除类别",
+    "EDIT": "编辑类别"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "管理扣押地段",
+    "ADD": "添加扣押地块",
+    "DELETE": "删除扣押地块",
+    "EDIT": "编辑扣押地段"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "管理车辆标志",
+    "ADD": "添加车辆标志",
+    "DELETE": "删除车辆标志",
+    "EDIT": "编辑车辆标志"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "管理公民旗帜",
+    "ADD": "添加公民旗帜",
+    "DELETE": "删除公民旗帜",
+    "EDIT": "编辑公民旗帜"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "管理单位资格",
+    "ADD": "添加单位资格",
+    "DELETE": "删除单位资格",
+    "EDIT": "编辑单位资格"
+  }
+}

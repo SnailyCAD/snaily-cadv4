@@ -1,0 +1,43 @@
+{
+  "Ems": {
+    "emsFd": "Ambulansen/Räddningstjänsten",
+    "createMedicalRecord": "Skapa medicinskt journalanteckning",
+    "searchMedicalRecord": "Sök medicinsk journalanteckning",
+    "activeDeputies": "Aktiva Ambulansen/Räddningstjänsten-biträden",
+    "selectDeputy": "Välj biträde",
+    "deputy": "Biträde",
+    "myDeputies": "Mina EMS/FD-biträden",
+    "createDeputy": "Skapa biträde",
+    "editDeputy": "Redigera biträde",
+    "deputyName": "Biträdets namn",
+    "deleteDeputy": "Ta bort biträde",
+    "noDeputies": "Du har inga EMS/FD-biträden",
+    "noActiveDeputies": "Det finns inga aktiva EMS/FD-biträden",
+    "citizenNoMedicalRecords": "Denna medborgare har inga medicinska journalanteckningar.",
+    "activeDeputy": "Aktivt biträde",
+    "declareDead": "Förklara som avliden",
+    "declareAlive": "Förklara som vid liv",
+    "myDeputyLogs": "Mina biträdesloggar",
+    "emergencyVehicle": "Nödfordon",
+    "alert_deleteDeputy": "Är du säker på att du vill ta bort <span>{deputy}</span>? Denna åtgärd kan inte ångras.",
+    "assignedToCall#": "{activeVehicle}, svara på {location}",
+    "assignedToCall#WithType": "{activeVehicle}, svara på {location}, {callType}",
+    "emsFdIncidents": "EMS/FD-händelser",
+    "createDoctorVisit": "Skapa läkarbesök",
+    "doctorVisits": "Läkarbesök",
+    "medicalRecords": "Medicinska journalanteckningar",
+    "medications": "Medicinering",
+    "diagnosis": "Diagnos",
+    "conditions": "Tillstånd",
+    "add": "Lägg till",
+    "noDoctorVisits": "Denna medborgare har inga läkarbesök."
+  },
+  "HospitalServices": {
+    "hospitalServices": "Sjukhus tjänster",
+    "declareAlive": "Förklara som vid liv",
+    "noDeadCitizens": "Det finns inga medborgare markerade som avlidna.",
+    "alert_declareAlive": "Är du säker på att du vill förklara <span>{citizen}</span> som vid liv? Endast användare med behörighet att förklara medborgaren som avliden eller ägaren av medborgaren kan markera denna medborgare som avliden.",
+    "citizenDeclaredAlive": "Medborgare förklarad som vid liv",
+    "citizenDeclaredAliveMessage": "Medborgaren har framgångsrikt förklarats som vid liv."
+  }
+}

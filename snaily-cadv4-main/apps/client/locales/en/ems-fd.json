@@ -1,0 +1,43 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Create Medical Record",
+    "searchMedicalRecord": "Search Medical Record",
+    "activeDeputies": "Active EMS/FD Deputies",
+    "selectDeputy": "Select Deputy",
+    "deputy": "Deputy",
+    "myDeputies": "My EMS/FD Deputies",
+    "createDeputy": "Create Deputy",
+    "editDeputy": "Edit Deputy",
+    "deputyName": "Deputy Name",
+    "deleteDeputy": "Delete Deputy",
+    "noDeputies": "You do not have any EMS/FD deputies",
+    "noActiveDeputies": "There are no active EMS/FD deputies",
+    "citizenNoMedicalRecords": "This citizen doesn't have any medical records.",
+    "activeDeputy": "Active Deputy",
+    "declareDead": "Declare dead",
+    "declareAlive": "Declare alive",
+    "myDeputyLogs": "My deputy logs",
+    "emergencyVehicle": "Emergency Vehicle",
+    "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone.",
+    "assignedToCall#": "{activeVehicle}, respond to {location}",
+    "assignedToCall#WithType": "{activeVehicle}, respond to {location}, {callType}",
+    "emsFdIncidents": "EMS/FD Incidents",
+    "createDoctorVisit": "Create Doctor Visit",
+    "doctorVisits": "Doctor Visits",
+    "medicalRecords": "Medical Records",
+    "medications": "Medication",
+    "diagnosis": "Diagnosis",
+    "conditions": "Conditions",
+    "add": "Add",
+    "noDoctorVisits": "This citizen doesn't have any doctor visits."
+  },
+  "HospitalServices": {
+    "hospitalServices": "Hospital Services",
+    "declareAlive": "Declare alive",
+    "noDeadCitizens": "There are no citizens marked dead.",
+    "alert_declareAlive": "Are you sure you want to declare <span>{citizen}</span> alive? Only users with the 'Declare Citizen Dead' permissions or the owner of the citizen can mark this citizen as dead.",
+    "citizenDeclaredAlive": "Citizen Declared Alive",
+    "citizenDeclaredAliveMessage": "Successfully declared this citizen as alive."
+  }
+}

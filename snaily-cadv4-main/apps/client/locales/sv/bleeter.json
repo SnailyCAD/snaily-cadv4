@@ -1,0 +1,25 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "Det finns inga bleeter-inlägg ännu. Kom tillbaka senare.",
+    "createBleet": "Skapa bleet",
+    "editBleet": "Redigera bleet",
+    "deleteBleet": "Ta bort bleet",
+    "viewBleet": "Visa bleet",
+    "headerImage": "Huvudbild",
+    "bleetTitle": "Bleet-titel",
+    "bleetBody": "Bleet-innehåll",
+    "followers": "Följare",
+    "following": "Följer",
+    "follow": "Följ",
+    "unfollow": "Sluta följa",
+    "editProfile": "Redigera profil",
+    "posts": "Inlägg",
+    "myProfile": "Min profil",
+    "save": "Spara",
+    "getStarted": "Kom igång",
+    "unVerifyProfile": "Avverifiera profil",
+    "verifyProfile": "Verifiera profil",
+    "alert_deleteBleet": "Är du säker på att du vill ta bort \"<span>{title}</span>\"? Detta går inte att ångra."
+  }
+}

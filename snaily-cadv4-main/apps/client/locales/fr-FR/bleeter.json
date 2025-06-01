@@ -1,0 +1,25 @@
+{
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "Il n'y a pas encore de messages de bleeter. ",
+    "createBleet": "Créer un message",
+    "editBleet": "Modifier le message",
+    "deleteBleet": "Supprimer Bleet",
+    "viewBleet": "Voir le bêlement",
+    "headerImage": "Image d'en-tête",
+    "bleetTitle": "Titre blet",
+    "bleetBody": "Bleet Corps",
+    "alert_deleteBleet": "Voulez-vous vraiment supprimer \"<span>{title}</span>\"? Cette action ne peut pas être annulée.",
+    "followers": "Abonné",
+    "following": "Mes abonnements",
+    "follow": "Suivre",
+    "unfollow": "Ne plus suivre",
+    "editProfile": "Editer le profil",
+    "posts": "Des postes",
+    "myProfile": "Mon profil",
+    "save": "Sauvegarder",
+    "getStarted": "Commencer",
+    "unVerifyProfile": "Annuler la vérification du profil",
+    "verifyProfile": "Vérifier le profil"
+  }
+}

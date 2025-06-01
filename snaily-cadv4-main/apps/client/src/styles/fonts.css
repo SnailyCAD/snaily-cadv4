@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Assistant";
+  src: url("../../public/fonts/Assistant-VariableFont_wght.ttf");
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  font-display: swap;
+}
+
+html,
+body,
+#map-calls,
+.leaflet-container {
+  font-family: "Assistant", sans-serif;
+}

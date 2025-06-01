@@ -1,0 +1,13 @@
+node_modules
+.next
+yarn-error.log
+dist
+.env
+.data
+
+apps/api/public/**/*.png
+apps/api/public/**/*.svg
+apps/api/public/**/*.jpg
+apps/api/public/**/*.jpeg
+
+next-env.d.ts

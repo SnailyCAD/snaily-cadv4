@@ -1,0 +1,36 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "verbatimModuleSyntax": false,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+
+    "baseUrl": "./src",
+    "paths": {
+      "~/*": ["./*"],
+      "utils/*": ["./utils/*"],
+      "lib/*": ["./lib/*"],
+      "middlewares/*": ["./middlewares/*"],
+      "services/*": ["./services/*"],
+      "controllers/*": ["./controllers/*"],
+      "migrations/*": ["./migrations/*"]
+    },
+
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/"
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "swc": true,
+    "files": true,
+    "require": ["tsconfig-paths/register"]
+  }
+}

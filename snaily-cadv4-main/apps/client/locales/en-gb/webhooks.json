@@ -1,0 +1,93 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Vehicle Seized",
+    "registrationStatus": "Registration Status",
+    "model": "Model",
+    "owner": "Owner"
+  },
+  "Bolos": {
+    "boloCreated": "Remark Created",
+    "viewMoreInfo": "View more information on the CAD.",
+    "type": "Type",
+    "name": "Name",
+    "plate": "Registration",
+    "model": "Model",
+    "color": "Colour"
+  },
+  "Statuses": {
+    "statusChange": "Status Change",
+    "status": "Status",
+    "statusChangeDescription": "Unit {unit} has changed their status to {status}."
+  },
+  "PanicButton": {
+    "panicButton": "Panic Button",
+    "panicButtonDescription": "Unit {unit} has pressed the panic button."
+  },
+  "Calls": {
+    "callCreated": "999 Call Created",
+    "viewMoreInfo": "View more information on the CAD.",
+    "location": "Location",
+    "caller": "Caller",
+    "unknown": "Unknown",
+    "couldNotRenderDescription": "Could not render description."
+  },
+  "Records": {
+    "citizen": "Civilian",
+    "status": "Status",
+    "postal": "postal",
+    "recordType": "Record Type",
+    "ARREST_REPORT": "Arrest Report",
+    "WRITTEN_WARNING": "Caution",
+    "TICKET": "Penalty Notice",
+    "totalBail": "Total Bail",
+    "totalFineAmount": "Total Penalty",
+    "totalJailTime": "Total Sentence",
+    "newWarrantCreated": "New Warrant Created",
+    "newRecordCreated": "New Record Created",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "violations": "Charges",
+    "generalInformation": "General Information",
+    "citizenInformation": "Civilian Information",
+    "vehicleInformation": "Vehicle Information",
+    "description": "Description",
+    "bail": "Bail",
+    "communityService": "Community Service",
+    "violation": "Charge",
+    "fines": "Penalty",
+    "jailTime": "Sentence",
+    "counts": "Counts",
+    "color": "Colour",
+    "plate": "Registration",
+    "model": "Model",
+    "registrationStatus": "Registration Status",
+    "registeredAt": "Registered At",
+    "vinNumber": "VIN Number",
+    "phoneNumber": "Phone Number",
+    "address": "Address",
+    "weight": "Weight",
+    "height": "Height",
+    "hairColor": "Hair Colour",
+    "eyeColor": "Eye Colour",
+    "gender": "Gender",
+    "ethnicity": "Ethnicity",
+    "age": "Age",
+    "dateOfBirth": "Date of Birth",
+    "surname": "Surname",
+    "firstName": "First Name",
+    "caseNumber": "Case Number",
+    "paymentStatus": "Payment Status",
+    "createdAt": "Created At",
+    "officer": "Officer",
+    "socialSecurityNumber": "National Insurance Number"
+  },
+  "WhitelistStatusChange": {
+    "accepted": "accepted",
+    "declined": "declined",
+    "pending": "pending",
+    "userChangeDescription": "User: {user}'s allowlist status has been changed to {status}.",
+    "userChangeTitle": "User Allowlist Status Change",
+    "departmentChangeDescription": "Unit: {unit}'s allowlist status has been changed to {status}.",
+    "departmentChangeTitle": "Unit Department Allowlist Status Change"
+  }
+}

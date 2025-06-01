@@ -1,0 +1,226 @@
+{
+  "Values": {
+    "totalItems": "Articles au total",
+    "values": "Valeurs",
+    "shouldDo": "Devrait faire",
+    "color": "Couleur",
+    "callsign": "Signe d'appel",
+    "department": "Département",
+    "gameHash": "Nom du modèle",
+    "file": "déposer",
+    "importValues": "Importation via fichier",
+    "exportValues": "Valeurs d'exportation",
+    "ungrouped": "Non groupé",
+    "licenseType": "Type de licence",
+    "whitelisted": "Liste blanche",
+    "whatPages": "Quelles pages",
+    "departments": "Départements",
+    "isDefaultDepartment": "Département par défaut",
+    "deleteSelectedValues": "Supprimer les valeurs sélectionnées",
+    "isDefault": "Est par défaut",
+    "defaultOfficerRank": "Rang d'officier par défaut",
+    "pairedUnitTemplate": "Modèle d'unité jumelée",
+    "isConfidential": "Est confidentiel",
+    "priority": "Priorité",
+    "isDisabled": "Désactivé",
+    "county": "Comté",
+    "deletedSelectedValues": "Éléments {deleted} supprimés. ",
+    "failedDeleteValue": "Échec de la suppression <span>{value}</span>.",
+    "cacheTip": " Les valeurs sont mises en cache pendant 24 heures. ",
+    "alert_deleteValue": "Etes-vous sûr que vous voulez supprimer <span>{value}</span>? ",
+    "alert_deleteSelectedValues": "Voulez-vous vraiment supprimer {length} éléments ? ",
+    "noValuesForThisType": "Aucune valeur n'a encore été créée pour ce type.",
+    "value": "Valeur",
+    "textColor": "Couleur du texte",
+    "selectAll": "Sélectionner tout {count} ?",
+    "xItemsSelected": "{count} éléments sélectionnés.",
+    "cannotDeleteTooltip": " Vous ne pouvez pas supprimer cette valeur car elle est utilisée par un autre élément de la base de données. Vous devez d'abord supprimer cet élément.",
+    "mustBeValidHexColor": "Doit être une couleur HEX valide",
+    "as": "Comme (c'est pour que la base de données sache quoi utiliser.)",
+    "trimLevels": "Niveaux de finition",
+    "disabledDescription": "Lorsqu'une valeur est désactivée, elle ne pourra pas être sélectionnée dans la liste déroulante.",
+    "postal": "Code postal",
+    "callsignSymbol": "Symbole de l'indicatif d'appel",
+    "defaultRank": "Rang par défaut",
+    "whitelistedDescription": "Lorsqu'un département est sur liste blanche, vous pouvez définir 1 département par défaut. Ce département sera donné à l'agent lorsqu'il est en attente d'accès ou lorsqu'il a été refusé.",
+    "defaultDepartment": "Département par défaut",
+    "isConfidentialDescription": "Lorsqu'un service est confidentiel, les autres agents ne pourront pas voir les informations des autres agents de ce service.",
+    "extraFieldsDescription": "Vous permet de définir une valeur JSON à utiliser pour des champs supplémentaires. Cela peut être utile lors de l'utilisation de l'API publique pour effectuer des tâches personnalisées.",
+    "extraFields": "Champs supplémentaires (JSON)",
+    "divisions": "Divisions",
+    "defaultLicense": "Licence par défaut",
+    "defaultLicenseDescription": "Cette licence sera accordée à un citoyen lors de sa première création.",
+    "qualification": "Qualification",
+    "award": "Récompense",
+    "colorHex": "Couleur (#HEX)",
+    "codeType": "Type de codes",
+    "license": "Licence",
+    "registrationStatus": "Statut d'enregistrement",
+    "insuranceStatus": "Statut d'assurance",
+    "employee": "Employé",
+    "manager": "Directeur",
+    "owner": "Propriétaire",
+    "import": "Importer",
+    "importCitizens": "Importer des citoyens",
+    "importVehicles": "Importer des véhicules",
+    "importWeapons": "Importer des armes",
+    "customCallsignTemplate": "Modèle d'indicatif personnalisé",
+    "customCallsignTemplateDescription": "Une fois défini, il utilisera ce modèle plutôt que le modèle d'indicatif global. Vous pouvez utiliser les variables suivantes : {variables}",
+    "category": "Catégorie",
+    "addGroup": "Ajouter un groupe",
+    "manageGroup": "Gérer le groupe",
+    "INFRACTION": "Infractions",
+    "MISDEMEANOR": "Délit",
+    "FELONY": "Crime",
+    "warningApplicable": "Avertissement applicable",
+    "warningNotApplicable": "Avertissement non applicable",
+    "isPrimary": "Est primaire"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Gérer les groupes de code pénal",
+    "ADD": "Ajouter un groupe de code pénal",
+    "DELETE": "Supprimer le groupe Code pénal",
+    "EDIT": "Modifier le groupe de codes pénaux",
+    "ungrouped": "Non groupé",
+    "alert_deletePenalCodeGroup": "Etes-vous sûr que vous voulez supprimer <span>{group}</span>? ",
+    "deleteGroup": "Supprimer le groupe"
+  },
+  "GENDER": {
+    "MANAGE": "Gérer les genres",
+    "ADD": "Ajouter le sexe",
+    "DELETE": "Supprimer le sexe",
+    "EDIT": "Modifier le sexe"
+  },
+  "WEAPON": {
+    "MANAGE": "Gérer les armes",
+    "ADD": "Ajouter une arme",
+    "DELETE": "Supprimer l'arme",
+    "EDIT": "Modifier l'arme"
+  },
+  "VEHICLE": {
+    "MANAGE": "Gérer les véhicules",
+    "ADD": "Ajouter un véhicule",
+    "DELETE": "Supprimer le véhicule",
+    "EDIT": "Modifier le véhicule"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Gérer les ethnies",
+    "ADD": "Ajouter une origine ethnique",
+    "DELETE": "Supprimer l'ethnicité",
+    "EDIT": "Modifier l'appartenance ethnique"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Gérer les groupes sanguins",
+    "ADD": "Ajouter un groupe sanguin",
+    "DELETE": "Supprimer le groupe sanguin",
+    "EDIT": "Modifier le groupe sanguin"
+  },
+  "LICENSE": {
+    "MANAGE": "Gérer les licences",
+    "ADD": "Ajouter une licence",
+    "DELETE": "Supprimer la licence",
+    "EDIT": "Modifier la licence"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Gérer les rôles d'entreprise",
+    "ADD": "Ajouter un rôle commercial",
+    "DELETE": "Supprimer le rôle métier",
+    "EDIT": "Modifier le rôle professionnel"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Gérer les départements",
+    "ADD": "Ajouter un département",
+    "DELETE": "Supprimer le département",
+    "EDIT": "Modifier le département"
+  },
+  "CODES_10": {
+    "MANAGE": "Gérer 10 codes",
+    "ADD": "Ajouter 10 codes",
+    "DELETE": "Supprimer 10 codes",
+    "EDIT": "Modifier 10 codes"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Gérer les grades d'officier",
+    "ADD": "Ajouter un grade d'officier",
+    "DELETE": "Supprimer le grade d'officier",
+    "EDIT": "Modifier le grade d'officier"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Gérer les codes pénaux",
+    "ADD": "Ajouter un code pénal",
+    "DELETE": "Supprimer le code pénal",
+    "EDIT": "Modifier le code pénal"
+  },
+  "DIVISION": {
+    "MANAGE": "Gérer les divisions",
+    "ADD": "Ajouter une division",
+    "DELETE": "Supprimer la division",
+    "EDIT": "Modifier la division"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Gérer les catégories de licence",
+    "ADD": "ajouter une catégorie",
+    "DELETE": "Supprimer la catégorie",
+    "EDIT": "Modifier la catégorie"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Gérer les lots en fourrière",
+    "ADD": "Ajouter un lot en fourrière",
+    "DELETE": "Supprimer la mise en fourrière",
+    "EDIT": "Modifier la mise en fourrière"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Gérer les drapeaux des véhicules",
+    "ADD": "Ajouter un drapeau de véhicule",
+    "DELETE": "Supprimer le drapeau du véhicule",
+    "EDIT": "Modifier le drapeau du véhicule"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Gérer les indicateurs citoyens",
+    "ADD": "Ajouter un indicateur citoyen",
+    "DELETE": "Supprimer l'indicateur du citoyen",
+    "EDIT": "Modifier l'indicateur citoyen"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Gérer les qualifications de l'unité",
+    "ADD": "Ajouter une qualification d'unité",
+    "DELETE": "Supprimer la qualification d'unité",
+    "EDIT": "Modifier la qualification d'unité"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Gérer les types d'appels",
+    "ADD": "Ajouter un type d'appel",
+    "DELETE": "Supprimer le type d'appel",
+    "EDIT": "Modifier le type d'appel"
+  },
+  "ADDRESS": {
+    "MANAGE": "Gérer les adresses",
+    "ADD": "Ajoutez l'adresse",
+    "DELETE": "Supprimer l'adresse",
+    "EDIT": "Modifier l'adresse"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Gérer les véhicules d'urgence",
+    "ADD": "Ajouter un véhicule d'urgence",
+    "DELETE": "Supprimer le véhicule d'urgence",
+    "EDIT": "Modifier le véhicule d'urgence"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Gérer les indicateurs d'adresse",
+    "ADD": "Ajouter un indicateur d'adresse",
+    "DELETE": "Supprimer l'indicateur d'adresse",
+    "EDIT": "Modifier l'indicateur d'adresse"
+  },
+  "VEHICLE_TRIM_LEVEL": {
+    "MANAGE": "Gérer les niveaux de finition des véhicules",
+    "ADD": "Ajouter un niveau de finition",
+    "DELETE": "Supprimer le niveau de finition",
+    "EDIT": "Modifier le niveau de finition"
+  },
+  "WEAPON_FLAG": {
+    "MANAGE": "Gérer les indicateurs d'armes",
+    "ADD": "Ajouter un indicateur d'arme",
+    "DELETE": "Supprimer l'indicateur d'arme",
+    "EDIT": "Modifier l'indicateur de l'arme"
+  }
+}

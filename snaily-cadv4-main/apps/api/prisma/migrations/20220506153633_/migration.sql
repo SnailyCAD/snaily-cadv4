@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "Feature" ADD VALUE 'COMMON_CITIZEN_CARDS';

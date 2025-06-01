@@ -1,0 +1,43 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Créer un dossier médical",
+    "searchMedicalRecord": "Rechercher un dossier médical",
+    "activeDeputies": "EMS/FD actifs",
+    "selectDeputy": "Sélectionnez l'EMS/FD",
+    "deputy": "Agent",
+    "myDeputies": "Mes agents EMS/FD",
+    "createDeputy": "Créer un EMS / Pompier",
+    "editDeputy": "Modifier l'agent",
+    "deputyName": "Nom de l'agent",
+    "deleteDeputy": "Supprimer l'agent",
+    "noDeputies": "Vous n'avez pas d'agent EMS/FD",
+    "noActiveDeputies": "Il n'y a pas d'agent EMS/FD actifs",
+    "citizenNoMedicalRecords": "Ce citoyen n'a pas de dossier médical.",
+    "activeDeputy": "EMS/Pompier actif",
+    "declareDead": "Déclarer mort",
+    "declareAlive": "Déclarer vivant",
+    "myDeputyLogs": "Historique de service",
+    "emergencyVehicle": "Véhicule d'urgence",
+    "alert_deleteDeputy": "Etes-vous sûr que vous voulez supprimer <span>{deputy}</span>? ",
+    "assignedToCall#": "{activeVehicle}, répondez à {location}",
+    "assignedToCall#WithType": "{activeVehicle}, répondez à {location}, {callType}",
+    "emsFdIncidents": "Incidents EMS/FD",
+    "createDoctorVisit": "Créer une visite médical",
+    "medications": "Médicament",
+    "diagnosis": "Diagnostic",
+    "conditions": "Conditions",
+    "doctorVisits": "Visites chez le médecin",
+    "medicalRecords": "Medical Records",
+    "add": "Ajouter",
+    "noDoctorVisits": "Ce citoyen n'a aucune visite chez le médecin."
+  },
+  "HospitalServices": {
+    "hospitalServices": "Services hospitaliers",
+    "declareAlive": "Déclarer vivant",
+    "noDeadCitizens": "Aucun citoyen n'est marqué comme mort.",
+    "alert_declareAlive": "Êtes-vous sûr de vouloir déclarer <span>{citizen}</span> vivant ? Seuls les utilisateurs disposant des autorisations 'Déclarer le citoyen mort' ou le propriétaire du citoyen peuvent marquer ce citoyen comme mort.",
+    "citizenDeclaredAlive": "Citoyen déclaré vivant",
+    "citizenDeclaredAliveMessage": "Ce citoyen a été déclaré vivant avec succès."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "TruckLogs": {
+    "truckLogs": "Registros do Caminhão",
+    "createTruckLog": "Criar Log do Caminhão",
+    "editTruckLog": "Editar Log do Caminhão",
+    "deleteTruckLog": "Excluir log do Caminhão",
+    "driver": "Condutor",
+    "vehicle": "Veículo",
+    "startedAt": "Iniciado em",
+    "endedAt": "terminado em",
+    "noTruckLogs": "Você ainda não tem nenhum log de caminhão.",
+    "notes": "Notas",
+    "alert_deleteTruckLog": "Tem certeza de que deseja excluir este log de caminhão? Esta ação não pode ser desfeita."
+  }
+}

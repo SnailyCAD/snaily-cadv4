@@ -1,0 +1,50 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Voertuig in beslag genomen",
+    "registrationStatus": "Registratie Status",
+    "model": "Model",
+    "owner": "Eigenaar"
+  },
+  "Bolos": {
+    "boloCreated": "Opsporingsbericht aangemaakt",
+    "viewMoreInfo": "Meer informatie bekijken in FOCUS.",
+    "type": "Type",
+    "Name": "Naam",
+    "plate": "Nummerplaat",
+    "model": "Model",
+    "color": "Kleur"
+  },
+  "Statuses": {
+    "statusChange": "Status wijziging",
+    "status": "Status",
+    "statusChangeDescription": "{unit} heeft zich {status} gemeld."
+  },
+  "PanicButton": {
+    "panicButton": "Paniekknop",
+    "panicButtonDescription": "{unit} heeft de paniekknop geactiveerd."
+  },
+  "Calls": {
+    "callCreated": "Nieuwe 112 oproep",
+    "viewMoreInfo": "Meer informatie bekijken in FOCUS.",
+    "location": "Locatie",
+    "caller": "Beller",
+    "unknown": "Onbekend",
+    "couldNotRenderDescription": "Beschrijving niet geladen."
+  },
+  "Records": {
+    "citizen": "Burger",
+    "status": "Status",
+    "postal": "perceel",
+    "recordType": "Invoer Type",
+    "ARREST_REPORT": "PV",
+    "WRITTEN_WARNING": "RIR",
+    "TICKET": "OI",
+    "totalBail": "Borgsom",
+    "totalFineAmount": "Boetebedrag",
+    "totalJailTime": "Gevangenistijd",
+    "newWarrantCreated": "Nieuw arrestatiebevel gemaakt",
+    "newRecordCreated": "Nieuwe invoer geregistreerd",
+    "ACTIVE": "Actief",
+    "INACTIVE": "Inactief"
+  }
+}

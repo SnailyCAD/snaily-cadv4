@@ -1,0 +1,43 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "创建医疗记录",
+    "searchMedicalRecord": "搜索医疗记录",
+    "activeDeputies": "活跃EMS/FD副手",
+    "selectDeputy": "选择副手",
+    "deputy": "副手",
+    "myDeputies": "我的EMS/FD副手",
+    "createDeputy": "创建副手",
+    "editDeputy": "编辑副手",
+    "deputyName": "副手姓名",
+    "deleteDeputy": "删除副手",
+    "noDeputies": "您没有任何EMS/FD副手",
+    "noActiveDeputies": "没有活跃的EMS/FD副手",
+    "citizenNoMedicalRecords": "此市民没有任何医疗记录。",
+    "activeDeputy": "活跃副手",
+    "declareDead": "宣布死亡",
+    "declareAlive": "宣布复活",
+    "myDeputyLogs": "我的副手日志",
+    "emergencyVehicle": "急救车辆",
+    "alert_deleteDeputy": "您确定要删除<span>{deputy}</span>吗？此操作无法撤消。",
+    "assignedToCall#": "{activeVehicle}，前往{location}",
+    "assignedToCall#WithType": "{activeVehicle}，前往{location}，{callType}",
+    "emsFdIncidents": "EMS/FD事件",
+    "createDoctorVisit": "创建医生就诊",
+    "doctorVisits": "医生就诊",
+    "medicalRecords": "医疗记录",
+    "medications": "药物",
+    "diagnosis": "诊断",
+    "conditions": "病况",
+    "add": "添加",
+    "noDoctorVisits": "此市民没有任何医生就诊记录。"
+  },
+  "HospitalServices": {
+    "hospitalServices": "医院服务",
+    "declareAlive": "宣布复活",
+    "noDeadCitizens": "没有标记为死亡的市民。",
+    "alert_declareAlive": "您确定要宣布<span>{citizen}</span>复活吗？只有拥有'宣布市民死亡'权限或市民所有者才能将此市民标记为死亡。",
+    "citizenDeclaredAlive": "市民宣布为活着",
+    "citizenDeclaredAliveMessage": "成功宣布此市民为活着。"
+  }
+}

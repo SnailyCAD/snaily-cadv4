@@ -1,0 +1,228 @@
+{
+  "Values": {
+    "totalItems": "总项目数",
+    "values": "值",
+    "shouldDo": "应该做",
+    "color": "颜色",
+    "textColor": "文本颜色 (#HEX)",
+    "callsign": "呼号",
+    "department": "部门",
+    "gameHash": "游戏哈希",
+    "file": "文件",
+    "importValues": "通过文件导入",
+    "exportValues": "导出值",
+    "ungrouped": "未分组",
+    "licenseType": "许可证类型",
+    "whitelisted": "加入白名单",
+    "whatPages": "哪些页面",
+    "departments": "部门",
+    "isDefaultDepartment": "默认部门",
+    "deleteSelectedValues": "删除所选值",
+    "isDefault": "是否默认",
+    "defaultOfficerRank": "默认警员级别",
+    "pairedUnitTemplate": "配对的单位模板",
+    "isConfidential": "保密",
+    "priority": "优先级",
+    "isDisabled": "已禁用",
+    "county": "县",
+    "value": "值",
+    "selectAll": "选择全部 {count}?",
+    "xItemsSelected": "{count} 项已选择。",
+    "noValuesForThisType": "尚未创建此类型的值。",
+    "cannotDeleteTooltip": "  由于另一个数据库项正在使用此值，因此无法删除。您必须首先删除该项。",
+    "deletedSelectedValues": "已删除 {deleted} 项。无法删除 {failed} 项。",
+    "failedDeleteValue": "无法删除 <span>{value}</span>。",
+    "cacheTip": " 值会被缓存 24 小时。这意味着更新、添加或删除的值可能不会立即更改。可能需要最多 24 小时才能生效。",
+    "alert_deleteValue": "您确定要删除 <span>{value}</span> 吗？此操作无法撤消！",
+    "alert_deleteSelectedValues": "您确定要删除 {length} 项吗？此操作无法撤消",
+    "mustBeValidHexColor": "必须是有效的 HEX 颜色",
+    "as": "作为（这是为了数据库知道要使用什么）",
+    "trimLevels": "配置等级",
+    "disabledDescription": "当值被禁用时，将无法在下拉列表中选择。",
+    "postal": "邮政编码",
+    "callsignSymbol": "呼号符号",
+    "defaultRank": "默认等级",
+    "whitelistedDescription": "当部门在白名单中时，您可以设置一个部门为默认。当等待访问或被拒绝时，该部门将分配给警员。",
+    "defaultDepartment": "默认部门",
+    "isConfidentialDescription": "当部门是保密的时，其他警员将无法查看该部门内其他警员的信息。",
+    "extraFieldsDescription": "允许您设置用于额外字段的 JSON 值。在使用公共 API 进行自定义操作时，这可能很有用。",
+    "extraFields": "额外字段 (JSON)",
+    "divisions": "分部",
+    "defaultLicense": "默认许可证",
+    "defaultLicenseDescription": "当首次创建公民时，将授予该许可证。",
+    "qualification": "资格",
+    "award": "奖项",
+    "colorHex": "颜色 (#HEX)",
+    "codeType": "代码类型",
+    "license": "许可证",
+    "registrationStatus": "注册状态",
+    "insuranceStatus": "保险状态",
+    "employee": "雇员",
+    "manager": "经理",
+    "owner": "所有者",
+    "import": "导入",
+    "importCitizens": "导入公民",
+    "importVehicles": "导入车辆",
+    "importWeapons": "导入武器",
+    "customCallsignTemplate": "自定义呼号模板",
+    "customCallsignTemplateDescription": "设置后，将使用此模板而不是全局呼号模板。您可以使用以下变量：{variables}",
+    "category": "类别",
+    "addGroup": "添加组",
+    "manageGroup": "管理组",
+    "INFRACTION": "违规",
+    "MISDEMEANOR": "轻罪",
+    "FELONY": "重罪",
+    "warningApplicable": "适用警告",
+    "warningNotApplicable": "不适用警告",
+    "isPrimary": "是否为主要",
+    "isDispositionDescription": "当呼叫关闭时，可以使用处分代码。这将用于确定呼叫的结果。",
+    "isDisposition": "是否为处分"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "管理刑法组",
+    "ADD": "添加刑法组",
+    "DELETE": "删除刑法组",
+    "EDIT": "编辑刑法组",
+    "ungrouped": "未分组",
+    "alert_deletePenalCodeGroup": "您确定要删除 <span>{group}</span> 吗？此操作无法撤消。",
+    "deleteGroup": "删除组"
+  },
+  "GENDER": {
+    "MANAGE": "管理性别",
+    "ADD": "添加性别",
+    "DELETE": "删除性别",
+    "EDIT": "编辑性别"
+  },
+  "WEAPON": {
+    "MANAGE": "管理武器",
+    "ADD": "添加武器",
+    "DELETE": "删除武器",
+    "EDIT": "编辑武器"
+  },
+  "VEHICLE": {
+    "MANAGE": "管理车辆",
+    "ADD": "添加车辆",
+    "DELETE": "删除车辆",
+    "EDIT": "编辑车辆"
+  },
+  "ETHNICITY": {
+    "MANAGE": "管理种族",
+    "ADD": "添加种族",
+    "DELETE": "删除种族",
+    "EDIT": "编辑种族"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "管理血型",
+    "ADD": "添加血型",
+    "DELETE": "删除血型",
+    "EDIT": "编辑血型"
+  },
+  "LICENSE": {
+    "MANAGE": "管理许可证",
+    "ADD": "添加许可证",
+    "DELETE": "删除许可证",
+    "EDIT": "编辑许可证"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "管理业务角色",
+    "ADD": "添加业务角色",
+    "DELETE": "删除业务角色",
+    "EDIT": "编辑业务角色"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "管理部门",
+    "ADD": "添加部门",
+    "DELETE": "删除部门",
+    "EDIT": "编辑部门"
+  },
+  "CODES_10": {
+    "MANAGE": "管理10-code",
+    "ADD": "添加10-code",
+    "DELETE": "删除10-code",
+    "EDIT": "编辑10-code"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "管理警员级别",
+    "ADD": "添加警员级别",
+    "DELETE": "删除警员级别",
+    "EDIT": "编辑警员级别"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "管理刑法",
+    "ADD": "添加刑法",
+    "DELETE": "删除刑法",
+    "EDIT": "编辑刑法"
+  },
+  "DIVISION": {
+    "MANAGE": "管理分部",
+    "ADD": "添加分部",
+    "DELETE": "删除分部",
+    "EDIT": "编辑分部"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "管理驾照类别",
+    "ADD": "添加类别",
+    "DELETE": "删除类别",
+    "EDIT": "编辑类别"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "管理扣押场",
+    "ADD": "添加扣押场",
+    "DELETE": "删除扣押场",
+    "EDIT": "编辑扣押场"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "管理车辆标志",
+    "ADD": "添加车辆标志",
+    "DELETE": "删除车辆标志",
+    "EDIT": "编辑车辆标志"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "管理公民标志",
+    "ADD": "添加公民标志",
+    "DELETE": "删除公民标志",
+    "EDIT": "编辑公民标志"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "管理单位资格",
+    "ADD": "添加单位资格",
+    "DELETE": "删除单位资格",
+    "EDIT": "编辑单位资格"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "管理呼叫类型",
+    "ADD": "添加呼叫类型",
+    "DELETE": "删除呼叫类型",
+    "EDIT": "编辑呼叫类型"
+  },
+  "ADDRESS": {
+    "MANAGE": "管理地址",
+    "ADD": "添加地址",
+    "DELETE": "删除地址",
+    "EDIT": "编辑地址"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "管理紧急车辆",
+    "ADD": "添加紧急车辆",
+    "DELETE": "删除紧急车辆",
+    "EDIT": "编辑紧急车辆"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "管理地址标志",
+    "ADD": "添加地址标志",
+    "DELETE": "删除地址标志",
+    "EDIT": "编辑地址标志"
+  },
+  "VEHICLE_TRIM_LEVEL": {
+    "MANAGE": "管理车辆改装级别",
+    "ADD": "添加改装级别",
+    "DELETE": "删除改装级别",
+    "EDIT": "编辑改装级别"
+  },
+  "WEAPON_FLAG": {
+    "MANAGE": "管理武器标志",
+    "ADD": "添加武器标志",
+    "DELETE": "删除武器标志",
+    "EDIT": "编辑武器标志"
+  }
+}

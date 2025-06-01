@@ -1,0 +1,93 @@
+{
+  "Tow": {
+    "vehicleImpounded": "Véhicule mis en fourrière",
+    "registrationStatus": "Statut d'enregistrement",
+    "model": "Modèle",
+    "owner": "Propriétaire"
+  },
+  "Bolos": {
+    "boloCreated": "BOLO Créé",
+    "viewMoreInfo": "Afficher plus d’informations sur le CAD.",
+    "type": "Type",
+    "name": "Nom",
+    "plate": "Plaque",
+    "model": "Modèle",
+    "color": "Couleur"
+  },
+  "Statuses": {
+    "statusChange": "Changement de statut",
+    "status": "Statut",
+    "statusChangeDescription": "L'unité {unit} a changé son statut en {status}."
+  },
+  "PanicButton": {
+    "panicButton": "Bouton panique",
+    "panicButtonDescription": "L'unité {unit} a appuyé sur le bouton panique."
+  },
+  "Calls": {
+    "callCreated": "Appel au 911 créé",
+    "viewMoreInfo": "Afficher plus d'informations sur la CAO.",
+    "location": "Emplacement",
+    "caller": "Votre interlocuteur",
+    "unknown": "Inconnu",
+    "couldNotRenderDescription": "Impossible d'afficher la description."
+  },
+  "Records": {
+    "citizen": "Citoyen",
+    "status": "Statut",
+    "postal": "Postal",
+    "recordType": "Type d'enregistrement",
+    "ARREST_REPORT": "Rapport d'arrestation",
+    "WRITTEN_WARNING": "Avertissement écrit",
+    "TICKET": "Billet",
+    "totalBail": "Caution totale",
+    "totalFineAmount": "Montant total de l'amende",
+    "totalJailTime": "Durée totale de prison",
+    "newWarrantCreated": "Nouveau mandat créé",
+    "newRecordCreated": "Nouvel enregistrement créé",
+    "ACTIVE": "Actif",
+    "INACTIVE": "Inactif",
+    "violations": "Violations",
+    "generalInformation": "Informations générales",
+    "citizenInformation": "Informations citoyennes",
+    "vehicleInformation": "Informations sur le véhicule",
+    "description": "Description",
+    "bail": "Caution",
+    "communityService": "Service publique",
+    "violation": "Violation",
+    "fines": "Amendes",
+    "jailTime": "Temps de prison",
+    "counts": "Comptes",
+    "color": "Couleur",
+    "plate": "Plaque",
+    "model": "Modèle",
+    "registrationStatus": "Statut d'enregistrement",
+    "registeredAt": "Inscrit à",
+    "vinNumber": "Numéro VIN",
+    "phoneNumber": "Numéro de téléphone",
+    "address": "Adresse",
+    "weight": "Poids",
+    "height": "Hauteur",
+    "hairColor": "Couleur de cheveux",
+    "eyeColor": "Couleur des yeux",
+    "gender": "Genre",
+    "ethnicity": "Origine ethnique",
+    "age": "Âge",
+    "dateOfBirth": "Date de naissance",
+    "surname": "Nom de famille",
+    "firstName": "Prénom",
+    "caseNumber": "Numéro de dossier",
+    "paymentStatus": "Statut de paiement",
+    "createdAt": "Créé à",
+    "officer": "Officier",
+    "socialSecurityNumber": "Numéro de sécurité sociale"
+  },
+  "WhitelistStatusChange": {
+    "accepted": "Accepté",
+    "declined": "Refusé",
+    "pending": "En attente",
+    "userChangeDescription": "Utilisateur : le statut de la liste blanche de {user} a été modifié en {status}.",
+    "userChangeTitle": "Modification du statut de la liste blanche des utilisateurs",
+    "departmentChangeDescription": "Unité : le statut de la liste blanche de {unit} a été modifié en {status}.",
+    "departmentChangeTitle": "Modification du statut de la liste blanche des départements d'unité"
+  }
+}

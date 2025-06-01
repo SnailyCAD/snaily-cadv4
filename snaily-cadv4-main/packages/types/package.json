@@ -1,0 +1,63 @@
+{
+  "name": "@snailycad/types",
+  "version": "1.80.2",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./api": {
+      "types": "./dist/api.d.ts",
+      "require": "./dist/api.js",
+      "import": "./dist/api.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "typesVersions": {
+    "*": {
+      "api": [
+        "dist/api.d.ts"
+      ]
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "pnpm --filter \"@snailycad/api\" generate && pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm --filter \"@snailycad/api\" generate && pnpm tsc --noEmit",
+    "prepublish": "pnpm build"
+  },
+  "dependencies": {
+    "@snailycad/permissions": "workspace:*",
+    "discord-api-types": "0.37.58"
+  },
+  "devDependencies": {
+    "tsup": "6.6.2",
+    "typescript": "^5.3.2"
+  },
+  "tsup": {
+    "entry": [
+      "./src/**/*.ts"
+    ],
+    "dts": true,
+    "bundle": false,
+    "platform": "node",
+    "target": "node18",
+    "silent": true,
+    "treeshake": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "sideEffects": false
+}

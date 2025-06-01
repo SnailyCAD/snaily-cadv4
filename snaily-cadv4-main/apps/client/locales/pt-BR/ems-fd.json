@@ -1,0 +1,24 @@
+{
+  "Ems": {
+    "emsFd": "Médico/Bombeiro",
+    "createMedicalRecord": "Criar Registro Médico",
+    "searchMedicalRecord": "Pesquisar Registro Médico",
+    "activeDeputies": "Médicos/Bombeiros Ativos",
+    "selectDeputy": "Selecionar Médico/Bombeiro",
+    "deputy": "Médico/Bombeiro",
+    "myDeputies": "Meus Médicos/Bombeiros",
+    "createDeputy": "Criar Médico/Bombeiro",
+    "editDeputy": "Editar Médico/Bombeiro",
+    "deputyName": "Nome do Médico/Bombeiro",
+    "deleteDeputy": "Excluir Médico/Bombeiro",
+    "noDeputies": "Você não tem Médico/Bombeiros",
+    "noActiveDeputies": "Não há Médico/Bombeiros Ativos",
+    "citizenNoMedicalRecords": "Este cidadão não possui registros médicos.",
+    "activeDeputy": "Médicos/Bombeiros Ativo",
+    "declareDead": "Declarar Morto",
+    "declareAlive": "Declarar Vivo",
+    "myDeputyLogs": "Meus logs de Médico/Bombeiro",
+    "emergencyVehicle": "Veículo de Emergência",
+    "alert_deleteDeputy": "Tem certeza de que deseja excluir <span>{deputy}</span>? Esta ação não pode ser desfeita."
+  }
+}

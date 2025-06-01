@@ -1,0 +1,43 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Krankenakte anlegen",
+    "searchMedicalRecord": "Krankenakte suchen",
+    "activeDeputies": "Aktive Rettungskräfte",
+    "selectDeputy": "Rettungskräfte wählen",
+    "deputy": "Rettungskraft",
+    "myDeputies": "Meine Rettungskräfte",
+    "createDeputy": "Meine Rettungskraft erstellen",
+    "editDeputy": "Meine Rettungskraft bearbeiten",
+    "deputyName": "Name der Rettungskraft",
+    "deleteDeputy": "Rettungskraft löschen",
+    "noDeputies": "Sie haben keine Rettungskraft",
+    "noActiveDeputies": "Es gibt keine aktiven Rettungskräfte",
+    "citizenNoMedicalRecords": "Dieser Bürger hat keine Krankenakte!",
+    "activeDeputy": "Aktive Rettungskraft",
+    "declareDead": "Für tot erklären",
+    "declareAlive": "Für lebendig erklären",
+    "myDeputyLogs": "Meine Protokolle meiner Helfer",
+    "emergencyVehicle": "Einsatzfahrzeug",
+    "alert_deleteDeputy": "Bist du sicher, dass Du <span>{deputy}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "assignedToCall#": "{activeVehicle}, antworte auf {location}",
+    "assignedToCall#WithType": "{activeVehicle}, antworte auf {location}, {callType}",
+    "emsFdIncidents": "Feuerwehr und Rettungsdienst Ereignisse",
+    "createDoctorVisit": "Arztbesuch erstellen",
+    "doctorVisits": "Arztbesuche",
+    "medicalRecords": "Krankenakte",
+    "medications": "Medikamente",
+    "diagnosis": "Diagnose",
+    "conditions": "Zustände",
+    "add": "Hinzufügen",
+    "noDoctorVisits": "Dieser Bürger hat keine Arztbesuche."
+  },
+  "HospitalServices": {
+    "hospitalServices": "Krankenhausdienste",
+    "declareAlive": "Als lebend erklären",
+    "noDeadCitizens": "Es gibt keine als tot markierten Bürger.",
+    "alert_declareAlive": "Bist du sicher, dass du <span>{citizen}</span> als lebend erklären möchtest? Nur Benutzer mit den Berechtigungen 'Bürger für tot erklären' oder der Besitzer des Bürgers können diesen Bürger als tot markieren.",
+    "citizenDeclaredAlive": "Bürger als lebend erklärt",
+    "citizenDeclaredAliveMessage": "Bürger erfolgreich als lebend erklärt"
+  }
+}

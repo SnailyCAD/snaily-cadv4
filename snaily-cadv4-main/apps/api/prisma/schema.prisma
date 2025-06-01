@@ -1,0 +1,2024 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+generator types {
+  provider = "prisma-generator-redundant-types"
+  output   = "../../../packages/types/src/prisma"
+}
+
+model cad {
+  id                      String                 @id @default(cuid())
+  name                    String                 @db.VarChar(255)
+  owner                   User                   @relation(fields: [ownerId], references: [id])
+  ownerId                 String
+  areaOfPlay              String?                @db.VarChar(255)
+  steamApiKey             String?                @db.VarChar(255)
+  whitelisted             Boolean                @default(false)
+  towWhitelisted          Boolean                @default(false)
+  taxiWhitelisted         Boolean                @default(false)
+  businessWhitelisted     Boolean                @default(false)
+  logoId                  String?
+  registrationCode        String?
+  features                CadFeature[]
+  miscCadSettings         MiscCadSettings?       @relation(fields: [miscCadSettingsId], references: [id])
+  miscCadSettingsId       String?
+  apiToken                ApiToken?              @relation(fields: [apiTokenId], references: [id])
+  apiTokenId              String?
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @default(now()) @updatedAt
+  autoSetUserProperties   AutoSetUserProperties? @relation(fields: [autoSetUserPropertiesId], references: [id])
+  autoSetUserPropertiesId String?
+  discordRoles            DiscordRoles?          @relation(fields: [discordRolesId], references: [id])
+  discordRolesId          String?
+  timeZone                String?                @default("UTC")
+}
+
+model CadFeature {
+  id          String  @id @default(cuid())
+  feature     Feature @unique
+  isEnabled   Boolean @default(false)
+  cad         cad?    @relation(fields: [cadId], references: [id])
+  cadId       String?
+  extraFields Json?
+}
+
+model MiscCadSettings {
+  id String @id @default(cuid())
+
+  /// OG = open graph.
+  cadOGDescription          String?
+  heightPrefix              String         @default("cm") @db.VarChar(255)
+  weightPrefix              String         @default("kg") @db.VarChar(255)
+  maxCitizensPerUser        Int?
+  maxOfficersPerUser        Int?
+  maxPlateLength            Int            @default(8)
+  maxBusinessesPerCitizen   Int?
+  maxDivisionsPerOfficer    Int?
+  /// max units a user can create with a department
+  maxDepartmentsEachPerUser Int?
+  maxAssignmentsToIncidents Int?
+  maxAssignmentsToCalls     Int?
+  callsignTemplate          String         @default("{department}{callsign1} - {callsign2}{division}") @db.Text
+  caseNumberTemplate        String?
+  pairedUnitTemplate        String?        @default("1A-{callsign1}") @db.Text
+  pairedUnitSymbol          String?        @default("A") @db.VarChar(255)
+  signal100Enabled          Boolean        @default(false)
+  liveMapURL                String?        @db.Text
+  liveMapURLs               LiveMapURL[]
+  roleplayEnabled           Boolean?       @default(true)
+  authScreenBgImageId       String?
+  authScreenHeaderImageId   String?
+  jailTimeScale             JailTimeScale?
+  // How many times a signal 100 should be repeated.
+  signal100RepeatAmount     Int?           @default(1)
+  // The amount between each signal 100 repeat.
+  signal100RepeatIntervalMs Int?           @default(1000)
+
+  call911InactivityTimeout           Int?
+  incidentInactivityTimeout          Int?
+  unitInactivityTimeout              Int?
+  boloInactivityTimeout              Int?
+  activeWarrantsInactivityTimeout    Int?
+  activeDispatchersInactivityTimeout Int?
+
+  driversLicenseNumberLength Int?    @default(8)
+  driversLicenseTemplate     String? @db.Text
+  pilotLicenseNumberLength   Int?    @default(6)
+  pilotLicenseTemplate       String? @db.Text
+  weaponLicenseNumberLength  Int?    @default(8)
+  weaponLicenseTemplate      String? @db.Text
+  waterLicenseNumberLength   Int?    @default(8)
+  waterLicenseTemplate       String? @db.Text
+  huntingLicenseNumberLength Int?    @default(8)
+  huntingLicenseTemplate     String? @db.Text
+  fishingLicenseNumberLength Int?    @default(8)
+  fishingLicenseTemplate     String? @db.Text
+
+  driversLicenseMaxPoints Int? @default(12)
+  pilotLicenseMaxPoints   Int? @default(12)
+  weaponLicenseMaxPoints  Int? @default(12)
+  waterLicenseMaxPoints   Int? @default(12)
+  fishingLicenseMaxPoints Int? @default(12)
+  huntingLicenseMaxPoints Int? @default(12)
+
+  lastInactivitySyncTimestamp DateTime?
+
+  webhooks    DiscordWebhook[]
+  rawWebhooks RawWebhook[]
+
+  cad cad[]
+}
+
+model LiveMapURL {
+  id                String           @id @default(cuid())
+  url               String
+  name              String
+  MiscCadSettings   MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id], onDelete: Cascade)
+  miscCadSettingsId String?
+}
+
+model RawWebhook {
+  id   String             @id @default(cuid())
+  type DiscordWebhookType @unique
+  url  String
+
+  MiscCadSettings   MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id], onDelete: Cascade)
+  miscCadSettingsId String?
+}
+
+model DiscordWebhook {
+  id                String             @id @default(cuid())
+  type              DiscordWebhookType @unique
+  webhookId         String?
+  channelId         String
+  extraMessage      String?
+  MiscCadSettings   MiscCadSettings?   @relation(fields: [miscCadSettingsId], references: [id], onDelete: Cascade)
+  miscCadSettingsId String?
+}
+
+model AutoSetUserProperties {
+  id String @id @default(cuid())
+
+  leo                Boolean? @default(false)
+  dispatch           Boolean? @default(false)
+  emsFd              Boolean? @default(false)
+  defaultPermissions String[]
+
+  cad cad[]
+
+  @@map("AutoSetPropertiesUser")
+}
+
+model ApiToken {
+  id      String   @id @default(cuid())
+  enabled Boolean  @default(false)
+  token   String?
+  // empty = *
+  routes  String[]
+
+  uses      Int?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now()) @updatedAt
+  logs      ApiTokenLog[]
+
+  cad  cad[]
+  User User[]
+}
+
+model ApiTokenLog {
+  id         String   @id @default(uuid())
+  apiToken   ApiToken @relation(fields: [apiTokenId], references: [id], onDelete: Cascade)
+  apiTokenId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  statusCode String?
+  route      String?
+  method     String?
+}
+
+model DiscordRoles {
+  id      String @id @default(cuid())
+  guildId String
+
+  leoRoles           DiscordRole[] @relation("leoRoles")
+  leoSupervisorRoles DiscordRole[] @relation("leoSupervisorRoles")
+  emsFdRoles         DiscordRole[] @relation("emsFdRoles")
+  dispatchRoles      DiscordRole[] @relation("dispatchRoles")
+  towRoles           DiscordRole[] @relation("towRoles")
+  taxiRoles          DiscordRole[] @relation("taxiRoles")
+  adminRoles         DiscordRole[] @relation("adminRoles")
+  whitelistedRoleId  String?
+  whitelistedRole    DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
+  courthouseRoles    DiscordRole[] @relation("courthouseRoles")
+
+  adminRolePermissions         String[]
+  leoRolePermissions           String[]
+  leoSupervisorRolePermissions String[]
+  emsFdRolePermissions         String[]
+  dispatchRolePermissions      String[]
+  towRolePermissions           String[]
+  taxiRolePermissions          String[]
+  courthouseRolePermissions    String[]
+
+  roles DiscordRole[]
+  cad   cad[]
+}
+
+model DiscordRole {
+  id             String       @id @unique
+  name           String
+  guildId        String?
+  discordRoles   DiscordRoles @relation(fields: [discordRolesId], references: [id])
+  discordRolesId String
+  CustomRole     CustomRole[]
+
+  leoRolesArr           DiscordRoles[] @relation("leoRoles")
+  emsFdRolesArr         DiscordRoles[] @relation("emsFdRoles")
+  whitelistedRoles      DiscordRoles[] @relation("whitelistedRole")
+  dispatchRolesArr      DiscordRoles[] @relation("dispatchRoles")
+  leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
+  taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
+  towRolesArr           DiscordRoles[] @relation("towRoles")
+  courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
+  adminRolesArr         DiscordRoles[] @relation("adminRoles")
+}
+
+model BlacklistedWord {
+  id        String   @id @unique @default(cuid())
+  word      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+// audit logs
+model AuditLog {
+  id             String   @id @default(uuid())
+  executor       User?    @relation(fields: [executorId], references: [id])
+  executorId     String?
+  action         Json
+  createdAt      DateTime @default(now())
+  translationKey String?
+}
+
+model User {
+  id                       String                    @id @default(cuid())
+  username                 String                    @unique @db.VarChar(255)
+  password                 String                    @db.Text
+  rank                     Rank                      @default(USER)
+  banned                   Boolean                   @default(false)
+  banReason                String?
+  avatarUrl                String?                   @db.Text
+  steamId                  String?                   @db.VarChar(255)
+  whitelistStatus          WhitelistStatus           @default(ACCEPTED)
+  isDarkTheme              Boolean                   @default(true)
+  tempPassword             String?
+  statusViewMode           StatusViewMode            @default(DOT_COLOR)
+  tableActionsAlignment    TableActionsAlignment     @default(RIGHT)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @default(now()) @updatedAt
+  discordId                String?
+  lastDiscordSyncTimestamp DateTime?
+  permissions              String[]
+  soundSettings            UserSoundSettings?        @relation(fields: [soundSettingsId], references: [id])
+  soundSettingsId          String?
+  apiToken                 ApiToken?                 @relation(fields: [apiTokenId], references: [id])
+  apiTokenId               String?
+  roles                    CustomRole[]
+  locale                   String?
+  sessions                 UserSession[]
+  toAddDefaultPermissions  ToAddDefaultPermissions[]
+  lastSeen                 DateTime                  @default(now())
+  developerMode            Boolean                   @default(false)
+  dispatchLayoutOrder      DashboardLayoutCardType[]
+  emsFdLayoutOrder         DashboardLayoutCardType[]
+  officerLayoutOrder       DashboardLayoutCardType[]
+
+  // relational data
+  citizens             Citizen[]
+  cads                 cad[]
+  vehicles             RegisteredVehicle[]
+  weapons              Weapon[]
+  notifications        Notification[]
+  executedNotifictions Notification[]         @relation("executor")
+  medicalRecords       MedicalRecord[]
+  bleeterPosts         BleeterPost[]
+  businesses           Business[]
+  businessPosts        BusinessPost[]
+  Employee             Employee[]
+  officers             Officer[]
+  emsFdDeputies        EmsFdDeputy[]
+  TruckLog             TruckLog[]
+  ExpungementRequest   ExpungementRequest[]
+  ActiveDispatchers    ActiveDispatchers[]
+  User2FA              User2FA[]
+  NameChangeRequest    NameChangeRequest[]
+  CourthousePost       CourthousePost[]
+  ActiveTone           ActiveTone[]
+  AuditLog             AuditLog[]
+  DoctorVisit          DoctorVisit[]
+  BleeterProfile       BleeterProfile?
+  BleeterProfileFollow BleeterProfileFollow[]
+}
+
+model UserSession {
+  id           String   @id @default(cuid())
+  refreshToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+}
+
+model ToAddDefaultPermissions {
+  id          String                     @id @default(cuid())
+  key         ToAddDefaultPermissionsKey
+  user        User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  permissions String[]
+  addedAt     DateTime                   @default(now())
+
+  @@unique([key, userId])
+}
+
+model UserSoundSettings {
+  id           String  @id @default(uuid())
+  speech       Boolean @default(true)
+  speechVoice  String?
+  panicButton  Boolean @default(true)
+  signal100    Boolean @default(true)
+  addedToCall  Boolean @default(false)
+  stopRoleplay Boolean @default(false)
+  statusUpdate Boolean @default(false)
+  incomingCall Boolean @default(false)
+  User         User[]
+}
+
+model User2FA {
+  id     String @id @default(uuid())
+  secret String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model Citizen {
+  id                   String                        @id @default(cuid())
+  socialSecurityNumber String?
+  user                 User?                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
+  name                 String                        @db.VarChar(255)
+  surname              String                        @db.VarChar(255)
+  dateOfBirth          DateTime
+  gender               Value?                        @relation("genderToValue", fields: [genderId], references: [id])
+  genderId             String?
+  ethnicity            Value?                        @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
+  ethnicityId          String?
+  hairColor            String                        @db.VarChar(255)
+  eyeColor             String                        @db.VarChar(255)
+  address              String                        @db.VarChar(255)
+  postal               String?                       @db.VarChar(255)
+  height               String                        @db.VarChar(255)
+  weight               String                        @db.VarChar(255)
+  driversLicense       Value?                        @relation("driversLicenseToValue", fields: [driversLicenseId], references: [id])
+  driversLicenseId     String?
+  driversLicenseNumber String?
+  dlCategory           DriversLicenseCategoryValue[] @relation("dlCategoryToDLCategory")
+  weaponLicense        Value?                        @relation("weaponLicenseToValue", fields: [weaponLicenseId], references: [id])
+  weaponLicenseId      String?
+  weaponLicenseNumber  String?
+  pilotLicense         Value?                        @relation("pilotLicenseToValue", fields: [pilotLicenseId], references: [id])
+  pilotLicenseId       String?
+  pilotLicenseNumber   String?
+  waterLicense         Value?                        @relation("waterLicenseToValue", fields: [waterLicenseId], references: [id])
+  waterLicenseId       String?
+  waterLicenseNumber   String?
+  huntingLicense       Value?                        @relation("huntingLicenseToValue", fields: [huntingLicenseId], references: [id])
+  huntingLicenseId     String?
+  huntingLicenseNumber String?
+  fishingLicense       Value?                        @relation("fishingLicenseToValue", fields: [fishingLicenseId], references: [id])
+  fishingLicenseId     String?
+  fishingLicenseNumber String?
+  ccw                  Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
+  ccwId                String?
+  imageId              String?                       @db.Text
+  imageBlurData        String?                       @db.Text
+  note                 String?                       @db.Text
+  dead                 Boolean?                      @default(false)
+  dateOfDead           DateTime?
+  missing              Boolean?                      @default(false)
+  dateOfMissing        DateTime?
+  arrested             Boolean?                      @default(false)
+  phoneNumber          String?
+  occupation           String?                       @db.Text
+  additionalInfo       String?                       @db.Text
+  flags                Value[]                       @relation("citizenFlags")
+  addressFlags         Value[]                       @relation("citizenAddressFlags")
+  customFields         CustomFieldValue[]
+  vehicles             RegisteredVehicle[]
+  weapons              Weapon[]
+  medicalRecords       MedicalRecord[]
+  towCalls             TowCall[]
+  createdTowCalls      TowCall[]                     @relation("towCallCreator")
+  Employee             Employee[]
+  officers             Officer[]
+  warrants             Warrant[]
+  Record               Record[]
+  emsFdDeputies        EmsFdDeputy[]
+  TaxiCall             TaxiCall[]
+  createdTaxiCalls     TaxiCall[]                    @relation("taxiCallCreator")
+  truckLogs            TruckLog[]
+  createdAt            DateTime                      @default(now())
+  updatedAt            DateTime                      @default(now()) @updatedAt
+  appearance           String?
+  RecordRelease        RecordRelease[]
+  RecordLog            RecordLog[]
+  ExpungementRequest   ExpungementRequest[]
+  NameChangeRequest    NameChangeRequest[]
+  notes                Note[]
+  suspendedLicenses    SuspendedCitizenLicenses?     @relation(fields: [suspendedLicensesId], references: [id])
+  licensePoints        CitizenLicensePoints?         @relation(fields: [licensePointsId], references: [id])
+  licensePointsId      String?
+  suspendedLicensesId  String?
+  LicenseExam          LicenseExam[]
+  DoctorVisit          DoctorVisit[]
+  pets                 Pet[]
+
+  @@index([name, surname], name: "fullname")
+}
+
+model CitizenLicensePoints {
+  id                    String    @id @default(uuid())
+  driverLicensePoints   Int       @default(0)
+  pilotLicensePoints    Int       @default(0)
+  waterLicensePoints    Int       @default(0)
+  huntingLicensePoints  Int       @default(0)
+  fishingLicensePoints  Int       @default(0)
+  firearmsLicensePoints Int       @default(0)
+  updatedAt             DateTime  @default(now()) @updatedAt
+  citizens              Citizen[]
+}
+
+model SuspendedCitizenLicenses {
+  id                     String    @id @default(uuid())
+  driverLicense          Boolean   @default(false)
+  driverLicenseTimeEnd   DateTime?
+  pilotLicense           Boolean   @default(false)
+  pilotLicenseTimeEnd    DateTime?
+  waterLicense           Boolean   @default(false)
+  waterLicenseTimeEnd    DateTime?
+  fishingLicense         Boolean   @default(false)
+  fishingLicenseTimeEnd  DateTime?
+  huntingLicense         Boolean   @default(false)
+  huntingLicenseTimeEnd  DateTime?
+  firearmsLicense        Boolean   @default(false)
+  firearmsLicenseTimeEnd DateTime?
+  citizens               Citizen[]
+}
+
+model Pet {
+  id          String   @id @default(cuid())
+  name        String
+  breed       String   @db.VarChar(255)
+  color       String   @db.VarChar(255)
+  weight      String   @db.VarChar(255)
+  dateOfBirth DateTime
+  citizen     Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId   String
+  imageId     String?
+
+  notes          Note[]
+  medicalRecords PetMedicalRecord[]
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  createdBy   Officer?           @relation(fields: [createdById], references: [id])
+  createdById String?
+  Citizen     Citizen?           @relation(fields: [citizenId], references: [id])
+  citizenId   String?
+  vehicle     RegisteredVehicle? @relation(fields: [vehicleId], references: [id])
+  vehicleId   String?
+  pet         Pet?               @relation(fields: [petId], references: [id])
+  petId       String?
+}
+
+model RegisteredVehicle {
+  id                   String                   @id @default(cuid())
+  user                 User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
+  citizen              Citizen?                 @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String?
+  vinNumber            String                   @unique @db.VarChar(255)
+  plate                String                   @unique @db.VarChar(255)
+  model                VehicleValue             @relation(fields: [modelId], references: [id])
+  modelId              String
+  color                String                   @db.VarChar(255)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @default(now()) @updatedAt
+  registrationStatus   Value                    @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
+  registrationStatusId String
+  flags                Value[]                  @relation("vehicleFlags")
+  insuranceStatus      Value?                   @relation("insuranceStatusToValue", fields: [insuranceStatusId], references: [id])
+  insuranceStatusId    String?
+  inspectionStatus     VehicleInspectionStatus?
+  taxStatus            VehicleTaxStatus?
+  reportedStolen       Boolean                  @default(false)
+  impounded            Boolean                  @default(false)
+  customFields         CustomFieldValue[]
+  dmvStatus            WhitelistStatus?
+  notes                Note[]
+  appearance           String?
+  imageId              String?
+  trimLevels           Value[]                  @relation("registeredVehicleTrimLevels")
+
+  TruckLog         TruckLog[]
+  ImpoundedVehicle ImpoundedVehicle[]
+  Business         Business[]         @relation("registeredBusinessVehicles")
+  Record           Record[]
+
+  @@index([plate, vinNumber])
+}
+
+model Weapon {
+  id                   String             @id @default(cuid())
+  user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
+  citizen              Citizen            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @default(now()) @updatedAt
+  serialNumber         String             @unique @db.VarChar(255)
+  registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
+  registrationStatusId String
+  flags                Value[]            @relation("weaponFlags")
+  bofStatus            WhitelistStatus?
+  model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
+  modelId              String
+  customFields         CustomFieldValue[]
+
+  @@index([serialNumber])
+}
+
+model MedicalRecord {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  // type = diseases
+  type            String? @db.Text
+  description     String? @db.Text
+  descriptionData Json?
+  bloodGroup      Value?  @relation(fields: [bloodGroupId], references: [id])
+  bloodGroupId    String?
+}
+
+model PetMedicalRecord {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  pet       Pet      @relation(fields: [petId], references: [id])
+  petId     String
+
+  // type = diseases
+  type        String? @db.Text
+  description String? @db.Text
+}
+
+model DoctorVisit {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  diagnosis   String? @db.Text
+  description String? @db.Text
+  conditions  String? @db.Text
+  medications String? @db.Text
+}
+
+// values
+model Value {
+  id         String    @id @default(cuid())
+  type       ValueType
+  value      String    @db.VarChar(255)
+  isDefault  Boolean
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  position   Int?
+  isDisabled Boolean   @default(false)
+
+  // LICENSE type specific
+  // this was added here since the migration of eg `LicenseValue` would be to large.
+  licenseType ValueLicenseType?
+
+  /// OFFICER_RANK only
+  officerRankImageId       String?
+  officerRankImageBlurData String?
+  officerRankDepartments   DepartmentValue[] @relation("officerRankDepartments")
+
+  // how to clean this up?!
+  ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
+  genderToValue                   Citizen[]                     @relation("genderToValue")
+  driversLicenseToValue           Citizen[]                     @relation("driversLicenseToValue")
+  weaponLicenseToValue            Citizen[]                     @relation("weaponLicenseToValue")
+  pilotLicenseToValue             Citizen[]                     @relation("pilotLicenseToValue")
+  ccwToValue                      Citizen[]                     @relation("ccwToValue")
+  registrationStatusToValue       RegisteredVehicle[]           @relation("registrationStatusToValue")
+  weaponRegistrationStatusToValue Weapon[]                      @relation("weaponRegistrationStatusToValue")
+  EmployeeValue                   EmployeeValue[]
+  officerRankToValue              Officer[]                     @relation("officerRankToValue")
+  StatusValueToValue              StatusValue[]                 @relation("StatusValueToValue")
+  divisionToValue                 DivisionValue[]               @relation("divisionToValue")
+  emsFdRankToValue                EmsFdDeputy[]                 @relation("emsFdRankToValue")
+  departmentToValue               DepartmentValue[]             @relation("departmentToValue")
+  driversLicenseCategoryToValue   DriversLicenseCategoryValue[] @relation("driversLicenseCategoryToValue")
+  VehicleValue                    VehicleValue[]                @relation("vehicleValueToValue")
+  WeaponValue                     WeaponValue[]                 @relation("weaponValueToValue")
+  ImpoundedVehicle                ImpoundedVehicle[]
+  TowCall                         TowCall[]
+  MedicalRecord                   MedicalRecord[]
+  vehicleFlags                    RegisteredVehicle[]           @relation("vehicleFlags")
+  insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
+  waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
+  citizenFlags                    Citizen[]                     @relation("citizenFlags")
+  DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
+  QualificationValue              QualificationValue[]
+  CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
+  LicenseExam                     LicenseExam[]                 @relation("examToLicense")
+  AddressValue                    AddressValue[]                @relation("addressValueToValue")
+  EmergencyVehicleValue           EmergencyVehicleValue[]       @relation("emergencyVehicleToValue")
+  CitizenAddressFlags             Citizen[]                     @relation("citizenAddressFlags")
+  VehicleTrimLevels               VehicleValue[]                @relation("vehicleTrimLevels")
+  RegisteredVehicle               RegisteredVehicle[]           @relation("registeredVehicleTrimLevels")
+  Weapon                          Weapon[]                      @relation("weaponFlags")
+  fishingLicenseToValue           Citizen[]                     @relation("fishingLicenseToValue")
+  huntingLicenseToValue           Citizen[]                     @relation("huntingLicenseToValue")
+
+  @@index([type])
+}
+
+model AddressValue {
+  id      String  @id @default(uuid())
+  value   Value   @relation("addressValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId String
+  county  String?
+  postal  String?
+}
+
+model PenalCode {
+  id                     String                @id @default(cuid())
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @default(now()) @updatedAt
+  title                  String                @db.VarChar(255)
+  description            String?               @db.Text
+  descriptionData        Json?
+  isPrimary              Boolean               @default(true)
+  type                   PenalCodeType?
+  warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
+  warningApplicableId    String?
+  warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
+  warningNotApplicableId String?
+  violations             Violation[]
+  position               Int?
+  group                  PenalCodeGroup?       @relation(fields: [groupId], references: [id])
+  groupId                String?
+}
+
+model PenalCodeGroup {
+  id        String      @id @default(cuid())
+  position  Int?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now()) @updatedAt
+  name      String
+  PenalCode PenalCode[]
+}
+
+// Int[] = [field1, field2]. Items in this array where idx > 1 will be ignored
+model WarningApplicable {
+  id        String      @id @default(uuid())
+  fines     Int[]
+  PenalCode PenalCode[]
+}
+
+model WarningNotApplicable {
+  id         String      @id @default(uuid())
+  fines      Int[]
+  prisonTerm Int[]
+  bail       Int[]
+  PenalCode  PenalCode[]
+}
+
+model Violation {
+  id               String     @id @default(uuid())
+  fine             Int?
+  jailTime         Int?
+  bail             Int?
+  communityService String?
+  penalCode        PenalCode? @relation(fields: [penalCodeId], references: [id], onDelete: SetNull)
+  penalCodeId      String?
+  records          Record[]
+  counts           Int?
+}
+
+model SeizedItem {
+  id       String  @id @default(uuid())
+  record   Record  @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  recordId String
+  item     String
+  quantity Int     @default(1)
+  illegal  Boolean @default(false)
+}
+
+model DivisionValue {
+  id                         String                       @id @default(cuid())
+  value                      Value                        @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId                    String
+  department                 DepartmentValue?             @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId               String?
+  callsign                   String?
+  officerDivisionsToDivision Officer[]                    @relation("officerDivisionsToDivision")
+  deputies                   EmsFdDeputy[]                @relation("emsFdDivisionToDivision")
+  pairedUnitTemplate         String?
+  extraFields                Json?
+  Call911                    Call911[]
+  IndividualDivisionCallsign IndividualDivisionCallsign[]
+  EmergencyVehicleValue      EmergencyVehicleValue[]
+}
+
+model DepartmentValue {
+  id                    String                  @id @default(cuid())
+  value                 Value                   @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId               String
+  callsign              String?
+  customTemplate        String?
+  whitelisted           Boolean                 @default(false)
+  isDefaultDepartment   Boolean                 @default(false)
+  type                  DepartmentType          @default(LEO)
+  EmsFdDeputy           EmsFdDeputy[]           @relation("emsFdDepartmentToDepartment")
+  Officer               Officer[]               @relation("officerDepartmentToDepartment")
+  division              DivisionValue[]         @relation("divisionDepartmentToValue")
+  LeoWhitelistStatus    LeoWhitelistStatus[]
+  Call911               Call911[]
+  StatusValue           StatusValue?            @relation(fields: [statusValueId], references: [id])
+  statusValueId         String?
+  defaultOfficerRank    Value?                  @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
+  defaultOfficerRankId  String?
+  isConfidential        Boolean                 @default(false)
+  extraFields           Json?
+  Qualification         QualificationValue[]
+  CombinedLeoUnit       CombinedLeoUnit[]
+  Value                 Value[]                 @relation("officerRankDepartments")
+  EmergencyVehicleValue EmergencyVehicleValue[]
+  mCombinedEmsFdUnit    CombinedEmsFdUnit[]
+  ActiveDispatchers     ActiveDispatchers[]
+  links                 DepartmentValueLink[]
+}
+
+model DepartmentValueLink {
+  id           String          @id @default(cuid())
+  title        String
+  url          String
+  department   DepartmentValue @relation(fields: [departmentId], references: [id])
+  departmentId String
+}
+
+model EmergencyVehicleValue {
+  id          String            @id @default(cuid())
+  value       Value             @relation("emergencyVehicleToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId     String
+  departments DepartmentValue[]
+  divisions   DivisionValue[]
+  extraFields Json?
+  description String?
+
+  Officers          Officer[]           @relation("activeEmergencyVehicle_leo")
+  EmsFdDeputies     EmsFdDeputy[]       @relation("activeEmergencyVehicle_emsfd")
+  CombinedLeoUnit   CombinedLeoUnit[]   @relation("activeEmergencyVehicle_combined_unit")
+  CombinedEmsFdUnit CombinedEmsFdUnit[] @relation("activeEmergencyVehicle_combined_emsfd_unit")
+}
+
+model DriversLicenseCategoryValue {
+  id          String                     @id @default(cuid())
+  valueId     String
+  value       Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type        DriversLicenseCategoryType
+  description String?
+  citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
+  LicenseExam LicenseExam[]              @relation("dlCategoryToLicenseExam")
+}
+
+model VehicleValue {
+  id                String              @id @default(cuid())
+  valueId           String
+  value             Value               @relation("vehicleValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  hash              String?
+  imageId           String?
+  trimLevels        Value[]             @relation("vehicleTrimLevels")
+  RegisteredVehicle RegisteredVehicle[]
+}
+
+model WeaponValue {
+  id      String   @id @default(cuid())
+  valueId String
+  value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  hash    String?
+  weapon  Weapon[] @relation("weaponModelToValue")
+}
+
+model CallTypeValue {
+  id            String  @id @default(cuid())
+  priority      String?
+  valueId       String
+  isDisposition Boolean @default(false)
+  value         Value   @relation("callTypeValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+
+  dispositionCodeToCall Call911[] @relation("dispositionCodeToCall")
+  callTypeToCall        Call911[] @relation("callTypeToCall")
+}
+
+// notifications
+model Notification {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  executor    User?    @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
+  executorId  String?
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
+// bleeter
+model BleeterProfile {
+  id         String                 @id @default(cuid())
+  name       String                 @db.VarChar(255)
+  handle     String                 @unique @db.VarChar(255)
+  isVerified Boolean?               @default(false)
+  bio        String?                @db.Text
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String                 @unique
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @default(now()) @updatedAt
+  followers  BleeterProfileFollow[] @relation("followers")
+  following  BleeterProfileFollow[] @relation("following")
+  posts      BleeterPost[]
+}
+
+model BleeterProfileFollow {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  followerProfile    BleeterProfile? @relation(name: "followers", fields: [followerProfileId], references: [id], onDelete: Cascade)
+  followerProfileId  String?
+  followingProfile   BleeterProfile? @relation(name: "following", fields: [followingProfileId], references: [id], onDelete: Cascade)
+  followingProfileId String?
+}
+
+model BleeterPost {
+  id            String          @id @default(uuid())
+  creator       BleeterProfile? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId     String?
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  title         String          @db.VarChar(255)
+  body          String?         @db.Text
+  bodyData      Json?
+  imageId       String?         @db.VarChar(255)
+  imageBlurData String?         @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+// tow
+model TowCall {
+  id                String   @id @default(uuid())
+  userId            String?
+  assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id], onDelete: SetNull)
+  assignedUnitId    String?
+  location          String   @db.VarChar(255)
+  postal            String?  @db.Text
+  deliveryAddress   Value?   @relation(fields: [deliveryAddressId], references: [id])
+  deliveryAddressId String?
+  plate             String?  @db.VarChar(255)
+  model             String?  @db.VarChar(255)
+  name              String?
+  description       String?  @db.Text
+  descriptionData   Json?
+  creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  creatorId         String?
+  ended             Boolean  @default(false)
+  callCountyService Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
+}
+
+// taxi
+model TaxiCall {
+  id              String   @id @default(uuid())
+  userId          String?
+  assignedUnit    Citizen? @relation(fields: [assignedUnitId], references: [id], onDelete: SetNull)
+  assignedUnitId  String?
+  location        String   @db.VarChar(255)
+  postal          String?  @db.Text
+  name            String?
+  description     String?  @db.Text
+  descriptionData Json?
+  creator         Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  creatorId       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
+// businesses
+model Business {
+  id            String              @id @default(cuid())
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @default(now()) @updatedAt
+  name          String              @db.VarChar(255)
+  whitelisted   Boolean             @default(false)
+  address       String              @db.Text
+  postal        String?             @db.VarChar(255)
+  status        WhitelistStatus?
+  businessPosts BusinessPost[]
+  employees     Employee[]
+  Record        Record[]
+  vehicles      RegisteredVehicle[] @relation("registeredBusinessVehicles")
+  roles         EmployeeValue[]     @relation("businessValueBusinessRoles")
+  RecordLog     RecordLog[]
+}
+
+model Employee {
+  id                 String          @id @default(cuid())
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  citizen            Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId          String
+  business           Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId         String
+  role               EmployeeValue?  @relation("employeeToValue", fields: [roleId], references: [id], onDelete: Restrict)
+  roleId             String?
+  employeeOfTheMonth Boolean         @default(false)
+  canCreatePosts     Boolean         @default(true)
+  canManageEmployees Boolean         @default(false)
+  canManageVehicles  Boolean         @default(false)
+  whitelistStatus    WhitelistStatus @default(ACCEPTED)
+  businessPosts      BusinessPost[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @default(now()) @updatedAt
+}
+
+model BusinessPost {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId String
+
+  title     String   @db.VarChar(255)
+  body      String?  @db.Text
+  bodyData  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model EmployeeValue {
+  id         String         @id @default(cuid())
+  value      Value          @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  valueId    String
+  as         EmployeeAsEnum @default(EMPLOYEE)
+  employees  Employee[]     @relation("employeeToValue")
+  businesses Business[]     @relation("businessValueBusinessRoles")
+}
+
+// leo
+model Officer {
+  id                          String                       @id @default(cuid())
+  department                  DepartmentValue?             @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId                String?
+  callsign                    String                       @db.VarChar(255)
+  callsign2                   String                       @db.VarChar(255)
+  activeDivisionCallsign      IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
+  activeDivisionCallsignId    String?
+  incremental                 Int?
+  userDefinedCallsign         String?
+  divisions                   DivisionValue[]              @relation("officerDivisionsToDivision")
+  rank                        Value?                       @relation("officerRankToValue", fields: [rankId], references: [id])
+  rankId                      String?
+  position                    String?                      @db.Text
+  status                      StatusValue?                 @relation("officerStatusToValue", fields: [statusId], references: [id])
+  statusId                    String?
+  suspended                   Boolean                      @default(false)
+  badgeNumber                 Int?
+  badgeNumberString           String?
+  imageId                     String?                      @db.VarChar(255)
+  imageBlurData               String?                      @db.Text
+  citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId                   String
+  user                        User?                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String?
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @default(now()) @updatedAt
+  whitelistStatus             LeoWhitelistStatus?          @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId           String?
+  radioChannelId              String?
+  bolos                       Bolo[]                       @relation("bolosToOfficer")
+  warrants                    Warrant[]
+  logs                        OfficerLog[]
+  Record                      Record[]
+  assignedUnit                AssignedUnit[]
+  activeIncident              LeoIncident?                 @relation("activeIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId            String?
+  activeCall                  Call911?                     @relation("activeCall", fields: [activeCallId], references: [id])
+  activeCallId                String?
+  LeoIncident                 LeoIncident[]
+  LeoIncidentInvolvedOfficers LeoIncident[]                @relation("involvedOfficers")
+  combinedLeoUnit             CombinedLeoUnit?             @relation(fields: [combinedLeoUnitId], references: [id])
+  combinedLeoUnitId           String?
+  qualifications              UnitQualification[]
+  IncidentInvolvedUnit        IncidentInvolvedUnit[]
+  Note                        Note[]
+  callsigns                   IndividualDivisionCallsign[]
+  AssignedWarrantOfficer      AssignedWarrantOfficer[]
+  ImpoundedVehicle            ImpoundedVehicle[]
+  activeVehicle               EmergencyVehicleValue?       @relation("activeEmergencyVehicle_leo", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId             String?
+  isTemporary                 Boolean                      @default(false)
+  identifiers                 String[]
+  ChatCreator                 ChatCreator[]
+
+  @@index([callsign, callsign2, statusId])
+}
+
+model IndividualDivisionCallsign {
+  id         String         @id @default(uuid())
+  divisionId String?
+  division   DivisionValue? @relation(fields: [divisionId], references: [id])
+  callsign   String
+  callsign2  String
+  officerId  String
+  officer    Officer        @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  Officer    Officer[]      @relation("divisionCallsign")
+}
+
+model UnitQualification {
+  id              String             @id @default(uuid())
+  qualification   QualificationValue @relation(fields: [qualificationId], references: [id])
+  qualificationId String
+
+  suspendedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  officerId     String?
+  Officer       Officer?     @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  emsFdDeputyId String?
+  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id], onDelete: Cascade)
+}
+
+model QualificationValue {
+  id                String                 @id @default(uuid())
+  imageId           String?
+  imageBlurData     String?                @db.Text
+  /// name of the qualification
+  valueId           String
+  value             Value                  @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  departments       DepartmentValue[]
+  departmentId      String?
+  description       String?                @db.Text
+  qualificationType QualificationValueType @default(QUALIFICATION)
+  UnitQualification UnitQualification[]
+}
+
+model LeoWhitelistStatus {
+  id           String          @id @default(uuid())
+  status       WhitelistStatus
+  // the department they're awaiting access for.
+  department   DepartmentValue @relation(fields: [departmentId], references: [id])
+  departmentId String
+  Officers     Officer[]
+  EmsFdDeputy  EmsFdDeputy[]
+}
+
+model StatusValue {
+  id          String            @id @default(uuid())
+  value       Value             @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId     String
+  shouldDo    ShouldDoType      @default(SET_STATUS)
+  whatPages   WhatPages[]
+  color       String?
+  textColor   String?
+  type        StatusValueType   @default(STATUS_CODE)
+  departments DepartmentValue[]
+
+  officerStatusToValue Officer[]           @relation("officerStatusToValue")
+  emsFdStatusToValue   EmsFdDeputy[]       @relation("emsFdStatusToValue")
+  CombinedLeoUnit      CombinedLeoUnit[]   @relation("combinedUnitStatusToValue")
+  CombinedEmsFdUnit    CombinedEmsFdUnit[] @relation("combinedEmsFdUnitStatusToValue")
+  Call911              Call911[]
+  LeoIncident          LeoIncident[]
+  EmsFdIncident        EmsFdIncident[]
+}
+
+model OfficerLog {
+  id            String       @id @default(uuid())
+  startedAt     DateTime     @default(now())
+  endedAt       DateTime?
+  userId        String?
+  officer       Officer?     @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id], onDelete: Cascade)
+  emsFdDeputyId String?
+}
+
+model ImpoundedVehicle {
+  id                  String            @id @default(uuid())
+  vehicle             RegisteredVehicle @relation(fields: [registeredVehicleId], references: [id], onDelete: Cascade)
+  registeredVehicleId String
+  location            Value             @relation(fields: [valueId], references: [id])
+  valueId             String
+  officer             Officer?          @relation(fields: [officerId], references: [id])
+  officerId           String?
+  descriptionData     Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model LeoIncident {
+  id                   String                 @id @default(uuid())
+  caseNumber           Int                    @default(autoincrement())
+  description          String?                @db.Text
+  descriptionData      Json?
+  postal               String?
+  // when null, it is the dispatcher
+  creator              Officer?               @relation(fields: [creatorId], references: [id])
+  creatorId            String?
+  officersInvolved     Officer[]              @relation("involvedOfficers")
+  unitsInvolved        IncidentInvolvedUnit[] @relation("unitsInvolved")
+  firearmsInvolved     Boolean                @default(false)
+  injuriesOrFatalities Boolean                @default(false)
+  arrestsMade          Boolean                @default(false)
+  isActive             Boolean                @default(false)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  situationCode        StatusValue?           @relation(fields: [situationCodeId], references: [id])
+  situationCodeId      String?
+  events               IncidentEvent[]
+  calls                Call911[]
+  Officer              Officer[]              @relation("activeIncident")
+  CombinedLeoUnit      CombinedLeoUnit[]      @relation("combinedActiveIncident")
+  EmsFdDeputy          EmsFdDeputy[]          @relation("emsfdActiveIncident")
+  CombinedEmsFdUnit    CombinedEmsFdUnit[]    @relation("combinedEmsFdActiveIncident")
+  Record               Record[]
+  DispatchChat         DispatchChat[]
+}
+
+model IncidentEvent {
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  incident        LeoIncident    @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId      String
+  description     String         @db.Text
+  EmsFdIncident   EmsFdIncident? @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId String?
+}
+
+model CombinedLeoUnit {
+  id                     String                   @id @default(uuid())
+  officers               Officer[]
+  userDefinedCallsign    String?
+  callsign               String
+  callsign2              String?
+  department             DepartmentValue?         @relation(fields: [departmentId], references: [id])
+  departmentId           String?
+  incremental            Int?
+  radioChannelId         String?
+  status                 StatusValue?             @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId               String?
+  pairedUnitTemplate     String?
+  activeCall             Call911?                 @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId           String?
+  activeIncident         LeoIncident?             @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId       String?
+  activeVehicle          EmergencyVehicleValue?   @relation("activeEmergencyVehicle_combined_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId        String?
+  AssignedUnit           AssignedUnit[]
+  IncidentInvolvedUnit   IncidentInvolvedUnit[]
+  AssignedWarrantOfficer AssignedWarrantOfficer[]
+  EmsFdIncident          EmsFdIncident?           @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId        String?
+  ChatCreator            ChatCreator[]
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @default(now()) @updatedAt
+
+  @@index([statusId])
+}
+
+model CombinedEmsFdUnit {
+  id                  String                 @id @default(uuid())
+  deputies            EmsFdDeputy[]
+  callsign            String
+  userDefinedCallsign String?
+  callsign2           String?
+  department          DepartmentValue?       @relation(fields: [departmentId], references: [id])
+  departmentId        String?
+  incremental         Int?
+  radioChannelId      String?
+  status              StatusValue?           @relation("combinedEmsFdUnitStatusToValue", fields: [statusId], references: [id])
+  statusId            String?
+  pairedUnitTemplate  String?
+  activeCall          Call911?               @relation("CombinedEmsFdUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId        String?
+  activeIncident      LeoIncident?           @relation("combinedEmsFdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId    String?
+  activeVehicle       EmergencyVehicleValue? @relation("activeEmergencyVehicle_combined_emsfd_unit", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId     String?
+  EmsFdIncident       EmsFdIncident?         @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId     String?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @default(now()) @updatedAt
+
+  AssignedUnit         AssignedUnit[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  ChatCreator          ChatCreator[]
+
+  @@index([statusId])
+}
+
+// dispatching
+model ActiveDispatchers {
+  id           String           @id @default(cuid())
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @default(now()) @updatedAt
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  department   DepartmentValue? @relation(fields: [departmentId], references: [id])
+  departmentId String?
+}
+
+model DispatchChat {
+  id         String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  message    String       @db.Text
+  unitId     String
+  // creator = null ? dispatcher : unit
+  creator    ChatCreator? @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId  String?
+  call       Call911?     @relation(fields: [callId], references: [id], onDelete: Cascade)
+  callId     String?
+  incident   LeoIncident? @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId String?
+}
+
+model ChatCreator {
+  id                String             @id @default(uuid())
+  officer           Officer?           @relation(fields: [officerId], references: [id])
+  officerId         String?
+  deputy            EmsFdDeputy?       @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId     String?
+  combinedUnit      CombinedLeoUnit?   @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId     String?
+  combinedEmsFdUnit CombinedEmsFdUnit? @relation(fields: [combinedEmsFdId], references: [id])
+  combinedEmsFdId   String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
+  DispatchChat      DispatchChat[]
+}
+
+// 911 calls & bolos
+model Call911 {
+  id                String              @id @default(cuid())
+  caseNumber        Int                 @default(autoincrement())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
+  position          Position?           @relation(fields: [positionId], references: [id])
+  positionId        String?
+  userId            String?
+  assignedUnits     AssignedUnit[]
+  location          String              @db.Text
+  postal            String?             @db.Text
+  description       String?             @db.Text
+  descriptionData   Json?
+  name              String              @db.VarChar(255)
+  ended             Boolean?            @default(false)
+  situationCode     StatusValue?        @relation(fields: [situationCodeId], references: [id])
+  situationCodeId   String?
+  dispositionCode   CallTypeValue?      @relation("dispositionCodeToCall", fields: [dispositionCodeId], references: [id])
+  dispositionCodeId String?
+  viaDispatch       Boolean?            @default(false)
+  divisions         DivisionValue[]
+  departments       DepartmentValue[]
+  events            Call911Event[]
+  incidents         LeoIncident[]
+  type              CallTypeValue?      @relation("callTypeToCall", fields: [typeId], references: [id])
+  typeId            String?
+  Officer           Officer[]           @relation("activeCall")
+  EmsFdDeputy       EmsFdDeputy[]       @relation("emsFdActiveCall")
+  CombinedLeoUnit   CombinedLeoUnit[]   @relation("CombinedLeoUnitActiveCall")
+  gtaMapPosition    GTAMapPosition?     @relation(fields: [gtaMapPositionId], references: [id])
+  gtaMapPositionId  String?
+  isSignal100       Boolean?            @default(false)
+  extraFields       Json?
+  status            WhitelistStatus?
+  CombinedEmsFdUnit CombinedEmsFdUnit[] @relation("CombinedEmsFdUnitActiveCall")
+  Record            Record[]
+  EmsFdIncident     EmsFdIncident?      @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId   String?
+  DispatchChat      DispatchChat[]
+
+  @@index([caseNumber])
+}
+
+model GTAMapPosition {
+  id      String @id @default(uuid())
+  x       Float
+  y       Float
+  z       Float
+  heading Float
+
+  Call911 Call911[]
+}
+
+model Position {
+  id      String    @id @default(uuid())
+  lat     Float?
+  lng     Float?
+  Call911 Call911[]
+}
+
+model AssignedUnit {
+  id                String             @id @default(uuid())
+  isPrimary         Boolean?           @default(false)
+  officer           Officer?           @relation(fields: [officerId], references: [id])
+  officerId         String?
+  deputy            EmsFdDeputy?       @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId     String?
+  combinedUnit      CombinedLeoUnit?   @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId     String?
+  combinedEmsFdUnit CombinedEmsFdUnit? @relation(fields: [combinedEmsFdId], references: [id])
+  combinedEmsFdId   String?
+  call911           Call911?           @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  call911Id         String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
+}
+
+model AssignedWarrantOfficer {
+  id            String           @id @default(uuid())
+  officer       Officer?         @relation(fields: [officerId], references: [id])
+  officerId     String?
+  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId String?
+  warrant       Warrant?         @relation(fields: [warrantId], references: [id], onDelete: Cascade)
+  warrantId     String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
+}
+
+model IncidentInvolvedUnit {
+  id                String             @id @default(uuid())
+  officer           Officer?           @relation(fields: [officerId], references: [id])
+  officerId         String?
+  deputy            EmsFdDeputy?       @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId     String?
+  combinedUnit      CombinedLeoUnit?   @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId     String?
+  combinedEmsFdUnit CombinedEmsFdUnit? @relation(fields: [combinedEmsFdId], references: [id])
+  combinedEmsFdId   String?
+  incident          LeoIncident?       @relation("unitsInvolved", fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId        String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
+  emsFdIncident     EmsFdIncident?     @relation("unitsInvolved", fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId   String?
+}
+
+model Call911Event {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  call            Call911  @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  call911Id       String
+  description     String   @db.Text
+  translationData Json?
+}
+
+model Bolo {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  type        BoloType
+  description String?  @db.Text
+  plate       String?  @db.VarChar(255)
+  model       String?  @db.VarChar(255)
+  color       String?  @db.VarChar(255)
+  name        String?  @db.VarChar(255)
+  officer     Officer? @relation("bolosToOfficer", fields: [officerId], references: [id])
+  officerId   String?
+
+  @@index([type, plate, name])
+}
+
+// tickets, arrest reports, warrants, written warnings
+model Record {
+  id                   String              @id @default(uuid())
+  publishStatus        PublishStatus       @default(DRAFT)
+  caseNumber           Int                 @default(autoincrement())
+  type                 RecordType
+  citizen              Citizen?            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String?
+  officer              Officer?            @relation(fields: [officerId], references: [id], onDelete: SetNull)
+  officerId            String?
+  violations           Violation[]
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @default(now()) @updatedAt
+  postal               String              @db.VarChar(255)
+  address              String?             @db.Text
+  notes                String?             @db.Text
+  descriptionData      Json?
+  release              RecordRelease?      @relation(fields: [releaseId], references: [id], onDelete: SetNull)
+  releaseId            String?
+  courtEntry           CourtEntry?         @relation(fields: [CourtEntryId], references: [id], onDelete: SetNull)
+  CourtEntryId         String?
+  RecordLog            RecordLog[]
+  ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
+  expungementRequestId String?
+  seizedItems          SeizedItem[]
+  status               WhitelistStatus?    @default(ACCEPTED)
+  paymentStatus        PaymentStatus?
+  vehicle              RegisteredVehicle?  @relation(fields: [vehicleId], references: [id])
+  vehicleId            String?
+  vehiclePlate         String?
+  vehicleModel         String?
+  vehicleColor         String?
+  vehicleSpeed         String?
+  speedLimit           String?
+  vehiclePaceType      VehiclePaceType?
+  call911              Call911?            @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  call911Id            String?
+  incident             LeoIncident?        @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId           String?
+  business             Business?           @relation(fields: [businessId], references: [id])
+  businessId           String?
+  EmsFdIncident        EmsFdIncident?      @relation(fields: [emsFdIncidentId], references: [id])
+  emsFdIncidentId      String?
+}
+
+model RecordRelease {
+  id         String      @id @default(uuid())
+  type       ReleaseType
+  releasedBy Citizen?    @relation(fields: [citizenId], references: [id], onDelete: SetNull)
+  citizenId  String?
+  Record     Record[]
+}
+
+model Warrant {
+  id                   String                   @id @default(uuid())
+  caseNumber           Int                      @default(autoincrement())
+  citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  officer              Officer?                 @relation(fields: [officerId], references: [id], onDelete: SetNull)
+  officerId            String?
+  assignedOfficers     AssignedWarrantOfficer[]
+  description          String                   @db.Text
+  status               WarrantStatus            @default(ACTIVE)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @default(now()) @updatedAt
+  RecordLog            RecordLog[]
+  ExpungementRequest   ExpungementRequest?      @relation(fields: [expungementRequestId], references: [id])
+  expungementRequestId String?
+  approvalStatus       WhitelistStatus?         @default(ACCEPTED)
+}
+
+model RecordLog {
+  id         String    @id @default(uuid())
+  citizen    Citizen?  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId  String?
+  business   Business? @relation(fields: [businessId], references: [id])
+  businessId String?
+  records    Record?   @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  recordId   String?
+  warrant    Warrant?  @relation(fields: [warrantId], references: [id], onDelete: Cascade)
+  warrantId  String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+}
+
+// Expungement requests
+model ExpungementRequest {
+  id          String                   @id @default(uuid())
+  citizen     Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId   String
+  user        User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  status      ExpungementRequestStatus @default(PENDING)
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @default(now()) @updatedAt
+  description String?                  @db.Text
+  warrants    Warrant[]
+  records     Record[]
+}
+
+model NameChangeRequest {
+  id          String          @id @default(uuid())
+  citizen     Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId   String
+  user        User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  newName     String
+  newSurname  String
+  description String?         @db.Text
+  status      WhitelistStatus @default(PENDING)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now()) @updatedAt
+}
+
+model CourtEntry {
+  id              String      @id @default(uuid())
+  title           String
+  caseNumber      String
+  descriptionData Json?
+  dates           CourtDate[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @default(now()) @updatedAt
+  records         Record[]
+}
+
+model CourtDate {
+  id           String     @id @default(uuid())
+  note         String?
+  date         DateTime
+  courtEntry   CourtEntry @relation(fields: [courtEntryId], references: [id], onDelete: Cascade)
+  courtEntryId String
+}
+
+// ems-fd
+model EmsFdDeputy {
+  id                   String                 @id @default(cuid())
+  department           DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId         String?
+  callsign             String                 @db.VarChar(255)
+  callsign2            String                 @db.VarChar(255)
+  incremental          Int?
+  userDefinedCallsign  String?
+  division             DivisionValue?         @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId           String?
+  position             String?                @db.Text
+  rank                 Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId               String?
+  status               StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId             String?
+  suspended            Boolean                @default(false)
+  badgeNumber          Int?
+  badgeNumberString    String?
+  imageId              String?                @db.VarChar(255)
+  imageBlurData        String?                @db.Text
+  citizen              Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  user                 User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  radioChannelId       String?
+  activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
+  activeIncident       LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId     String?
+  whitelistStatus      LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId    String?
+  logs                 OfficerLog[]
+  AssignedUnit         AssignedUnit[]
+  qualifications       UnitQualification[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  activeVehicle        EmergencyVehicleValue? @relation("activeEmergencyVehicle_emsfd", fields: [activeVehicleId], references: [id], onDelete: SetNull)
+  activeVehicleId      String?
+  isTemporary          Boolean                @default(false)
+  identifiers          String[]
+  CombinedEmsFdUnit    CombinedEmsFdUnit?     @relation(fields: [combinedEmsFdUnitId], references: [id])
+  combinedEmsFdUnitId  String?
+  EmsFdIncident        EmsFdIncident[]        @relation("emsFdIncidentCreator")
+  ChatCreator          ChatCreator[]
+
+  @@index([callsign, callsign2, statusId])
+}
+
+model EmsFdIncident {
+  id                   String                 @id @default(uuid())
+  caseNumber           Int                    @default(autoincrement())
+  description          String?                @db.Text
+  descriptionData      Json?
+  address              String?
+  postal               String?
+  fireType             String?
+  // when null, it is the dispatcher
+  creator              EmsFdDeputy?           @relation("emsFdIncidentCreator", fields: [creatorId], references: [id])
+  creatorId            String?
+  unitsInvolved        IncidentInvolvedUnit[] @relation("unitsInvolved")
+  firearmsInvolved     Boolean                @default(false)
+  injuriesOrFatalities Boolean                @default(false)
+  arrestsMade          Boolean                @default(false)
+  vehicleInvolved      Boolean                @default(false)
+  isActive             Boolean                @default(false)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  situationCode        StatusValue?           @relation(fields: [situationCodeId], references: [id])
+  situationCodeId      String?
+  events               IncidentEvent[]
+  calls                Call911[]
+  CombinedLeoUnit      CombinedLeoUnit[]
+  CombinedEmsFdUnit    CombinedEmsFdUnit[]
+  Record               Record[]
+}
+
+// truck logs
+model TruckLog {
+  id        String             @id @default(uuid())
+  citizen   Citizen?           @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String?
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  vehicle   RegisteredVehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  vehicleId String?
+  startedAt String             @db.VarChar(255)
+  endedAt   String             @db.VarChar(255)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now()) @updatedAt
+  notes     String?
+}
+
+// Exams
+model LicenseExam {
+  id           String                        @id @default(uuid())
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
+  status       DLExamStatus                  @default(IN_PROGRESS)
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @default(now()) @updatedAt
+  type         LicenseExamType
+  citizen      Citizen                       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId    String
+  license      Value                         @relation("examToLicense", fields: [licenseId], references: [id])
+  licenseId    String
+  categories   DriversLicenseCategoryValue[] @relation("dlCategoryToLicenseExam")
+}
+
+/// custom fields
+model CustomField {
+  id              String              @id @default(uuid())
+  name            String
+  citizenEditable Boolean             @default(false)
+  category        CustomFieldCategory
+  values          CustomFieldValue[]
+}
+
+model CustomFieldValue {
+  id                 String              @id @default(uuid())
+  value              String?
+  field              CustomField         @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId            String
+  Citizens           Citizen[]
+  RegisteredVehicles RegisteredVehicle[]
+  Weapons            Weapon[]
+}
+
+/// custom roles
+model CustomRole {
+  id            String       @id @default(uuid())
+  name          String       @unique
+  iconId        String?
+  permissions   String[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  discordRole   DiscordRole? @relation(fields: [discordRoleId], references: [id])
+  discordRoleId String?
+  User          User[]
+}
+
+// courthouse posts
+model CourthousePost {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  title           String   @db.VarChar(255)
+  descriptionData Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
+model ActiveTone {
+  id          String         @id @default(uuid())
+  type        ActiveToneType @unique
+  description String?
+  createdAt   DateTime       @default(now())
+  createdBy   User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ActiveToneType {
+  LEO
+  EMS_FD
+  SHARED
+}
+
+enum LicenseExamType {
+  DRIVER
+  FIREARM
+  WATER
+  PILOT
+  HUNTING
+  FISHING
+}
+
+enum QualificationValueType {
+  QUALIFICATION
+  AWARD
+}
+
+enum CustomFieldCategory {
+  CITIZEN
+  WEAPON
+  VEHICLE
+}
+
+enum DLExamPassType {
+  PASSED
+  FAILED
+}
+
+enum DLExamStatus {
+  IN_PROGRESS
+  PASSED
+  FAILED
+}
+
+enum StatusViewMode {
+  FULL_ROW_COLOR
+  DOT_COLOR
+}
+
+enum TableActionsAlignment {
+  NONE
+  LEFT
+  RIGHT
+}
+
+enum Rank {
+  OWNER
+  ADMIN
+  USER
+}
+
+enum WhitelistStatus {
+  ACCEPTED
+  PENDING
+  DECLINED
+}
+
+enum ValueLicenseType {
+  LICENSE
+  REGISTRATION_STATUS
+  INSURANCE_STATUS
+}
+
+enum DepartmentType {
+  LEO
+  EMS_FD
+}
+
+enum ValueType {
+  LICENSE
+  GENDER
+  ETHNICITY
+  VEHICLE
+  WEAPON
+  BLOOD_GROUP
+  BUSINESS_ROLE
+  CODES_10
+  PENAL_CODE
+  DEPARTMENT
+  OFFICER_RANK
+  DIVISION
+  DRIVERSLICENSE_CATEGORY
+  IMPOUND_LOT
+  VEHICLE_FLAG
+  CITIZEN_FLAG
+  QUALIFICATION
+  CALL_TYPE
+  ADDRESS
+  EMERGENCY_VEHICLE
+  ADDRESS_FLAG
+  VEHICLE_TRIM_LEVEL
+  WEAPON_FLAG
+}
+
+enum DriversLicenseCategoryType {
+  AUTOMOTIVE
+  AVIATION
+  WATER
+  FIREARM
+  HUNTING
+  FISHING
+  OTHER
+}
+
+enum EmployeeAsEnum {
+  OWNER
+  MANAGER
+  EMPLOYEE
+}
+
+enum StatusValueType {
+  STATUS_CODE
+  SITUATION_CODE
+}
+
+enum WhatPages {
+  DISPATCH
+  EMS_FD
+  LEO
+}
+
+enum ShouldDoType {
+  SET_OFF_DUTY
+  SET_ON_DUTY
+  SET_ASSIGNED
+  SET_STATUS
+  PANIC_BUTTON
+  EN_ROUTE
+  ON_SCENE
+  UNAVAILABLE
+}
+
+enum BoloType {
+  VEHICLE
+  PERSON
+  OTHER
+}
+
+enum ReleaseType {
+  TIME_OUT
+  BAIL_POSTED
+}
+
+enum RecordType {
+  ARREST_REPORT
+  TICKET
+  WRITTEN_WARNING
+}
+
+enum WarrantStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ExpungementRequestStatus {
+  ACCEPTED
+  DENIED
+  PENDING
+  CANCELED
+}
+
+enum VehicleInspectionStatus {
+  PASSED
+  FAILED
+}
+
+enum VehicleTaxStatus {
+  TAXED
+  UNTAXED
+}
+
+enum DiscordWebhookType {
+  CALL_911
+  PANIC_BUTTON
+  UNIT_STATUS
+  BOLO
+  CITIZEN_RECORD
+  VEHICLE_IMPOUNDED
+  WARRANTS
+  BLEETER_POST
+  CITIZEN_DECLARED_DEAD
+  DEPARTMENT_WHITELIST_STATUS
+  USER_WHITELIST_STATUS
+  LEO_INCIDENT_CREATED
+  EMS_FD_INCIDENT_CREATED
+}
+
+enum JailTimeScale {
+  HOURS
+  MINUTES
+  SECONDS
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+enum ToAddDefaultPermissionsKey {
+  MANAGE_WARRANTS_PERMISSIONS
+  MANAGE_AWARDS_AND_QUALIFICATIONS
+}
+
+enum PenalCodeType {
+  INFRACTION
+  MISDEMEANOR
+  FELONY
+}
+
+// other
+enum Feature {
+  BLEETER
+  TOW
+  TAXI
+  COURTHOUSE
+  TRUCK_LOGS
+  AOP
+  BUSINESS
+  ALLOW_DUPLICATE_CITIZEN_NAMES
+  DISCORD_AUTH
+  CALLS_911
+  WEAPON_REGISTRATION
+  SOCIAL_SECURITY_NUMBERS
+  CUSTOM_TEXTFIELD_VALUES
+  /// @deprecated, use `CUSTOM_TEXTFIELD_VALUES` instead
+  DISALLOW_TEXTFIELD_SELECTION
+  ACTIVE_DISPATCHERS
+  ACTIVE_INCIDENTS
+  ALLOW_CITIZEN_UPDATE_LICENSE
+  ALLOW_REGULAR_LOGIN
+  RADIO_CHANNEL_MANAGEMENT
+  ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
+  /// @deprecated, use `LICENSE_EXAMS` instead
+  DL_EXAMS
+  DMV
+  BADGE_NUMBERS
+  USER_API_TOKENS
+  CITIZEN_RECORD_APPROVAL
+  COMMON_CITIZEN_CARDS
+  STEAM_OAUTH
+  CREATE_USER_CITIZEN_LEO
+  LEO_TICKETS
+  LEO_BAIL
+  COURTHOUSE_POSTS
+  /// @deprecated, use `LICENSE_EXAMS` instead
+  WEAPON_EXAMS
+  ACTIVE_WARRANTS
+  CITIZEN_DELETE_ON_DEAD
+  PANIC_BUTTON
+  WARRANT_STATUS_APPROVAL
+  DIVISIONS
+  TONES
+  LICENSE_EXAMS
+  CITIZEN_CREATION_RECORDS // See #1188
+  BUREAU_OF_FIREARMS // See #1298
+  CALL_911_APPROVAL // See #1459
+  FORCE_DISCORD_AUTH // See #1502
+  FORCE_STEAM_AUTH // See #1502
+  EDITABLE_SSN // See #1544
+  EDITABLE_VIN // See #1544
+  SIGNAL_100_CITIZEN // See #1562
+  FORCE_ACCOUNT_PASSWORD // See #1498
+  USER_DEFINED_CALLSIGN_COMBINED_UNIT // see #1607
+  HOSPITAL_SERVICES // see #1602
+  MEDICAL_RECORDS_CITIZEN_MANAGEABLE
+  PETS // see #1640
+  REQUIRED_CITIZEN_IMAGE // see #1681
+  LEO_EDITABLE_CITIZEN_PROFILE // see #1698
+  ALLOW_MULTIPLE_UNITS_DEPARTMENTS_PER_USER // see #1722
+  OPEN_LAW_BOOK
+  CITIZEN_RECORD_PAYMENTS
+}
+
+enum DashboardLayoutCardType {
+  ACTIVE_CALLS
+  ACTIVE_BOLOS
+  ACTIVE_WARRANTS
+  ACTIVE_OFFICERS
+  ACTIVE_DEPUTIES
+  ACTIVE_INCIDENTS
+}
+
+enum VehiclePaceType {
+  PACE
+  RADAR
+  LASER
+  OTHER
+}

@@ -1,0 +1,228 @@
+{
+  "Values": {
+    "totalItems": "Totalt antal",
+    "values": "Värden",
+    "shouldDo": "Bör göra",
+    "color": "Färg",
+    "textColor": "Textfärg (#HEX)",
+    "callsign": "Signalord",
+    "department": "Avdelning",
+    "gameHash": "Spelhash",
+    "file": "fil",
+    "importValues": "Importera via fil",
+    "exportValues": "Exportera värden",
+    "ungrouped": "Ogrupperade",
+    "licenseType": "Licens typ",
+    "whitelisted": "Vitlistad",
+    "whatPages": "Vilka sidor",
+    "departments": "Avdelningar",
+    "isDefaultDepartment": "Standardavdelning",
+    "deleteSelectedValues": "Ta bort valda värden",
+    "isDefault": "Standardinställning",
+    "defaultOfficerRank": "Standardtjänstgrad",
+    "pairedUnitTemplate": "Parad enhetstemplate",
+    "isConfidential": "Konfidentiell",
+    "priority": "Prioritet",
+    "isDisabled": "Avaktiverad",
+    "county": "Län",
+    "value": "Värde",
+    "selectAll": "Välj alla {count}?",
+    "xItemsSelected": "{count} objekt valda.",
+    "noValuesForThisType": "Det finns inga skapade värden för denna typ än.",
+    "cannotDeleteTooltip": "Du kan inte ta bort detta värde eftersom det används av en annan databaspost. Du måste först ta bort den posten.",
+    "deletedSelectedValues": "Borttagna {deleted} objekt. Misslyckades med att ta bort {failed} objekt.",
+    "failedDeleteValue": "Misslyckades med att ta bort <span>{value}</span>.",
+    "cacheTip": "Värden är cachade i 24 timmar. Det innebär att uppdaterade, tillagda eller borttagna värden kanske inte ändras omedelbart. Det kan ta upp till 24 timmar för ändringarna att träda i kraft.",
+    "alert_deleteValue": "Är du säker på att du vill ta bort <span>{value}</span>? Detta går inte att ångra!",
+    "alert_deleteSelectedValues": "Är du säker på att du vill ta bort {length} objekt? Detta går inte att ångra",
+    "mustBeValidHexColor": "Måste vara en giltig HEX-färg",
+    "as": "Som (så att databasen vet vad den ska använda.)",
+    "trimLevels": "Beskärningsnivåer",
+    "disabledDescription": "När ett värde är avaktiverat kan det inte väljas i rullistan.",
+    "postal": "Postnummer",
+    "callsignSymbol": "Signalordsymbol",
+    "defaultRank": "Standardtjänstegrad",
+    "whitelistedDescription": "När en avdelning är vitlistad kan du ställa in 1 avdelning som standard. Denna avdelning kommer att tilldelas tjänstemannen när de väntar på åtkomst eller när de har nekats.",
+    "defaultDepartment": "Standardavdelning",
+    "isConfidentialDescription": "När en avdelning är konfidentiell kommer andra tjänstemän inte att kunna se information om andra tjänstemän inom denna avdelning.",
+    "extraFieldsDescription": "Tillåter dig att ställa in ett JSON-värde att användas för extra fält. Detta kan vara användbart när du använder den offentliga API: n för att göra anpassade saker.",
+    "extraFields": "Extra fält (JSON)",
+    "divisions": "Enheter",
+    "defaultLicense": "Standardlicens",
+    "defaultLicenseDescription": "Denna licens kommer att tilldelas en medborgare när de först skapas.",
+    "qualification": "Kvalifikation",
+    "award": "Utmärkelse",
+    "colorHex": "Färg (#HEX)",
+    "codeType": "Kodtyp",
+    "license": "Licens",
+    "registrationStatus": "Registreringsstatus",
+    "insuranceStatus": "Försäkringsstatus",
+    "employee": "Anställd",
+    "manager": "Chef",
+    "owner": "Ägare",
+    "import": "Importera",
+    "importCitizens": "Importera medborgare",
+    "importVehicles": "Importera fordon",
+    "importWeapons": "Importera vapen",
+    "customCallsignTemplate": "Anpassat signalordstemplate",
+    "customCallsignTemplateDescription": "När det är inställt kommer det att använda detta template istället för det globala signalordstemplet. Du kan använda följande variabler: {variabler}",
+    "category": "Kategori",
+    "addGroup": "Lägg till grupp",
+    "manageGroup": "Hantera grupp",
+    "INFRACTION": "Förseelse",
+    "MISDEMEANOR": "Förseelse",
+    "FELONY": "Brott",
+    "warningApplicable": "Varning tillämpbar",
+    "warningNotApplicable": "Varning inte tillämplig",
+    "isPrimary": "Primär",
+    "isDispositionDescription": "En disponeringskod kan användas när ett samtal är avslutat. Det kommer att användas för att fastställa utfallet av samtalet.",
+    "isDisposition": "Disposition"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Hantera straffkodgrupper",
+    "ADD": "Lägg till straffkodgrupp",
+    "DELETE": "Ta bort straffkodgrupp",
+    "EDIT": "Redigera straffkodgrupp",
+    "ungrouped": "Ogrupperade",
+    "alert_deletePenalCodeGroup": "Är du säker på att du vill ta bort <span>{group}</span>? Detta går inte att ångra.",
+    "deleteGroup": "Ta bort grupp"
+  },
+  "GENDER": {
+    "MANAGE": "Hantera kön",
+    "ADD": "Lägg till kön",
+    "DELETE": "Ta bort kön",
+    "EDIT": "Redigera kön"
+  },
+  "WEAPON": {
+    "MANAGE": "Hantera vapen",
+    "ADD": "Lägg till vapen",
+    "DELETE": "Ta bort vapen",
+    "EDIT": "Redigera vapen"
+  },
+  "VEHICLE": {
+    "MANAGE": "Hantera fordon",
+    "ADD": "Lägg till fordon",
+    "DELETE": "Ta bort fordon",
+    "EDIT": "Redigera fordon"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Hantera etniciteter",
+    "ADD": "Lägg till etnicitet",
+    "DELETE": "Ta bort etnicitet",
+    "EDIT": "Redigera etnicitet"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Hantera blodgrupper",
+    "ADD": "Lägg till blodgrupp",
+    "DELETE": "Ta bort blodgrupp",
+    "EDIT": "Redigera blodgrupp"
+  },
+  "LICENSE": {
+    "MANAGE": "Hantera licenser",
+    "ADD": "Lägg till licens",
+    "DELETE": "Ta bort licens",
+    "EDIT": "Redigera licens"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Hantera företagsroller",
+    "ADD": "Lägg till företagsroll",
+    "DELETE": "Ta bort företagsroll",
+    "EDIT": "Redigera företagsroll"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Hantera avdelningar",
+    "ADD": "Lägg till avdelning",
+    "DELETE": "Ta bort avdelning",
+    "EDIT": "Redigera avdelning"
+  },
+  "CODES_10": {
+    "MANAGE": "Hantera 10-koder",
+    "ADD": "Lägg till 10-kod",
+    "DELETE": "Ta bort 10-kod",
+    "EDIT": "Redigera 10-kod"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Hantera tjänstegrader",
+    "ADD": "Lägg till tjänstegrad",
+    "DELETE": "Ta bort tjänstegrad",
+    "EDIT": "Redigera tjänstegrad"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Hantera straffkoder",
+    "ADD": "Lägg till straffkod",
+    "DELETE": "Ta bort straffkod",
+    "EDIT": "Redigera straffkod"
+  },
+  "DIVISION": {
+    "MANAGE": "Hantera enheter",
+    "ADD": "Lägg till enhet",
+    "DELETE": "Ta bort enhet",
+    "EDIT": "Redigera enhet"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Hantera körkortskategorier",
+    "ADD": "Lägg till kategori",
+    "DELETE": "Ta bort kategori",
+    "EDIT": "Redigera kategori"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Hantera beslagsplatser",
+    "ADD": "Lägg till beslagsplats",
+    "DELETE": "Ta bort beslagsplats",
+    "EDIT": "Redigera beslagsplats"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Hantera fordonsflaggor",
+    "ADD": "Lägg till fordonsflagg",
+    "DELETE": "Ta bort fordonsflagg",
+    "EDIT": "Redigera fordonsflagg"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Hantera medborgarflaggor",
+    "ADD": "Lägg till medborgarflagg",
+    "DELETE": "Ta bort medborgarflagg",
+    "EDIT": "Redigera medborgarflagg"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Hantera enhetskvalifikationer",
+    "ADD": "Lägg till enhetskvalifikation",
+    "DELETE": "Ta bort enhetskvalifikation",
+    "EDIT": "Redigera enhetskvalifikation"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Hantera samtalstyper",
+    "ADD": "Lägg till samtalstyp",
+    "DELETE": "Ta bort samtalstyp",
+    "EDIT": "Redigera samtalstyp"
+  },
+  "ADDRESS": {
+    "MANAGE": "Hantera adresser",
+    "ADD": "Lägg till adress",
+    "DELETE": "Ta bort adress",
+    "EDIT": "Redigera adress"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Hantera nödfordon",
+    "ADD": "Lägg till nödfordon",
+    "DELETE": "Ta bort nödfordon",
+    "EDIT": "Redigera nödfordon"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Hantera adressflaggor",
+    "ADD": "Lägg till adressflagg",
+    "DELETE": "Ta bort adressflagg",
+    "EDIT": "Redigera adressflagg"
+  },
+  "VEHICLE_TRIM_LEVEL": {
+    "MANAGE": "Hantera fordonsbeskärningsnivåer",
+    "ADD": "Lägg till beskärningsnivå",
+    "DELETE": "Ta bort beskärningsnivå",
+    "EDIT": "Redigera beskärningsnivå"
+  },
+  "WEAPON_FLAG": {
+    "MANAGE": "Hantera vapenflaggor",
+    "ADD": "Lägg till vapenflagg",
+    "DELETE": "Delete weapon flag",
+    "EDIT": "Edit weapon flag"
+  }
+}

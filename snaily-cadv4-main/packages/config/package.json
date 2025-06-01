@@ -1,0 +1,50 @@
+{
+  "name": "@snailycad/config",
+  "version": "1.80.2",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm tsup",
+    "watch": "pnpm tsup --watch --silent=false",
+    "typecheck": "pnpm tsc --noEmit",
+    "test:watch": "pnpm vitest --watch",
+    "test": "pnpm vitest run",
+    "prepublish": "pnpm build"
+  },
+  "devDependencies": {
+    "tsup": "6.6.2",
+    "typescript": "^5.3.2",
+    "vite": "^5.2.13",
+    "vitest": "^0.34.6"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts",
+      "src/routes.ts",
+      "src/socket-events.ts"
+    ],
+    "dts": true,
+    "bundle": false,
+    "platform": "node",
+    "treeshake": true,
+    "target": "node18",
+    "silent": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,140 @@
+{
+  "Values": {
+    "totalItems": "Všechny předměty",
+    "values": "Hodnoty",
+    "shouldDo": "Měl by",
+    "color": "Barva",
+    "callsign": "Volací znak",
+    "department": "Oddělení",
+    "gameHash": "Game Hash",
+    "file": "Soubor",
+    "importValues": "Importovat přes soubor",
+    "exportValues": "Exportovat Hodnoty",
+    "addPenalCodeGroup": "Přidat skupinu",
+    "deleteGroup": "Odstranit skupinu",
+    "ungrouped": "Nezařazen",
+    "licenseType": "Typ průkazu",
+    "whitelisted": "Whitelisted",
+    "whatPages": "Jake stranky",
+    "departments": "Oddělení",
+    "isDefaultDepartment": "Výchozí oddělení",
+    "deleteSelectedValues": "Smazat vybrané hodnoty",
+    "isDefault": "Je výchozí",
+    "defaultOfficerRank": "Výchozí hodnost policisty",
+    "pairedUnitTemplate": "Spojena hlídka přednastavení",
+    "isConfidential": "Je důvěrné",
+    "priority": "Priorita",
+    "isDisabled": "Vypnuto",
+    "alert_deletePenalCodeGroup": "Jsi si jist, že chceš smazat <span>{group}</span>? Toto nelze vzít zpět.",
+    "alert_deleteValue": "Jsi si jist, že chceš smazat <span>{value}</span>? Toto nelze vzít zpět!",
+    "alert_deleteSelectedValues": "Jsi si jist, že chceš smazat {length} items? Toto nelze vzít zpět"
+  },
+  "GENDER": {
+    "MANAGE": "Spravuj pohlaví",
+    "ADD": "Přidat pohlaví",
+    "DELETE": "Smazat pohlaví",
+    "EDIT": "Uprav pohlaví"
+  },
+  "WEAPON": {
+    "MANAGE": "Spravuj zbraně",
+    "ADD": "Přidat zbraně",
+    "DELETE": "Smazat zbraně",
+    "EDIT": "Uprav zbraně"
+  },
+  "VEHICLE": {
+    "MANAGE": "Spravuj vozidla",
+    "ADD": "Přidat vozidla",
+    "DELETE": "Smazat vozidla",
+    "EDIT": "Uprav vozidla"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Spravuj rasy",
+    "ADD": "Přidat rasy",
+    "DELETE": "Smazat rasy",
+    "EDIT": "Uprav rasy"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Spravuj krevní skupiny",
+    "ADD": "Přidat krevní skupiny",
+    "DELETE": "Smazat krevní skupiny",
+    "EDIT": "Uprav krevní skupiny"
+  },
+  "LICENSE": {
+    "MANAGE": "Spravuj průkazy",
+    "ADD": "Přidat průkazy",
+    "DELETE": "Smazat průkazy",
+    "EDIT": "Uprav průkazy"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Spravuj podnikové role",
+    "ADD": "Přidat podnikové role",
+    "DELETE": "Smazat podnikové role",
+    "EDIT": "Uprav podnikové role"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Spravuj sbory",
+    "ADD": "Přidat sbory",
+    "DELETE": "Smazat sbory",
+    "EDIT": "Uprav sbory"
+  },
+  "CODES_10": {
+    "MANAGE": "Spravuj rychlé statusy",
+    "ADD": "Přidat rychlé statusy",
+    "DELETE": "Smazat rychlé statusy",
+    "EDIT": "Uprav rychlé statusy"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Spravuj hodnosti",
+    "ADD": "Přidat hodnosti",
+    "DELETE": "Smazat hodnosti",
+    "EDIT": "Uprav hodnosti"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Spravuj trestné činy",
+    "ADD": "Přidat trestné činy",
+    "DELETE": "Smazat trestné činy",
+    "EDIT": "Uprav trestné činy"
+  },
+  "DIVISION": {
+    "MANAGE": "Spravuj oddělení",
+    "ADD": "Přidat oddělení",
+    "DELETE": "Smazat oddělení",
+    "EDIT": "Uprav oddělení"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Spravuj řidičské skupiny",
+    "ADD": "Přidat řidičské skupiny",
+    "DELETE": "Smazat řidičské skupiny",
+    "EDIT": "Uprav řidičské skupiny"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Spravuj odtahové parkoviště",
+    "ADD": "Přidat odtahové parkoviště",
+    "DELETE": "Smazat odtahové parkoviště",
+    "EDIT": "Uprav odtahové parkoviště"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Spravuj poznámky k vozidlům",
+    "ADD": "Přidat poznámky k vozidlům",
+    "DELETE": "Smazat poznámky k vozidlům",
+    "EDIT": "Uprav poznámky k vozidlům"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Spravuj poznámky k civilistům",
+    "ADD": "Přidat poznámky k civilistům",
+    "DELETE": "Smazat poznámky k civilistům",
+    "EDIT": "Uprav poznámky k civilistům"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Spravuj kvalifikaci jednotky",
+    "ADD": "Přidat kvalifikaci jednotky",
+    "DELETE": "Smazat kvalifikaci jednotky",
+    "EDIT": "Uprav kvalifikaci jednotky"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Spravuj typy hovorů",
+    "ADD": "Přidat typy hovorů",
+    "DELETE": "Smazat typy hovorů",
+    "EDIT": "Uprav typy hovorů"
+  }
+}

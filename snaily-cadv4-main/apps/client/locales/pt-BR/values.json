@@ -1,0 +1,168 @@
+{
+  "Values": {
+    "totalItems": "Total de Itens",
+    "values": "Valores",
+    "shouldDo": "Deveria Fazer",
+    "color": "Cor",
+    "callsign": "Callsign",
+    "department": "Departamento",
+    "gameHash": "Hash do Jogo",
+    "file": "Arquivo",
+    "importValues": "Importar via Arquivo",
+    "exportValues": "Exportar Valores",
+    "ungrouped": "Desagrupado",
+    "licenseType": "Tipo de Licença",
+    "whitelisted": "Whitelisted",
+    "whatPages": "Quais Páginas",
+    "departments": "Departamentos",
+    "isDefaultDepartment": "Departamento Padrão",
+    "deleteSelectedValues": "Excluir Valores Selecionados",
+    "isDefault": "É Padrão",
+    "defaultOfficerRank": "Classificação de Oficial Padrão",
+    "pairedUnitTemplate": "Modelo de Unidade Emparelhada",
+    "isConfidential": "É confidencial",
+    "priority": "Prioridade",
+    "isDisabled": "Desativado",
+    "county": "Condado",
+    "deletedSelectedValues": "Itens {deleted} excluídos. Falha ao excluir {failed} itens.",
+    "failedDeleteValue": "Falha ao Excluir <span>{value}</span>.",
+    "cacheTip": " Os valores são armazenados em cache por 24 horas. Isso significa que os valores atualizados, adicionados ou excluídos podem não mudar imediatamente. Pode levar até 24 horas para que as alterações entrem em vigor.",
+    "alert_deleteValue": "Tem certeza de que deseja excluir <span>{value}</span>? Esta ação não pode ser desfeita!",
+    "alert_deleteSelectedValues": "Tem certeza de que deseja excluir {length} itens? Esta ação não pode ser desfeita"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Gerenciar Grupos de Código Penal",
+    "ADD": "Adicionar Grupo do Código Penal",
+    "DELETE": "Deletar Grupo do Código Penal",
+    "EDIT": "Editar Grupo do Código Penal",
+    "ungrouped": "Não Agrupado",
+    "alert_deletePenalCodeGroup": "Tem certeza de que deseja excluir <span>{group}</span>?  Essa ação não pode ser desfeita.",
+    "deleteGroup": "Deletar Grupo"
+  },
+  "GENDER": {
+    "MANAGE": "Gerenciar Gêneros",
+    "ADD": "Adicionar Sexo",
+    "DELETE": "Excluir Gênero",
+    "EDIT": "Editar Gênero"
+  },
+  "WEAPON": {
+    "MANAGE": "Gerenciar Armas",
+    "ADD": "Adicionar Arma",
+    "DELETE": "Excluir Arma",
+    "EDIT": "Editar Arma"
+  },
+  "VEHICLE": {
+    "MANAGE": "Gerenciar Veículos",
+    "ADD": "Adicionar Veículo",
+    "DELETE": "Excluir Veículo",
+    "EDIT": "Editar veículo"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Gerenciar Etnias",
+    "ADD": "Adicionar Etnia",
+    "DELETE": "Excluir Etnia",
+    "EDIT": "Editar Etnia"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Gerenciar Grupos Sanguíneos",
+    "ADD": "Adicionar Grupo Sanguíneo",
+    "DELETE": "Excluir Grupo Sanguíneo",
+    "EDIT": "Editar Grupo Sanguíneo"
+  },
+  "LICENSE": {
+    "MANAGE": "Gerenciar Licenças",
+    "ADD": "Adicionar licença",
+    "DELETE": "Excluir Licença",
+    "EDIT": "Editar Licença"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Gerenciar Funções de Comercios",
+    "ADD": "Adicionar Função Comercial",
+    "DELETE": "Excluir Função Comercial",
+    "EDIT": "Editar Função Comercial"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Gerenciar Departamentos",
+    "ADD": "Adicionar Departamento",
+    "EXCLUIR": "Excluir Departamento",
+    "EDIT": "Editar Departamento"
+  },
+  "CODES_10": {
+    "MANAGE": "Gerenciar 10 Códigos",
+    "ADD": "Adicionar Código 10",
+    "DELETE": "Excluir Código 10",
+    "EDIT": "Editar Código 10"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Gerenciar Patentes de Oficiais",
+    "ADD": "Adicionar Patente de Oficial",
+    "DELETE": "Excluir Patente de Oficial",
+    "EDIT": "Editar Patente de Oficial"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Gerenciar Códigos Penais",
+    "ADD": "Adicionar Código Penal",
+    "DELETE": "Excluir Código Penal",
+    "EDIT": "Editar Código Penal"
+  },
+  "DIVISION": {
+    "MANAGE": "Gerenciar Divisões",
+    "ADD": "Adicionar Divisão",
+    "DELETE": "Excluir Divisão",
+    "EDIT": "Editar Divisão"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Gerenciar Categorias CNH",
+    "ADD": "Adicionar Categoria",
+    "DELETE": "Excluir Categoria",
+    "EDIT": "Editar Categoria"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Gerenciar Locais de Apreensão",
+    "ADD": "Adicionar Local de Apreensão",
+    "DELETE": "Excluir Local de Apreensão",
+    "EDIT": "Editar Local de Apreensão"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Gerenciar Observações do Veículo",
+    "ADD": "Adicionar Observação do Veículo",
+    "DELETE": "Excluir Observação do Veículo",
+    "EDIT": "Editar Observação do Veículo"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Gerenciar Observações do Cidadão",
+    "ADD": "Adicionar Observação do Cidadão",
+    "DELETE": "Excluir Observação do Cidadão",
+    "EDIT": "Editar Observação do Cidadão"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Gerenciar Qualificações da Unidade",
+    "ADD": "Adicionar Qualificação de Unidade",
+    "DELETE": "Excluir qualificação da Unidade",
+    "EDIT": "Editar qualificação da Unidade"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Gerenciar Tipos de Chamada",
+    "ADD": "Adicionar tipo de Chamada",
+    "DELETE": "Excluir tipo de Chamada",
+    "EDIT": "Editar tipo de Chamada"
+  },
+  "ADDRESS": {
+    "MANAGE": "Gerenciar Endereços",
+    "ADD": "Adicionar Endereço",
+    "DELETE": "Excluir Endereço",
+    "EDIT": "Editar Endereço"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Gerenciar Veículos de Emergência",
+    "ADD": "Adicionar Veículo de Emergência",
+    "DELETE": "Excluir Veículo de Emergência",
+    "EDIT": "Editar Veículo de Emergência"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Gerenciar sinalizadores de endereço",
+    "ADD": "Adicionar sinalizador de endereço",
+    "DELETE": "Excluir sinalizador de endereço",
+    "EDIT": "Editar sinalizador de endereço"
+  }
+}

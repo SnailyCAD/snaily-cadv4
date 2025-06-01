@@ -1,0 +1,38 @@
+{
+  "exclude": ["dist", "node_modules", ".dev-data", ".data"],
+  "compilerOptions": {
+    /* Basic Options */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "verbatimModuleSyntax": false,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+
+    /* Strict */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "pretty": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
+    "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
+    "allowUnreachableCode": false,
+    "lib": ["es2022"],
+
+    /* Monorepo options */
+    "composite": true,
+    "declarationMap": true
+  }
+}

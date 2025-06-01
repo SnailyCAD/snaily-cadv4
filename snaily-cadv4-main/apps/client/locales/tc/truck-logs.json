@@ -1,0 +1,14 @@
+{
+  "TruckLogs": {
+    "truckLogs": "卡車",
+    "createTruckLog": "創建卡車日誌",
+    "editTruckLog": "編輯卡車日誌",
+    "deleteTruckLog": "刪除卡車日誌",
+    "driver": "司機",
+    "vehicle": "車輛",
+    "startedAt": "開始於",
+    "endedAt": "結束於",
+    "noTruckLogs": "你還沒有卡車。",
+    "alert_deleteTruckLog": "是否確實要刪除此卡車日誌？此操作無法撤消。"
+  }
+}

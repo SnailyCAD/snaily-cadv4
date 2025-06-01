@@ -1,0 +1,16 @@
+{
+  "Courthouse": {
+    "courthouse": "圣安德烈亚斯法院",
+    "requestExpungement": "请求删除",
+    "noExpungementRequests": "您没有任何消除请求",
+    "request": "请求",
+    "noPendingRequests": "没有待处理的清除请求",
+    "expungementRequests": "消除请求",
+    "nameChangeRequests": "姓名更改请求",
+    "requestNameChange": "请求更改名称",
+    "noNameChangeRequests": "没有名称更改请求。",
+    "newName": "新名称",
+    "newSurname": "新姓氏",
+    "status": "状态"
+  }
+}

@@ -1,0 +1,22 @@
+name: Cancel
+
+on:
+  push:
+    branches-ignore:
+      - "main"
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  cancel:
+    name: "Cancel Previous Actions"
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          # `60597620` = Chromatic
+          # `14026219` = Lint
+          # `19288873` = "Typecheck & test builds in workspaces/*"
+          workflow_id: 60597620, 14026219, 19288873
+          access_token: ${{ github.token }}

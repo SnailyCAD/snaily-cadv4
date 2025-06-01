@@ -1,0 +1,15 @@
+{
+  "TruckLogs": {
+    "truckLogs": "Journaux de camions",
+    "createTruckLog": "Créer un journal de camion",
+    "editTruckLog": "Modifier le journal du camion",
+    "deleteTruckLog": "Supprimer le journal du camion",
+    "driver": "Conducteur",
+    "vehicle": "Véhicule",
+    "startedAt": "Commencé à",
+    "endedAt": "Terminé à",
+    "noTruckLogs": "Vous n'avez pas encore de logs de camion.",
+    "notes": "Remarques",
+    "alert_deleteTruckLog": "Voulez-vous vraiment supprimer ce journal de camion ? "
+  }
+}

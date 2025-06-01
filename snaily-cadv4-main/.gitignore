@@ -1,0 +1,41 @@
+node_modules
+.next
+dist
+.env
+
+# uploaded images
+apps/api/public/**/*.png
+apps/api/public/**/*.svg
+apps/api/public/**/*.jpg
+apps/api/public/**/*.jpeg
+apps/api/public/**/*.gif
+apps/api/public/**/*.webp
+
+# custom sounds & custom favicon
+apps/client/public/favicon.png
+apps/client/public/sounds/*.mp3
+
+# eslint
+.eslintcache
+
+# typescript
+tsconfig.tsbuildinfo
+
+# misc
+.husky/_
+.turbo
+apps/**/coverage
+packages/**/coverage
+import-officers.mjs
+sample-data.json
+.data
+.dev-data
+# Sentry
+.sentryclirc
+
+# storybook
+storybook-static
+build-storybook.log
+
+# Prisma generated types
+**/prisma/index.ts

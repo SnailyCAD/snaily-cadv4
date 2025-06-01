@@ -1,0 +1,132 @@
+{
+  "Values": {
+    "totalItems": "總項目數",
+    "values": "價值觀",
+    "shouldDo": "應該做",
+    "color": "顏色",
+    "callsign": "呼號",
+    "department": "部門",
+    "gameHash": "遊戲哈希",
+    "file": "文件",
+    "importValues": "通過文件導入",
+    "exportValues": "出口值",
+    "addPenalCodeGroup": "添加組",
+    "deleteGroup": "刪除組",
+    "ungrouped": "未分組",
+    "licenseType": "許可證類型",
+    "whitelisted": "白名單",
+    "whatPages": "什麽頁面",
+    "departments": "部門",
+    "isDefaultDepartment": "默認部門",
+    "deleteSelectedValues": "刪除所選值",
+    "isDefault": "是默認的",
+    "defaultOfficerRank": "默認軍官軍銜",
+    "pairedUnitTemplate": "配對單元模板",
+    "isConfidential": "Is Confidential",
+    "alert_deletePenalCodeGroup": "是否確實要刪除 <span>{group}</span>？此操作無法撤消。",
+    "alert_deleteValue": "是否確實要刪除<span>{value}</span>？此操作無法撤消！",
+    "alert_deleteSelectedValues": "是否確實要刪除 {length} 項目？此操作無法撤消"
+  },
+  "GENDER": {
+    "MANAGE": "管理性別",
+    "ADD": "添加性別",
+    "DELETE": "刪除性別",
+    "EDIT": "編輯性別"
+  },
+  "WEAPON": {
+    "MANAGE": "管理武器",
+    "ADD": "添加武器",
+    "DELETE": "刪除武器",
+    "EDIT": "編輯武器"
+  },
+  "VEHICLE": {
+    "MANAGE": "管理車輛",
+    "ADD": "添加車輛",
+    "DELETE": "刪除車輛",
+    "EDIT": "編輯車輛"
+  },
+  "ETHNICITY": {
+    "MANAGE": "管理種族",
+    "ADD": "添加種族",
+    "DELETE": "刪除種族",
+    "EDIT": "編輯種族"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "管理血型",
+    "ADD": "添加血型",
+    "DELETE": "刪除血型",
+    "EDIT": "編輯血型"
+  },
+  "LICENSE": {
+    "MANAGE": "管理許可證",
+    "ADD": "添加許可證",
+    "DELETE": "刪除許可證",
+    "EDIT": "編輯許可證"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "管理業務角色",
+    "ADD": "添加業務角色",
+    "DELETE": "刪除業務角色",
+    "EDIT": "編輯業務角色"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "管理部門",
+    "ADD": "添加部門",
+    "DELETE": "刪除部門",
+    "EDIT": "編輯部"
+  },
+  "CODES_10": {
+    "MANAGE": "管理 10 code個代碼",
+    "ADD": "添加 10 個code代碼",
+    "DELETE": "刪除 10 個code代碼",
+    "EDIT": "Edit 10 Code"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "管理軍官軍銜",
+    "ADD": "添加軍官軍銜",
+    "DELETE": "刪除軍官軍銜",
+    "EDIT": "編輯軍官軍銜"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "管理刑法典",
+    "ADD": "增加《刑法典》",
+    "DELETE": "刪除刑法典",
+    "EDIT": "編輯刑法典"
+  },
+  "DIVISION": {
+    "MANAGE": "管理部門",
+    "ADD": "添加除法",
+    "DELETE": "刪除除法",
+    "EDIT": "編輯部門"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "管理深度學習類別",
+    "ADD": "添加類別",
+    "DELETE": "刪除類別",
+    "EDIT": "編輯類別"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "管理扣押地段",
+    "ADD": "添加扣押地塊",
+    "DELETE": "刪除扣押地塊",
+    "EDIT": "編輯扣押地段"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "管理車輛標誌",
+    "ADD": "添加車輛標誌",
+    "DELETE": "刪除車輛標誌",
+    "EDIT": "編輯車輛標誌"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "管理公民旗幟",
+    "ADD": "添加公民旗幟",
+    "DELETE": "刪除公民旗幟",
+    "EDIT": "編輯公民旗幟"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "管理單位資格",
+    "ADD": "添加單位資格",
+    "DELETE": "刪除單位資格",
+    "EDIT": "編輯單位資格"
+  }
+}

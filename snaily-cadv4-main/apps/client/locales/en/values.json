@@ -1,0 +1,229 @@
+{
+  "Values": {
+    "totalItems": "Total Items",
+    "values": "Values",
+    "shouldDo": "Should Do",
+    "color": "Color",
+    "textColor": "Text Color (#HEX)",
+    "callsign": "Callsign",
+    "department": "Department",
+    "gameHash": "Game Hash",
+    "file": "file",
+    "importValues": "Import via file",
+    "exportValues": "Export Values",
+    "ungrouped": "Ungrouped",
+    "licenseType": "License Type",
+    "whitelisted": "Whitelisted",
+    "whatPages": "What Pages",
+    "departments": "Departments",
+    "isDefaultDepartment": "Default Department",
+    "deleteSelectedValues": "Delete Selected Values",
+    "isDefault": "Is Default",
+    "defaultOfficerRank": "Default Officer Rank",
+    "pairedUnitTemplate": "Paired Unit Template",
+    "isConfidential": "Is Confidential",
+    "priority": "Priority",
+    "isDisabled": "Disabled",
+    "county": "County",
+    "value": "Value",
+    "selectAll": "Select all {count}?",
+    "xItemsSelected": "{count} items selected.",
+    "noValuesForThisType": "There are no values created yet for this type.",
+    "cannotDeleteTooltip": "  You cannot delete this value because it is being used by another database item. You must first delete that item.",
+    "deletedSelectedValues": "Deleted {deleted} items. Failed to delete {failed} items.",
+    "failedDeleteValue": "Failed to delete <span>{value}</span>.",
+    "cacheTip": " Values are cached for 24 hours. This means that updated, added or deleted values may not immediately change. It could take up to 24 hours for the changes to take effect.",
+    "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
+    "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone",
+    "mustBeValidHexColor": "Must be a valid HEX Color",
+    "as": "As (this is so the database knows what to use.)",
+    "trimLevels": "Trim Levels",
+    "disabledDescription": "When a value is disabled, it will not be able to be selected in the dropdown.",
+    "postal": "Postal",
+    "callsignSymbol": "Callsign Symbol",
+    "defaultRank": "Default Rank",
+    "whitelistedDescription": "When a department is whitelisted, you can set 1 department as default. This department will be given to the officer when they are awaiting access or when they were declined.",
+    "defaultDepartment": "Default Department",
+    "isConfidentialDescription": "When a department is confidential, other officers will not be able to view information of other officers within this department.",
+    "extraFieldsDescription": "Allows you to set a JSON value to be used for extra fields. This can be useful when using the Public API for doing custom things.",
+    "extraFields": "Extra Fields (JSON)",
+    "divisions": "Divisions",
+    "defaultLicense": "Default License",
+    "defaultLicenseDescription": "This license will be given to a citizen when they are first created.",
+    "qualification": "Qualification",
+    "award": "Award",
+    "colorHex": "Color (#HEX)",
+    "codeType": "Code Type",
+    "license": "License",
+    "registrationStatus": "Registration Status",
+    "insuranceStatus": "Insurance Status",
+    "employee": "Employee",
+    "manager": "Manager",
+    "owner": "Owner",
+    "import": "Import",
+    "importCitizens": "Import Citizens",
+    "importVehicles": "Import Vehicles",
+    "importWeapons": "Import Weapons",
+    "customCallsignTemplate": "Custom Callsign Template",
+    "customCallsignTemplateDescription": "When set, it will use this template over the global callsign template. You can use the following variables: {variables}",
+    "category": "Category",
+    "addGroup": "Add Group",
+    "manageGroup": "Manage Group",
+    "INFRACTION": "Infraction",
+    "MISDEMEANOR": "Misdemeanor",
+    "FELONY": "Felony",
+    "warningApplicable": "Warning Applicable",
+    "warningNotApplicable": "Warning Not Applicable",
+    "isPrimary": "Is Primary",
+    "isDispositionDescription": "A disposition code can be used when a call is closed. This will be used to determine the outcome of the call.",
+    "isDisposition": "Is Disposition",
+    "mustBeValidJson": "Must be valid JSON"
+  },
+  "PENAL_CODE_GROUP": {
+    "MANAGE": "Manage Penal Code Groups",
+    "ADD": "Add Penal Code Group",
+    "DELETE": "Delete Penal Code Group",
+    "EDIT": "Edit Penal Code Group",
+    "ungrouped": "Ungrouped",
+    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
+    "deleteGroup": "Delete Group"
+  },
+  "GENDER": {
+    "MANAGE": "Manage Genders",
+    "ADD": "Add Gender",
+    "DELETE": "Delete Gender",
+    "EDIT": "Edit Gender"
+  },
+  "WEAPON": {
+    "MANAGE": "Manage Weapons",
+    "ADD": "Add Weapon",
+    "DELETE": "Delete Weapon",
+    "EDIT": "Edit Weapon"
+  },
+  "VEHICLE": {
+    "MANAGE": "Manage Vehicles",
+    "ADD": "Add Vehicle",
+    "DELETE": "Delete Vehicle",
+    "EDIT": "Edit Vehicle"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Manage Ethnicities",
+    "ADD": "Add Ethnicity",
+    "DELETE": "Delete Ethnicity",
+    "EDIT": "Edit Ethnicity"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Manage Blood Groups",
+    "ADD": "Add Blood Group",
+    "DELETE": "Delete Blood Group",
+    "EDIT": "Edit Blood Group"
+  },
+  "LICENSE": {
+    "MANAGE": "Manage Licenses",
+    "ADD": "Add License",
+    "DELETE": "Delete License",
+    "EDIT": "Edit License"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Manage Business Roles",
+    "ADD": "Add Business Role",
+    "DELETE": "Delete Business Role",
+    "EDIT": "Edit Business Role"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Manage Departments",
+    "ADD": "Add Department",
+    "DELETE": "Delete Department",
+    "EDIT": "Edit Department"
+  },
+  "CODES_10": {
+    "MANAGE": "Manage 10 Codes",
+    "ADD": "Add 10 Code",
+    "DELETE": "Delete 10 Code",
+    "EDIT": "Edit 10 Code"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Manage Officer Ranks",
+    "ADD": "Add Officer Rank",
+    "DELETE": "Delete Officer Rank",
+    "EDIT": "Edit Officer Rank"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Manage Penal Codes",
+    "ADD": "Add Penal Code",
+    "DELETE": "Delete Penal Code",
+    "EDIT": "Edit Penal Code"
+  },
+  "DIVISION": {
+    "MANAGE": "Manage Divisions",
+    "ADD": "Add Division",
+    "DELETE": "Delete Division",
+    "EDIT": "Edit Division"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Manage License Categories",
+    "ADD": "Add Category",
+    "DELETE": "Delete Category",
+    "EDIT": "Edit Category"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Manage Impound Lots",
+    "ADD": "Add Impound Lot",
+    "DELETE": "Delete Impound Lot",
+    "EDIT": "Edit Impound Lot"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Manage Vehicle flags",
+    "ADD": "Add vehicle flag",
+    "DELETE": "Delete vehicle flag",
+    "EDIT": "Edit vehicle flag"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Manage Citizen flags",
+    "ADD": "Add citizen flag",
+    "DELETE": "Delete citizen flag",
+    "EDIT": "Edit citizen flag"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Manage Unit Qualifications",
+    "ADD": "Add Unit Qualification",
+    "DELETE": "Delete Unit Qualification",
+    "EDIT": "Edit Unit Qualification"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Manage Call Types",
+    "ADD": "Add Call Type",
+    "DELETE": "Delete Call Type",
+    "EDIT": "Edit Call Type"
+  },
+  "ADDRESS": {
+    "MANAGE": "Manage Addresses",
+    "ADD": "Add Address",
+    "DELETE": "Delete Address",
+    "EDIT": "Edit Address"
+  },
+  "EMERGENCY_VEHICLE": {
+    "MANAGE": "Manage Emergency Vehicles",
+    "ADD": "Add Emergency Vehicle",
+    "DELETE": "Delete Emergency Vehicle",
+    "EDIT": "Edit Emergency Vehicle"
+  },
+  "ADDRESS_FLAG": {
+    "MANAGE": "Manage Address flags",
+    "ADD": "Add address flag",
+    "DELETE": "Delete address flag",
+    "EDIT": "Edit address flag"
+  },
+  "VEHICLE_TRIM_LEVEL": {
+    "MANAGE": "Manage Vehicle Trim Levels",
+    "ADD": "Add trim level",
+    "DELETE": "Delete trim level",
+    "EDIT": "Edit trim level"
+  },
+  "WEAPON_FLAG": {
+    "MANAGE": "Manage Weapon flags",
+    "ADD": "Add weapon flag",
+    "DELETE": "Delete weapon flag",
+    "EDIT": "Edit weapon flag"
+  }
+}

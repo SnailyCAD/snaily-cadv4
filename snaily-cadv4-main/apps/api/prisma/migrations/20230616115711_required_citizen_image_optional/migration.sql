@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "Feature" ADD VALUE 'REQUIRED_CITIZEN_IMAGE';
