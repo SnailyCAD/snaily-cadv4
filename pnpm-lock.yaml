@@ -227,8 +227,8 @@ importers:
         specifier: 2.22.1
         version: 2.22.1(react@18.3.1)
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: 3.25.67
+        version: 3.25.67
     devDependencies:
       '@swc/cli':
         specifier: ^0.1.63
@@ -534,8 +534,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       zod:
-        specifier: 3.23.8
-        version: 3.23.8
+        specifier: 3.25.67
+        version: 3.25.67
       zustand:
         specifier: ^4.5.2
         version: 4.5.2(@types/react@18.3.3)(immer@10.0.3)(react@18.3.1)
@@ -626,8 +626,8 @@ importers:
         specifier: ^2.6.3
         version: 2.6.3
       zod:
-        specifier: 3.23.8
-        version: 3.23.8
+        specifier: 3.25.67
+        version: 3.25.67
     devDependencies:
       tsup:
         specifier: 6.6.2
@@ -12465,8 +12465,8 @@ packages:
     resolution: {integrity: sha512-zshzwQW7gG7hjpBlgeQP9RuyPGNxvJdzR8SUM3QhxCnLjWN2E7j3dOvpeDcQoETfHx0urRS7EtmVToql7YpU4A==}
     engines: {node: '>= 10'}
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+  zod@3.25.67:
+    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
   zustand@4.5.2:
     resolution: {integrity: sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==}
@@ -23406,7 +23406,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       styled-jsx: 5.1.1(@babel/core@7.22.11)(babel-plugin-macros@3.1.0)(react@18.3.1)
       watchpack: 2.4.0
-      zod: 3.23.8
+      zod: 3.25.67
     optionalDependencies:
       '@next/swc-darwin-arm64': 13.4.13
       '@next/swc-darwin-x64': 13.4.13
@@ -25517,7 +25517,7 @@ snapshots:
   streamroller@3.1.5:
     dependencies:
       date-format: 4.0.14
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.4.1
       fs-extra: 8.1.0
     transitivePeerDependencies:
       - supports-color
@@ -26838,7 +26838,7 @@ snapshots:
       compress-commons: 4.1.1
       readable-stream: 3.6.2
 
-  zod@3.23.8: {}
+  zod@3.25.67: {}
 
   zustand@4.5.2(@types/react@18.3.3)(immer@10.0.3)(react@18.3.1):
     dependencies:
