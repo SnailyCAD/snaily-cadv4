@@ -89,10 +89,10 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
   }
 
   const INITIAL_VALUES = {
-    model: CUSTOM_TEXTFIELD_VALUES ? weapon?.model.value.value ?? "" : weapon?.modelId ?? "",
+    model: CUSTOM_TEXTFIELD_VALUES ? (weapon?.model.value.value ?? "") : (weapon?.modelId ?? ""),
     modelName: weapon?.model.value.value ?? "",
     registrationStatus: weapon?.registrationStatusId ?? "",
-    citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
+    citizenId: isDisabled ? citizen.id : (weapon?.citizenId ?? ""),
     serialNumber: weapon?.serialNumber ?? "",
     reApplyForDmv: weapon?.bofStatus === WhitelistStatus.DECLINED ? false : undefined,
     name: isDisabled
