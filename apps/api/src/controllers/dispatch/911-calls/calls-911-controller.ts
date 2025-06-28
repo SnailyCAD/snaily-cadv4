@@ -315,7 +315,7 @@ export class Calls911Controller {
         description: data.descriptionData ? null : data.description,
         name: data.name,
         userId: user.id,
-        positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,
+        positionId: shouldRemovePosition ? null : (position?.id ?? call.positionId),
         descriptionData: data.descriptionData ?? undefined,
         situationCodeId: data.situationCode === null ? null : data.situationCode,
         typeId: data.type,

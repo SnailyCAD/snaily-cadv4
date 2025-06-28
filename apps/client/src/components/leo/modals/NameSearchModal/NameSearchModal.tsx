@@ -153,7 +153,7 @@ export function NameSearchModal() {
   }
 
   const warrants =
-    !currentResult || currentResult.isConfidential ? [] : currentResult.warrants ?? [];
+    !currentResult || currentResult.isConfidential ? [] : (currentResult.warrants ?? []);
 
   const hasActiveWarrants = warrants.filter((v) => v.status === "ACTIVE").length > 0;
   const isArrested =

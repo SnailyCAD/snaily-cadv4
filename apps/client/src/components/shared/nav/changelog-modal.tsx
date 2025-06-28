@@ -46,7 +46,7 @@ export function ChangelogModal() {
           <Loader className="w-7 h-7" />
         </div>
       ) : !data || error ? (
-        error?.message ?? "Unable to fetch changelog"
+        (error?.message ?? "Unable to fetch changelog")
       ) : (
         <ReactMarkdown
           remarkPlugins={[
