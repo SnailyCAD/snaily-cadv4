@@ -32,7 +32,7 @@
     "add": "Hinzufügen",
     "noDoctorVisits": "Dieser Bürger hat keine Arztbesuche."
   },
-    "HospitalServices": {
+  "HospitalServices": {
     "hospitalServices": "Krankenhausdienste",
     "declareAlive": "Als lebend erklären",
     "noDeadCitizens": "Es sind keine Bürger als tot markiert.",

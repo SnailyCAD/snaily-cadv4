@@ -70,7 +70,7 @@
     "fishingLicensePoints": "Angelschein-Punkte",
     "otherLicenseCategory": "Andere Lizenz-Kategorien",
     "markAsPaid": "Als bezahlt markieren"
-      },
+  },
   "Vehicles": {
     "model": "Modell",
     "registrationStatus": "Status der Registrierung",
@@ -157,13 +157,13 @@
     "alert_deleteNote": "Sind Sie sicher, dass Sie diese Notiz löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "LawBook": {
-      "lawBook": "Gesetzbuch",
-      "warningApplicable": "Verwarnung anwendbar",
-      "noPenalCodes": "Es wurde kein Strafgesetzbuch registriert.",
-      "warningNotApplicable": "Verwarnung nicht anwendbar",
-      "fines": "Geldstrafen",
-      "bail": "Kaution",
-      "jailTime": "Gefängniszeit",
-      "isPrimary": "Ist primär"
+    "lawBook": "Gesetzbuch",
+    "warningApplicable": "Verwarnung anwendbar",
+    "noPenalCodes": "Es wurde kein Strafgesetzbuch registriert.",
+    "warningNotApplicable": "Verwarnung nicht anwendbar",
+    "fines": "Geldstrafen",
+    "bail": "Kaution",
+    "jailTime": "Gefängniszeit",
+    "isPrimary": "Ist primär"
   }
 }

@@ -193,20 +193,20 @@
     "steamAuthIssue": "Bei der Authentifizierung mit Steam ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
     "discordAuthIssue": "Bei der Authentifizierung mit Discord ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
     "blacklistedWordUsed": "Dieses Wort ist gesperrt und kann nicht verwendet werden."
-    },
+  },
   "Statuses": {
-      "ACCEPTED": "Akzeptiert",
-      "PASSED": "Bestanden",
-      "PAID": "Bezahlt",
-      "PENDING": "Ausstehend",
-      "IN_PROGRESS": "In Bearbeitung",
-      "DECLINED": "Abgelehnt",
-      "DENIED": "Verweigert",
-      "UNPAID": "Unbezahlt",
-      "FAILED": "Nicht bestanden",
-      "CANCELED": "Abgebrochen",
-      "CONNECTED": "Verbunden",
-      "CONNECTING": "Verbindet...",
-      "DISCONNECTED": "Getrennt"
+    "ACCEPTED": "Akzeptiert",
+    "PASSED": "Bestanden",
+    "PAID": "Bezahlt",
+    "PENDING": "Ausstehend",
+    "IN_PROGRESS": "In Bearbeitung",
+    "DECLINED": "Abgelehnt",
+    "DENIED": "Verweigert",
+    "UNPAID": "Unbezahlt",
+    "FAILED": "Nicht bestanden",
+    "CANCELED": "Abgebrochen",
+    "CONNECTED": "Verbunden",
+    "CONNECTING": "Verbindet...",
+    "DISCONNECTED": "Getrennt"
   }
 }

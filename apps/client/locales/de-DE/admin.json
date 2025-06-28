@@ -189,6 +189,6 @@
     "activeWarrantDeclined": "Ein aktiver Haftbefehlsantrag wurde mit der ID <span>{value}</span> abgelehnt.",
     "bulkRemoveValues": "Ausgewählte Werte wurden entfernt: <span>{value}</span>",
     "leoIncidentsPurged": "Ausgewählte LEO-Vorfälle wurden bereinigt. Diese Vorfälle können nicht wiederhergestellt werden und wurden dauerhaft gelöscht: <span>{value}</span>.",
-"emsFdIncidentsPurged": "Ausgewählte EMS/FD-Vorfälle wurden bereinigt. Diese Vorfälle können nicht wiederhergestellt werden und wurden dauerhaft gelöscht: <span>{value}</span>."
+    "emsFdIncidentsPurged": "Ausgewählte EMS/FD-Vorfälle wurden bereinigt. Diese Vorfälle können nicht wiederhergestellt werden und wurden dauerhaft gelöscht: <span>{value}</span>."
   }
 }
