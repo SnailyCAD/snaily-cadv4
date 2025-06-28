@@ -1,52 +1,101 @@
 {
   "Values": {
-    "totalItems": "Posten insgesamt",
+    "totalItems": "Gesamtanzahl",
     "values": "Werte",
     "shouldDo": "Sollte tun",
     "color": "Farbe",
-    "callsign": "Rufzeichen",
+    "textColor": "Textfarbe (#HEX)",
+    "callsign": "Funkrufzeichen",
     "department": "Abteilung",
-    "gameHash": "Spiel Hash",
+    "gameHash": "Spiel-Hash",
     "file": "Datei",
-    "importValues": "Importieren über Datei",
+    "importValues": "Über Datei importieren",
     "exportValues": "Werte exportieren",
-    "addPenalCodeGroup": "Gruppe hinzufügen",
-    "deleteGroup": "Gruppe löschen",
     "ungrouped": "Ungruppiert",
-    "licenseType": "Lizenz-Typ",
-    "whitelisted": "Whitelisted",
+    "licenseType": "Lizenztyp",
+    "whitelisted": "Auf Whitelist gesetzt",
     "whatPages": "Welche Seiten",
     "departments": "Abteilungen",
-    "isDefaultDepartment": "Standard-Abteilung",
+    "isDefaultDepartment": "Standardabteilung",
     "deleteSelectedValues": "Ausgewählte Werte löschen",
     "isDefault": "Ist Standard",
-    "defaultOfficerRank": "Standard-Offiziersrang",
-    "pairedUnitTemplate": "Vorlage für gepaarte Einheiten",
+    "defaultOfficerRank": "Standardoffiziersrang",
+    "pairedUnitTemplate": "Vorlage für verbundene Einheiten",
     "isConfidential": "Ist vertraulich",
     "priority": "Priorität",
-    "isDisabled": "Behinderte",
-    "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "cacheTip": " Die Werte werden für 24 Stunden zwischengespeichert. Das bedeutet, dass sich aktualisierte, hinzugefügte oder gelöschte Werte möglicherweise nicht sofort ändern. Es kann bis zu 24 Stunden dauern, bis die Änderungen wirksam werden.",
-    "alert_deleteValue": "Bist Du, dass Du <span>{value}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!",
-    "alert_deleteSelectedValues": "Bist Du sicher, dass Du {length} Elemente löschen willst? Diese Aktion kann nicht rückgängig gemacht werden"
+    "isDisabled": "Deaktiviert",
+    "county": "Bezirk",
+    "value": "Wert",
+    "selectAll": "Alle {count} auswählen?",
+    "xItemsSelected": "{count} Elemente ausgewählt.",
+    "noValuesForThisType": "Es wurden noch keine Werte für diesen Typ erstellt.",
+    "cannotDeleteTooltip": "Sie können diesen Wert nicht löschen, da er von einem anderen Datenbankelement verwendet wird. Sie müssen dieses Element zuerst löschen.",
+    "deletedSelectedValues": "{deleted} Elemente gelöscht. {failed} Elemente konnten nicht gelöscht werden.",
+    "failedDeleteValue": "Fehler beim Löschen von <span>{value}</span>.",
+    "cacheTip": "Werte werden für 24 Stunden zwischengespeichert. Das bedeutet, dass aktualisierte, hinzugefügte oder gelöschte Werte möglicherweise nicht sofort angezeigt werden. Es kann bis zu 24 Stunden dauern, bis die Änderungen wirksam werden.",
+    "alert_deleteValue": "Sind Sie sicher, dass Sie <span>{value}</span> löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "alert_deleteSelectedValues": "Sind Sie sicher, dass Sie {length} Elemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "mustBeValidHexColor": "Muss eine gültige HEX-Farbe sein",
+    "as": "Als (damit die Datenbank weiß, was verwendet werden soll.)",
+    "trimLevels": "Ausstattungsstufen",
+    "disabledDescription": "Wenn ein Wert deaktiviert ist, kann er nicht im Dropdown ausgewählt werden.",
+    "postal": "Postleitzahl",
+    "callsignSymbol": "Funkrufzeichen-Symbol",
+    "defaultRank": "Standardrang",
+    "whitelistedDescription": "Wenn eine Abteilung auf der Whitelist steht, können Sie 1 Abteilung als Standard festlegen. Diese Abteilung wird dem Beamten zugewiesen, wenn er auf Zugang wartet oder abgelehnt wurde.",
+    "defaultDepartment": "Standardabteilung",
+    "isConfidentialDescription": "Wenn eine Abteilung vertraulich ist, können andere Beamte keine Informationen über andere Beamte innerhalb dieser Abteilung einsehen.",
+    "extraFieldsDescription": "Ermöglicht es Ihnen, einen JSON-Wert für zusätzliche Felder zu verwenden. Dies kann nützlich sein, wenn Sie die Public API für benutzerdefinierte Aufgaben verwenden.",
+    "extraFields": "Zusätzliche Felder (JSON)",
+    "divisions": "Divisionen",
+    "defaultLicense": "Standardlizenz",
+    "defaultLicenseDescription": "Diese Lizenz wird einem Bürger bei seiner Erstellung zugewiesen.",
+    "qualification": "Qualifikation",
+    "award": "Auszeichnung",
+    "colorHex": "Farbe (#HEX)",
+    "codeType": "Code-Typ",
+    "license": "Lizenz",
+    "registrationStatus": "Registrierungsstatus",
+    "insuranceStatus": "Versicherungsstatus",
+    "employee": "Mitarbeiter",
+    "manager": "Manager",
+    "owner": "Besitzer",
+    "import": "Importieren",
+    "importCitizens": "Bürger importieren",
+    "importVehicles": "Fahrzeuge importieren",
+    "importWeapons": "Waffen importieren",
+    "customCallsignTemplate": "Benutzerdefinierte Funkrufzeichen-Vorlage",
+    "customCallsignTemplateDescription": "Wenn festgelegt, wird diese Vorlage anstelle der globalen Funkrufzeichen-Vorlage verwendet. Sie können die folgenden Variablen verwenden: {variables}",
+    "category": "Kategorie",
+    "addGroup": "Gruppe hinzufügen",
+    "manageGroup": "Gruppe verwalten",
+    "INFRACTION": "Vergehen",
+    "MISDEMEANOR": "Vergehen",
+    "FELONY": "Verbrechen",
+    "warningApplicable": "Verwarnung anwendbar",
+    "warningNotApplicable": "Verwarnung nicht anwendbar",
+    "isPrimary": "Ist primär",
+    "isDispositionDescription": "Ein Dispositionscode kann verwendet werden, wenn ein Anruf beendet wird. Dies wird verwendet, um das Ergebnis des Anrufs zu bestimmen.",
+    "isDisposition": "Ist Dispositionscode",
+    "mustBeValidJson": "Muss gültiges JSON sein"
   },
   "PENAL_CODE_GROUP": {
-    "MANAGE": "Verwalten von Strafrechtsgruppen",
+    "MANAGE": "Strafgesetzbuch-Gruppen verwalten",
     "ADD": "Strafgesetzbuch-Gruppe hinzufügen",
     "DELETE": "Strafgesetzbuch-Gruppe löschen",
     "EDIT": "Strafgesetzbuch-Gruppe bearbeiten",
     "ungrouped": "Ungruppiert",
-    "alert_deletePenalCodeGroup": "Bist Du sicher, dass Du <span>{group}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deletePenalCodeGroup": "Sind Sie sicher, dass Sie <span>{group}</span> löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteGroup": "Gruppe löschen"
   },
   "GENDER": {
     "MANAGE": "Geschlechter verwalten",
-    "ADD": "Geschlechter hinzufügen",
-    "DELETE": "Geschlechter löschen",
-    "EDIT": "Geschlechter bearbeiten"
+    "ADD": "Geschlecht hinzufügen",
+    "DELETE": "Geschlecht löschen",
+    "EDIT": "Geschlecht bearbeiten"
   },
   "WEAPON": {
-    "MANAGE": "Waffe verwalten",
+    "MANAGE": "Waffen verwalten",
     "ADD": "Waffe hinzufügen",
     "DELETE": "Waffe löschen",
     "EDIT": "Waffe bearbeiten"
@@ -58,28 +107,28 @@
     "EDIT": "Fahrzeug bearbeiten"
   },
   "ETHNICITY": {
-    "MANAGE": "Ethnizitäten verwalten",
-    "ADD": "Ethnizität hinzufügen",
-    "DELETE": "Ethnizität löschen",
-    "EDIT": "Ethnizität bearbeiten"
+    "MANAGE": "Ethnien verwalten",
+    "ADD": "Ethnie hinzufügen",
+    "DELETE": "Ethnie löschen",
+    "EDIT": "Ethnie bearbeiten"
   },
   "BLOOD_GROUP": {
     "MANAGE": "Blutgruppen verwalten",
-    "ADD": "Blutgrupp hinzufügen",
-    "DELETE": "Blutgrupp löschen",
-    "EDIT": "Blutgrupp bearbeiten"
+    "ADD": "Blutgruppe hinzufügen",
+    "DELETE": "Blutgruppe löschen",
+    "EDIT": "Blutgruppe bearbeiten"
   },
   "LICENSE": {
     "MANAGE": "Lizenzen verwalten",
     "ADD": "Lizenz hinzufügen",
     "DELETE": "Lizenz löschen",
-    "EDIT": "Lizenz barbeiten"
+    "EDIT": "Lizenz bearbeiten"
   },
   "BUSINESS_ROLE": {
-    "MANAGE": "Unternehmerische Rollen verwalten",
-    "ADD": "Unternehmerische Rolle hinzufügen",
-    "DELETE": "Unternehmerische Rolle löschen",
-    "EDIT": "Unternehmerische Rolle bearbeiten"
+    "MANAGE": "Geschäftsrollen verwalten",
+    "ADD": "Geschäftsrolle hinzufügen",
+    "DELETE": "Geschäftsrolle löschen",
+    "EDIT": "Geschäftsrolle bearbeiten"
   },
   "DEPARTMENT": {
     "MANAGE": "Abteilungen verwalten",
@@ -100,7 +149,7 @@
     "EDIT": "Offiziersrang bearbeiten"
   },
   "PENAL_CODE": {
-    "MANAGE": "Strafgesetzbücher verwalten",
+    "MANAGE": "Strafgesetzbuch verwalten",
     "ADD": "Strafgesetzbuch hinzufügen",
     "DELETE": "Strafgesetzbuch löschen",
     "EDIT": "Strafgesetzbuch bearbeiten"
@@ -112,57 +161,69 @@
     "EDIT": "Division bearbeiten"
   },
   "DRIVERSLICENSE_CATEGORY": {
-    "MANAGE": "FS-Kategorien verwalten",
-    "ADD": "FS-Kategorie hinzufügen",
-    "DELETE": "FS-Kategorie löschen",
-    "EDIT": "FS-Kategorie bearbeiten"
+    "MANAGE": "Führerscheinkategorien verwalten",
+    "ADD": "Kategorie hinzufügen",
+    "DELETE": "Kategorie löschen",
+    "EDIT": "Kategorie bearbeiten"
   },
   "IMPOUND_LOT": {
-    "MANAGE": "Beschlagnahmte Grundstücke verwalten",
-    "ADD": "Beschlagnahmte Grundstück hinzufügen",
-    "DELETE": "Beschlagnahmte Grundstück löschen",
-    "EDIT": "Beschlagnahmte Grundstück bearbeiten"
+    "MANAGE": "Abstellplätze verwalten",
+    "ADD": "Abstellplatz hinzufügen",
+    "DELETE": "Abstellplatz löschen",
+    "EDIT": "Abstellplatz bearbeiten"
   },
   "VEHICLE_FLAG": {
-    "MANAGE": "Fahrzeug-Kennungen verwalten",
-    "ADD": "Fahrzeug-Kennung hinzufügen",
-    "DELETE": "Fahrzeug-Kennung löschen",
-    "EDIT": "Fahrzeug-Kennung bearbeiten"
+    "MANAGE": "Fahrzeug-Flaggen verwalten",
+    "ADD": "Fahrzeug-Flagge hinzufügen",
+    "DELETE": "Fahrzeug-Flagge löschen",
+    "EDIT": "Fahrzeug-Flagge bearbeiten"
   },
   "CITIZEN_FLAG": {
-    "MANAGE": "Bürger-Kennungen verwalten",
-    "ADD": "Bürger-Kennung hinzufügen",
-    "DELETE": "Bürger-Kennung löschen",
-    "EDIT": "Bürger-Kennung bearbeiten"
+    "MANAGE": "Bürger-Flaggen verwalten",
+    "ADD": "Bürger-Flagge hinzufügen",
+    "DELETE": "Bürger-Flagge löschen",
+    "EDIT": "Bürger-Flagge bearbeiten"
   },
   "QUALIFICATION": {
-    "MANAGE": "Qualifikationen der Einheit verwalten",
-    "ADD": "Qualifikation der Einheit hinzufügen",
-    "DELETE": "Qualifikation der Einheit löschen",
-    "EDIT": "Qualifikation der Einheit bearbeiten"
+    "MANAGE": "Einheitenqualifikationen verwalten",
+    "ADD": "Einheitenqualifikation hinzufügen",
+    "DELETE": "Einheitenqualifikation löschen",
+    "EDIT": "Einheitenqualifikation bearbeiten"
   },
   "CALL_TYPE": {
-    "MANAGE": "Ruf-Typen verwalten",
-    "ADD": "Ruf-Typ hinzufügen",
-    "DELETE": "Ruf-Typ löschen",
-    "EDIT": "Ruf-Typ bearbeiten"
+    "MANAGE": "Anrufarten verwalten",
+    "ADD": "Anrufart hinzufügen",
+    "DELETE": "Anrufart löschen",
+    "EDIT": "Anrufart bearbeiten"
   },
   "ADDRESS": {
     "MANAGE": "Adressen verwalten",
-    "ADD": "Adressen hinzufügen",
+    "ADD": "Adresse hinzufügen",
     "DELETE": "Adresse löschen",
-    "EDIT": "Adressen bearbeiten"
+    "EDIT": "Adresse bearbeiten"
   },
   "EMERGENCY_VEHICLE": {
     "MANAGE": "Einsatzfahrzeuge verwalten",
-    "ADD": "Einsatzfahrzeuge hinzufügen",
-    "DELETE": "Lösche Einsatzfahrzeuge",
-    "EDIT": "Einsatzfahrzeuge bearbeiten"
+    "ADD": "Einsatzfahrzeug hinzufügen",
+    "DELETE": "Einsatzfahrzeug löschen",
+    "EDIT": "Einsatzfahrzeug bearbeiten"
   },
   "ADDRESS_FLAG": {
-    "MANAGE": "Adresskennzeichen verwalten",
-    "ADD": "Adresskennzeichen hinzufügen",
-    "DELETE": "Adresskennzeichen löschen",
-    "EDIT": "Adresskennzeichen bearbeiten"
+    "MANAGE": "Adress-Flaggen verwalten",
+    "ADD": "Adress-Flagge hinzufügen",
+    "DELETE": "Adress-Flagge löschen",
+    "EDIT": "Adress-Flagge bearbeiten"
+  },
+  "VEHICLE_TRIM_LEVEL": {
+    "MANAGE": "Ausstattungsstufen verwalten",
+    "ADD": "Ausstattungsstufe hinzufügen",
+    "DELETE": "Ausstattungsstufe löschen",
+    "EDIT": "Ausstattungsstufe bearbeiten"
+  },
+  "WEAPON_FLAG": {
+    "MANAGE": "Waffen-Flaggen verwalten",
+    "ADD": "Waffen-Flagge hinzufügen",
+    "DELETE": "Waffen-Flagge löschen",
+    "EDIT": "Waffen-Flagge bearbeiten"
   }
 }
