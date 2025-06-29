@@ -8,6 +8,7 @@ import { NotFound } from "@tsed/exceptions";
 import { UsePermissions, Permissions } from "middlewares/use-permissions";
 import type { Citizen, RegisteredVehicle } from "@prisma/client";
 import type * as APITypes from "@snailycad/types/api";
+import type { z } from "zod";
 
 @Controller("/notes")
 @UseBeforeEach(IsAuth)
@@ -68,7 +69,7 @@ export class NotesController {
     return true;
   }
 
-  private getPrismaName(data: Zod.infer<typeof NOTE_SCHEMA>) {
+  private getPrismaName(data: z.infer<typeof NOTE_SCHEMA>) {
     const prismaNames = {
       CITIZEN: "citizen",
       VEHICLE: "registeredVehicle",
@@ -78,9 +79,7 @@ export class NotesController {
     return name;
   }
 
-  private async findItem<T extends Citizen | RegisteredVehicle>(
-    data: Zod.infer<typeof NOTE_SCHEMA>,
-  ) {
+  private async findItem<T extends Citizen | RegisteredVehicle>(data: z.infer<typeof NOTE_SCHEMA>) {
     const name = this.getPrismaName(data);
     // @ts-expect-error methods have the same properties here.
     const item = await prisma[name].findUnique({

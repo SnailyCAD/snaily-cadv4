@@ -5,7 +5,7 @@ import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/data/prisma";
 import { IsAuth } from "middlewares/auth/is-auth";
 import { leoProperties } from "utils/leo/includes";
-
+import type { z } from "zod";
 import { type MiscCadSettings, ReleaseType, type Prisma, PublishStatus } from "@prisma/client";
 import { validateSchema } from "lib/data/validate-schema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
@@ -123,7 +123,7 @@ export class JailController {
 
   private async handleReleaseCitizen(
     citizenId: string,
-    data: Zod.infer<typeof RELEASE_CITIZEN_SCHEMA> & { force?: true },
+    data: z.infer<typeof RELEASE_CITIZEN_SCHEMA> & { force?: true },
   ) {
     const citizen = await prisma.citizen.findUnique({
       where: { id: citizenId },

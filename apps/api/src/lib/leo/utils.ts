@@ -12,6 +12,7 @@ import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/data/prisma";
 import { ExtendedBadRequest } from "~/exceptions/extended-bad-request";
 import type { DisconnectOrConnect } from "lib/data/many-to-many";
+import type { z } from "zod";
 
 interface MaxDepartmentOptions {
   type: "emsFdDeputy" | "officer";
@@ -103,7 +104,7 @@ export async function updateOfficerDivisionsCallsigns({
 }: {
   officerId: string;
   disconnectConnectArr: DisconnectOrConnect<string>[];
-  callsigns?: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>> | null;
+  callsigns?: Record<string, z.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>> | null;
 }) {
   if (!callsigns) return;
 

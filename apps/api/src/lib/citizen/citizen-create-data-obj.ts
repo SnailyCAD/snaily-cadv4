@@ -5,9 +5,10 @@ import generateBlurPlaceholder from "lib/images/generate-image-blur-data";
 import { validateImageURL } from "lib/images/validate-image-url";
 import { generateLicenseNumber } from "./licenses/generate-license-number";
 import { isFeatureEnabled } from "../upsert-cad";
+import type { z } from "zod";
 
 interface Options {
-  data: Partial<Zod.infer<typeof CREATE_CITIZEN_SCHEMA>>;
+  data: Partial<z.infer<typeof CREATE_CITIZEN_SCHEMA>>;
   defaultLicenseValueId?: string | null;
   cad: cad & { features?: Record<Feature, boolean>; miscCadSettings: MiscCadSettings | null };
 }
