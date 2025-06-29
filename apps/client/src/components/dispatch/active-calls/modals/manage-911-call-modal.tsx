@@ -43,8 +43,10 @@ interface AreFormFieldsDisabledOptions {
 function areFormFieldsEnabled(options: AreFormFieldsDisabledOptions) {
   /** force disable the fields */
   if (options.forceDisabled) return false;
+  
   /** dispatch can always edit the fields */
   if (options.isDispatch) return true;
+  
   /** a new call is being created, always editable */
   if (!options.call) return true;
 
@@ -56,8 +58,15 @@ function areFormFieldsEnabled(options: AreFormFieldsDisabledOptions) {
     return isAssignedToCall;
   }
 
-  // todo: make this an optional feature
-  /** otherwise fields are not editable, even when the unit is assigned to the call */
+  // Officers and Deputies can only edit calls they are assigned to
+  if (options.activeUnit) {
+    const isAssignedToCall = options.call.assignedUnits.some(
+      (u) => u.unit?.id === options.activeUnit?.id,
+    );
+    return isAssignedToCall;
+  }
+
+  // By default, fields are not editable if the user is not a dispatcher or assigned unit
   return false;
 }
 
@@ -106,7 +115,6 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
 
   function handleClose() {
     onClose?.();
-
     setShowAlert(false);
     modalState.closeModal(ModalIds.Manage911Call);
   }
@@ -141,7 +149,6 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
       title={call ? t("manage911Call") : t("create911Call")}
       className={call ? "!max-w-[100rem] w-full" : "w-[750px]"}
     >
-      {/* todo: custom component for expanded view */}
       {call ? (
         <div className="mb-4 flex flex-wrap flex-row gap-4 max-w-[1050px]">
           {user?.developerMode ? <Infofield label={t("id")}>{call.id}</Infofield> : null}
@@ -162,8 +169,7 @@ export function Manage911CallModal({ setCall, forceDisabled, forceOpen, call, on
           setShowAlert={setShowAlert}
           handleClose={handleClose}
           isDisabled={areFieldsDisabled}
-          call={call}
-        />
+          call={call} isDispatch={false} activeUnit={null}        />
 
         {call ? (
           <CallEventsArea
