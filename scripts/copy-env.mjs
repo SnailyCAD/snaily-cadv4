@@ -45,6 +45,13 @@ const [, , ...args] = process.argv;
 const copyToClient = hasArg("--client");
 const copyToApi = hasArg("--api");
 
+console.log("Copying .env to client and/or api...");
+
+if (!copyToClient && !copyToApi) {
+  console.log("No --client or --api flag provided. Exiting.");
+  process.exit(0);
+}
+
 let ENV_FILE_PATH = join(process.cwd(), ".env");
 
 if (ENV_FILE_PATH.endsWith("/apps/client/.env") || ENV_FILE_PATH.endsWith("/apps/api/.env")) {

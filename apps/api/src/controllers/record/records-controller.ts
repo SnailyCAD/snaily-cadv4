@@ -293,7 +293,7 @@ export class RecordsController {
 
     try {
       const args = process.env.IS_USING_ROOT_USER === "true" ? ["--no-sandbox"] : [];
-      const browser = await puppeteer.launch({ args, headless: "new" });
+      const browser = await puppeteer.launch({ args, headless: true });
       const page = await browser.newPage();
 
       page.setContent(template, { waitUntil: "domcontentloaded" });
@@ -388,7 +388,7 @@ export class RecordsController {
 
     try {
       const args = process.env.IS_USING_ROOT_USER === "true" ? ["--no-sandbox"] : [];
-      const browser = await puppeteer.launch({ args, headless: "new" });
+      const browser = await puppeteer.launch({ args, headless: true });
       const page = await browser.newPage();
 
       page.setContent(template, { waitUntil: "domcontentloaded" });
