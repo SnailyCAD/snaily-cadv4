@@ -60,7 +60,7 @@ export function Status({ children, fallback }: Props) {
           className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
         />
       ) : null}
-      {children ? t(children) : fallback ?? ""}
+      {children ? t(children) : (fallback ?? "")}
     </span>
   );
 }

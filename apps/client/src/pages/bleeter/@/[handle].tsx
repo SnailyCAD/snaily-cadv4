@@ -69,11 +69,11 @@ export default function BleeterProfilePage(props: BleeterProfilePageProps) {
 
   const followingCount = followingData.isInitialLoading
     ? props.data.followingCount
-    : followingData.following?.length ?? props.data.followingCount;
+    : (followingData.following?.length ?? props.data.followingCount);
 
   const followersCount = followersData.isInitialLoading
     ? props.data.followersCount
-    : followersData.followers?.length ?? props.data.followersCount;
+    : (followersData.followers?.length ?? props.data.followersCount);
 
   return (
     <Layout className="dark:text-white">

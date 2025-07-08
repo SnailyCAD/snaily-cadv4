@@ -99,7 +99,7 @@ function createInitialValues(options: CreateInitialValuesOptions) {
     description:
       value &&
       (isUnitQualification(value) || isDLCategoryValue(value) || isEmergencyVehicleValue(value))
-        ? value.description ?? ""
+        ? (value.description ?? "")
         : "",
     qualificationType:
       value && isUnitQualification(value)
@@ -107,8 +107,8 @@ function createInitialValues(options: CreateInitialValuesOptions) {
         : QualificationValueType.QUALIFICATION,
 
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
-    color: value && isStatusValue(value) ? value.color ?? "" : "",
-    textColor: value && isStatusValue(value) ? value.textColor ?? "" : "",
+    color: value && isStatusValue(value) ? (value.color ?? "") : "",
+    textColor: value && isStatusValue(value) ? (value.textColor ?? "") : "",
     type: getTypeForValue(options.type, value),
     departments:
       value &&
@@ -117,31 +117,31 @@ function createInitialValues(options: CreateInitialValuesOptions) {
         : undefined,
     whatPages: value && isStatusValue(value) ? makeDefaultWhatPages(value) : [],
 
-    pairedUnitTemplate: value && isDivisionValue(value) ? value.pairedUnitTemplate ?? "" : "",
+    pairedUnitTemplate: value && isDivisionValue(value) ? (value.pairedUnitTemplate ?? "") : "",
     departmentId: value && isDivisionValue(value) ? value.departmentId : "",
     isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
     whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
     defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
     isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
     callsign:
-      value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
-    customTemplate: value && isDepartmentValue(value) ? value.customTemplate ?? "" : "",
+      value && (isDepartmentValue(value) || isDivisionValue(value)) ? (value.callsign ?? "") : "",
+    customTemplate: value && isDepartmentValue(value) ? (value.customTemplate ?? "") : "",
 
     as: value && isEmployeeValue(value) ? value.as : "",
-    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
-    trimLevels: value && isVehicleValue(value) ? value.trimLevels?.map((v) => v.id) ?? [] : [],
+    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? (value.hash ?? "") : undefined,
+    trimLevels: value && isVehicleValue(value) ? (value.trimLevels?.map((v) => v.id) ?? []) : [],
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
-    priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
-    isDisposition: value && isCallTypeValue(value) ? value.isDisposition ?? undefined : undefined,
+    priority: value && isCallTypeValue(value) ? (value.priority ?? undefined) : undefined,
+    isDisposition: value && isCallTypeValue(value) ? (value.isDisposition ?? undefined) : undefined,
 
     officerRankImageId: "",
     officerRankDepartments:
       value && isOfficerRankValue(value) ? options.makeDefaultDepartmentsValues(value) : undefined,
 
-    postal: value && isAddressValue(value) ? value.postal ?? "" : "",
-    county: value && isAddressValue(value) ? value.county ?? "" : "",
+    postal: value && isAddressValue(value) ? (value.postal ?? "") : "",
+    county: value && isAddressValue(value) ? (value.county ?? "") : "",
 
     divisions:
       value && isEmergencyVehicleValue(value) && options.features.DIVISIONS
@@ -157,7 +157,7 @@ function createInitialValues(options: CreateInitialValuesOptions) {
         ? safelyStringifyJSON(value.extraFields)
         : "null",
 
-    departmentLinks: value && isDepartmentValue(value) ? value.links ?? [] : [],
+    departmentLinks: value && isDepartmentValue(value) ? (value.links ?? []) : [],
   };
 }
 

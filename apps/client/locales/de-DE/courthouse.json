@@ -33,6 +33,7 @@
     "noCourthousePosts": "Es gibt noch keine Gerichtsposten.",
     "createdBy": "Erstellt von",
     "cancelRequest": "Anfrage stornieren",
+    "courthouseManagement": "Gerichtsverwaltung",
     "alert_deleteCourthousePost": "Bist du sicher, dass Du diesen Beitrag löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_deleteCourtEntry": "Bist du sicher, dass Du diesen Eintrag löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_cancelRequest": "Bist du sicher, dass Du diesen Antrag auf Löschung Abbrechen willst? Dieser Vorgang kann nicht rückgängig gemacht werden.",

@@ -44,8 +44,10 @@
     "editBusinessRole": "Unternehmens Rolle bearbeiten",
     "as": "Als",
     "deleteBusinessRole": "Unternehmens Rolle löschen",
+    "canManageVehicles": "Kann Fahrzeuge verwalten",
     "alert_fireEmployee": "Bist Du sicher, dass Du <span>{employee}</span> entlassen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
     "alert_deletePost": "Bist Du sicher, dass Du diesen Beitrag löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "alert_deleteBusiness": "Bist Du sicher, dass Du \"<span>{business}</span>\" löschen willst? Diese Aktion kann nicht rückgängig gemacht werden."
+    "alert_deleteBusiness": "Bist Du sicher, dass Du \"<span>{business}</span>\" löschen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "alert_deleteBusinessRole": "Sind Sie sicher, dass Sie \"<span>{role}</span>\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   }
 }

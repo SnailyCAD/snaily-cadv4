@@ -53,7 +53,9 @@
     "otherSounds": "Andere Sounds",
     "unavailableSounds": "Nicht verfügbare Sounds",
     "unavailableSoundsMessage": "Diese Sounds sind nicht verfügbar. Du musst von einem Administrator hinzugefügt werden.",
-    "userApiTokenDescription": "Dieser Token kann verwendet werden, um mit SnailyCAD's API zu kommunizieren."
+    "userApiTokenDescription": "Dieser Token kann verwendet werden, um mit SnailyCAD's API zu kommunizieren.",
+    "developerMode": "Entwicklermodus",
+    "statusViewDescription": "Wie die Farbe eines Statuscodes (10-Code) in der Tabelle der aktiven Einheiten angezeigt wird."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> wurde gelöscht. Grund: {reason}"

@@ -19,6 +19,25 @@
     "declareAlive": "Für lebendig erklären",
     "myDeputyLogs": "Mein Stellvertreter protokolliert",
     "emergencyVehicle": "Einsatzfahrzeug",
-    "alert_deleteDeputy": "Bist du sicher, dass Du <span>{deputy}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!"
+    "alert_deleteDeputy": "Bist du sicher, dass Du <span>{deputy}</span> löschen willst? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "assignedToCall#": "{activeVehicle}, antworten Sie auf {location}",
+    "assignedToCall#WithType": "{activeVehicle}, antworten Sie auf {location}, {callType}",
+    "emsFdIncidents": "EMS/FD Vorfälle",
+    "createDoctorVisit": "Arztbesuch erstellen",
+    "doctorVisits": "Arztbesuche",
+    "medicalRecords": "Medizinische Aufzeichnungen",
+    "medications": "Medikamente",
+    "diagnosis": "Diagnose",
+    "conditions": "Krankheitszustände",
+    "add": "Hinzufügen",
+    "noDoctorVisits": "Dieser Bürger hat keine Arztbesuche."
+  },
+  "HospitalServices": {
+    "hospitalServices": "Krankenhausdienste",
+    "declareAlive": "Als lebend erklären",
+    "noDeadCitizens": "Es sind keine Bürger als tot markiert.",
+    "alert_declareAlive": "Sind Sie sicher, dass Sie <span>{citizen}</span> als lebend erklären möchten? Nur Benutzer mit den Berechtigungen 'Bürger als tot erklären' oder der Besitzer des Bürgers können diesen als tot markieren.",
+    "citizenDeclaredAlive": "Bürger als lebend erklärt",
+    "citizenDeclaredAliveMessage": "Dieser Bürger wurde erfolgreich als lebend erklärt."
   }
 }

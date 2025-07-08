@@ -105,7 +105,7 @@ export function DepartmentWhitelistingTab({ pendingUnits }: Props) {
                     {officer.user.username}
                   </Link>
                 ) : (
-                  officer.user?.username ?? common("Leo.temporaryUnit")
+                  (officer.user?.username ?? common("Leo.temporaryUnit"))
                 ),
               actions: (
                 <>
