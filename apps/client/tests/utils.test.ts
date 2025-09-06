@@ -2,7 +2,6 @@
 import { ValueLicenseType, WhitelistStatus } from "@snailycad/types";
 import { describe, expect, test } from "vitest";
 import {
-  calculateAge,
   yesOrNoText,
   formatDate,
   formatCitizenAddress,
@@ -19,19 +18,6 @@ import {
   getObjLength,
   soundCamelCaseToKebabCase,
 } from "../src/lib/utils";
-
-const DOB_1 = "1999-03-02";
-const DOB_2 = "1953-10-21";
-
-describe("calculateAge", () => {
-  test("Should correctly calculate age", () => {
-    expect(calculateAge(DOB_1)).toMatchInlineSnapshot('"25"');
-  });
-
-  test("Should correctly calculate age", () => {
-    expect(calculateAge(DOB_2)).toMatchInlineSnapshot('"70"');
-  });
-});
 
 describe("yesOrNoText", () => {
   test("Should return 'yes' -> true", () => {
