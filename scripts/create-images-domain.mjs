@@ -24,10 +24,9 @@ function getNextConfigPath() {
 async function loadNextConfig() {
   const configFilePath = getNextConfigPath();
 
-  const data = await import(configFilePath);
   const text = await readFile(configFilePath, "utf8");
 
-  return { data, text };
+  return { text };
 }
 
 async function writeNextConfig(data) {

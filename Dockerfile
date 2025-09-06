@@ -5,26 +5,31 @@ WORKDIR /snailycad
 # Install pnpm globally and set config in one layer
 RUN npm install -g pnpm && pnpm config set httpTimeout 1200000
 
-# Copy only package files first for better caching
-COPY pnpm-lock.yaml package.json ./
+# Copy the rest of the source code
+COPY . ./
 
 FROM base AS deps
 
 RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the source code
-COPY . ./
+FROM deps AS build
 
-FROM deps AS api
 ENV NODE_ENV="production"
-RUN pnpm turbo run build --filter=@snailycad/api
+
+# Build all packages (this will also build the API and Client)
+RUN pnpm turbo run build --filter="{packages/*}"
+
+
+FROM build AS api
+ENV NODE_ENV="production"
 WORKDIR /snailycad/apps/api
+RUN pnpm run build
 CMD ["pnpm", "start"]
 
-FROM deps AS client
+FROM build AS client
 ENV NODE_ENV="production"
+WORKDIR /snailycad/apps/client
 RUN rm -rf /snailycad/apps/client/.next
 RUN pnpm create-images-domain
-RUN pnpm turbo run build --filter=@snailycad/client
-WORKDIR /snailycad/apps/client
+RUN pnpm run build
 CMD ["pnpm", "start"]
