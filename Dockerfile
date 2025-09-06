@@ -1,4 +1,4 @@
-FROM node:18 AS base
+FROM node:20 AS base
 
 RUN npm install -g pnpm
 
