@@ -1,4 +1,4 @@
-FROM node:18 as base
+FROM node:18 AS base
 
 RUN npm install -g pnpm
 
@@ -8,11 +8,11 @@ WORKDIR /snailycad
 
 COPY . ./
 
-FROM base as deps
+FROM base AS deps
 
 RUN pnpm install
 
-FROM deps as api
+FROM deps AS api
 
 ENV NODE_ENV="production"
 
@@ -22,7 +22,7 @@ WORKDIR /snailycad/apps/api
 
 CMD ["pnpm", "start"]
 
-FROM deps as client
+FROM deps AS client
 
 ENV NODE_ENV="production"
 
