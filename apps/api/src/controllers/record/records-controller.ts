@@ -631,6 +631,147 @@ export class RecordsController {
     return true;
   }
 
+   @Get("/:id?")
+   async getRecordsHandler(
+    @PathParams("id") id: string,
+    @QueryParams("name") name?: string,
+    @QueryParams("department") department?: string,
+    @QueryParams("from") from?: string,
+    @QueryParams("to") to?: string,
+	@QueryParams("skip") skip?: number,
+	@QueryParams("take") take?: number,
+	@QueryParams("type") type?: string
+	){
+    // 1. Get by ID or Case Number
+    if (id) {
+      const record = await prisma.record.findUnique({
+        where: {
+			OR: [
+			  { id: id },
+			  { caseNumber: id },
+			],
+		},
+        include: {
+			citizen: { include: { user: { select: { 
+				id: true,
+				username: true,
+				discordId: true,
+				steamId: true,
+			} } } },
+			officer: { include: {
+				
+				department: true,
+				citizen: { select: {
+					name: true,
+					surname: true,
+					id: true,
+				} },
+				user: {
+					select: {
+						id: true,
+						username: true,
+						discordId: true,
+						steamId: true,
+					}
+				}
+				
+			} },
+		},
+      });
+
+      if (!record) {
+        throw new BadRequest("Record not found.");
+      }
+
+      return record;
+    }
+	
+	const safeSkip = Number(skip) || 0;
+	const safeTake = Math.min(Number(take) || 50, 100); // Max 100
+
+	let citizenWhere;
+	if (name) {
+	  const nameParts = name.trim().split(/\s+/);
+
+	  if (nameParts.length === 1) {
+		// Single part (search in both fields)
+		citizenWhere = {
+		  OR: [
+			{ name: { contains: nameParts[0], mode: "insensitive" } },
+			{ surname: { contains: nameParts[0], mode: "insensitive" } },
+		  ],
+		};
+	  } else {
+		// Multi-part (assume first + partial last)
+		const [first, ...rest] = nameParts;
+		const last = rest.join(" "); // in case of "Mary Ann S"
+
+		citizenWhere = {
+		  AND: [
+			{ name: { contains: first, mode: "insensitive" } },
+			{ surname: { startsWith: last, mode: "insensitive" } },
+		  ],
+		};
+	  }
+	}
+
+
+    // 2. Search/filter
+    const records = await prisma.record.findMany({
+      where: {
+		type: type as any,
+        citizen: citizenWhere,
+        officer: department
+          ? {
+              department: {
+                name: {
+                  contains: department,
+                  mode: "insensitive",
+                },
+              },
+            }
+          : undefined,
+        createdAt: {
+          gte: from ? new Date(from) : undefined,
+          lte: to ? new Date(to) : undefined,
+        },
+      },
+      include: {
+        citizen: { include: { user: { select: { 
+			id: true,
+			username: true,
+			discordId: true,
+			steamId: true,
+		} } } },
+        officer: { include: {
+			
+			department: true,
+			citizen: { select: {
+				name: true,
+				surname: true,
+				id: true,
+			} },
+			user: {
+				select: {
+					id: true,
+					username: true,
+					discordId: true,
+					steamId: true,
+				}
+			}
+			
+		} },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+	  skip: safeSkip,
+      take: safeTake,
+    });
+
+    return records;
+   }
+
   private async handleDiscordWebhook(
     ticket: (
       | (CADRecord & { violations: (Violation & { penalCode: { title: string } })[] })
