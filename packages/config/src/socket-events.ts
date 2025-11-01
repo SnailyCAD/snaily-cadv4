@@ -39,4 +39,5 @@ export enum SocketEvents {
   RoleplayStopped = "RoleplayStopped",
   Tones = "Tones",
   PrivateMessage = "PrivateMessage",
+  OfficerChat = "OfficerChat",
 }

@@ -22,3 +22,7 @@ export const PRIVATE_MESSAGE_SCHEMA = z.object({
   call911Id: z.string().nullish(),
   incidentId: z.string().nullish(),
 });
+
+export const OFFICER_CHAT_SCHEMA = z.object({
+  message: z.string().min(1),
+});

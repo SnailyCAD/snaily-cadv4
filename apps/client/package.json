@@ -7,7 +7,7 @@
     "watch": "npm run dev",
     "build": "pnpm validate && pnpm --filter \"@snailycad/api\" generate && pnpm --filter \"@snailycad/ui\" build && pnpm next-build",
     "next-build": "pnpm next build",
-    "start": "pnpm next start",
+    "start": "pnpm next start -p 3008",
     "start:proxy-experimental": "pnpm next start --port 80",
     "validate": "node ../../scripts/validate.mjs",
     "typecheck": "pnpm tsc --noEmit",

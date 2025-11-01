@@ -207,4 +207,8 @@ export class Socket {
   emitPrivateMessage(unitId: string, chat: DispatchChat) {
     this.io.sockets.emit(SocketEvents.PrivateMessage, { unitId, chat });
   }
+
+  emitOfficerChat(chat: any) {
+    this.io.sockets.emit(SocketEvents.OfficerChat, chat);
+  }
 }

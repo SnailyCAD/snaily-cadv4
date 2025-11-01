@@ -5,11 +5,20 @@ import { Nav } from "./shared/nav/Nav";
 import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout";
 import { useSocketError } from "hooks/global/useSocketError";
 import { useSocket } from "@casperiv/use-socket.io";
+import { usePermission } from "hooks/usePermission";
+import { Permissions as PermissionsEnum } from "@snailycad/permissions";
+import { useLeoState } from "state/leo-state";
+import { ShouldDoType } from "@snailycad/types";
 
 import dynamic from "next/dynamic";
 
 const SocketErrorComponent = dynamic(
   async () => (await import("hooks/global/components/socket-error-component")).SocketErrorComponent,
+  { ssr: false },
+);
+
+const GDOfficerChatbox = dynamic(
+  async () => (await import("components/leo/officer-chatbox/GDOfficerChatbox")).GDOfficerChatbox,
   { ssr: false },
 );
 
@@ -34,6 +43,14 @@ export function Layout({
   const { showError } = useSocketError();
   const { forbidden, Loader } = useHasPermissionForLayout(permissions);
   const socket = useSocket();
+  const { hasPermissions } = usePermission();
+  const activeOfficer = useLeoState((state) => state.activeOfficer);
+  const hasLeoPermissions = hasPermissions([PermissionsEnum.Leo]);
+  const isOfficerOnDuty =
+    hasLeoPermissions &&
+    activeOfficer !== null &&
+    activeOfficer.status !== null &&
+    activeOfficer.status.shouldDo !== ShouldDoType.SET_OFF_DUTY;
 
   React.useEffect(() => {
     if (connectedToSocket) return;
@@ -59,6 +76,7 @@ export function Layout({
 
         {children}
       </main>
+      {isOfficerOnDuty ? <GDOfficerChatbox /> : null}
     </>
   );
 }
