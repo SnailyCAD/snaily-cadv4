@@ -176,10 +176,10 @@ export function ManageIncidentModal<T extends LeoIncident | EmsFdIncident>({
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
-    isActive: isDispatch ? true : incident?.isActive ?? false,
+    isActive: isDispatch ? true : (incident?.isActive ?? false),
     situationCodeId: incident?.situationCodeId ?? null,
     openModalAfterCreation: true,
-    fireType: isEmsFdIncident ? incident.fireType ?? "" : "",
+    fireType: isEmsFdIncident ? (incident.fireType ?? "") : "",
   };
 
   return (

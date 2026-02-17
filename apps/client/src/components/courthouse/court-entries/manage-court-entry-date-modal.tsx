@@ -25,7 +25,7 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
   const validate = handleValidate(COURT_DATE_SCHEMA);
   const INITIAL_VALUES = {
     note: date?.note ?? "",
-    date: typeof date?.date === "string" ? parseISO(date.date) : date?.date ?? new Date(),
+    date: typeof date?.date === "string" ? parseISO(date.date) : (date?.date ?? new Date()),
   };
 
   function handleClose() {

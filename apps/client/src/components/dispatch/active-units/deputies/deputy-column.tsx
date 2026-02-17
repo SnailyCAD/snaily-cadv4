@@ -125,7 +125,7 @@ export function DeputyColumn({
     ...dispatchCodes,
   ];
 
-  const canContextMenuBeOpened = isEligiblePage ? canBeOpened ?? false : false;
+  const canContextMenuBeOpened = isEligiblePage ? (canBeOpened ?? false) : false;
 
   return (
     <ContextMenu>

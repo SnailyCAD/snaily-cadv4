@@ -68,7 +68,7 @@ export function ImageSelectInput({
     <FormField
       optional={isOptional}
       errorMessage={errors[valueKey] as string}
-      label={hideLabel ? null : label ?? common("image")}
+      label={hideLabel ? null : (label ?? common("image"))}
     >
       <div className="flex gap-2">
         <Input
@@ -119,7 +119,7 @@ export function ImageSelectInput({
       <FormField
         optional={isOptional}
         errorMessage={errors[valueKey] as string}
-        label={hideLabel ? null : label ?? common("image")}
+        label={hideLabel ? null : (label ?? common("image"))}
       >
         <div className="flex">
           <Input

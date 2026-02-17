@@ -78,7 +78,7 @@ export function EditDashboardLayoutModal() {
   }
 
   React.useEffect(() => {
-    const userSortedList = columnName ? user?.[columnName] ?? [] : [];
+    const userSortedList = columnName ? (user?.[columnName] ?? []) : [];
 
     const list = cardsForType.sort((a, b) => {
       return userSortedList.indexOf(a) - userSortedList.indexOf(b);

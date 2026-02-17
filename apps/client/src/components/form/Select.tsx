@@ -58,13 +58,13 @@ export function Select({ name, onChange, ...rest }: Props) {
 
     if (actionMeta.action === "clear" && Array.isArray(value)) {
       onChange({
-        target: { name, value: rest.isMulti ? fixedOptions : changedValue?.value ?? null },
+        target: { name, value: rest.isMulti ? fixedOptions : (changedValue?.value ?? null) },
       });
       return;
     }
 
     onChange({
-      target: { name, value: rest.isMulti ? changedValue : changedValue?.value ?? null },
+      target: { name, value: rest.isMulti ? changedValue : (changedValue?.value ?? null) },
     });
   }
 

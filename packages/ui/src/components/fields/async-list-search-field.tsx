@@ -90,7 +90,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
       });
 
       const json = await res.json();
-      const itemsArray = Array.isArray(json) ? json : props.fetchOptions.onResponse?.(json) ?? [];
+      const itemsArray = Array.isArray(json) ? json : (props.fetchOptions.onResponse?.(json) ?? []);
 
       return {
         items: itemsArray,

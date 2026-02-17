@@ -126,7 +126,7 @@ export function getManageOfficerFieldsDefaults(options: GetManageOfficerFieldsDe
     callsign2: options.officer?.callsign2 ?? "",
     divisions: options.officer?.divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     badgeNumberString: options.features.BADGE_NUMBERS
-      ? options.officer?.badgeNumberString ?? ""
+      ? (options.officer?.badgeNumberString ?? "")
       : undefined,
     citizenId: options.officer?.citizenId ?? "",
     name: options.officer

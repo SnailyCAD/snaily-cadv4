@@ -576,7 +576,7 @@ export const typeHandlers = {
       data.map((item) => {
         const data = {
           update: {
-            isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
+            isDefault: type === ValueType.LICENSE ? (item.isDefault ?? false) : false,
             type: type as ValueType,
             value: { set: item.value },
             licenseType:
@@ -584,7 +584,7 @@ export const typeHandlers = {
             isDisabled: item.isDisabled ?? false,
           },
           create: {
-            isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
+            isDefault: type === ValueType.LICENSE ? (item.isDefault ?? false) : false,
             type: type as ValueType,
             value: item.value,
             isDisabled: item.isDisabled ?? false,

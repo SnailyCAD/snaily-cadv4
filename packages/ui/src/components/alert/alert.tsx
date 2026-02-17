@@ -40,7 +40,7 @@ export function Alert(props: AlertProps) {
       ) : null}
       {props.message ? (
         <div className="flex items-center gap-2">
-          {!props.title ? props.icon ?? <ExclamationCircleFill /> : null}
+          {!props.title ? (props.icon ?? <ExclamationCircleFill />) : null}
           <p>{props.message}</p>
         </div>
       ) : null}

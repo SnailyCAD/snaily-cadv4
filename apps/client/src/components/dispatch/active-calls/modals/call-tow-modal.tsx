@@ -76,7 +76,7 @@ export function DispatchCallTowModal({ call }: Props) {
   const INITIAL_VALUES = {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
-    creatorId: isCombined ? null : activeUnit?.citizenId ?? null,
+    creatorId: isCombined ? null : (activeUnit?.citizenId ?? null),
     description: call?.description ?? "",
     descriptionData: call?.descriptionData ?? null,
     callCountyService: false,

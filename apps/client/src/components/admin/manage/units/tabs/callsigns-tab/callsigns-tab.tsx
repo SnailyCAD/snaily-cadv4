@@ -102,7 +102,7 @@ export function CallsignsTab({ units }: Props) {
                     {unit.user.username}
                   </Link>
                 ) : (
-                  unit.user?.username ?? t("Leo.temporaryUnit")
+                  (unit.user?.username ?? t("Leo.temporaryUnit"))
                 ),
               callsign1: unit.callsign,
               callsign2: unit.callsign2,

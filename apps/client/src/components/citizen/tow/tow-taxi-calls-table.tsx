@@ -122,7 +122,7 @@ export function TowTaxiCallsTable({ initialData, type, noCallsText }: Props) {
             description: <CallDescription nonCard data={call} />,
             caller: call.creator
               ? `${call.creator.name} ${call.creator.surname}`
-              : call.name ?? leo("dispatch"),
+              : (call.name ?? leo("dispatch")),
             assignedUnit: assignedUnit(call),
             createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (

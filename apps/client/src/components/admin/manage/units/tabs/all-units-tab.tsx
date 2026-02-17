@@ -216,7 +216,7 @@ export function AllUnitsTab({ units }: Props) {
                   </Link>
                 ) : (
                   // todo: add information about temporary unit here
-                  unit.user?.username ?? t("Leo.temporaryUnit")
+                  (unit.user?.username ?? t("Leo.temporaryUnit"))
                 ),
               callsign: generateCallsign(unit),
               badgeNumberString: unit.badgeNumberString,

@@ -164,7 +164,7 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
     inspectionStatus: vehicle?.inspectionStatus ?? null,
     taxStatus: vehicle?.taxStatus ?? null,
     registrationStatus: vehicle?.registrationStatusId ?? "",
-    citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
+    citizenId: isDisabled ? citizen.id : (vehicle?.citizenId ?? ""),
     name: isDisabled
       ? `${citizen.name} ${citizen.surname}`
       : vehicle?.citizen
