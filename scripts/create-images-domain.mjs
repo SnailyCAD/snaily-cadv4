@@ -23,9 +23,7 @@ function getNextConfigPath() {
 
 async function loadNextConfig() {
   const configFilePath = getNextConfigPath();
-
   const text = await readFile(configFilePath, "utf8");
-
   return { text };
 }
 
@@ -47,35 +45,63 @@ async function writeNextConfig(data) {
   );
 }
 
-function urlToDomain(fullUrl) {
+function getHostnameAndProtocol(fullUrl) {
   try {
     const url = new URL(fullUrl);
-
     if (url.hostname === "api") {
-      return "localhost";
+      return { hostname: "localhost", protocol: "http" };
     }
-
-    return `${url.hostname}`;
+    const protocol = url.protocol === "https:" ? "https" : "http";
+    return { hostname: url.hostname, protocol };
   } catch {
-    return "localhost";
+    return { hostname: "localhost", protocol: "http" };
   }
 }
 
-const domain = urlToDomain(process.env.NEXT_PUBLIC_PROD_ORIGIN);
+const { hostname, protocol } = getHostnameAndProtocol(process.env.NEXT_PUBLIC_PROD_ORIGIN);
 const { text } = await loadNextConfig();
 
-const stringArray = text.split("\n");
+const lines = text.split("\n");
+const imagesStart = lines.findIndex((line) => line.includes("images: { // start images"));
+const imagesEnd = lines.findIndex((line) => line.includes("}, // end images"));
 
-const imagesIndex = stringArray.findIndex((line) => line.includes("images: { // start images"));
-const imagesEndIndex = stringArray.findIndex((line) => line.includes("}, // end images"));
+if (imagesStart === -1 || imagesEnd === -1) {
+  console.warn("Could not find images block in next.config.mjs");
+  process.exit(0);
+}
 
-let imagesData = stringArray.slice(imagesIndex, imagesEndIndex).join("\n");
-imagesData = imagesData.replace(/, "localhost"/, `, "localhost", "${domain}"`);
+const imagesBlock = lines.slice(imagesStart, imagesEnd + 1).join("\n");
+const hostnameAlreadyPresent = imagesBlock.includes(`hostname: "${hostname}"`);
 
-stringArray.splice(imagesIndex, imagesEndIndex - imagesIndex, imagesData);
+if (hostnameAlreadyPresent) {
+  console.log("Image remotePatterns already include hostname:", hostname);
+  process.exit(0);
+}
 
-const config = stringArray.join("\n");
+// Find the line that closes remotePatterns (whitespace + ])
+let insertAtIndex = -1;
+for (let i = imagesStart; i <= imagesEnd; i++) {
+  const trimmed = lines[i].trim();
+  if (trimmed === "]") {
+    insertAtIndex = i;
+    break;
+  }
+}
 
-await writeNextConfig(config);
+if (insertAtIndex === -1) {
+  console.warn("Could not find remotePatterns closing bracket");
+  process.exit(0);
+}
 
-console.log("Image domain added to next.config.mjs");
+const newEntry = [
+  "      {",
+  `        protocol: "${protocol}",`,
+  `        hostname: "${hostname}",`,
+  // eslint-disable-next-line quotes
+  `        pathname: "**"`,
+  "      },",
+];
+lines.splice(insertAtIndex, 0, ...newEntry);
+
+await writeNextConfig(lines.join("\n"));
+console.log("Image remotePatterns updated in next.config.mjs");
