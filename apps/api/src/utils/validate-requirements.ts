@@ -1,5 +1,5 @@
 // credits to Whitigol
-// https://github.com/WhitigolProd/SnailyCAD-Manager/blob/main/src/scripts/utils/requirements.ts
+// https://github.com/whitigol/SnailyCAD-Manager/blob/main/src/scripts/utils/requirements.ts
 import commandExists from "command-exists";
 import { $log, drawTable } from "@tsed/logger";
 

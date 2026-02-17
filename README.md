@@ -33,7 +33,7 @@ this is a web based integration for communities who love police roleplaying and 
 - [Local9](https://github.com/Local9)
 - [jxckUK](https://github.com/jxckUK)
 - [Creizy](https://github.com/Creizy)
-- [Whitigol](https://github.com/WhitigolProd)
+- [Whitigol](https://github.com/whitigol)
 - [LazyCalypso](https://github.com/LazyCalypso)
 - [Northern524](https://github.com/Northern524)
 - [Sharki](https://github.com/subtosharki)
