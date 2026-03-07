@@ -155,10 +155,10 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     {
       ...props,
       onSelectionChange: handleSelectionChange,
-      inputRef: inputRef,
-      listBoxRef: listBoxRef,
-      popoverRef: popoverRef,
-      buttonRef: buttonRef,
+      inputRef,
+      listBoxRef,
+      popoverRef,
+      buttonRef,
     },
     state,
   );

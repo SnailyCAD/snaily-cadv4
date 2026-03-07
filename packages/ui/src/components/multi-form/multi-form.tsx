@@ -59,7 +59,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
     ): React.ReactElement<MultiFormStepItem<FormValues>> => {
       const _step = steps[stepNumber];
       const elementProps =
-        typeof _step === "object" && _step !== null && "props" in _step
+        typeof _step === "object" && "props" in _step
           ? (_step.props as Record<string, unknown>)
           : {};
 
