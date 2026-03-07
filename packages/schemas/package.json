@@ -26,12 +26,12 @@
     "typecheck": "pnpm tsc --noEmit"
   },
   "devDependencies": {
-    "tsup": "6.6.2",
-    "typescript": "^5.9.0"
+    "tsup": "8.5.1",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@snailycad/types": "workspace:*",
-    "tslib": "^2.6.3",
+    "tslib": "^2.8.1",
     "zod": "3.25.74"
   },
   "tsup": {
