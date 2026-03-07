@@ -67,7 +67,7 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
         steps[stepNumber] as React.ReactElement<MultiFormStepItem<FormValues>>,
         { ...elementProps, formikState } as Partial<MultiFormStepItem<FormValues>>,
       );
-      return element as React.ReactElement<MultiFormStepItem<FormValues>>;
+      return element;
     },
     [steps],
   );

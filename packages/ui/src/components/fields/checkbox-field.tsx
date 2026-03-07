@@ -15,11 +15,7 @@ interface CheckboxFieldProps extends AriaCheckboxProps {
 export function CheckboxField(props: CheckboxFieldProps) {
   const state = useToggleState(props);
   const ref = React.useRef(null);
-  const { inputProps } = useCheckbox(
-    props,
-    state,
-    ref as unknown as React.RefObject<HTMLInputElement>,
-  );
+  const { inputProps } = useCheckbox(props, state, ref);
   const { isFocusVisible, focusProps } = useFocusRing();
 
   const isSelected = state.isSelected && !props.isIndeterminate;

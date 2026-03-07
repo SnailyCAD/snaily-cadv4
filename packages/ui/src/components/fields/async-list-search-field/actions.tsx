@@ -8,7 +8,7 @@ interface AsyncListSearchFieldActionsProps<T> {
   errorMessage: React.ReactNode;
   showClearableButton: boolean;
   isDisabled?: boolean;
-  buttonRef: React.RefObject<HTMLButtonElement>;
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 export function AsyncListSearchFieldActions<T>(props: AsyncListSearchFieldActionsProps<T>) {

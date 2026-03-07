@@ -45,7 +45,7 @@ export function SmartSignsMarker({ marker }: Props) {
     if (!markerText.editing) setMarkerText(safeParseSmartSignText(marker.defaultText));
   }, [marker.defaultText, markerText.editing]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!socket?.connected) return;
 

@@ -22,7 +22,7 @@ export function CalendarCell(props: Props) {
     isDisabled,
     formattedDate,
     isInvalid,
-  } = useCalendarCell({ date: props.date }, props.state, ref as React.RefObject<HTMLElement>);
+  } = useCalendarCell({ date: props.date }, props.state, ref);
 
   const _isToday = isToday(props.date.toDate("UTC"));
   const { focusProps, isFocusVisible } = useFocusRing();

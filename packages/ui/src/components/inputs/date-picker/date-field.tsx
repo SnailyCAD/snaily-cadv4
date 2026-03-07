@@ -18,7 +18,7 @@ export function DateField(props: AriaDatePickerProps<DateValue>) {
   });
 
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const { fieldProps } = useDateField(props, state, ref as React.RefObject<Element>);
+  const { fieldProps } = useDateField(props, state, ref);
 
   return (
     <div {...fieldProps} ref={ref} className="flex">
@@ -31,11 +31,7 @@ export function DateField(props: AriaDatePickerProps<DateValue>) {
 
 function DateSegment(props: { segment: DateSegment; state: DateFieldState }) {
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const { segmentProps } = useDateSegment(
-    props.segment,
-    props.state,
-    ref as React.RefObject<HTMLElement>,
-  );
+  const { segmentProps } = useDateSegment(props.segment, props.state, ref);
 
   return (
     <div

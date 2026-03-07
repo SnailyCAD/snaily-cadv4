@@ -81,10 +81,10 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const { labelProps, triggerProps, errorMessageProps, valueProps, menuProps } = useMultiSelect(
     { ...props, selectedKey: undefined, disallowEmptySelection, children, disabledKeys },
     state,
-    ref as React.RefObject<HTMLElement>,
+    ref,
   );
 
-  const { buttonProps } = useButton(triggerProps, ref as React.RefObject<Element>);
+  const { buttonProps } = useButton(triggerProps, ref);
 
   const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
   const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
@@ -137,11 +137,7 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
             />
           </div>
           {state.isOpen && (
-            <Popover
-              triggerRef={triggerRef as React.RefObject<Element>}
-              isCalendar={props.isCalendar}
-              state={state}
-            >
+            <Popover triggerRef={triggerRef} isCalendar={props.isCalendar} state={state}>
               <ListBox {...menuProps} state={state} />
             </Popover>
           )}

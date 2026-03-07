@@ -55,7 +55,7 @@ export function SmartMotorwaySignsMarker({ marker }: Props) {
     }
   }, [marker.speeds, marker.defaultSpeeds]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!socket?.connected) return;
 

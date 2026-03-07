@@ -8,7 +8,7 @@ export const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
 export const ContextMenuPortal = ContextMenuPrimitive.Portal;
 
 export const ContextMenuContent = React.forwardRef<
-  React.ElementRef<typeof ContextMenuPrimitive.Content>,
+  React.ComponentRef<typeof ContextMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <ContextMenuPrimitive.Portal>
@@ -27,7 +27,7 @@ export const ContextMenuContent = React.forwardRef<
 ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName;
 
 export const ContextMenuItem = React.forwardRef<
-  React.ElementRef<typeof ContextMenuPrimitive.Item>,
+  React.ComponentRef<typeof ContextMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & ButtonVariantProps
 >(({ className, size, variant, ...props }, ref) => (
   <ContextMenuPrimitive.Item

@@ -9,7 +9,7 @@ export function HoverCard(props: React.ComponentPropsWithoutRef<typeof HoverCard
 }
 
 export const HoverCardContent = React.forwardRef<
-  React.ElementRef<typeof HoverCardPrimitive.Content>,
+  React.ComponentRef<typeof HoverCardPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content> & { pointerEvents?: boolean }
 >(({ className, align = "center", sideOffset = 4, pointerEvents = false, ...props }, ref) => (
   <HoverCardPrimitive.Content

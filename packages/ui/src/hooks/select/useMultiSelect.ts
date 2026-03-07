@@ -28,7 +28,7 @@ interface UseMultiSelect {
 export function useMultiSelect<T>(
   props: MultiSelectProps<T>,
   state: MultiSelectState<T>,
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLElement | null>,
 ): UseMultiSelect {
   const { disallowEmptySelection, isDisabled } = props;
 

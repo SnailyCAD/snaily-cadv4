@@ -14,11 +14,7 @@ interface SwitchFieldProps extends AriaSwitchProps {
 export function SwitchField(props: SwitchFieldProps) {
   const state = useToggleState(props);
   const ref = React.useRef(null);
-  const { inputProps } = useSwitch(
-    props,
-    state,
-    ref as unknown as React.RefObject<HTMLInputElement>,
-  );
+  const { inputProps } = useSwitch(props, state, ref);
 
   return (
     <label

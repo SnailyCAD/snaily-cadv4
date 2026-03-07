@@ -7,9 +7,7 @@ import { cn } from "mxcn";
 interface Props extends Omit<AriaPopoverProps, "triggerRef" | "popoverRef"> {
   children: React.ReactNode;
   triggerRef?: React.RefObject<Element | null>;
-  popoverRef?:
-    | React.RefObject<HTMLDivElement | null>
-    | React.MutableRefObject<HTMLDivElement | null>;
+  popoverRef?: React.RefObject<HTMLDivElement | null> | React.RefObject<HTMLDivElement | null>;
   className?: string;
   isCalendar?: boolean;
 
@@ -26,8 +24,8 @@ export function Popover(props: Props) {
 
   const { popoverProps } = usePopover(
     {
-      popoverRef: popoverRef as React.RefObject<Element>,
-      triggerRef: effectiveTriggerRef as React.RefObject<Element>,
+      popoverRef,
+      triggerRef: effectiveTriggerRef,
       placement: "bottom start",
       ...otherProps,
     },

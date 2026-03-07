@@ -155,10 +155,10 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
     {
       ...props,
       onSelectionChange: handleSelectionChange,
-      inputRef: inputRef as React.RefObject<HTMLInputElement>,
-      listBoxRef: listBoxRef as React.RefObject<HTMLUListElement>,
-      popoverRef: popoverRef as React.RefObject<HTMLDivElement>,
-      buttonRef: buttonRef as React.RefObject<HTMLButtonElement>,
+      inputRef: inputRef,
+      listBoxRef: listBoxRef,
+      popoverRef: popoverRef,
+      buttonRef: buttonRef,
     },
     state,
   );
@@ -194,7 +194,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
         ) : null}
 
         <AsyncListSearchFieldActions
-          buttonRef={buttonRef as React.RefObject<HTMLButtonElement>}
+          buttonRef={buttonRef}
           showClearableButton={showClearableButton}
           errorMessage={props.errorMessage}
           state={state}
@@ -210,11 +210,7 @@ function AsyncListSearchField<T extends object>(props: AsyncListFieldProps<T>) {
             placement={props.menuPlacement}
           >
             {state.collection.size > 0 ? (
-              <AsyncListFieldListBox<T>
-                {...listBoxProps}
-                listBoxRef={listBoxRef as React.RefObject<HTMLUListElement>}
-                state={state}
-              />
+              <AsyncListFieldListBox<T> {...listBoxProps} listBoxRef={listBoxRef} state={state} />
             ) : (
               <p className="cursor-default text-base text-neutral-700 dark:text-gray-400">
                 {state.inputValue === ""

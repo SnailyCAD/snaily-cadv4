@@ -17,18 +17,18 @@ interface Props extends AriaTextFieldOptions<"input"> {
   errorMessage?: string | null;
   name?: string;
   children?: React.ReactNode;
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
 }
 
 export function TextField(props: Props) {
-  const _ref = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  const _ref = React.useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
   const ref = props.inputRef ?? _ref;
 
   const { labelProps, inputProps, errorMessageProps } = useTextField(
     { ...props, inputElementType: props.isTextarea ? "textarea" : "input" } as AriaTextFieldOptions<
       "input" | "textarea"
     >,
-    ref as unknown as Parameters<typeof useTextField>[1],
+    ref,
   );
 
   return (

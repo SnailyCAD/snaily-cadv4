@@ -6,14 +6,14 @@ import { Option } from "./option";
 import { useTranslations } from "next-intl";
 
 interface ListBoxProps extends AriaListBoxOptions<unknown> {
-  listBoxRef?: React.RefObject<HTMLUListElement>;
+  listBoxRef?: React.RefObject<HTMLUListElement | null>;
   state: ListState<unknown>;
 }
 
 export function ListBox(props: ListBoxProps) {
   const ref = React.useRef<HTMLUListElement>(null);
   const { listBoxRef = ref, state } = props;
-  const { listBoxProps } = useListBox(props, state, listBoxRef as React.RefObject<HTMLElement>);
+  const { listBoxProps } = useListBox(props, state, listBoxRef);
   const t = useTranslations("Common");
 
   return (

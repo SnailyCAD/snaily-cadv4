@@ -67,7 +67,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         excludeFromTabOrder,
         ...rest,
       },
-      ref as React.RefObject<HTMLButtonElement>,
+      ref as React.RefObject<HTMLButtonElement | null>,
     );
 
     return (

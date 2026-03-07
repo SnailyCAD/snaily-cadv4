@@ -16,7 +16,7 @@ export function Option(props: OptionProps) {
   const { optionProps, isDisabled, isSelected, isFocusVisible } = useOption(
     { key: props.item.key },
     props.state,
-    ref as React.RefObject<import("@react-types/shared").FocusableElement>,
+    ref,
   );
 
   return (

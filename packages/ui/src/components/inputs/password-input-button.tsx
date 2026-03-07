@@ -2,8 +2,12 @@ import * as React from "react";
 import { Button } from "../button/button";
 import { useTranslations } from "next-intl";
 
-export function PasswordInputButton({ inputRef }: { inputRef: React.RefObject<HTMLInputElement> }) {
-  const [passwordShown, setPasswordShown] = React.useState(false);
+export function PasswordInputButton({
+  inputRef,
+}: {
+  inputRef: React.RefObject<HTMLInputElement | null>;
+}) {
+  const [passwordShown, setPasswordShown] = React.useState<boolean>(false);
   const common = useTranslations("Common");
 
   function handleToggle() {
