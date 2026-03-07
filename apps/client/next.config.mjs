@@ -42,15 +42,6 @@ const nextConfig = {
       },
     ]
   }, // end images
-  // prettier-enable
-  webpack(config, { webpack }) {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-      }),
-    );
-    return config;
-  },
 }; // end config
 
 /** @type {typeof nextConfig} */
