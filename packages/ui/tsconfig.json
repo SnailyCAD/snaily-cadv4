@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
+  "exclude": ["dist", "node_modules", "**/*.stories.*", "**/*.spec.*"],
   "compilerOptions": {
     "moduleResolution": "Bundler",
     "module": "ESNext",

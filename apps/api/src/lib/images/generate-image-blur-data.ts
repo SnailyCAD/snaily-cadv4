@@ -34,7 +34,7 @@ export default async function generateBlurPlaceholder(
     return placeholderBlur;
   }
 
-  const base64 = Buffer.from(image.buffer).toString("base64");
+  const base64 = image.buffer.toString("base64");
   placeholderBlur = `data:image/jpeg;base64,${base64}`;
   cache.set(image.fileName, placeholderBlur);
 

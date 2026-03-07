@@ -31,9 +31,7 @@ const CallsignsTab = dynamic(
 const DepartmentTimeLogsTab = dynamic(
   async () =>
     (
-      await import(
-        "components/admin/manage/units/tabs/department-time-logs/department-time-logs-table"
-      )
+      await import("components/admin/manage/units/tabs/department-time-logs/department-time-logs-table")
     ).DepartmentTimeLogsTab,
   { ssr: false },
 );

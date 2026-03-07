@@ -16,7 +16,7 @@ export function generateLicenseNumber(options: GenerateLicenseNumberOptions) {
   const matches = options.template.matchAll(regex);
 
   for (const match of matches) {
-    const [regex, type, _length] = match as [string, string, string];
+    const [regex, type, _length] = match as unknown as [string, string, string];
     const length = parseInt(_length, 10);
 
     if (type === "letter") {

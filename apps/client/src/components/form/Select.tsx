@@ -18,8 +18,10 @@ export interface SelectValue<Value = string> {
   readonly description?: string | null;
 }
 
-interface Props<Value extends SelectValue = SelectValue<any>>
-  extends Exclude<SelectProps, "options"> {
+interface Props<Value extends SelectValue = SelectValue<any>> extends Exclude<
+  SelectProps,
+  "options"
+> {
   onChange(event: any): void;
   value: Value | Value[] | string | null;
   values: Value[];
@@ -41,7 +43,6 @@ export function Select({ name, onChange, ...rest }: Props) {
 
   const useDarkTheme =
     user?.isDarkTheme &&
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     typeof window !== "undefined" &&
     window.document.body.classList.contains("dark");
 

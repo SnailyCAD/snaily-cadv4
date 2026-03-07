@@ -15,7 +15,8 @@ import type {
 } from "@react-types/shared";
 
 export interface MultiSelectProps<T>
-  extends CollectionBase<T>,
+  extends
+    CollectionBase<T>,
     AsyncLoadable,
     Omit<InputBase, "isReadOnly">,
     Validation<any>,

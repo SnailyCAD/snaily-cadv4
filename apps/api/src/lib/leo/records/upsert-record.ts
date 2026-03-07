@@ -159,13 +159,11 @@ export async function upsertRecord(options: UpsertRecordOptions) {
   );
   const fullFilledValidatedViolations = validatedViolationsResults
     .filter((v) => v.status === "fulfilled")
-    // @ts-expect-error - we know it's fulfilled
-    .map((v) => v.value) as Awaited<ReturnType<typeof validateRecordData>>[];
+    .map((v) => v.value);
 
   const failedValidatedViolations = validatedViolationsResults
     .filter((v) => v.status === "rejected")
-    // @ts-expect-error - we know it's rejected
-    .map((v) => v.reason);
+    .map((v) => (v as PromiseRejectedResult).reason);
 
   if (failedValidatedViolations.length >= 1) {
     captureException({

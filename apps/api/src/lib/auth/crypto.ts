@@ -2,7 +2,7 @@
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 
-const ALGORITHM = "aes256";
+const ALGORITHM = "aes256" as const;
 const INPUT_ENCODING = "utf8";
 const OUTPUT_ENCODING = "hex";
 const IV_LENGTH = 16;
@@ -18,7 +18,11 @@ export const encryptValue = function (text: string, key: string) {
   const _key = Buffer.from(key, "latin1");
   const iv = crypto.randomBytes(IV_LENGTH);
 
-  const cipher = crypto.createCipheriv(ALGORITHM, _key, iv);
+  const cipher = crypto.createCipheriv(
+    ALGORITHM,
+    _key as crypto.CipherKey,
+    iv as crypto.BinaryLike,
+  );
   let ciphered = cipher.update(text, INPUT_ENCODING, OUTPUT_ENCODING);
   ciphered += cipher.final(OUTPUT_ENCODING);
   const ciphertext = `${iv.toString(OUTPUT_ENCODING)}:${ciphered}`;
@@ -37,7 +41,11 @@ export const decryptValue = function (text: string, key: string) {
   const components = text.split(":");
   // @ts-expect-error ignore
   const iv_from_ciphertext = Buffer.from(components.shift(), OUTPUT_ENCODING);
-  const decipher = crypto.createDecipheriv(ALGORITHM, _key, iv_from_ciphertext);
+  const decipher = crypto.createDecipheriv(
+    ALGORITHM,
+    _key as crypto.CipherKey,
+    iv_from_ciphertext as crypto.BinaryLike,
+  );
   let deciphered = decipher.update(components.join(":"), OUTPUT_ENCODING, INPUT_ENCODING);
   deciphered += decipher.final(INPUT_ENCODING);
 

@@ -129,7 +129,7 @@ export class PetsController {
         data: { imageId: image.fileName },
         select: { imageId: true },
       }),
-      fs.writeFile(image.path, image.buffer),
+      fs.writeFile(image.path, image.buffer as NodeJS.ArrayBufferView),
     ]);
 
     return data;

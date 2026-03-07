@@ -65,7 +65,7 @@ export class ManageCitizensController {
           selectCADsettings: hasManageCadSettingsPermissions,
         }),
       }),
-      fs.writeFile(image.path, image.buffer),
+      fs.writeFile(image.path, image.buffer as NodeJS.ArrayBufferView),
     ]);
 
     await createAuditLogEntry({
@@ -109,7 +109,7 @@ export class ManageCitizensController {
             where: { id: cad.miscCadSettingsId! },
             data: { [file.originalname]: image.fileName },
           }),
-          fs.writeFile(image.path, image.buffer),
+          fs.writeFile(image.path, image.buffer as NodeJS.ArrayBufferView),
         ]);
 
         return data;
@@ -129,6 +129,6 @@ export class ManageCitizensController {
     const sharpImage = sharp(image.buffer).png({ quality: 80 });
     const buffer = await sharpImage.toBuffer();
 
-    await fs.writeFile(`${clientPublicFolder}/favicon.png`, buffer);
+    await fs.writeFile(`${clientPublicFolder}/favicon.png`, buffer as NodeJS.ArrayBufferView);
   }
 }

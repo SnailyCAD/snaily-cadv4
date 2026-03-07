@@ -8,7 +8,7 @@ import { useAuth } from "context/AuthContext";
 import type { MiscCadSettings } from "@snailycad/types";
 import { useDispatchMapState, useSocketStore } from "state/mapState";
 import { toastMessage } from "lib/toastMessage";
-import { io } from "socket.io-client";
+import { io, type Socket } from "socket.io-client";
 
 export function SelectMapServerModal() {
   const modalState = useModal();
@@ -94,7 +94,7 @@ function createLiveMapURLs(miscCadSettings: MiscCadSettings | null) {
   return Array.from(liveMapURLs.values());
 }
 
-export function makeSocketConnection(url: string) {
+export function makeSocketConnection(url: string): Socket | undefined {
   try {
     if (url.startsWith("ws")) {
       const _url = url.replace(/ws:\/\//, "http://").replace(/wss:\/\//, "https://");
@@ -122,6 +122,6 @@ export function makeSocketConnection(url: string) {
       duration: Infinity,
     });
 
-    return null;
+    return undefined;
   }
 }

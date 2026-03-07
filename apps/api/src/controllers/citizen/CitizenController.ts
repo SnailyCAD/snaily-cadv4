@@ -561,7 +561,7 @@ export class CitizenController {
           data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
           select: { imageId: true },
         }),
-        fs.writeFile(image.path, image.buffer),
+        fs.writeFile(image.path, image.buffer as NodeJS.ArrayBufferView),
       ]);
 
       return data;

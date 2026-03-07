@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "tsup": "6.6.2",
-    "typescript": "^5.3.2"
+    "typescript": "^5.9.0"
   },
   "dependencies": {
     "@snailycad/types": "workspace:*",
@@ -41,7 +41,7 @@
     "dts": true,
     "bundle": false,
     "platform": "node",
-    "target": "node18",
+    "target": "node20",
     "treeshake": true,
     "silent": true,
     "minify": true,

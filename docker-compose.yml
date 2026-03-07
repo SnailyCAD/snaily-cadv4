@@ -10,4 +10,4 @@ services:
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - ./.dev-data:/var/lib/postgresql/data
+      - ./.dev-data:/var/lib/postgresql

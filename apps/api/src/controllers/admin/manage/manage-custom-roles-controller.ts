@@ -203,7 +203,7 @@ export class AdminManageCustomRolesController {
         where: { id: customRole.id },
         data: { iconId: `${customRole.id}.${extension}` },
       }),
-      fs.writeFile(path, file.buffer),
+      fs.writeFile(path, file.buffer as NodeJS.ArrayBufferView),
     ]);
 
     await createAuditLogEntry({

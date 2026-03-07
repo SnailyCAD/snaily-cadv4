@@ -12,8 +12,10 @@ import { Button } from "../button/button";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
 import { MultiFormStep, type MultiFormStepItem } from "./multi-form-step";
 
-interface Props<FormValues extends FormikValues>
-  extends Omit<FormikConfig<FormValues>, "children"> {
+interface Props<FormValues extends FormikValues> extends Omit<
+  FormikConfig<FormValues>,
+  "children"
+> {
   children: ReturnType<typeof MultiFormStep>[];
   submitButton(state: {
     formikState: FormikProps<FormValues>;

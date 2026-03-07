@@ -627,7 +627,7 @@ export class AdminManageUnitsController {
           where: { id: unit.id },
           data: { imageId: image.fileName, imageBlurData: await generateBlurPlaceholder(image) },
         }),
-        fs.writeFile(image.path, image.buffer),
+        fs.writeFile(image.path, image.buffer as NodeJS.ArrayBufferView),
       ]);
 
       await createAuditLogEntry({

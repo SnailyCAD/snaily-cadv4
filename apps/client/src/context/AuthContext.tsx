@@ -46,9 +46,8 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   const handleGetUser = React.useCallback(async () => {
     const { getSessionUser } = await import("lib/auth");
-    const { doesUserHaveAllRequiredConnections } = await import(
-      "lib/validation/does-user-have-required-connections"
-    );
+    const { doesUserHaveAllRequiredConnections } =
+      await import("lib/validation/does-user-have-required-connections");
 
     const user = await getSessionUser();
 

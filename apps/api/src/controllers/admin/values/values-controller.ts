@@ -340,7 +340,7 @@ export class ValuesController {
 
       const blurData = await generateBlurPlaceholder(image);
 
-      await fs.writeFile(image.path, image.buffer);
+      await fs.writeFile(image.path, image.buffer as NodeJS.ArrayBufferView);
 
       switch (type) {
         case ValueType.VEHICLE: {

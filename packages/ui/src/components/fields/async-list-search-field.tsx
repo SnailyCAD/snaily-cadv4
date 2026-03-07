@@ -31,8 +31,10 @@ interface AsyncListFieldFetchOptions {
   onResponse?(json: any): any[];
 }
 
-export interface AsyncListFieldProps<T extends object>
-  extends Omit<ComboBoxProps<T>, "onSelectionChange" | "onInputChange"> {
+export interface AsyncListFieldProps<T extends object> extends Omit<
+  ComboBoxProps<T>,
+  "onSelectionChange" | "onInputChange"
+> {
   label: React.ReactNode;
   isOptional?: boolean;
   isClearable?: boolean;
