@@ -16,7 +16,7 @@ export function AsyncListFieldOption<T>(props: OptionProps<T>) {
   const { optionProps, isDisabled, isFocusVisible, isSelected } = useOption<T>(
     { key: props.item.key },
     props.state,
-    ref,
+    ref as React.RefObject<import("@react-types/shared").FocusableElement>,
   );
 
   return (

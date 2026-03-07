@@ -32,7 +32,6 @@
     "lib": ["es2022"],
 
     /* Monorepo options */
-    "composite": true,
-    "declarationMap": true
+    "composite": false
   }
 }

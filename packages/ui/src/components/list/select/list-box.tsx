@@ -13,7 +13,7 @@ interface ListBoxProps extends AriaListBoxOptions<unknown> {
 export function ListBox(props: ListBoxProps) {
   const ref = React.useRef<HTMLUListElement>(null);
   const { listBoxRef = ref, state } = props;
-  const { listBoxProps } = useListBox(props, state, listBoxRef);
+  const { listBoxProps } = useListBox(props, state, listBoxRef as React.RefObject<HTMLElement>);
   const t = useTranslations("Common");
 
   return (

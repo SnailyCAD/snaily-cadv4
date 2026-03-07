@@ -1,5 +1,4 @@
-import { Replay, init } from "@sentry/nextjs";
-import { BrowserTracing } from "@sentry/browser";
+import { replayIntegration, init, browserTracingIntegration } from "@sentry/nextjs";
 
 init({
   dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
@@ -27,6 +26,6 @@ init({
     "ResizeObserver loop completed with undelivered notifications.",
   ],
   integrations(integrations) {
-    return [...integrations, new BrowserTracing(), new Replay()];
+    return [...integrations, browserTracingIntegration(), replayIntegration()];
   },
 });

@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { AriaSelectProps } from "@react-types/select";
+import type { AriaSelectProps, SelectionMode } from "@react-types/select";
 import { Item } from "@react-stately/collections";
 import { cn } from "mxcn";
 import { Popover } from "../overlays/popover";
@@ -24,7 +24,7 @@ export interface SelectValue {
 }
 
 export type SelectFieldProps<T extends SelectValue> = Omit<
-  AriaSelectProps<T>,
+  AriaSelectProps<T, SelectionMode>,
   "children" | "selectedKey" | "errorMessage"
 > & {
   label: string;
@@ -81,10 +81,10 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
   const { labelProps, triggerProps, errorMessageProps, valueProps, menuProps } = useMultiSelect(
     { ...props, selectedKey: undefined, disallowEmptySelection, children, disabledKeys },
     state,
-    ref,
+    ref as React.RefObject<HTMLElement>,
   );
 
-  const { buttonProps } = useButton(triggerProps, ref);
+  const { buttonProps } = useButton(triggerProps, ref as React.RefObject<Element>);
 
   const selectedItems = selectionMode === "multiple" ? state.selectedItems : null;
   const selectedItem = selectionMode === "single" ? state.selectedItems?.[0] : null;
@@ -137,7 +137,11 @@ export function SelectField<T extends SelectValue>(props: SelectFieldProps<T>) {
             />
           </div>
           {state.isOpen && (
-            <Popover triggerRef={triggerRef} isCalendar={props.isCalendar} state={state}>
+            <Popover
+              triggerRef={triggerRef as React.RefObject<Element>}
+              isCalendar={props.isCalendar}
+              state={state}
+            >
               <ListBox {...menuProps} state={state} />
             </Popover>
           )}

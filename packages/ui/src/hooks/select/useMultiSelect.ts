@@ -8,11 +8,11 @@ import type {
   MultiSelectProps as MultiSelectStateProps,
   MultiSelectState,
 } from "./useMultiSelectState";
-import type { AriaSelectProps } from "@react-types/select";
+import type { AriaSelectProps, SelectionMode } from "@react-types/select";
 import type { AriaButtonOptions } from "@react-aria/button";
 import type { DOMAttributes, FocusableElement } from "@react-types/shared";
 
-interface MultiSelectProps<T> extends Omit<AriaSelectProps<T>, "onSelectionChange"> {
+interface MultiSelectProps<T> extends Omit<AriaSelectProps<T, SelectionMode>, "onSelectionChange"> {
   disallowEmptySelection?: boolean;
   onSelectionChange?: MultiSelectStateProps<T>["onSelectionChange"];
 }

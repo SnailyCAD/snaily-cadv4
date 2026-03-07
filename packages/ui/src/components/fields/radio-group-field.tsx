@@ -41,7 +41,11 @@ export function RadioGroupField(props: Props) {
 export function Radio(props: AriaRadioProps) {
   const state = useRadioFieldContext();
   const ref = React.useRef(null);
-  const { inputProps, isDisabled } = useRadio(props, state, ref);
+  const { inputProps, isDisabled } = useRadio(
+    props,
+    state,
+    ref as unknown as React.RefObject<HTMLInputElement>,
+  );
 
   return (
     <label className="block dark:text-gray-200 my-0.5">

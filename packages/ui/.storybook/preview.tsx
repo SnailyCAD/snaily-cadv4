@@ -1,17 +1,16 @@
 import * as React from "react";
 import "../src/tailwind.css";
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-vite";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { NextIntlClientProvider } from "next-intl";
 
 const preview: Preview = {
   parameters: {
     backgrounds: {
-      default: "dark",
-      values: [
-        { name: "light", value: "#ffffff" },
-        { name: "dark", value: "#16151a" },
-      ],
+      options: {
+        light: { name: "light", value: "#ffffff" },
+        dark: { name: "dark", value: "#16151a" },
+      },
     },
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
@@ -19,6 +18,12 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
+    },
+  },
+
+  initialGlobals: {
+    backgrounds: {
+      value: "dark",
     },
   },
 };

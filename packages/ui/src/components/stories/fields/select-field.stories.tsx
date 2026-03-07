@@ -1,7 +1,7 @@
 import * as React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SelectField, type SelectFieldProps } from "../../fields/select-field";
-import { within, userEvent } from "@storybook/testing-library";
+import { within, userEvent } from "storybook/test";
 import { expect } from "@storybook/jest";
 import type { Key } from "@react-types/shared";
 

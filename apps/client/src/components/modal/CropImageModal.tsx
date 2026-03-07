@@ -4,7 +4,7 @@ import type CropperJS from "cropperjs";
 import { Button } from "@snailycad/ui";
 import { useTranslations } from "use-intl";
 import { Modal } from "./Modal";
-import "cropperjs/dist/cropper.css";
+// import "cropperjs/dist/cropper.css";
 import { classNames } from "lib/classNames";
 
 interface Props {

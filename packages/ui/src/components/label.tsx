@@ -11,7 +11,7 @@ interface Props {
   isOptional?: boolean;
   hiddenLabel?: boolean;
   labelClassnames?: string;
-  element?: keyof React.ReactHTML;
+  element?: keyof React.JSX.IntrinsicElements;
   description?: React.ReactNode;
 }
 
@@ -21,7 +21,7 @@ export function Label(props: Props) {
   const elementType = props.element ?? "label";
 
   const element = React.createElement(
-    elementType,
+    elementType as React.ElementType,
     {
       ...props.labelProps,
       className: cn(

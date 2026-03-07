@@ -57,7 +57,7 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
     dialogProps,
     calendarProps,
     errorMessageProps,
-  } = useDatePicker({ ...rest }, state, triggerRef);
+  } = useDatePicker({ ...rest }, state, triggerRef as React.RefObject<Element>);
 
   const errorMessageClassName =
     !!rest.errorMessage && "!border-red-500 focus:!border-red-700 dark:!focus:border-red-700";
@@ -108,7 +108,12 @@ export function DatePickerField({ value: _value, ...rest }: Props) {
           ) : null}
         </div>
         {state.isOpen && (
-          <Popover triggerRef={triggerRef} isCalendar state={state} {...dialogProps}>
+          <Popover
+            triggerRef={triggerRef as React.RefObject<Element>}
+            isCalendar
+            state={state}
+            {...dialogProps}
+          >
             <Calendar {...calendarProps} />
           </Popover>
         )}

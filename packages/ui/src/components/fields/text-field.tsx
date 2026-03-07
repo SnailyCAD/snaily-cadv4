@@ -1,5 +1,5 @@
 import * as React from "react";
-import { type AriaTextFieldOptions, type TextFieldAria, useTextField } from "@react-aria/textfield";
+import { type AriaTextFieldOptions, useTextField } from "@react-aria/textfield";
 import { cn } from "mxcn";
 import { Input } from "../inputs/input";
 import { Textarea } from "../inputs/textarea";
@@ -25,8 +25,10 @@ export function TextField(props: Props) {
   const ref = props.inputRef ?? _ref;
 
   const { labelProps, inputProps, errorMessageProps } = useTextField(
-    { ...props, inputElementType: props.isTextarea ? "textarea" : "input" },
-    ref,
+    { ...props, inputElementType: props.isTextarea ? "textarea" : "input" } as AriaTextFieldOptions<
+      "input" | "textarea"
+    >,
+    ref as unknown as Parameters<typeof useTextField>[1],
   );
 
   return (
@@ -37,13 +39,13 @@ export function TextField(props: Props) {
         <Textarea
           errorMessage={props.errorMessage}
           ref={ref as React.RefObject<HTMLTextAreaElement>}
-          {...(inputProps as TextFieldAria<"textarea">["inputProps"])}
+          {...(inputProps as React.ComponentProps<"textarea">)}
         />
       ) : (
         <Input
           errorMessage={props.errorMessage}
           ref={ref as React.RefObject<HTMLInputElement>}
-          {...(inputProps as TextFieldAria["inputProps"])}
+          {...(inputProps as React.ComponentProps<"input">)}
         />
       )}
       {props.children}

@@ -4,9 +4,12 @@ import { DismissButton, Overlay, usePopover, type AriaPopoverProps } from "@reac
 import { mergeProps } from "@react-aria/utils";
 import { cn } from "mxcn";
 
-interface Props extends Omit<AriaPopoverProps, "popoverRef"> {
+interface Props extends Omit<AriaPopoverProps, "triggerRef" | "popoverRef"> {
   children: React.ReactNode;
-  popoverRef?: React.MutableRefObject<HTMLDivElement | null>;
+  triggerRef?: React.RefObject<Element | null>;
+  popoverRef?:
+    | React.RefObject<HTMLDivElement | null>
+    | React.MutableRefObject<HTMLDivElement | null>;
   className?: string;
   isCalendar?: boolean;
 
@@ -17,14 +20,21 @@ const MENU_WIDTH = 300;
 
 export function Popover(props: Props) {
   const ref = React.useRef<HTMLDivElement>(null);
+  const defaultTriggerRef = React.useRef<Element>(null);
   const { popoverRef = ref, triggerRef, children, isCalendar, state, ...otherProps } = props;
+  const effectiveTriggerRef = triggerRef ?? defaultTriggerRef;
 
   const { popoverProps } = usePopover(
-    { popoverRef, triggerRef, placement: "bottom start", ...otherProps },
+    {
+      popoverRef: popoverRef as React.RefObject<Element>,
+      triggerRef: effectiveTriggerRef as React.RefObject<Element>,
+      placement: "bottom start",
+      ...otherProps,
+    },
     state,
   );
 
-  const fieldWidth = triggerRef.current?.clientWidth ?? 0;
+  const fieldWidth = effectiveTriggerRef.current?.clientWidth ?? 0;
   const width = isCalendar ? MENU_WIDTH : fieldWidth;
   const style = { ...popoverProps.style, width };
 

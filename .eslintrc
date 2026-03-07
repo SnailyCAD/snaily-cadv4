@@ -15,7 +15,7 @@
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
-    "project": "./tsconfig.base.json",
+    "project": "**/tsconfig.base.json",
     "emitDecoratorMetadata": true,
     "ecmaFeatures": {
       "jsx": true

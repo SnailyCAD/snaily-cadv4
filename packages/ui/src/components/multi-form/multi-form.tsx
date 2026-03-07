@@ -53,18 +53,21 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
   }, [steps]);
 
   const getActiveStep = React.useCallback(
-    <FormValues extends object>(formikState: FormikProps<FormValues>, stepNumber: number) => {
+    (
+      formikState: FormikProps<FormValues>,
+      stepNumber: number,
+    ): React.ReactElement<MultiFormStepItem<FormValues>> => {
       const _step = steps[stepNumber];
-      const elementProps = typeof _step === "object" && "props" in _step ? _step.props : {};
+      const elementProps =
+        typeof _step === "object" && _step !== null && "props" in _step
+          ? (_step.props as Record<string, unknown>)
+          : {};
 
       const element = React.cloneElement(
         steps[stepNumber] as React.ReactElement<MultiFormStepItem<FormValues>>,
-        {
-          ...elementProps,
-          formikState,
-        },
+        { ...elementProps, formikState } as Partial<MultiFormStepItem<FormValues>>,
       );
-      return element;
+      return element as React.ReactElement<MultiFormStepItem<FormValues>>;
     },
     [steps],
   );
@@ -153,7 +156,8 @@ function MultiForm<FormValues extends FormikValues>(props: Props<FormValues>) {
                       Next <ArrowRight />
                     </Button>
                   )}
-                  {isLastStep || (!isFirstStep && !activeStep.props.isRequired)
+                  {isLastStep ||
+                  (!isFirstStep && !(activeStep.props as MultiFormStepItem<FormValues>).isRequired)
                     ? props.submitButton({ formikState, activeStep })
                     : null}
                 </div>

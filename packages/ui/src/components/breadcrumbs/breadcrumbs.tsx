@@ -13,7 +13,9 @@ export function Breadcrumbs(props: Props) {
     <nav {...navProps} className="mb-3">
       <ol className="flex list-none">
         {children.map((child, i) =>
-          React.cloneElement(child as React.ReactElement, { isCurrent: i === children.length - 1 }),
+          React.cloneElement(child as React.ReactElement<Props & { isCurrent?: boolean }>, {
+            isCurrent: i === children.length - 1,
+          }),
         )}
       </ol>
     </nav>

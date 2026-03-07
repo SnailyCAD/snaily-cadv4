@@ -23,7 +23,10 @@ export function BreadcrumbItem(props: Props) {
 
 function SpanElement(props: Props) {
   const ref = React.useRef<HTMLSpanElement | null>(null);
-  const { itemProps } = useBreadcrumbItem({ ...props, elementType: "span" }, ref);
+  const { itemProps } = useBreadcrumbItem(
+    { ...props, elementType: "span" },
+    ref as React.RefObject<import("@react-types/shared").FocusableElement>,
+  );
 
   return (
     <span
@@ -42,7 +45,10 @@ function SpanElement(props: Props) {
 
 function LinkElement(props: Props) {
   const ref = React.useRef<HTMLAnchorElement | null>(null);
-  const { itemProps } = useBreadcrumbItem({ ...props, elementType: "a" }, ref);
+  const { itemProps } = useBreadcrumbItem(
+    { ...props, elementType: "a" },
+    ref as React.RefObject<import("@react-types/shared").FocusableElement>,
+  );
 
   return (
     <Link

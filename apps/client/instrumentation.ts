@@ -1,7 +1,6 @@
-import { init } from "@sentry/nextjs";
-import "@sentry/tracing";
+import * as Sentry from "@sentry/nextjs";
 
-init({
+const sharedOptions: Parameters<typeof Sentry.init>[0] = {
   dsn: "https://6e31d0dc886d482091e293edb73eb10e@o518232.ingest.sentry.io/6553264",
   tracesSampleRate: 0.4,
   attachStacktrace: true,
@@ -24,4 +23,14 @@ init({
     /ResizeObserver/gi,
     "ResizeObserver loop completed with undelivered notifications.",
   ],
-});
+};
+
+export async function register() {
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    Sentry.init(sharedOptions);
+  }
+
+  if (process.env.NEXT_RUNTIME === "edge") {
+    Sentry.init(sharedOptions);
+  }
+}
