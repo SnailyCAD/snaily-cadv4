@@ -46,8 +46,8 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
   const { state, execute } = useFetch();
   const { units, setUnits } = useCacheStore();
 
-  const hoverRef = React.useRef(null);
-  const hovered = useHoverDirty(hoverRef);
+  const hoverRef = React.useRef<HTMLSpanElement | null>(null);
+  const hovered = useHoverDirty(hoverRef as React.RefObject<HTMLSpanElement>);
   const cache = units[unit.id];
 
   const handleHover = React.useCallback(async () => {

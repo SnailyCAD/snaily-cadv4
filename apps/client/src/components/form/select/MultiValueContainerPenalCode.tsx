@@ -12,6 +12,7 @@ export function MultiValueContainerPenalCode(props: MultiValueGenericProps<any>)
     <HoverCard>
       <HoverCardTrigger asChild>
         <div>
+          {/* @ts-expect-error - react-select types are not compatible with our types */}
           <components.MultiValueContainer {...props} />
         </div>
       </HoverCardTrigger>

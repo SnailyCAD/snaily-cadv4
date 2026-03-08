@@ -4,11 +4,13 @@ import ReactSelect, {
   type GroupBase,
   type StylesConfig,
   type ActionMeta,
+  type CSSObjectWithLabel,
 } from "react-select";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
 
 import { MultiValueContainerPenalCode } from "./select/MultiValueContainerPenalCode";
+import type React from "react";
 
 export interface SelectValue<Value = string> {
   readonly label: string;
@@ -33,6 +35,9 @@ interface Props<Value extends SelectValue = SelectValue<any>> extends Exclude<
   };
 }
 
+/**
+ * @deprecated Use the SelectField component instead.
+ */
 export function Select({ name, onChange, ...rest }: Props) {
   const { user } = useAuth();
   const common = useTranslations("Common");
@@ -102,66 +107,72 @@ export function styles({
   hasError = false,
 }: SelectStylesOptions): StylesConfig<unknown, boolean, GroupBase<unknown>> {
   return {
-    valueContainer: (base) => ({
-      ...base,
-      background: backgroundColor,
-      color,
-      ":hover": {
-        border: "none",
-      },
-    }),
-    option: (base, option) => ({
-      ...base,
-      padding: "0.5em",
-      width: "100%",
-      backgroundColor,
-      color,
-      cursor: option.isDisabled ? "not-allowed" : "pointer",
-      transition: "background 150ms",
-      borderRadius: "0.2rem",
-      marginTop: "0.2rem",
-      opacity: option.isDisabled ? 0.8 : 1,
-      background: option.isFocused
-        ? backgroundColor === "white"
-          ? "#D4D4D4"
-          : "#1f1e26"
-        : "transparent",
-      ":hover": {
-        background: option.isDisabled
-          ? "none"
-          : backgroundColor === "white"
+    valueContainer: (base) =>
+      ({
+        ...base,
+        background: backgroundColor,
+        color,
+        ":hover": {
+          border: "none",
+        },
+      }) as CSSObjectWithLabel,
+    option: (base, option) =>
+      ({
+        ...base,
+        padding: "0.5em",
+        width: "100%",
+        backgroundColor,
+        color,
+        cursor: option.isDisabled ? "not-allowed" : "pointer",
+        transition: "background 150ms",
+        borderRadius: "0.2rem",
+        marginTop: "0.2rem",
+        opacity: option.isDisabled ? 0.8 : 1,
+        background: option.isFocused
+          ? backgroundColor === "white"
             ? "#D4D4D4"
-            : "#1f1e26",
-      },
-    }),
-    menu: (prov) => ({
-      ...prov,
-      width: "100%",
-      color,
-      padding: "0.5rem",
-      backgroundColor,
-      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.5)",
-    }),
-    multiValue: (base) => ({
-      ...base,
-      color: "#000",
-      borderColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
-      backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
-    }),
-    noOptionsMessage: (base) => ({
-      ...base,
-      color,
-    }),
-    multiValueLabel: (base) => ({
-      ...base,
-      backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
-      color,
-      padding: "0.2rem",
-      borderRadius: "2px 0 0 2px",
-    }),
+            : "#1f1e26"
+          : "transparent",
+        ":hover": {
+          background: option.isDisabled
+            ? "none"
+            : backgroundColor === "white"
+              ? "#D4D4D4"
+              : "#1f1e26",
+        },
+      }) as CSSObjectWithLabel,
+    menu: (prov) =>
+      ({
+        ...prov,
+        width: "100%",
+        color,
+        padding: "0.5rem",
+        backgroundColor,
+        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.5)",
+      }) as CSSObjectWithLabel,
+    multiValue: (base) =>
+      ({
+        ...base,
+        color: "#000",
+        borderColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
+        backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
+      }) as CSSObjectWithLabel,
+    noOptionsMessage: (base) =>
+      ({
+        ...base,
+        color,
+      }) as CSSObjectWithLabel,
+    multiValueLabel: (base) =>
+      ({
+        ...base,
+        backgroundColor: backgroundColor === "white" ? "#D4D4D4" : "#1f1e26",
+        color,
+        padding: "0.2rem",
+        borderRadius: "2px 0 0 2px",
+      }) as CSSObjectWithLabel,
     multiValueRemove: (base, props) => {
       if (props.isDisabled || (props.data as any).isFixed) {
-        return { ...base, display: "none" };
+        return { ...base, display: "none" } as CSSObjectWithLabel;
       }
 
       return {
@@ -173,48 +184,45 @@ export function styles({
         ":hover": {
           filter: "brightness(90%)",
         },
-      };
+      } as CSSObjectWithLabel;
     },
-    indicatorsContainer: (base) => ({
-      ...base,
-      backgroundColor,
-      color,
-    }),
-    clearIndicator: (base) => ({
-      ...base,
-      cursor: "pointer",
-      color,
-      ":hover": {
-        color: backgroundColor === "white" ? "#222" : "#a1a1a1",
-      },
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      cursor: "pointer",
-      color,
-      ":hover": {
-        color: backgroundColor === "white" ? "#222" : "#a1a1a1",
-      },
-    }),
-    control: (base, state) => ({
-      ...base,
-      opacity: state.isDisabled ? 0.7 : undefined,
-      cursor: state.isDisabled ? "not-allowed !important" : undefined,
-      background: backgroundColor,
-      borderRadius: "0.375rem",
-      overflow: "hidden",
-      border: hasError
-        ? "1.5px solid #EF4444"
-        : state.isFocused
-          ? "1.5px solid rgb(107, 114, 128)"
-          : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
-      boxShadow: "none",
-      ":hover": {
-        boxShadow: "none",
-        borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
-      },
-      ":focus": {
-        borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+    indicatorsContainer: (base) =>
+      ({
+        ...base,
+        backgroundColor,
+        color,
+      }) as CSSObjectWithLabel,
+    clearIndicator: (base) =>
+      ({
+        ...base,
+        cursor: "pointer",
+        color,
+        ":hover": {
+          color: backgroundColor === "white" ? "#222" : "#a1a1a1",
+        },
+      }) as CSSObjectWithLabel,
+    dropdownIndicator: (base) =>
+      ({
+        ...base,
+        cursor: "pointer",
+        color,
+        ":hover": {
+          color: backgroundColor === "white" ? "#222" : "#a1a1a1",
+        },
+      }) as CSSObjectWithLabel,
+    control: (base, state) =>
+      ({
+        ...base,
+        opacity: state.isDisabled ? 0.7 : undefined,
+        cursor: state.isDisabled ? "not-allowed !important" : undefined,
+        background: backgroundColor,
+        borderRadius: "0.375rem",
+        overflow: "hidden",
+        border: hasError
+          ? "1.5px solid #EF4444"
+          : state.isFocused
+            ? "1.5px solid rgb(107, 114, 128)"
+            : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
         boxShadow: "none",
         ":hover": {
           boxShadow: "none",
@@ -223,27 +231,38 @@ export function styles({
         ":focus": {
           borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
           boxShadow: "none",
+          ":hover": {
+            boxShadow: "none",
+            borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+          },
+          ":focus": {
+            borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+            boxShadow: "none",
+          },
         },
-      },
-    }),
-    placeholder: (base) => ({
-      ...base,
-      color,
-      opacity: "0.4",
-    }),
-    singleValue: (base) => ({
-      ...base,
-      color,
-    }),
-    input: (base) => ({
-      ...base,
-      color,
-    }),
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-    container: (base, state) => ({
-      ...base,
-      opacity: state.isDisabled ? 0.7 : undefined,
-      cursor: state.isDisabled ? "not-allowed !important" : undefined,
-    }),
+      }) as CSSObjectWithLabel,
+    placeholder: (base) =>
+      ({
+        ...base,
+        color,
+        opacity: "0.4",
+      }) as CSSObjectWithLabel,
+    singleValue: (base) =>
+      ({
+        ...base,
+        color,
+      }) as CSSObjectWithLabel,
+    input: (base) =>
+      ({
+        ...base,
+        color,
+      }) as CSSObjectWithLabel,
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }) as CSSObjectWithLabel,
+    container: (base, state) =>
+      ({
+        ...base,
+        opacity: state.isDisabled ? 0.7 : undefined,
+        cursor: state.isDisabled ? "not-allowed !important" : undefined,
+      }) as CSSObjectWithLabel,
   };
 }

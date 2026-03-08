@@ -80,8 +80,7 @@ export default function ValuePath({ pathValues: { totalCount, type, values: data
   const { user } = useAuth();
 
   useLoadValuesClientSide({
-    // @ts-expect-error - this is fine
-    valueTypes: pathsRecord[type] ? pathsRecord[type] : [],
+    valueTypes: pathsRecord[type] ?? [],
   });
 
   const isBaseObj = (

@@ -40,7 +40,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
 
   const modalState = useModal();
   const actionsRef = React.useRef<HTMLLIElement>(null);
-  const isHovering = useHoverDirty(actionsRef);
+  const isHovering = useHoverDirty(actionsRef as React.RefObject<Element>);
   const t = useTranslations("Calls");
   const tEvent = useTranslations("Events");
   const { execute } = useFetch();
