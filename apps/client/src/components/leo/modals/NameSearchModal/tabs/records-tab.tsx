@@ -3,6 +3,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
 import { PaymentStatus, type Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import { useAuth } from "context/AuthContext";
 import { Button, FullDate, Loader, Status, TabsContent } from "@snailycad/ui";
 import { ModalIds } from "types/modal-ids";
 import { useModal } from "state/modalState";
@@ -36,6 +37,7 @@ export function RecordsTab({
   const t = useTranslations();
   const { state, execute } = useFetch();
   const modalState = useModal();
+  const { user } = useAuth();
 
   const tempItem = modalState.getPayload<Record>(ModalIds.AlertDeleteRecord);
   const tempEditRecord = modalState.getPayload<Record>(ModalIds.ManageRecord);
@@ -56,6 +58,7 @@ export function RecordsTab({
 
   function handleRecordUpdate(data: Record) {
     if (!currentResult || currentResult.isConfidential) return;
+    const isOwner = tempEditRecord?.officer?.userId === user?.id;
     const isNewRecord = !currentResult.Record.some((v) => v.id === data.id);
 
     setCurrentResult?.({
@@ -171,6 +174,7 @@ export function RecordsTable({
   const currency = common("currency");
   const { CITIZEN_RECORD_PAYMENTS } = useFeatureEnabled();
 
+  const { user } = useAuth();
   const { hasPermissions } = usePermission();
   const _hasDeletePermissions =
     hasDeletePermissions ??
@@ -312,14 +316,21 @@ export function RecordsTable({
                         {common("export")}
                       </Button>
 
-                      <Button
-                        type="button"
-                        onPress={() => handleEditClick(record)}
-                        size="xs"
-                        variant="success"
-                      >
-                        {common("edit")}
-                      </Button>
+                      {(() => {
+                        const isOwner = record.officer?.userId === user?.id;
+                        const canEdit = isOwner || hasPermissions([Permissions.ManageRecords]);
+
+                        return (
+                          <Button
+                            type="button"
+                            onPress={() => handleEditClick(record)}
+                            size="xs"
+                            variant="success"
+                          >
+                            {canEdit ? common("edit") : common("view")}
+                          </Button>
+                        );
+                      })()}
 
                       {_hasDeletePermissions ? (
                         <Button

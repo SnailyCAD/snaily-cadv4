@@ -41,6 +41,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useDebounce } from "react-use";
 import { InfoCircleFill } from "react-bootstrap-icons";
 import { DraftsTab } from "./tabs/drafts-tab/drafts-tab";
+import { useAuth } from "context/AuthContext";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const ManageCourtEntryModal = dynamic(
   async () =>
@@ -184,6 +186,13 @@ interface MutationState {
 }
 
 export function ManageRecordModal(props: Props) {
+  const { user } = useAuth();
+  const { hasPermissions } = usePermission();
+
+  const isOwner = !props.record?.officerId || props.record.officer?.userId === user?.id;
+  const hasManagePermissions = hasPermissions([Permissions.ManageRecords]);
+  const isReadOnly = props.isReadOnly || (props.isEdit && !isOwner && !hasManagePermissions);
+
   const [mutationState, setMutationState] = React.useState<MutationState | null>(null);
   const [activeTab, setActiveTab] = React.useState<string>("general-information-tab");
 

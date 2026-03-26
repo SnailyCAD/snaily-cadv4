@@ -37,6 +37,9 @@ import { sendRawWebhook, sendDiscordWebhook } from "~/lib/discord/webhooks";
 import { type APIEmbed } from "discord-api-types/v10";
 import { getPrismaModelOrderBy } from "~/utils/order-by";
 import { leoProperties, unitProperties } from "utils/leo/includes";
+import { validateDiscordAndSteamId } from "lib/auth/validate-discord-steam-id";
+import { z } from "zod";
+import { findOrCreateCAD, isFeatureEnabled } from "lib/upsert-cad";
 
 const manageUsersSelect = (
   selectCitizens: boolean = false,
@@ -663,6 +666,109 @@ export class ManageUsersController {
 
     return true;
   }
+  
+  @Post("/")
+  @UsePermissions({
+    permissions: [Permissions.ManageUsers],
+  })
+  async createNewUser(
+    @BodyParams() body: unknown
+  ): Promise<APITypes.PostRegisterUserData> {
+	
+		const data = validateSchema(z.object({
+			discordId: z.string().nullish(),
+			username: z.string().min(3).max(255),
+			password: z.string().min(8).max(255),
+			steamId: z.string().nullish(),			
+		}), body);
+		
+		await validateDiscordAndSteamId(data);
+
+		const nonDiscordUserUsernameRegex = /^([a-z_.\d]+)*[a-z\d]+$/i;
+		if (!nonDiscordUserUsernameRegex.test(data.username)) {
+		  throw new ExtendedBadRequest({ username: "Invalid" });
+		}
+
+		const searchConditions: Array<any> = [
+		  { username: { equals: data.username, mode: "insensitive" } }
+		];
+
+		if (data.discordId) searchConditions.push({ discordId: data.discordId });
+		if (data.steamId) searchConditions.push({ steamId: data.steamId });
+
+		const existing = await prisma.user.findFirst({
+		  where: {
+			OR: searchConditions
+		  }
+		});
+
+		if (existing) {
+		  // Prepare a clear errors object containing only the colliding fields
+		  const errors: Record<string, string> = {};
+
+		  // username check should be case-insensitive
+		  if (existing.username && existing.username.toLowerCase() === data.username.toLowerCase()) {
+			errors.username = "userAlreadyExists";
+		  }
+		  if (data.discordId && existing.discordId === data.discordId) {
+			errors.discordId = "discordIdAlreadyExists";
+		  }
+		  if (data.steamId && existing.steamId === data.steamId) {
+			errors.steamId = "steamIdAlreadyExists";
+		  }
+
+		  // Fallback: if nothing matched (shouldn't happen) still report generic username collision
+		  if (Object.keys(errors).length === 0) {
+			errors.username = "userAlreadyExists";
+		  }
+
+		  throw new ExtendedBadRequest(errors);
+		}
+
+		const preCad = await prisma.cad.findFirst({
+		  select: { features: true, registrationCode: true },
+		});
+
+		const salt = genSaltSync();
+
+		const password = data.password ? hashSync(data.password, salt) : undefined;
+
+		const user = await prisma.user.create({
+		  data: {
+			username: data.username,
+			password: password ?? "",
+			steamId: data.steamId ?? null,
+			discordId: data.discordId ?? null,
+		  },
+		});
+
+		const cad = await findOrCreateCAD({
+		  ownerId: user.id,
+		});
+
+		const permissions = getDefaultPermissionsForNewUser(cad);
+
+		const extraUserData: Partial<User> = {
+				rank: Rank.USER,
+				whitelistStatus: cad.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+				permissions,
+		};
+
+		if (cad.whitelisted && extraUserData.whitelistStatus === WhitelistStatus.PENDING) {
+		  await sendUserWhitelistStatusChangeWebhook({ ...user, ...extraUserData });
+		}
+
+		await prisma.user.update({
+		  where: { id: user.id },
+		  data: extraUserData,
+		});
+
+		return {
+		  userId: user.id,
+		  isOwner: extraUserData.rank === Rank.OWNER,
+		  whitelistStatus: extraUserData.whitelistStatus,
+		};
+  }
 
   private parsePermissions(data: Record<string, string>, user: { roles: CustomRole[] }) {
     const permissions: string[] = [];
@@ -722,4 +828,36 @@ export async function sendUserWhitelistStatusChangeWebhook(
     type: DiscordWebhookType.USER_WHITELIST_STATUS,
     data: user,
   });
+}
+
+export function getDefaultPermissionsForNewUser(
+  cad: (cad & { autoSetUserProperties: AutoSetUserProperties | null }) | null,
+) {
+  const permissions: Permissions[] = [Permissions.CreateBusinesses];
+
+  if (!cad?.towWhitelisted) {
+    permissions.push(Permissions.ViewTowCalls, Permissions.ManageTowCalls, Permissions.ViewTowLogs);
+  }
+
+  if (!cad?.taxiWhitelisted) {
+    permissions.push(Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls);
+  }
+
+  if (cad?.autoSetUserProperties?.dispatch) {
+    permissions.push(...defaultPermissions.defaultDispatchPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.emsFd) {
+    permissions.push(...defaultPermissions.defaultEmsFdPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.leo) {
+    permissions.push(...defaultPermissions.defaultLeoPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.defaultPermissions) {
+    permissions.push(...(cad.autoSetUserProperties.defaultPermissions as Permissions[]));
+  }
+
+  return permissions;
 }

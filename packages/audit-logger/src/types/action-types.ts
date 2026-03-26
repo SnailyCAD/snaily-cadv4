@@ -30,6 +30,7 @@ export enum AuditLogActionType {
   UnitDepartmentAccepted = "UnitDepartmentAccepted",
   CitizenRecordRemove = "CitizenRecordRemove",
   CitizenWarrantRemove = "CitizenWarrantRemove",
+  CitizenRecordUpdate = "CitizenRecordUpdate",
 
   BusinessUpdate = "BusinessUpdate",
   BusinessDelete = "BusinessDelete",
